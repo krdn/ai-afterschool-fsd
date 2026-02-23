@@ -7,6 +7,7 @@
 
 import { generateText, type ModelMessage } from 'ai';
 import { db } from '@/lib/db/client';
+import { logger } from '@/lib/logger';
 import { getProviderRegistry } from './provider-registry';
 import { trackUsage, trackFailure } from './usage-tracker';
 import { FailoverError, isRetryableError } from './failover';
@@ -73,9 +74,7 @@ export async function generateWithVision(
 
     if (isFailover) {
       failoverFrom = providerOrder[i - 1].provider.providerType;
-      console.warn(
-        `[Universal Router] Vision failover: ${failoverFrom} -> ${provider.providerType} for ${featureType}`
-      );
+      logger.warn({ from: failoverFrom, to: provider.providerType, featureType }, '[Universal Router] Vision failover');
     }
 
     const startTime = Date.now();
@@ -83,13 +82,13 @@ export async function generateWithVision(
     try {
       const isReady = await setupProviderEnv(provider);
       if (!isReady) {
-        console.warn(`Provider ${provider.providerType} not ready for vision, skipping...`);
+        logger.warn({ provider: provider.providerType }, 'Provider not ready for vision, skipping');
         continue;
       }
 
       // Vision 지원 확인
       if (!model.supportsVision) {
-        console.warn(`Model ${model.modelId} does not support vision, skipping...`);
+        logger.warn({ modelId: model.modelId }, 'Model does not support vision, skipping');
         continue;
       }
 
@@ -123,9 +122,7 @@ export async function generateWithVision(
 
       // LLM 거부 응답 감지 — 다음 모델로 폴백
       if (isRefusalResponse(result.text)) {
-        console.warn(
-          `[Universal Router] Model ${model.modelId} refused the request, trying next provider...`
-        );
+        logger.warn({ modelId: model.modelId }, '[Universal Router] Model refused the request, trying next provider');
         lastError = new Error(`Model ${model.modelId} refused: ${result.text.slice(0, 100)}`);
         continue;
       }
@@ -156,7 +153,7 @@ export async function generateWithVision(
       const responseTimeMs = Date.now() - startTime;
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
-      console.error(`[Universal Router] Vision provider ${provider.providerType} failed:`, errorMessage);
+      logger.error({ detail: errorMessage, provider: provider.providerType }, '[Universal Router] Vision provider failed');
 
       await trackFailure({
         provider: provider.providerType as import('./providers/types').ProviderName,
@@ -171,9 +168,7 @@ export async function generateWithVision(
 
       // 재시도 불가능한 에러는 폴 백 체인 중단
       if (!isRetryableError(lastError)) {
-        console.warn(
-          `[Universal Router] Vision error is not retryable, stopping: ${lastError.message}`
-        );
+        logger.warn({ err: lastError }, '[Universal Router] Vision error is not retryable, stopping');
         break;
       }
     }

@@ -6,6 +6,7 @@
 
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
 import { generateText, type LanguageModel } from 'ai';
+import { logger } from '@/lib/logger';
 import { BaseAdapter } from './base';
 import type {
   ProviderConfig,
@@ -118,7 +119,7 @@ export class ZhipuAdapter extends BaseAdapter {
       });
 
       if (!response.ok) {
-        console.error('Zhipu API error:', response.status);
+        logger.error({ detail: response.status }, 'Zhipu API error');
         return this.getDefaultModels();
       }
 
@@ -137,7 +138,7 @@ export class ZhipuAdapter extends BaseAdapter {
         supportsTools: true,
       }));
     } catch (error) {
-      console.error('Failed to fetch Zhipu models:', error);
+      logger.error({ err: error }, 'Failed to fetch Zhipu models');
       return this.getDefaultModels();
     }
   }

@@ -1,5 +1,6 @@
 import "server-only"
 import { v2 as cloudinary } from "cloudinary"
+import { logger } from "@/lib/logger"
 
 const cloudName = process.env.CLOUDINARY_CLOUD_NAME
 const apiKey = process.env.CLOUDINARY_API_KEY
@@ -8,9 +9,7 @@ const apiSecret = process.env.CLOUDINARY_API_SECRET
 const isCloudinaryConfigured = !!(cloudName && apiKey && apiSecret)
 
 if (!isCloudinaryConfigured) {
-  console.warn(
-    "[cloudinary] CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET 중 일부가 미설정입니다. 이미지 업로드 기능이 비활성화됩니다."
-  )
+  logger.warn("[cloudinary] CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET 중 일부가 미설정입니다. 이미지 업로드 기능이 비활성화됩니다.")
 }
 
 const resolvedCloudName = cloudName || "not-configured"

@@ -2,6 +2,7 @@ import { createOllama } from 'ollama-ai-provider-v2';
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
 import { generateText } from 'ai';
 import type { LanguageModel } from 'ai';
+import { logger } from '@/lib/logger';
 
 export function getOllamaBaseUrl(): string {
   return process.env.OLLAMA_BASE_URL || 'http://192.168.0.5:11434/api';
@@ -149,7 +150,7 @@ export async function getOllamaModels(options?: { baseUrl?: string; apiKey?: str
     clearTimeout(timeout);
 
     if (!response.ok) {
-      console.error('Failed to fetch Ollama models:', response.statusText);
+      logger.error({ detail: response.statusText }, 'Failed to fetch Ollama models');
       return [];
     }
 
@@ -170,7 +171,7 @@ export async function getOllamaModels(options?: { baseUrl?: string; apiKey?: str
     // 직접 Ollama: { models: [...] }
     return data.models || [];
   } catch (error) {
-    console.error('Failed to fetch Ollama models:', error);
+    logger.error({ err: error }, 'Failed to fetch Ollama models');
     return [];
   }
 }
