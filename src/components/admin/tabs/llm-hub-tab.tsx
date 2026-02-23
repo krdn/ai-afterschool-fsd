@@ -69,12 +69,12 @@ export function LLMHubTab({
 
   // 제공자 액션 핸들러
   const handleEdit = (provider: ProviderWithModels) => {
-    window.location.href = `/admin/llm-providers/${(provider as unknown as { id: string }).id}/edit`;
+    window.location.href = `/admin/llm-providers/${provider.id}/edit`;
   };
 
   const handleDelete = async (provider: ProviderWithModels) => {
     if (confirm('정말 이 제공자를 삭제하시겠습니까?')) {
-      window.location.href = `/admin/llm-providers/${(provider as unknown as { id: string }).id}/delete`;
+      window.location.href = `/admin/llm-providers/${provider.id}/delete`;
     }
   };
 
@@ -240,7 +240,7 @@ export function LLMHubTab({
             <FeatureMappingList
               mappings={mappings}
               providers={providers.map((p) => ({
-                id: (p as unknown as { id: string }).id,
+                id: p.id,
                 name: p.name,
                 models: (p.models || []).map((m) => ({
                   id: m.id,

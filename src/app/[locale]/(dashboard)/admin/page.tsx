@@ -7,8 +7,8 @@ import { getCurrentPeriodCost } from '@/features/ai-engine'
 import { getUsageStatsByProvider, getUsageStatsByFeature } from '@/features/ai-engine'
 import { getBudgetSummary } from '@/features/ai-engine'
 import { db } from '@/lib/db/client'
-import type { DailyUsageData, ProviderUsageData, FeatureUsageData } from '@/app/[locale]/(dashboard)/admin/llm-usage/usage-charts'
-import type { ProviderName } from '@/features/ai-engine'
+import type { DailyUsageData, ProviderUsageData, FeatureUsageData } from '@/types/llm-usage'
+import type { ProviderName, FeatureMappingConfig, MatchMode, FallbackMode } from '@/features/ai-engine'
 
 // 새로운 탭 컴포넌트
 import { StatusTab } from '@/components/admin/tabs/status-tab'
@@ -325,15 +325,15 @@ export default async function AdminPage() {
         <AdminTabsContent value="llm-hub">
           <LLMHubTab
             providers={universalProviders}
-            mappings={universalMappings.success ? universalMappings.data?.map((m) => ({
-              id: (m as unknown as Record<string, string>).id || '',
-              featureType: (m as unknown as Record<string, string>).featureType || '',
-              matchMode: (m as unknown as Record<string, string>).matchMode as import('@/features/ai-engine').MatchMode,
-              requiredTags: ((m as unknown as Record<string, string[]>).requiredTags) || [],
-              excludedTags: ((m as unknown as Record<string, string[]>).excludedTags) || [],
-              specificModelId: (m as unknown as Record<string, string | null>).specificModelId || null,
-              priority: (m as unknown as Record<string, number>).priority || 1,
-              fallbackMode: (m as unknown as Record<string, string>).fallbackMode as import('@/features/ai-engine').FallbackMode,
+            mappings={universalMappings.success ? universalMappings.data?.map((m: FeatureMappingConfig) => ({
+              id: m.id,
+              featureType: m.featureType,
+              matchMode: m.matchMode as MatchMode,
+              requiredTags: m.requiredTags || [],
+              excludedTags: m.excludedTags || [],
+              specificModelId: m.specificModelId || null,
+              priority: m.priority,
+              fallbackMode: m.fallbackMode as FallbackMode,
               specificModel: null,
             })) || [] : []}
             dailyCost={dailyCost}

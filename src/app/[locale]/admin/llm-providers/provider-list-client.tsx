@@ -27,13 +27,13 @@ export function ProviderListClient({ providers }: ProviderListClientProps) {
 
   // 편집 핸들러
   const handleEdit = useCallback((provider: ProviderWithModels) => {
-    const id = (provider as unknown as { id: string }).id;
+    const { id } = provider;
     router.push(`/admin/llm-providers/${id}/edit`);
   }, [router]);
 
   // 삭제 핸들러
   const handleDelete = useCallback(async (provider: ProviderWithModels) => {
-    const id = (provider as unknown as { id: string }).id;
+    const { id } = provider;
     setIsLoading(true);
     try {
       await deleteProviderAction(id);
@@ -49,7 +49,7 @@ export function ProviderListClient({ providers }: ProviderListClientProps) {
 
   // 테스트 핸들러
   const handleTest = useCallback(async (provider: ProviderWithModels) => {
-    const id = (provider as unknown as { id: string }).id;
+    const { id } = provider;
     try {
       const result = await validateProviderAction(id);
       return {
@@ -69,7 +69,7 @@ export function ProviderListClient({ providers }: ProviderListClientProps) {
 
   // 토글 핸들러
   const handleToggle = useCallback(async (provider: ProviderWithModels, enabled: boolean) => {
-    const id = (provider as unknown as { id: string }).id;
+    const { id } = provider;
     setIsLoading(true);
     try {
       await updateProviderAction(id, { isEnabled: enabled });
