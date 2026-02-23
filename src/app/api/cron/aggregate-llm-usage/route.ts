@@ -4,6 +4,7 @@ import {
   aggregateMonthlyUsage,
   cleanupOldUsageData,
 } from '@/features/ai-engine';
+import { logger } from '@/lib/logger';
 
 // 인증용 API 키 (환경 변수에서 로드)
 // Vercel Cron 또는 외부 cron 서비스에서 사용
@@ -142,7 +143,7 @@ export async function GET(request: Request) {
       results,
     });
   } catch (error) {
-    console.error('Cron aggregation error:', error);
+    logger.error({ err: error }, 'Cron aggregation error');
 
     return NextResponse.json(
       {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/session'
 import { db } from '@/lib/db/client'
+import { logger } from '@/lib/logger'
 
 /**
  * POST /api/test/reset
@@ -53,7 +54,7 @@ export async function POST(req: NextRequest) {
       message: 'Test data reset complete. No test data was deleted (isTest flag not implemented in schema).'
     })
   } catch (error) {
-    console.error('Test reset error:', error)
+    logger.error({ err: error }, 'Test reset error')
     return NextResponse.json(
       { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }

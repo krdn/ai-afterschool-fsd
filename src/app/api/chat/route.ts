@@ -5,6 +5,7 @@ import { resolveMentions } from '@/lib/chat/mention-resolver';
 import { buildMentionContext } from '@/lib/chat/context-builder';
 import type { MentionItem } from '@/lib/chat/mention-types';
 import { ChatRequestSchema } from '@/lib/validations/chat';
+import { logger } from '@/lib/logger';
 
 const SYSTEM_PROMPT =
   '당신은 방과후 교실 관리 시스템의 AI 어시스턴트입니다. 교사들의 질문에 친절하고 정확하게 답변해주세요. 한국어로 답변하되, 필요 시 영어 기술 용어를 병기합니다.';
@@ -188,7 +189,7 @@ export async function POST(request: Request) {
       headers,
     });
   } catch (error) {
-    console.error('[Chat API] Error:', error);
+    logger.error({ err: error }, '[Chat API] Error');
     const message =
       error instanceof Error ? error.message : 'Internal server error';
     return new Response(JSON.stringify({ error: message }), {

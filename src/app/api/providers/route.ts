@@ -11,6 +11,7 @@ import { getProviderTemplate } from '@/features/ai-engine';
 import type { ProviderInput, ProviderType, AuthType } from '@/features/ai-engine';
 import { db } from '@/lib/db/client';
 import { CreateProviderSchema } from '@/lib/validations/providers';
+import { logger } from '@/lib/logger';
 
 /**
  * GET /api/providers
@@ -47,7 +48,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ providers: providersWithKeyStatus });
   } catch (error) {
-    console.error('Error fetching providers:', error);
+    logger.error({ err: error }, 'Error fetching providers');
     return NextResponse.json(
       { error: 'Failed to fetch providers' },
       { status: 500 }
@@ -189,7 +190,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       { status: 201 }
     );
   } catch (error) {
-    console.error('Error creating provider:', error);
+    logger.error({ err: error }, 'Error creating provider');
     const errorMessage = error instanceof Error ? error.message : 'Failed to create provider';
     return NextResponse.json(
       { error: errorMessage },

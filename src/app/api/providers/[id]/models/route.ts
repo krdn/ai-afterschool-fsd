@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifySession } from '@/lib/dal';
 import { db } from '@/lib/db/client';
 import { getProviderRegistry } from '@/features/ai-engine';
+import { logger } from '@/lib/logger';
 
 interface RouteParams {
   params: Promise<{
@@ -54,7 +55,7 @@ export async function GET(
       count: provider.models.length,
     });
   } catch (error) {
-    console.error('Error fetching models:', error);
+    logger.error({ err: error }, 'Error fetching models');
     return NextResponse.json(
       { error: 'Failed to fetch models' },
       { status: 500 }
@@ -104,7 +105,7 @@ export async function POST(
       count: models.length,
     });
   } catch (error) {
-    console.error('Error syncing models:', error);
+    logger.error({ err: error }, 'Error syncing models');
     const errorMessage = error instanceof Error ? error.message : 'Failed to sync models';
     return NextResponse.json(
       { error: errorMessage },

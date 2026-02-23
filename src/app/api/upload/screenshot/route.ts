@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifySession } from '@/lib/dal'
 import { imageStorage } from '@/lib/storage/image-storage'
+import { logger } from '@/lib/logger'
 
 /**
  * 스크린샷 업로드 API Route
@@ -27,7 +28,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ url: result.url })
   } catch (error) {
-    console.error('Screenshot upload failed:', error)
+    logger.error({ err: error }, 'Screenshot upload failed')
     const message = error instanceof Error ? error.message : '업로드 중 오류가 발생했습니다.'
     return NextResponse.json({ error: message }, { status: 500 })
   }
