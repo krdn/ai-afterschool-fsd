@@ -10,6 +10,7 @@ import { verifySession } from '@/lib/dal';
 import { getProviderTemplate } from '@/features/ai-engine';
 import type { ProviderInput, ProviderType, AuthType } from '@/features/ai-engine';
 import { db } from '@/lib/db/client';
+import { CreateProviderSchema } from '@/lib/validations/providers';
 
 /**
  * GET /api/providers
@@ -69,8 +70,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // 요청 본문 파싱
+    // 요청 본문 파싱 및 검증
     const body = await request.json();
+    const parsed = CreateProviderSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0].message },
+        { status: 400 }
+      );
+    }
     const {
       templateId,
       name,
@@ -83,7 +91,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       costTier,
       qualityTier,
       isEnabled,
-    } = body;
+    } = parsed.data;
 
     // 템플릿 기반 설정 병합
     let finalConfig: Partial<ProviderInput> = {

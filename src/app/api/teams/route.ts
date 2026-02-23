@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/session'
 import { db } from '@/lib/db/client'
-import type { Team } from '@/lib/db'
+import { TeamSchema } from '@/lib/validations/teams'
 
 /**
  * GET /api/teams
@@ -159,14 +159,14 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json()
-    const { name } = body
-
-    if (!name || typeof name !== 'string') {
+    const parsed = TeamSchema.safeParse(body)
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: 'Team name is required' },
+        { error: parsed.error.issues[0].message },
         { status: 400 }
       )
     }
+    const { name } = parsed.data
 
     // 팀 생성
     const team = await db.team.create({

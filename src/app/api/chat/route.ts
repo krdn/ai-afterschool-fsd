@@ -4,6 +4,7 @@ import { db } from '@/lib/db/client';
 import { resolveMentions } from '@/lib/chat/mention-resolver';
 import { buildMentionContext } from '@/lib/chat/context-builder';
 import type { MentionItem } from '@/lib/chat/mention-types';
+import { ChatRequestSchema } from '@/lib/validations/chat';
 
 const SYSTEM_PROMPT =
   '당신은 방과후 교실 관리 시스템의 AI 어시스턴트입니다. 교사들의 질문에 친절하고 정확하게 답변해주세요. 한국어로 답변하되, 필요 시 영어 기술 용어를 병기합니다.';
@@ -18,20 +19,17 @@ export async function POST(request: Request) {
       return new Response('Unauthorized', { status: 401 });
     }
 
-    const body = (await request.json()) as {
-      prompt: string;
-      providerId?: string;
-      modelId?: string;
-      sessionId?: string;
-      messages?: Array<{ role: 'user' | 'assistant'; content: string }>;
-      mentions?: MentionItem[];
-    };
-
-    const { prompt, providerId, sessionId, messages: clientMessages } = body;
-
-    if (!prompt || typeof prompt !== 'string' || prompt.trim().length === 0) {
-      return new Response('Prompt is required', { status: 400 });
+    const rawBody = await request.json();
+    const parsed = ChatRequestSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return new Response(JSON.stringify({ error: parsed.error.issues[0].message }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
+
+    const body = { ...parsed.data, mentions: parsed.data.mentions as MentionItem[] | undefined };
+    const { prompt, providerId, sessionId, messages: clientMessages } = body;
 
     const trimmedPrompt = prompt.trim();
 
