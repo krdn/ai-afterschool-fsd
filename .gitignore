@@ -44,5 +44,11 @@ packages/db/prisma/*.db-journal
 # Claude Code
 .claude/
 
+# Playwright CLI
+.playwright-cli/
+
+# Screenshots
+*.png
+
 # Misc
 *.tsbuildinfo
