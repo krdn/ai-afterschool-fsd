@@ -2,15 +2,19 @@ import { NextResponse } from "next/server"
 import { db } from "@/lib/db/client"
 import { createSession } from "@/lib/session"
 
-const isDev = process.env.NODE_ENV === "development"
+function guardDev() {
+  if (process.env.NODE_ENV !== "development") {
+    return NextResponse.json({ error: "Not available in production" }, { status: 404 })
+  }
+  return null
+}
 
 /**
  * GET: 전체 사용자 목록 조회 (개발 환경 전용)
  */
 export async function GET() {
-  if (!isDev) {
-    return NextResponse.json({ error: "Not available" }, { status: 403 })
-  }
+  const blocked = guardDev()
+  if (blocked) return blocked
 
   const teachers = await db.teacher.findMany({
     select: {
@@ -31,9 +35,8 @@ export async function GET() {
  * POST: 선택한 사용자로 세션 전환 (개발 환경 전용)
  */
 export async function POST(request: Request) {
-  if (!isDev) {
-    return NextResponse.json({ error: "Not available" }, { status: 403 })
-  }
+  const blocked = guardDev()
+  if (blocked) return blocked
 
   const { userId } = await request.json()
 
