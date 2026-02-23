@@ -27,6 +27,9 @@ export async function middleware(req: NextRequest) {
   const sessionCookie = req.cookies.get('session')?.value
   const session = await decrypt(sessionCookie)
 
+  // 쿠키는 존재하지만 복호화(jwtVerify)에 실패하여 session이 null로 반환된 경우 (ex: 운영 서버 재배포로 Secret Key 환경 변경)
+  const isInvalidSession = sessionCookie && !session;
+
   const isProtectedRoute = protectedRoutes.some((route) =>
     pathnameWithoutLocale.startsWith(route)
   )
@@ -39,18 +42,24 @@ export async function middleware(req: NextRequest) {
 
   // Redirect /dashboard to /students
   if (pathnameWithoutLocale === '/dashboard') {
-    return NextResponse.redirect(new URL(`${localePrefix}/students`, req.nextUrl))
+    const response = NextResponse.redirect(new URL(`${localePrefix}/students`, req.nextUrl))
+    if (isInvalidSession) response.cookies.delete('session')
+    return response
   }
 
   // Check admin access
   if (isAdminRoute && session?.role !== 'DIRECTOR') {
-    return NextResponse.redirect(new URL(`${localePrefix}/students`, req.nextUrl))
+    const response = NextResponse.redirect(new URL(`${localePrefix}/students`, req.nextUrl))
+    if (isInvalidSession) response.cookies.delete('session')
+    return response
   }
 
   if (isProtectedRoute && !session?.userId) {
     const loginUrl = new URL(`${localePrefix}/auth/login`, req.nextUrl)
     loginUrl.searchParams.set('callbackUrl', pathnameWithoutLocale)
-    return NextResponse.redirect(loginUrl)
+    const response = NextResponse.redirect(loginUrl)
+    if (isInvalidSession) response.cookies.delete('session') // 오염된 쿠키 강제 삭제 지시
+    return response
   }
 
   if (isAuthRoute && session?.userId) {
@@ -59,6 +68,10 @@ export async function middleware(req: NextRequest) {
 
   // Attach request ID to response headers for distributed tracing
   intlResponse.headers.set('x-request-id', requestId)
+
+  if (isInvalidSession) {
+    intlResponse.cookies.delete('session') // 보호되지 않은 라우트(ex: 랜딩 페이지)로 갈 때도 오염된 쿠키는 삭제 처리
+  }
 
   return intlResponse
 }
