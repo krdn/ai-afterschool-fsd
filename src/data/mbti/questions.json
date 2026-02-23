@@ -1,0 +1,422 @@
+[
+  {
+    "id": 1,
+    "dimension": "EI",
+    "pole": "E",
+    "text": "나는 여러 사람과 함께 있을 때 에너지가 충전된다",
+    "description": "예: 친구들과의 모임, 파티, 그룹 활동"
+  },
+  {
+    "id": 2,
+    "dimension": "EI",
+    "pole": "I",
+    "text": "혼자만의 시간을 가질 때 에너지가 회복된다",
+    "description": "예: 독서, 명상, 개인 취미 활동"
+  },
+  {
+    "id": 3,
+    "dimension": "EI",
+    "pole": "E",
+    "text": "새로운 사람들을 만나는 것이 즐겁다",
+    "description": "예: 네트워킹, 사교 모임"
+  },
+  {
+    "id": 4,
+    "dimension": "EI",
+    "pole": "I",
+    "text": "깊은 관계의 소수 친구를 선호한다",
+    "description": "예: 친한 친구 1-2명과의 깊은 대화"
+  },
+  {
+    "id": 5,
+    "dimension": "EI",
+    "pole": "E",
+    "text": "생각을 말로 표현하면서 정리한다",
+    "description": "예: 이야기하면서 생각 정리"
+  },
+  {
+    "id": 6,
+    "dimension": "EI",
+    "pole": "I",
+    "text": "말하기 전에 머릿속으로 충분히 생각한다",
+    "description": "예: 신중하게 고민 후 발언"
+  },
+  {
+    "id": 7,
+    "dimension": "EI",
+    "pole": "E",
+    "text": "활발하고 외향적이라는 말을 자주 듣는다",
+    "description": "예: 사교적, 적극적"
+  },
+  {
+    "id": 8,
+    "dimension": "EI",
+    "pole": "I",
+    "text": "조용하고 신중하다는 말을 자주 듣는다",
+    "description": "예: 침착함, 관찰자 같음"
+  },
+  {
+    "id": 9,
+    "dimension": "EI",
+    "pole": "E",
+    "text": "다양한 활동에 참여하는 것을 좋아한다",
+    "description": "예: 여러 동아리, 다양한 취미"
+  },
+  {
+    "id": 10,
+    "dimension": "EI",
+    "pole": "I",
+    "text": "한 가지 활동에 깊이 몰입하는 것을 선호한다",
+    "description": "예: 한 취미에 집중, 전문성 추구"
+  },
+  {
+    "id": 11,
+    "dimension": "EI",
+    "pole": "E",
+    "text": "팀 프로젝트가 개인 작업보다 더 즐겁다",
+    "description": "예: 협업, 공동 작업"
+  },
+  {
+    "id": 12,
+    "dimension": "EI",
+    "pole": "I",
+    "text": "혼자서 하는 작업이 더 집중이 잘 된다",
+    "description": "예: 개인 과제, 독립 작업"
+  },
+  {
+    "id": 13,
+    "dimension": "EI",
+    "pole": "E",
+    "text": "처음 만난 사람과도 쉽게 대화할 수 있다",
+    "description": "예: 스몰토크, 아이스브레이킹"
+  },
+  {
+    "id": 14,
+    "dimension": "EI",
+    "pole": "I",
+    "text": "낯선 사람과의 대화는 부담스럽다",
+    "description": "예: 초면 긴장, 친해지는데 시간 필요"
+  },
+  {
+    "id": 15,
+    "dimension": "EI",
+    "pole": "E",
+    "text": "사람들 속에서 에너지가 넘친다",
+    "description": "예: 사교 모임 후 활력 증가"
+  },
+  {
+    "id": 16,
+    "dimension": "SN",
+    "pole": "S",
+    "text": "구체적이고 실제적인 정보를 중요하게 여긴다",
+    "description": "예: 사실, 데이터, 경험"
+  },
+  {
+    "id": 17,
+    "dimension": "SN",
+    "pole": "N",
+    "text": "추상적이고 개념적인 아이디어에 흥미를 느낀다",
+    "description": "예: 이론, 철학, 가능성"
+  },
+  {
+    "id": 18,
+    "dimension": "SN",
+    "pole": "S",
+    "text": "현재에 집중하고 당장 할 수 있는 일을 선호한다",
+    "description": "예: 실천 가능한 계획, 즉시 행동"
+  },
+  {
+    "id": 19,
+    "dimension": "SN",
+    "pole": "N",
+    "text": "미래의 가능성과 잠재력을 상상하는 것이 즐겁다",
+    "description": "예: 비전, 미래 계획, 큰 그림"
+  },
+  {
+    "id": 20,
+    "dimension": "SN",
+    "pole": "S",
+    "text": "세부 사항과 디테일을 놓치지 않으려 노력한다",
+    "description": "예: 꼼꼼함, 정확성 추구"
+  },
+  {
+    "id": 21,
+    "dimension": "SN",
+    "pole": "N",
+    "text": "전체적인 맥락과 패턴을 파악하는 것이 중요하다",
+    "description": "예: 큰 틀, 연결 고리, 의미"
+  },
+  {
+    "id": 22,
+    "dimension": "SN",
+    "pole": "S",
+    "text": "검증된 방법과 실용적인 해결책을 선호한다",
+    "description": "예: 경험 기반, 실증된 방식"
+  },
+  {
+    "id": 23,
+    "dimension": "SN",
+    "pole": "N",
+    "text": "새로운 방법과 독창적인 아이디어를 시도하고 싶다",
+    "description": "예: 혁신, 실험, 창의성"
+  },
+  {
+    "id": 24,
+    "dimension": "SN",
+    "pole": "S",
+    "text": "오감으로 직접 경험할 수 있는 것을 신뢰한다",
+    "description": "예: 보고 만지고 느낀 것"
+  },
+  {
+    "id": 25,
+    "dimension": "SN",
+    "pole": "N",
+    "text": "직관과 육감을 중요하게 여긴다",
+    "description": "예: 느낌, 예감, 통찰"
+  },
+  {
+    "id": 26,
+    "dimension": "SN",
+    "pole": "S",
+    "text": "사실에 기반한 명확한 정보를 원한다",
+    "description": "예: 구체적 수치, 명확한 지침"
+  },
+  {
+    "id": 27,
+    "dimension": "SN",
+    "pole": "N",
+    "text": "은유와 상징을 사용해 설명하는 것을 좋아한다",
+    "description": "예: 비유, 추상적 표현"
+  },
+  {
+    "id": 28,
+    "dimension": "SN",
+    "pole": "S",
+    "text": "단계별로 순서대로 진행하는 것이 편하다",
+    "description": "예: 매뉴얼 따라하기, 체계적 접근"
+  },
+  {
+    "id": 29,
+    "dimension": "SN",
+    "pole": "N",
+    "text": "여러 가능성을 동시에 고려하는 것을 즐긴다",
+    "description": "예: 다양한 시나리오, 여러 관점"
+  },
+  {
+    "id": 30,
+    "dimension": "SN",
+    "pole": "S",
+    "text": "현실적이고 실용적이라는 평가를 받는다",
+    "description": "예: 발 딛고 사는, 실제적"
+  },
+  {
+    "id": 31,
+    "dimension": "TF",
+    "pole": "T",
+    "text": "결정할 때 논리와 객관성을 중시한다",
+    "description": "예: 사실 분석, 이성적 판단"
+  },
+  {
+    "id": 32,
+    "dimension": "TF",
+    "pole": "F",
+    "text": "결정할 때 사람들의 감정과 가치를 고려한다",
+    "description": "예: 공감, 조화, 관계"
+  },
+  {
+    "id": 33,
+    "dimension": "TF",
+    "pole": "T",
+    "text": "문제를 분석하고 해결하는 것을 좋아한다",
+    "description": "예: 논리적 추론, 체계적 접근"
+  },
+  {
+    "id": 34,
+    "dimension": "TF",
+    "pole": "F",
+    "text": "다른 사람을 이해하고 돕는 것을 중요하게 여긴다",
+    "description": "예: 공감, 지지, 배려"
+  },
+  {
+    "id": 35,
+    "dimension": "TF",
+    "pole": "T",
+    "text": "비판적 사고와 객관적 평가를 선호한다",
+    "description": "예: 냉철한 분석, 장단점 검토"
+  },
+  {
+    "id": 36,
+    "dimension": "TF",
+    "pole": "F",
+    "text": "칭찬과 격려를 통해 동기부여하는 것을 선호한다",
+    "description": "예: 긍정적 피드백, 응원"
+  },
+  {
+    "id": 37,
+    "dimension": "TF",
+    "pole": "T",
+    "text": "공정성과 원칙이 감정보다 우선이라고 생각한다",
+    "description": "예: 규칙 준수, 일관성"
+  },
+  {
+    "id": 38,
+    "dimension": "TF",
+    "pole": "F",
+    "text": "조화와 배려가 규칙보다 중요할 때가 있다고 생각한다",
+    "description": "예: 상황 고려, 융통성"
+  },
+  {
+    "id": 39,
+    "dimension": "TF",
+    "pole": "T",
+    "text": "솔직하고 직설적으로 말하는 것이 좋다고 생각한다",
+    "description": "예: 명확한 표현, 직접적 피드백"
+  },
+  {
+    "id": 40,
+    "dimension": "TF",
+    "pole": "F",
+    "text": "상대방의 기분을 배려해서 말하는 것이 중요하다",
+    "description": "예: 완곡한 표현, 감정 존중"
+  },
+  {
+    "id": 41,
+    "dimension": "TF",
+    "pole": "T",
+    "text": "옳고 그름을 명확히 판단하는 것을 중요하게 여긴다",
+    "description": "예: 흑백 논리, 정확한 판단"
+  },
+  {
+    "id": 42,
+    "dimension": "TF",
+    "pole": "F",
+    "text": "상황과 맥락에 따라 유연하게 판단하는 것이 필요하다",
+    "description": "예: 맥락 고려, 상대적 판단"
+  },
+  {
+    "id": 43,
+    "dimension": "TF",
+    "pole": "T",
+    "text": "효율성과 성과가 중요한 기준이다",
+    "description": "예: 결과 중심, 최적화"
+  },
+  {
+    "id": 44,
+    "dimension": "TF",
+    "pole": "F",
+    "text": "과정에서의 관계와 경험이 중요한 가치다",
+    "description": "예: 함께한 시간, 추억"
+  },
+  {
+    "id": 45,
+    "dimension": "TF",
+    "pole": "T",
+    "text": "논리적이고 이성적이라는 평가를 받는다",
+    "description": "예: 합리적, 객관적"
+  },
+  {
+    "id": 46,
+    "dimension": "JP",
+    "pole": "J",
+    "text": "계획을 세우고 그대로 실행하는 것을 선호한다",
+    "description": "예: 일정표, 체크리스트"
+  },
+  {
+    "id": 47,
+    "dimension": "JP",
+    "pole": "P",
+    "text": "상황에 따라 유연하게 대처하는 것을 선호한다",
+    "description": "예: 즉흥적, 적응적"
+  },
+  {
+    "id": 48,
+    "dimension": "JP",
+    "pole": "J",
+    "text": "미리 결정하고 준비하는 것이 편안하다",
+    "description": "예: 사전 계획, 예약"
+  },
+  {
+    "id": 49,
+    "dimension": "JP",
+    "pole": "P",
+    "text": "선택지를 열어두고 나중에 결정하는 것이 좋다",
+    "description": "예: 여지 남기기, 유보"
+  },
+  {
+    "id": 50,
+    "dimension": "JP",
+    "pole": "J",
+    "text": "정리정돈이 잘 되어 있어야 마음이 편하다",
+    "description": "예: 깔끔한 책상, 정돈된 공간"
+  },
+  {
+    "id": 51,
+    "dimension": "JP",
+    "pole": "P",
+    "text": "약간의 혼란스러움도 괜찮다고 생각한다",
+    "description": "예: 창의적 무질서, 편안한 어수선함"
+  },
+  {
+    "id": 52,
+    "dimension": "JP",
+    "pole": "J",
+    "text": "마감 기한을 여유있게 지키려고 한다",
+    "description": "예: 미리 완료, 여유 확보"
+  },
+  {
+    "id": 53,
+    "dimension": "JP",
+    "pole": "P",
+    "text": "마감이 임박해야 집중력이 생긴다",
+    "description": "예: 막판 집중, 데드라인 효과"
+  },
+  {
+    "id": 54,
+    "dimension": "JP",
+    "pole": "J",
+    "text": "일을 끝내고 나서야 편안함을 느낀다",
+    "description": "예: 완료의 만족감, 마무리"
+  },
+  {
+    "id": 55,
+    "dimension": "JP",
+    "pole": "P",
+    "text": "여러 일을 동시에 진행하는 것이 즐겁다",
+    "description": "예: 멀티태스킹, 다양한 활동"
+  },
+  {
+    "id": 56,
+    "dimension": "JP",
+    "pole": "J",
+    "text": "체계적이고 계획적이라는 평가를 받는다",
+    "description": "예: 조직적, 일정 관리 잘함"
+  },
+  {
+    "id": 57,
+    "dimension": "JP",
+    "pole": "P",
+    "text": "자유롭고 융통성 있다는 평가를 받는다",
+    "description": "예: 유연함, 적응력"
+  },
+  {
+    "id": 58,
+    "dimension": "JP",
+    "pole": "J",
+    "text": "루틴과 규칙적인 생활이 안정감을 준다",
+    "description": "예: 정해진 일과, 습관"
+  },
+  {
+    "id": 59,
+    "dimension": "JP",
+    "pole": "P",
+    "text": "새로운 경험과 변화가 삶을 풍요롭게 한다",
+    "description": "예: 다양성, 새로운 시도"
+  },
+  {
+    "id": 60,
+    "dimension": "JP",
+    "pole": "J",
+    "text": "결론을 내리고 결정하는 것을 선호한다",
+    "description": "예: 명확한 결정, 확정"
+  }
+]

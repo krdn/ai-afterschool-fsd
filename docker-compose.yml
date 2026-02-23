@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ai-afterschool-fsd:latest
+    container_name: ai-afterschool-fsd-web
+    restart: always
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+    networks:
+      - ai-network
+
+networks:
+  ai-network:
+    driver: bridge

@@ -1,0 +1,864 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Teacher {
+  id                         String                        @id @default(cuid())
+  email                      String                        @unique
+  password                   String
+  name                       String
+  createdAt                  DateTime                      @default(now())
+  updatedAt                  DateTime                      @updatedAt
+  phone                      String?
+  role                       Role                          @default(TEACHER)
+  teamId                     String?
+  nameHanja                  Json?
+  birthDate                  DateTime?
+  birthTimeHour              Int?
+  birthTimeMinute            Int?
+  profileImage               String?
+  profileImagePublicId       String?
+  assignmentProposalsCreated AssignmentProposal[]          @relation("ProposedBy")
+  compatibilityResults       CompatibilityResult[]
+  counselingSessions         CounselingSession[]
+  gradeHistoryTaught         GradeHistory[]
+  counselingReservations     ParentCounselingReservation[]
+  passwordResetTokens        PasswordResetToken[]
+  students                   Student[]
+  studentSatisfactions       StudentSatisfaction[]
+  team                       Team?                         @relation(fields: [teamId], references: [id])
+  auditLogs                  AuditLog[]
+  issuesCreated              Issue[]                   @relation("IssueCreator")
+  issuesAssigned             Issue[]                   @relation("IssueAssignee")
+  issueEvents                IssueEvent[]              @relation("IssueEventPerformer")
+  sajuAnalysisHistories      TeacherSajuAnalysisHistory[]
+  chatSessions               ChatSession[]
+}
+
+model Team {
+  id                  String               @id @default(cuid())
+  name                String               @unique
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  assignmentProposals AssignmentProposal[]
+  students            Student[]
+  teachers            Teacher[]
+}
+
+model Student {
+  id                             String                        @id @default(cuid())
+  name                           String
+  birthDate                      DateTime
+  phone                          String?
+  school                         String
+  grade                          Int
+  targetUniversity               String?
+  targetMajor                    String?
+  bloodType                      BloodType?
+  teacherId                      String?
+  createdAt                      DateTime                      @default(now())
+  updatedAt                      DateTime                      @updatedAt
+  expiresAt                      DateTime?
+  calculationRecalculationAt     DateTime?
+  calculationRecalculationNeeded Boolean                       @default(false)
+  calculationRecalculationReason String?
+  nameHanja                      Json?
+  birthTimeHour                  Int?
+  birthTimeMinute                Int?
+  teamId                         String?
+  attendanceRate                 Float?
+  initialGradeLevel              String?
+  priorAcademicPerformance       Json?
+  primaryParentId                String?
+  nationality                    String?                       @default("한국")
+  compatibilityResults           CompatibilityResult[]
+  counselingSessions             CounselingSession[]
+  gradeHistory                   GradeHistory[]
+  mbtiSurveyDraft                MbtiSurveyDraft?
+  parents                        Parent[]                      @relation("StudentParents")
+  counselingReservations         ParentCounselingReservation[]
+  personalitySummary             PersonalitySummary?
+  primaryParent                  Parent?                       @relation("StudentPrimaryParent", fields: [primaryParentId], references: [id])
+  teacher                        Teacher?                      @relation(fields: [teacherId], references: [id])
+  team                           Team?                         @relation(fields: [teamId], references: [id])
+  images                         StudentImage[]
+  studentSatisfactions           StudentSatisfaction[]
+  varkAnalysis                   VarkAnalysis?
+  varkSurveyDraft                VarkSurveyDraft?
+  zodiacAnalysis                 ZodiacAnalysis?
+
+  @@index([teacherId])
+  @@index([name])
+  @@index([school])
+  @@index([primaryParentId])
+  @@index([teacherId, name])
+  @@index([teacherId, school])
+  @@index([expiresAt])
+  @@index([calculationRecalculationNeeded])
+}
+
+model SajuAnalysis {
+  id             String      @id @default(cuid())
+  subjectType    SubjectType
+  subjectId      String
+  inputSnapshot  Json
+  result         Json
+  interpretation String?
+  status         String      @default("complete")
+  version        Int         @default(1)
+  calculatedAt   DateTime
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  usedProvider   String?
+  usedModel      String?
+
+  @@unique([subjectType, subjectId])
+  @@index([subjectId])
+}
+
+model SajuAnalysisHistory {
+  id                String   @id @default(cuid())
+  studentId         String
+  promptId          String   @default("default")
+  additionalRequest String?
+  result            Json
+  interpretation    String?
+  usedProvider      String   @default("내장 알고리즘")
+  usedModel         String?
+  calculatedAt      DateTime
+  createdAt         DateTime @default(now())
+
+  @@index([studentId])
+  @@index([studentId, createdAt(sort: Desc)])
+}
+
+model TeacherSajuAnalysisHistory {
+  id                String   @id @default(cuid())
+  teacherId         String
+  teacher           Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  promptId          String   @default("default")
+  additionalRequest String?
+  result            Json
+  interpretation    String?
+  usedProvider      String   @default("내장 알고리즘")
+  usedModel         String?
+  calculatedAt      DateTime
+  createdAt         DateTime @default(now())
+
+  @@index([teacherId])
+  @@index([teacherId, createdAt(sort: Desc)])
+  @@index([teacherId, promptId, usedProvider])
+}
+
+model NameAnalysis {
+  id             String      @id @default(cuid())
+  subjectType    SubjectType
+  subjectId      String
+  inputSnapshot  Json
+  result         Json
+  interpretation String?
+  status         String      @default("complete")
+  version        Int         @default(1)
+  calculatedAt   DateTime
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@unique([subjectType, subjectId])
+  @@index([subjectId])
+}
+
+model MbtiSurveyDraft {
+  id        String   @id @default(cuid())
+  studentId String   @unique
+  responses Json
+  progress  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+}
+
+model MbtiAnalysis {
+  id             String      @id @default(cuid())
+  subjectType    SubjectType
+  subjectId      String
+  responses      Json
+  scores         Json
+  mbtiType       String
+  percentages    Json
+  interpretation String?
+  version        Int         @default(1)
+  calculatedAt   DateTime
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@unique([subjectType, subjectId])
+  @@index([subjectId])
+}
+
+
+model StudentImage {
+  id          String           @id @default(cuid())
+  studentId   String
+  type        StudentImageType
+  originalUrl String
+  resizedUrl  String
+  publicId    String
+  format      String?
+  bytes       Int?
+  width       Int?
+  height      Int?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  student     Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, type])
+  @@index([studentId])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  teacherId String
+  createdAt DateTime @default(now())
+  teacher   Teacher  @relation(fields: [teacherId], references: [id])
+}
+
+model FaceAnalysis {
+  id           String      @id @default(cuid())
+  subjectType  SubjectType
+  subjectId    String
+  imageUrl     String
+  result       Json
+  status       String      @default("complete")
+  errorMessage String?
+  usedProvider String?
+  usedModel    String?
+  version      Int         @default(1)
+  analyzedAt   DateTime
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@unique([subjectType, subjectId])
+  @@index([subjectId])
+}
+
+model PalmAnalysis {
+  id           String      @id @default(cuid())
+  subjectType  SubjectType
+  subjectId    String
+  hand         String
+  imageUrl     String
+  result       Json
+  status       String      @default("complete")
+  errorMessage String?
+  version      Int         @default(1)
+  analyzedAt   DateTime
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@unique([subjectType, subjectId])
+  @@index([subjectId])
+}
+
+
+model CompatibilityResult {
+  id           String   @id @default(cuid())
+  teacherId    String
+  studentId    String
+  overallScore Float
+  breakdown    Json
+  reasons      Json?
+  calculatedAt DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  student      Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacher      Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@unique([teacherId, studentId])
+  @@index([teacherId])
+  @@index([studentId])
+  @@index([overallScore])
+}
+
+model PersonalitySummary {
+  id               String    @id @default(cuid())
+  studentId        String    @unique
+  coreTraits       String?
+  learningStrategy Json?
+  careerGuidance   Json?
+  status           String    @default("none")
+  errorMessage     String?
+  version          Int       @default(1)
+  generatedAt      DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  scores           Json?
+  student          Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+}
+
+model PersonalitySummaryHistory {
+  id               String    @id @default(cuid())
+  studentId        String
+  coreTraits       String?
+  learningStrategy Json?
+  careerGuidance   Json?
+  version          Int
+  generatedAt      DateTime?
+  createdAt        DateTime  @default(now())
+
+  @@index([studentId])
+  @@index([createdAt(sort: Desc)])
+}
+
+model ReportPDF {
+  id           String    @id @default(cuid())
+  studentId    String    @unique
+  status       String    @default("none")
+  fileUrl      String?
+  dataVersion  Int?
+  errorMessage String?
+  generatedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([studentId])
+  @@index([status])
+}
+
+model AssignmentProposal {
+  id          String   @id @default(cuid())
+  name        String
+  teamId      String?
+  proposedBy  String
+  assignments Json
+  summary     Json
+  status      String   @default("pending")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  proposer    Teacher  @relation("ProposedBy", fields: [proposedBy], references: [id])
+  team        Team?    @relation(fields: [teamId], references: [id])
+
+  @@index([teamId])
+  @@index([proposedBy])
+  @@index([status])
+}
+
+model GradeHistory {
+  id              String    @id @default(cuid())
+  studentId       String
+  teacherId       String?
+  subject         String
+  gradeType       GradeType
+  score           Float
+  maxScore        Float     @default(100)
+  normalizedScore Float
+  testDate        DateTime
+  academicYear    Int
+  semester        Int
+  notes           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  student         Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacher         Teacher?  @relation(fields: [teacherId], references: [id])
+
+  @@index([studentId, subject, testDate])
+  @@index([studentId, academicYear, semester])
+  @@index([teacherId])
+}
+
+model CounselingSession {
+  id                String                       @id @default(cuid())
+  studentId         String
+  teacherId         String
+  sessionDate       DateTime
+  duration          Int
+  type              CounselingType
+  summary           String
+  aiSummary         String?
+  followUpRequired  Boolean                      @default(false)
+  followUpDate      DateTime?
+  satisfactionScore Int?
+  createdAt         DateTime                     @default(now())
+  updatedAt         DateTime                     @updatedAt
+  student           Student                      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacher           Teacher                      @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  reservation       ParentCounselingReservation?
+
+  @@index([studentId, sessionDate])
+  @@index([teacherId, sessionDate])
+  @@index([studentId, type])
+}
+
+model StudentSatisfaction {
+  id                  String   @id @default(cuid())
+  studentId           String
+  teacherId           String
+  surveyDate          DateTime
+  overallSatisfaction Int
+  teachingQuality     Int
+  communication       Int
+  supportLevel        Int
+  feedback            String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  student             Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacher             Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, teacherId, surveyDate])
+  @@index([studentId, surveyDate])
+  @@index([teacherId, surveyDate])
+}
+
+model Parent {
+  id                     String                        @id @default(cuid())
+  studentId              String
+  name                   String
+  phone                  String
+  email                  String?
+  relation               ParentRelation
+  relationOther          String?
+  note                   String?
+  isPrimary              Boolean                       @default(false)
+  createdAt              DateTime                      @default(now())
+  updatedAt              DateTime                      @updatedAt
+  student                Student                       @relation("StudentParents", fields: [studentId], references: [id], onDelete: Cascade)
+  counselingReservations ParentCounselingReservation[]
+  studentAsPrimary       Student[]                     @relation("StudentPrimaryParent")
+
+  @@index([studentId])
+  @@index([studentId, isPrimary])
+}
+
+model ParentCounselingReservation {
+  id                  String             @id @default(cuid())
+  scheduledAt         DateTime
+  studentId           String
+  teacherId           String
+  parentId            String
+  topic               String
+  status              ReservationStatus  @default(SCHEDULED)
+  counselingSessionId String?            @unique
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  counselingSession   CounselingSession? @relation(fields: [counselingSessionId], references: [id])
+  parent              Parent             @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  student             Student            @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacher             Teacher            @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([teacherId])
+  @@index([parentId])
+  @@index([scheduledAt])
+  @@index([studentId, scheduledAt])
+  @@index([teacherId, scheduledAt])
+}
+
+model LLMFeatureConfig {
+  id              String   @id @default(cuid())
+  featureType     String   @unique
+  primaryProvider String
+  fallbackOrder   Json
+  modelOverride   String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model LLMUsage {
+  id             String   @id @default(cuid())
+  provider       String
+  modelId        String
+  featureType    String
+  teacherId      String?
+  inputTokens    Int
+  outputTokens   Int
+  totalTokens    Int
+  costUsd        Float
+  responseTimeMs Int
+  success        Boolean  @default(true)
+  errorMessage   String?
+  failoverFrom   String?
+  createdAt      DateTime @default(now())
+
+  @@index([provider, createdAt])
+  @@index([featureType, createdAt])
+  @@index([teacherId, createdAt])
+  @@index([createdAt])
+}
+
+model LLMUsageMonthly {
+  id                String   @id @default(cuid())
+  year              Int
+  month             Int
+  provider          String
+  featureType       String
+  totalRequests     Int
+  totalInputTokens  BigInt
+  totalOutputTokens BigInt
+  totalCostUsd      Float
+  avgResponseTimeMs Float
+  successRate       Float
+  createdAt         DateTime @default(now())
+
+  @@unique([year, month, provider, featureType])
+  @@index([year, month])
+}
+
+model LLMBudget {
+  id                 String    @id @default(cuid())
+  period             String    @unique
+  budgetUsd          Float
+  alertAt80          Boolean   @default(true)
+  alertAt100         Boolean   @default(true)
+  lastAlertAt        DateTime?
+  lastAlertThreshold Int?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+// Universal LLM Hub Models
+model Provider {
+  id                String   @id @default(cuid())
+  name              String
+  providerType      String
+  baseUrl           String?
+  apiKeyEncrypted   String?
+  authType          String
+  customAuthHeader  String?
+  capabilities      String[]
+  costTier          String
+  qualityTier       String
+  isEnabled         Boolean  @default(false)
+  isValidated       Boolean  @default(false)
+  validatedAt       DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  models            Model[]
+
+  @@index([providerType])
+  @@index([isEnabled])
+  @@index([isValidated])
+  @@map("providers")
+}
+
+model Model {
+  id                String   @id @default(cuid())
+  providerId        String
+  modelId           String
+  displayName       String
+  contextWindow     Int?
+  supportsVision    Boolean  @default(false)
+  supportsTools     Boolean  @default(false)
+  defaultParams     Json?
+  isDefault         Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  provider          Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  featureMappings   FeatureMapping[]
+
+  @@unique([providerId, modelId])
+  @@index([providerId])
+  @@index([supportsVision])
+  @@index([supportsTools])
+  @@map("models")
+}
+
+model FeatureMapping {
+  id                String   @id @default(cuid())
+  featureType       String
+  matchMode         String
+  requiredTags      String[]
+  excludedTags      String[]
+  specificModelId   String?
+  priority          Int      @default(1)
+  fallbackMode      String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  specificModel     Model?   @relation(fields: [specificModelId], references: [id], onDelete: SetNull)
+
+  @@index([featureType])
+  @@index([matchMode])
+  @@index([specificModelId])
+  @@index([priority])
+  @@map("feature_mappings")
+}
+
+model ProviderTemplate {
+  id                  String   @id @default(cuid())
+  templateId          String   @unique
+  name                String
+  providerType        String
+  defaultBaseUrl      String?
+  defaultCapabilities String[]
+  defaultAuthType     String
+  description         String
+  helpUrl             String?
+  isPopular           Boolean  @default(false)
+  sortOrder           Int      @default(0)
+
+  @@index([isPopular])
+  @@index([sortOrder])
+  @@map("provider_templates")
+}
+
+model AnalysisPromptPreset {
+  id                String   @id @default(cuid())
+  promptKey         String
+  name              String
+  shortDescription  String
+  target            String
+  levels            String   @default("★★★☆☆")
+  purpose           String
+  recommendedTiming String
+  tags              Json     @default("[]")
+  promptTemplate    String
+  isBuiltIn         Boolean  @default(false)
+  isActive          Boolean  @default(true)
+  sortOrder         Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  analysisType      String   @default("saju")
+
+  @@unique([promptKey, analysisType])
+  @@index([analysisType, isActive])
+  @@index([sortOrder])
+  @@map("analysis_prompt_presets")
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  teacherId  String
+  action     String
+  entityType String
+  entityId   String?
+  changes    Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+  teacher    Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@index([teacherId])
+  @@index([entityType, entityId])
+  @@index([createdAt(sort: Desc)])
+  @@map("audit_logs")
+}
+
+model SystemLog {
+  id        String   @id @default(cuid())
+  level     String
+  message   String
+  context   Json?
+  timestamp DateTime @default(now())
+
+  @@index([level])
+  @@index([timestamp(sort: Desc)])
+  @@map("system_logs")
+}
+
+model Issue {
+  id                String        @id @default(cuid())
+  title             String
+  description       String?       @db.Text
+  category          IssueCategory
+  priority          IssuePriority @default(MEDIUM)
+  status            IssueStatus   @default(OPEN)
+  githubIssueNumber Int?          @unique
+  githubIssueUrl    String?
+  githubBranchName  String?
+  screenshotUrl     String?
+  userContext       Json?
+  createdBy         String
+  assignedTo        String?
+  closedAt          DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  creator           Teacher       @relation("IssueCreator", fields: [createdBy], references: [id])
+  assignee          Teacher?      @relation("IssueAssignee", fields: [assignedTo], references: [id])
+  events            IssueEvent[]
+
+  @@index([status])
+  @@index([category])
+  @@index([createdBy])
+  @@index([githubIssueNumber])
+  @@index([createdAt(sort: Desc)])
+  @@map("issues")
+}
+
+model IssueEvent {
+  id          String   @id @default(cuid())
+  issueId     String
+  eventType   String   // "created", "labeled", "branch_created", "status_changed", "closed", "synced"
+  performedBy String
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  issue       Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  performer   Teacher  @relation("IssueEventPerformer", fields: [performedBy], references: [id])
+
+  @@index([issueId])
+  @@index([eventType])
+  @@index([createdAt(sort: Desc)])
+  @@map("issue_events")
+}
+
+model VarkAnalysis {
+  id             String   @id @default(cuid())
+  studentId      String   @unique
+  responses      Json
+  scores         Json
+  varkType       String
+  percentages    Json
+  interpretation String?
+  version        Int      @default(1)
+  calculatedAt   DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}
+
+model VarkSurveyDraft {
+  id        String   @id @default(cuid())
+  studentId String   @unique
+  responses Json
+  progress  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+}
+
+model ZodiacAnalysis {
+  id             String   @id @default(cuid())
+  studentId      String   @unique
+  zodiacSign     String
+  zodiacName     String
+  element        String
+  traits         Json
+  interpretation String?
+  version        Int      @default(1)
+  calculatedAt   DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  student        Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}
+
+enum SubjectType {
+  STUDENT
+  TEACHER
+}
+
+enum Role {
+  DIRECTOR
+  TEAM_LEADER
+  MANAGER
+  TEACHER
+}
+
+enum BloodType {
+  A
+  B
+  AB
+  O
+}
+
+enum ParentRelation {
+  FATHER
+  MOTHER
+  GRANDFATHER
+  GRANDMOTHER
+  OTHER
+}
+
+enum GradeType {
+  MIDTERM
+  FINAL
+  QUIZ
+  ASSIGNMENT
+}
+
+enum CounselingType {
+  ACADEMIC
+  CAREER
+  PSYCHOLOGICAL
+  BEHAVIORAL
+}
+
+enum ReservationStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum StudentImageType {
+  profile
+  face
+  palm
+}
+
+enum IssueCategory {
+  BUG
+  FEATURE
+  IMPROVEMENT
+  UI_UX
+  DOCUMENTATION
+  PERFORMANCE
+  SECURITY
+}
+
+enum IssueStatus {
+  OPEN
+  IN_PROGRESS
+  IN_REVIEW
+  CLOSED
+  ARCHIVED
+}
+
+enum IssuePriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model ChatSession {
+  id        String        @id @default(cuid())
+  title     String?
+  teacherId String
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  teacher   Teacher       @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  messages  ChatMessage[]
+
+  @@index([teacherId, updatedAt(sort: Desc)])
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id                String      @id @default(cuid())
+  sessionId         String
+  role              String
+  content           String      @db.Text
+  provider          String?
+  model             String?
+  mentionedEntities Json?
+  createdAt         DateTime    @default(now())
+  session           ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, createdAt])
+  @@map("chat_messages")
+}
