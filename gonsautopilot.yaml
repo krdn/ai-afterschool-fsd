@@ -1,0 +1,58 @@
+# GonsAutoPilot 설정 — ai-afterschool-fsd
+project:
+  name: "ai-afterschool-fsd"
+  type: "fullstack"
+
+test:
+  unit:
+    command: "pnpm run test"
+    coverage_threshold: 0       # 현재 테스트 파일 없음 — 추후 조정
+    enabled: true
+  e2e:
+    command: "pnpm run test:e2e"
+    browser: "chromium"
+    enabled: false              # e2e 디렉토리 미존재
+  performance:
+    tool: "lighthouse"
+    min_score: 70
+    enabled: false              # lighthouse 미설치
+  security:
+    enabled: true
+    audit: true
+
+build:
+  docker:
+    frontend: "./Dockerfile"
+  tag_strategy: "git-sha"
+
+deploy:
+  target: "192.168.0.5"
+  method: "docker-compose"
+  compose_file: "docker-compose.yml"
+  health_check:
+    url: "http://localhost:3001/api/health"
+    timeout: 120
+    retries: 3
+
+verify:
+  smoke_test:
+    response_time_max: 5000
+    endpoints:
+      - "/api/health"
+  watchdog:
+    duration: 30
+    error_rate_max: 0.01
+    latency_spike_ratio: 2.0
+
+safety:
+  auto_rollback: true
+  max_consecutive_failures: 3
+  notify:
+    email: true
+    method: "/notify-important"
+
+trigger:
+  auto_on_push: true
+  auto_execute: false
+  branches:
+    - main
