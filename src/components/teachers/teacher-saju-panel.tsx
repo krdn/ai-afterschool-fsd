@@ -5,6 +5,7 @@ import { format } from "date-fns"
 import { ko } from "date-fns/locale"
 import { Loader2, RefreshCw, Sparkles, Trash2 } from "lucide-react"
 import { runTeacherSajuAnalysis, simplifyTeacherInterpretation } from "@/lib/actions/teacher/analysis"
+import { getMergedPromptOptionsAction } from "@/lib/actions/student/saju"
 import type { SajuResult } from "@/features/analysis"
 import type { ProviderName } from "@/features/ai-engine"
 import type { AnalysisPromptMeta } from "@/features/ai-engine/prompts"
@@ -116,10 +117,7 @@ export function TeacherSajuPanel({
 
   // DB에서 프롬프트 옵션 실시간 로드
   useEffect(() => {
-    import("@/app/[locale]/(dashboard)/students/[id]/saju/actions")
-      .then(mod => mod.getMergedPromptOptionsAction())
-      .then(setPromptOptions)
-      .catch(console.error)
+    getMergedPromptOptionsAction().then(setPromptOptions).catch(console.error)
   }, [])
 
   const result = analysis?.result as SajuResult | undefined
