@@ -8,6 +8,7 @@ import { db } from "@/lib/db/client"
 import { TeacherSchema, UpdateTeacherSchema } from "@/lib/validations/teachers"
 import { NameHanjaSchema, type NameHanjaInput } from "@/lib/validations/students"
 import { ok, fail, okVoid, type ActionVoidResult } from "@/lib/errors/action-result"
+import { logger } from "@/lib/logger"
 
 function parseNameHanjaPayload(value: FormDataEntryValue | null): {
   nameHanja: NameHanjaInput | null
@@ -157,7 +158,7 @@ export async function createTeacher(
       },
     })
   } catch (error) {
-    console.error("Failed to create teacher:", error)
+    logger.error({ err: error }, 'Failed to create teacher')
     return {
       errors: {
         _form: ["선생님 생성 중 오류가 발생했어요"],
@@ -277,7 +278,7 @@ export async function updateTeacher(
       data: updateData,
     })
   } catch (error) {
-    console.error("Failed to update teacher:", error)
+    logger.error({ err: error }, 'Failed to update teacher')
     return {
       errors: {
         _form: ["선생님 수정 중 오류가 발생했어요"],
@@ -316,7 +317,7 @@ export async function deleteTeacher(id: string): Promise<ActionVoidResult> {
     })
     return okVoid()
   } catch (error) {
-    console.error("Failed to delete teacher:", error)
+    logger.error({ err: error }, 'Failed to delete teacher')
     return fail('선생님 삭제 중 오류가 발생했어요')
   }
 }

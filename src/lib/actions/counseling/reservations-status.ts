@@ -18,6 +18,7 @@ import type {
   CompleteReservationInput,
 } from '@/lib/validations/reservations'
 import { ok, okVoid, fail, type ActionResult, type ActionVoidResult } from '@/lib/errors/action-result'
+import { logger } from "@/lib/logger"
 
 /**
  * 예약 삭제 결과 타입 (ActionVoidResult 기반)
@@ -98,7 +99,7 @@ export async function deleteReservationAction(
 
     return okVoid()
   } catch (error) {
-    console.error('Failed to delete reservation:', error)
+    logger.error({ err: error }, 'Failed to delete reservation')
 
     // 에러 메시지 처리
     if (error instanceof Error) {
@@ -177,7 +178,7 @@ export async function completeReservationAction(
       counselingSessionId: updatedReservation.counselingSessionId,
     })
   } catch (error) {
-    console.error('Failed to complete reservation:', error)
+    logger.error({ err: error }, 'Failed to complete reservation')
 
     // 에러 메시지 처리
     if (error instanceof Error) {
@@ -244,7 +245,7 @@ export async function cancelReservationAction(
       status: updatedReservation.status,
     })
   } catch (error) {
-    console.error('Failed to cancel reservation:', error)
+    logger.error({ err: error }, 'Failed to cancel reservation')
 
     // 에러 메시지 처리
     if (error instanceof Error) {
@@ -311,7 +312,7 @@ export async function markNoShowAction(
       status: updatedReservation.status,
     })
   } catch (error) {
-    console.error('Failed to mark no-show:', error)
+    logger.error({ err: error }, 'Failed to mark no-show')
 
     // 에러 메시지 처리
     if (error instanceof Error) {

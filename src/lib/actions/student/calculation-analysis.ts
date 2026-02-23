@@ -29,6 +29,7 @@ import { getSajuPromptDefinition as getPromptDefinition, buildSajuPromptFromTemp
 import { getSajuPresetByKey } from '@/features/analysis'
 import type { ProviderName } from '@/features/ai-engine'
 import { eventBus } from "@/lib/events/event-bus"
+import { logger } from "@/lib/logger"
 
 type AnalysisInput = Prisma.JsonValue
 type AnalysisResult = Prisma.JsonValue
@@ -260,7 +261,7 @@ export async function runSajuAnalysis(studentId: string, provider?: string, prom
       usedModel = llmResult.model
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error)
-      console.error('[Saju Analysis] LLM failed, falling back to built-in:', errorMsg)
+      logger.error({ detail: errorMsg }, '[Saju Analysis] LLM failed, falling back to built-in')
       interpretation = generateSajuInterpretation(result)
       llmFailed = true
       llmError = humanizeLLMError(errorMsg)

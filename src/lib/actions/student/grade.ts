@@ -6,6 +6,7 @@ import { z } from "zod";
 import { GradeType } from '@/lib/db';
 import { getCurrentTeacher } from "@/lib/dal";
 import { okVoid, fail, type ActionVoidResult } from "@/lib/errors/action-result";
+import { logger } from "@/lib/logger";
 
 // 성적 입력 데이터 검증 스키마
 const GradeSchema = z.object({
@@ -59,7 +60,7 @@ export async function addGrade(prevState: unknown, formData: FormData) {
         ) {
             throw error;
         }
-        console.error(error);
+        logger.error({ err: error }, 'Failed to add grade');
         return { success: false, message: "성적 등록 중 오류가 발생했습니다." };
     }
 }
@@ -75,7 +76,7 @@ export async function getGrades(studentId: string) {
         });
         return grades;
     } catch (error) {
-        console.error("Failed to fetch grades:", error);
+        logger.error({ err: error }, 'Failed to fetch grades');
         return [];
     }
 }

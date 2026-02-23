@@ -5,6 +5,7 @@ import { verifySession } from '@/lib/dal'
 import { getRBACPrisma } from '@/lib/db/common/rbac'
 import type { CounselingType, Prisma } from '@/lib/db'
 import { ok, fail, type ActionResult } from '@/lib/errors/action-result'
+import { logger } from "@/lib/logger"
 
 /**
  * 상담 기록 통합 검색 파라미터
@@ -144,7 +145,7 @@ export async function searchCounselingSessions(
 
     return ok(sessions as CounselingSearchResult[])
   } catch (error) {
-    console.error('Failed to search counseling sessions:', error)
+    logger.error({ err: error }, 'Failed to search counseling sessions')
     return fail('상담 기록 검색 중 오류가 발생했습니다.')
   }
 }

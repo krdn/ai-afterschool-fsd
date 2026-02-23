@@ -19,6 +19,7 @@ import type {
   CompleteFollowUpInput,
 } from '@/types/follow-up';
 import { ok, fail, type ActionResult } from '@/lib/errors/action-result';
+import { logger } from "@/lib/logger";
 
 /**
  * 후속 조치 목록 조회
@@ -125,7 +126,7 @@ export async function getFollowUpsAction(filter: FollowUpFilter): Promise<Action
 
     return ok(followUpItems);
   } catch (error) {
-    console.error('Failed to get follow-ups:', error);
+    logger.error({ err: error }, 'Failed to get follow-ups');
     return fail('후속 조치 목록 조회 중 오류가 발생했습니다.');
   }
 }
@@ -182,7 +183,7 @@ export async function completeFollowUpAction(input: CompleteFollowUpInput): Prom
       completedAt: updatedSession.updatedAt,
     });
   } catch (error) {
-    console.error('Failed to complete follow-up:', error);
+    logger.error({ err: error }, 'Failed to complete follow-up');
     return fail('후속 조치 완료 처리 중 오류가 발생했습니다.');
   }
 }
@@ -216,7 +217,7 @@ export async function getOverdueCountAction(): Promise<ActionResult<{ count: num
 
     return ok({ count });
   } catch (error) {
-    console.error('Failed to get overdue count:', error);
+    logger.error({ err: error }, 'Failed to get overdue count');
     return fail('지연 개수 조회 중 오류가 발생했습니다.');
   }
 }

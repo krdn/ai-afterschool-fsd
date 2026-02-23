@@ -2,6 +2,7 @@
 
 import { db as prisma } from "@/lib/db/client"
 import { ok, fail, type ActionResult } from "@/lib/errors/action-result"
+import { logger } from "@/lib/logger"
 
 /**
  * 선생님 분석 이력 조회
@@ -127,7 +128,7 @@ export async function getTeacherAnalysisHistory(
         : "분석 이력이 없습니다.",
     })
   } catch (error) {
-    console.error(`Failed to fetch teacher ${type} analysis history:`, error)
+    logger.error({ err: error, type }, 'Failed to fetch teacher analysis history')
     return fail(`${type} 분석 이력 조회 중 오류가 발생했습니다.`)
   }
 }

@@ -12,6 +12,7 @@ import {
 } from "@/lib/optimization/auto-assignment"
 import { fetchSubjectAnalyses, fetchBatchAnalyses } from '@/features/matching'
 import { ok, okVoid, fail, type ActionResult, type ActionVoidResult } from "@/lib/errors/action-result"
+import { logger } from "@/lib/logger"
 /** 선생님 추천 항목 */
 export interface TeacherRecommendation {
   teacherId: string
@@ -71,7 +72,7 @@ export async function unassignStudent(
       data: { teacherId: null },
     })
   } catch (error) {
-    console.error("Failed to unassign student:", error)
+    logger.error({ err: error }, 'Failed to unassign student')
     return fail("배정 해제 중 오류가 발생했습니다.")
   }
 
@@ -127,7 +128,7 @@ export async function assignStudentToTeacher(
       data: { teacherId },
     })
   } catch (error) {
-    console.error("Failed to assign student to teacher:", error)
+    logger.error({ err: error }, 'Failed to assign student to teacher')
     return fail("학생 배정 중 오류가 발생했습니다.")
   }
 
@@ -190,7 +191,7 @@ export async function reassignStudent(
       data: { teacherId: newTeacherId },
     })
   } catch (error) {
-    console.error("Failed to reassign student:", error)
+    logger.error({ err: error }, 'Failed to reassign student')
     return fail("학생 재배정 중 오류가 발생했습니다.")
   }
 
@@ -249,7 +250,7 @@ export async function assignStudentBatch(
       )
     )
   } catch (error) {
-    console.error("Failed to assign students batch:", error)
+    logger.error({ err: error }, 'Failed to assign students batch')
     return fail("학생 일괄 배정 중 오류가 발생했습니다.")
   }
 
@@ -457,7 +458,7 @@ export async function applyAutoAssignment(
       )
     )
   } catch (error) {
-    console.error("Failed to apply auto assignments:", error)
+    logger.error({ err: error }, 'Failed to apply auto assignments')
     return fail("자동 배정 적용 중 오류가 발생했습니다.")
   }
 

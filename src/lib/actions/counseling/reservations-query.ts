@@ -10,6 +10,7 @@ const {
 } = reservationsRepo;
 import { ReservationStatus } from '@/lib/db'
 import { ok, fail, type ActionResult } from '@/lib/errors/action-result'
+import { logger } from "@/lib/logger"
 
 /**
  * 예약 목록 조회 액션
@@ -47,7 +48,7 @@ export async function getReservationsAction(params: {
 
     return ok(reservations)
   } catch (error) {
-    console.error('Failed to get reservations:', error)
+    logger.error({ err: error }, 'Failed to get reservations')
     return fail('예약 목록 조회 중 오류가 발생했습니다.')
   }
 }
@@ -73,7 +74,7 @@ export async function getReservationByIdAction(id: string): Promise<ActionResult
 
     return ok(reservation)
   } catch (error) {
-    console.error('Failed to get reservation:', error)
+    logger.error({ err: error }, 'Failed to get reservation')
     return fail('예약 조회 중 오류가 발생했습니다.')
   }
 }
@@ -114,7 +115,7 @@ export async function getReservationStatsAction(): Promise<ActionResult<Record<R
 
     return ok(statsMap)
   } catch (error) {
-    console.error('Failed to get reservation stats:', error)
+    logger.error({ err: error }, 'Failed to get reservation stats')
     return fail('예약 통계 조회 중 오류가 발생했습니다.')
   }
 }

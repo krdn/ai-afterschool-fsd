@@ -11,6 +11,7 @@ import { getSajuAnalysis } from '@/features/analysis'
 import { getEnabledProviders, getEnabledProvidersWithVision } from '@/features/ai-engine'
 import { getActiveGeneralPresetsByType } from '@/features/analysis'
 import type { ProviderName } from '@/features/ai-engine'
+import { logger } from "@/lib/logger"
 
 export type PromptOption = {
   id: string
@@ -224,7 +225,7 @@ export async function getStudentAnalysisData(studentId: string): Promise<Student
       zodiacPromptOptions: toPromptOptions(zodiacPresets),
     }
   } catch (error) {
-    console.error("Failed to load analysis data:", error)
+    logger.error({ err: error }, 'Failed to load analysis data')
     return {
       student: null,
       faceAnalysis: null,

@@ -4,6 +4,7 @@ import { db } from "@/lib/db/client"
 import { verifySession } from "@/lib/dal"
 import { revalidatePath } from "next/cache"
 import { okVoid, fail, type ActionVoidResult } from "@/lib/errors/action-result"
+import { logger } from "@/lib/logger"
 
 export type AnalysisType = "saju" | "face" | "palm" | "mbti" | "vark" | "name" | "zodiac"
 export type SubjectType = "STUDENT" | "TEACHER"
@@ -76,7 +77,7 @@ export async function resetAnalysis(
 
     return okVoid()
   } catch (e) {
-    console.error("resetAnalysis error:", e)
+    logger.error({ err: e }, 'resetAnalysis error')
     return fail("초기화 중 오류가 발생했어요.")
   }
 }

@@ -9,6 +9,7 @@ import { getCompatibilityResult } from '@/features/matching'
 import { generateWithProvider, FailoverError } from '@/features/ai-engine'
 import { buildCounselingSummaryPrompt, buildPersonalitySummaryPrompt } from "@/features/ai-engine/prompts"
 import { ok, fail, okVoid, type ActionResult, type ActionVoidResult } from "@/lib/errors/action-result"
+import { logger } from "@/lib/logger"
 
 // Validation schemas
 // Note: studentId can be CUID or custom format like "student-001" from seed data
@@ -207,20 +208,21 @@ export async function generateCounselingSummaryAction(sessionId: string): Promis
 
     // 폴백 발생 시 로깅
     if (response.wasFailover) {
-      console.info(
-        `[Counseling Summary] Failover occurred: ${response.failoverFrom} -> ${response.provider}`
+      logger.info(
+        { failoverFrom: response.failoverFrom, provider: response.provider },
+        '[Counseling Summary] Failover occurred'
       )
     }
 
     return ok(response.text)
   } catch (error) {
-    console.error("Failed to generate counseling summary:", error)
+    logger.error({ err: error }, 'Failed to generate counseling summary')
 
     // FailoverError인 경우 상세 로깅
     if (error instanceof FailoverError) {
-      console.error(
-        `[Counseling Summary] All providers failed (${error.totalAttempts} attempts):`,
-        error.errors.map((e) => `${e.provider}: ${e.error.message}`).join("; ")
+      logger.error(
+        { totalAttempts: error.totalAttempts, errors: error.errors.map((e) => `${e.provider}: ${e.error.message}`).join('; ') },
+        '[Counseling Summary] All providers failed'
       )
       return fail(error.userMessage)
     }
@@ -303,20 +305,21 @@ export async function generateCounselingSummaryFromContentAction(
 
     // 폴백 발생 시 로깅
     if (response.wasFailover) {
-      console.info(
-        `[Counseling Summary] Failover occurred: ${response.failoverFrom} -> ${response.provider}`
+      logger.info(
+        { failoverFrom: response.failoverFrom, provider: response.provider },
+        '[Counseling Summary] Failover occurred'
       )
     }
 
     return ok(response.text)
   } catch (error) {
-    console.error("Failed to generate counseling summary:", error)
+    logger.error({ err: error }, 'Failed to generate counseling summary')
 
     // FailoverError인 경우 상세 로깅
     if (error instanceof FailoverError) {
-      console.error(
-        `[Counseling Summary] All providers failed (${error.totalAttempts} attempts):`,
-        error.errors.map((e) => `${e.provider}: ${e.error.message}`).join("; ")
+      logger.error(
+        { totalAttempts: error.totalAttempts, errors: error.errors.map((e) => `${e.provider}: ${e.error.message}`).join('; ') },
+        '[Counseling Summary] All providers failed'
       )
       return fail(error.userMessage)
     }
@@ -378,7 +381,7 @@ export async function saveAISummaryAction(
 
     return okVoid()
   } catch (error) {
-    console.error("Failed to save AI summary:", error)
+    logger.error({ err: error }, 'Failed to save AI summary')
     return fail(error instanceof Error ? error.message : "AI 요약 저장에 실패했습니다.")
   }
 }
@@ -460,8 +463,9 @@ export async function generatePersonalitySummaryAction(studentId: string): Promi
 
     // 폴백 발생 시 로깅
     if (response.wasFailover) {
-      console.info(
-        `[Personality Summary] Failover occurred: ${response.failoverFrom} -> ${response.provider}`
+      logger.info(
+        { failoverFrom: response.failoverFrom, provider: response.provider },
+        '[Personality Summary] Failover occurred'
       )
     }
 
@@ -479,13 +483,13 @@ export async function generatePersonalitySummaryAction(studentId: string): Promi
 
     return ok(summary)
   } catch (error) {
-    console.error("Failed to generate personality summary:", error)
+    logger.error({ err: error }, 'Failed to generate personality summary')
 
     // FailoverError인 경우 상세 로깅
     if (error instanceof FailoverError) {
-      console.error(
-        `[Personality Summary] All providers failed (${error.totalAttempts} attempts):`,
-        error.errors.map((e) => `${e.provider}: ${e.error.message}`).join("; ")
+      logger.error(
+        { totalAttempts: error.totalAttempts, errors: error.errors.map((e) => `${e.provider}: ${e.error.message}`).join('; ') },
+        '[Personality Summary] All providers failed'
       )
 
       // 에러 상태 저장

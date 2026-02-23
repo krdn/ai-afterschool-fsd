@@ -16,6 +16,7 @@ import {
 } from "@/lib/db/common/performance"
 import type { GradeType, CounselingType } from '@/lib/db'
 import { okVoid, fail, type ActionVoidResult } from "@/lib/errors/action-result"
+import { logger } from "@/lib/logger"
 
 /**
  * 성적 기록 Server Action
@@ -79,7 +80,7 @@ export async function recordGradeAction(
     revalidatePath(`/students/${studentId}`)
     return okVoid()
   } catch (error) {
-    console.error("성적 기록 실패:", error)
+    logger.error({ err: error }, '성적 기록 실패')
     return fail("성적 기록에 실패했습니다.")
   }
 }
@@ -117,7 +118,7 @@ export async function updateGradeAction(
 
     return okVoid()
   } catch (error) {
-    console.error("성적 수정 실패:", error)
+    logger.error({ err: error }, '성적 수정 실패')
     return fail("성적 수정에 실패했습니다.")
   }
 }
@@ -137,7 +138,7 @@ export async function deleteGradeAction(
     await deleteGradeHistory(gradeId)
     return okVoid()
   } catch (error) {
-    console.error("성적 삭제 실패:", error)
+    logger.error({ err: error }, '성적 삭제 실패')
     return fail("성적 삭제에 실패했습니다.")
   }
 }
@@ -205,7 +206,7 @@ export async function recordCounselingAction(
     revalidatePath(`/students/${studentId}`)
     return okVoid()
   } catch (error) {
-    console.error("상담 기록 실패:", error)
+    logger.error({ err: error }, '상담 기록 실패')
     return fail("상담 기록에 실패했습니다.")
   }
 }
@@ -248,7 +249,7 @@ export async function updateCounselingAction(
 
     return okVoid()
   } catch (error) {
-    console.error("상담 수정 실패:", error)
+    logger.error({ err: error }, '상담 수정 실패')
     return fail("상담 수정에 실패했습니다.")
   }
 }
@@ -268,7 +269,7 @@ export async function deleteCounselingAction(
     await deleteCounselingSession(counselingId)
     return okVoid()
   } catch (error) {
-    console.error("상담 삭제 실패:", error)
+    logger.error({ err: error }, '상담 삭제 실패')
     return fail("상담 삭제에 실패했습니다.")
   }
 }
@@ -340,7 +341,7 @@ export async function recordSatisfactionAction(
     revalidatePath(`/teachers/${teacherId}`)
     return okVoid()
   } catch (error) {
-    console.error("만족도 조사 기록 실패:", error)
+    logger.error({ err: error }, '만족도 조사 기록 실패')
     return fail("만족도 조사 기록에 실패했습니다.")
   }
 }
@@ -387,7 +388,7 @@ export async function updateSatisfactionAction(
 
     return okVoid()
   } catch (error) {
-    console.error("만족도 수정 실패:", error)
+    logger.error({ err: error }, '만족도 수정 실패')
     return fail("만족도 수정에 실패했습니다.")
   }
 }
@@ -407,7 +408,7 @@ export async function deleteSatisfactionAction(
     await deleteStudentSatisfaction(satisfactionId)
     return okVoid()
   } catch (error) {
-    console.error("만족도 삭제 실패:", error)
+    logger.error({ err: error }, '만족도 삭제 실패')
     return fail("만족도 삭제에 실패했습니다.")
   }
 }

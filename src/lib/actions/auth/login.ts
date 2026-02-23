@@ -13,6 +13,7 @@ import {
   ResetPasswordSchema,
   SignupSchema,
 } from "@/lib/validations/auth"
+import { logger } from "@/lib/logger"
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { Resend } = require("resend") as {
@@ -288,7 +289,7 @@ export async function requestPasswordReset(
       `,
     })
   } catch (error) {
-    console.error("Failed to send password reset email:", error)
+    logger.error({ err: error }, 'Failed to send password reset email')
     return {
       errors: {
         _form: ["이메일 발송 중 오류가 발생했어요. 잠시 후 다시 시도해주세요."],

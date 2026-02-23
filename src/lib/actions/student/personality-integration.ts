@@ -14,6 +14,7 @@ import { buildLearningStrategyPrompt, buildCareerGuidancePrompt } from "@/featur
 import { LearningStrategySchema, CareerGuidanceSchema } from "@/lib/validations/personality"
 import { extractJsonFromLLM } from "@/shared"
 import { ok, fail, type ActionResult } from "@/lib/errors/action-result"
+import { logger } from "@/lib/logger"
 
 /**
  * AI 기반 학습 전략 생성 Server Action (통합 LLM 라우터 사용)
@@ -98,8 +99,9 @@ export async function generateLearningStrategy(studentId: string) {
 
       // 폴백 발생 시 로깅
       if (response.wasFailover) {
-        console.info(
-          `[Learning Strategy] Failover occurred: ${response.failoverFrom} -> ${response.provider}`
+        logger.info(
+          { failoverFrom: response.failoverFrom, provider: response.provider },
+          '[Learning Strategy] Failover occurred'
         )
       }
 
@@ -121,13 +123,13 @@ export async function generateLearningStrategy(studentId: string) {
       // 9. 페이지 갱신
       revalidatePath(`/students/${studentId}`)
     } catch (error) {
-      console.error("Failed to generate learning strategy:", error)
+      logger.error({ err: error }, 'Failed to generate learning strategy')
 
       // FailoverError인 경우 상세 로깅
       if (error instanceof FailoverError) {
-        console.error(
-          `[Learning Strategy] All providers failed (${error.totalAttempts} attempts):`,
-          error.errors.map(e => `${e.provider}: ${e.error.message}`).join('; ')
+        logger.error(
+          { totalAttempts: error.totalAttempts, errors: error.errors.map(e => `${e.provider}: ${e.error.message}`).join('; ') },
+          '[Learning Strategy] All providers failed'
         )
       }
 
@@ -227,8 +229,9 @@ export async function generateCareerGuidance(studentId: string) {
 
       // 폴백 발생 시 로깅
       if (response.wasFailover) {
-        console.info(
-          `[Career Guidance] Failover occurred: ${response.failoverFrom} -> ${response.provider}`
+        logger.info(
+          { failoverFrom: response.failoverFrom, provider: response.provider },
+          '[Career Guidance] Failover occurred'
         )
       }
 
@@ -250,13 +253,13 @@ export async function generateCareerGuidance(studentId: string) {
       // 9. 페이지 갱신
       revalidatePath(`/students/${studentId}`)
     } catch (error) {
-      console.error("Failed to generate career guidance:", error)
+      logger.error({ err: error }, 'Failed to generate career guidance')
 
       // FailoverError인 경우 상세 로깅
       if (error instanceof FailoverError) {
-        console.error(
-          `[Career Guidance] All providers failed (${error.totalAttempts} attempts):`,
-          error.errors.map(e => `${e.provider}: ${e.error.message}`).join('; ')
+        logger.error(
+          { totalAttempts: error.totalAttempts, errors: error.errors.map(e => `${e.provider}: ${e.error.message}`).join('; ') },
+          '[Career Guidance] All providers failed'
         )
       }
 

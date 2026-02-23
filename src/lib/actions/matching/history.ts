@@ -4,6 +4,7 @@ import { verifySession } from '@/lib/dal'
 import { db } from '@/lib/db/client'
 import type { AuditLogEntry } from '@/lib/actions/admin/audit'
 import { ok, fail, type ActionResult } from '@/lib/errors/action-result'
+import { logger } from "@/lib/logger"
 
 export interface MatchingHistoryParams {
   startDate?: string
@@ -100,7 +101,7 @@ export async function getMatchingHistory(
       total,
     })
   } catch (error) {
-    console.error('Failed to fetch matching history:', error)
+    logger.error({ err: error }, 'Failed to fetch matching history')
     return fail('매칭 이력 조회 중 오류가 발생했습니다.')
   }
 }

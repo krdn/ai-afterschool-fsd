@@ -17,6 +17,7 @@ import type {
   UpdateReservationInput,
 } from '@/lib/validations/reservations'
 import { ok, fail, fieldError, type ActionResult } from '@/lib/errors/action-result'
+import { logger } from "@/lib/logger"
 
 /**
  * 예약 데이터 타입
@@ -113,7 +114,7 @@ export async function createReservationAction(
       teacher: reservation.teacher,
     })
   } catch (error) {
-    console.error('Failed to create reservation:', error)
+    logger.error({ err: error }, 'Failed to create reservation')
 
     // 중복 에러 처리
     if (error instanceof Error && error.message === '이미 해당 시간대에 예약이 있습니다') {
@@ -228,7 +229,7 @@ export async function updateReservationAction(
       teacher: updatedReservation.teacher,
     })
   } catch (error) {
-    console.error('Failed to update reservation:', error)
+    logger.error({ err: error }, 'Failed to update reservation')
 
     // 에러 메시지 처리
     if (error instanceof Error) {

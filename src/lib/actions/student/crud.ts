@@ -18,6 +18,7 @@ import {
 import { setStudentImage } from "@/lib/actions/student/images"
 import { markStudentRecalculationNeeded } from '@/features/analysis'
 import { ok, fail, type ActionResult } from "@/lib/errors/action-result"
+import { logger } from "@/lib/logger"
 
 export type StudentFormState = {
   errors?: {
@@ -237,7 +238,7 @@ export async function createStudent(
     for (const imagePayload of imagePayloads.images) {
       const imageResult = await setStudentImage(studentId, imagePayload)
       if (!imageResult.success) {
-        console.error("Failed to save student image:", imageResult.error)
+        logger.error({ detail: imageResult.error }, 'Failed to save student image')
         return {
           errors: {
             _form: [`이미지 저장 실패: ${imageResult.error}`],
@@ -246,7 +247,7 @@ export async function createStudent(
       }
     }
   } catch (error) {
-    console.error("Failed to create student:", error)
+    logger.error({ err: error }, 'Failed to create student')
     return {
       errors: {
         _form: ["학생 등록 중 오류가 발생했어요. 다시 시도해주세요."],
@@ -400,7 +401,7 @@ export async function updateStudent(
     for (const imagePayload of imagePayloads.images) {
       const imageResult = await setStudentImage(studentId, imagePayload)
       if (!imageResult.success) {
-        console.error("Failed to save student image:", imageResult.error)
+        logger.error({ detail: imageResult.error }, 'Failed to save student image')
         return {
           errors: {
             _form: [`이미지 저장 실패: ${imageResult.error}`],
@@ -409,7 +410,7 @@ export async function updateStudent(
       }
     }
   } catch (error) {
-    console.error("Failed to update student:", error)
+    logger.error({ err: error }, 'Failed to update student')
     return {
       errors: {
         _form: ["학생 정보 수정 중 오류가 발생했어요. 다시 시도해주세요."],
@@ -529,7 +530,7 @@ export async function getStudentsAction(pagination?: {
       totalPages: Math.ceil(total / pageSize),
     })
   } catch (error) {
-    console.error("Failed to get students:", error)
+    logger.error({ err: error }, 'Failed to get students')
     return fail("학생 목록 조회 중 오류가 발생했습니다.")
   }
 }

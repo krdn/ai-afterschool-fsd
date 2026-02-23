@@ -12,6 +12,7 @@ import { upsertPalmAnalysis } from '@/features/analysis'
 import type { ProviderName } from '@/features/ai-engine'
 import { eventBus } from "@/lib/events/event-bus"
 import { ok, fail, type ActionResult } from "@/lib/errors/action-result"
+import { logger } from "@/lib/logger"
 
 /**
  * 학생 관상 분석 (통합 LLM 라우터 사용)
@@ -72,8 +73,9 @@ export async function analyzeFaceImage(studentId: string, imageUrl: string, prov
 
       // 폴백 발생 시 로깅
       if (response.wasFailover) {
-        console.info(
-          `[Face Analysis] Failover occurred: ${response.failoverFrom} -> ${response.provider}`
+        logger.info(
+          { failoverFrom: response.failoverFrom, provider: response.provider },
+          '[Face Analysis] Failover occurred'
         )
       }
 
@@ -101,13 +103,13 @@ export async function analyzeFaceImage(studentId: string, imageUrl: string, prov
       revalidatePath(`/students/${studentId}`)
 
     } catch (error) {
-      console.error('Face analysis error:', error)
+      logger.error({ err: error }, 'Face analysis error')
 
       // FailoverError인 경우 상세 로깅
       if (error instanceof FailoverError) {
-        console.error(
-          `[Face Analysis] All providers failed (${error.totalAttempts} attempts):`,
-          error.errors.map(e => `${e.provider}: ${e.error.message}`).join('; ')
+        logger.error(
+          { totalAttempts: error.totalAttempts, errors: error.errors.map(e => `${e.provider}: ${e.error.message}`).join('; ') },
+          '[Face Analysis] All providers failed'
         )
       }
 
@@ -182,8 +184,9 @@ export async function analyzePalmImage(
 
       // 폴백 발생 시 로깅
       if (response.wasFailover) {
-        console.info(
-          `[Palm Analysis] Failover occurred: ${response.failoverFrom} -> ${response.provider}`
+        logger.info(
+          { failoverFrom: response.failoverFrom, provider: response.provider },
+          '[Palm Analysis] Failover occurred'
         )
       }
 
@@ -209,13 +212,13 @@ export async function analyzePalmImage(
       revalidatePath(`/students/${studentId}`)
 
     } catch (error) {
-      console.error('Palm analysis error:', error)
+      logger.error({ err: error }, 'Palm analysis error')
 
       // FailoverError인 경우 상세 로깅
       if (error instanceof FailoverError) {
-        console.error(
-          `[Palm Analysis] All providers failed (${error.totalAttempts} attempts):`,
-          error.errors.map(e => `${e.provider}: ${e.error.message}`).join('; ')
+        logger.error(
+          { totalAttempts: error.totalAttempts, errors: error.errors.map(e => `${e.provider}: ${e.error.message}`).join('; ') },
+          '[Palm Analysis] All providers failed'
         )
       }
 

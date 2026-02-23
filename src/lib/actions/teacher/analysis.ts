@@ -21,6 +21,7 @@ import { getSajuPresetByKey } from '@/features/analysis'
 import type { ProviderName } from '@/features/ai-engine'
 import { eventBus } from "@/lib/events/event-bus"
 import { ok, fail, type ActionResult } from "@/lib/errors/action-result"
+import { logger } from "@/lib/logger"
 import questions from "@/data/mbti/questions.json"
 import descriptions from "@/data/mbti/descriptions.json"
 
@@ -187,7 +188,7 @@ export async function runTeacherSajuAnalysis(
       usedModel = llmResult.model
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : String(error)
-      console.error('[Teacher Saju Analysis] LLM failed, falling back to built-in:', errorMsg)
+      logger.error({ detail: errorMsg }, '[Teacher Saju Analysis] LLM failed, falling back to built-in')
       interpretation = generateSajuInterpretation(sajuResult)
       llmFailed = true
       llmError = humanizeLLMError(errorMsg)

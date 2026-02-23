@@ -4,6 +4,7 @@ import { addDays, startOfDay, endOfDay } from 'date-fns'
 import { db } from '@/lib/db/client'
 import { verifySession } from '@/lib/dal'
 import { ok, fail, type ActionResult } from '@/lib/errors/action-result'
+import { logger } from "@/lib/logger"
 
 /**
  * 다가오는 상담 데이터 타입
@@ -67,7 +68,7 @@ export async function getUpcomingCounseling(): Promise<UpcomingCounselingResult>
 
     return ok(reservations)
   } catch (error) {
-    console.error('Failed to get upcoming counseling:', error)
+    logger.error({ err: error }, 'Failed to get upcoming counseling')
     return fail('다가오는 상담 조회 중 오류가 발생했습니다.')
   }
 }

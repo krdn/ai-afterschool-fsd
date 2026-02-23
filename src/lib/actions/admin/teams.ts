@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache"
 import { verifySession } from "@/lib/dal"
 import { db } from "@/lib/db/client"
 import { TeamSchema } from "@/lib/validations/teams"
+import { logger } from "@/lib/logger"
 
 // ---------------------------------------------------------------------------
 // 결과 타입
@@ -49,7 +50,7 @@ export async function createTeamAction(
     revalidatePath("/admin")
     return { success: true, data: { id: team.id, name: team.name } }
   } catch (error) {
-    console.error("Failed to create team:", error)
+    logger.error({ err: error }, 'Failed to create team')
     return {
       success: false,
       error: error instanceof Error ? error.message : "팀 생성 중 오류가 발생했어요",
@@ -82,7 +83,7 @@ export async function updateTeamAction(
     revalidatePath("/admin")
     return { success: true, data: { id: team.id, name: team.name } }
   } catch (error) {
-    console.error("Failed to update team:", error)
+    logger.error({ err: error }, 'Failed to update team')
     return {
       success: false,
       error: error instanceof Error ? error.message : "팀 수정 중 오류가 발생했어요",
@@ -123,7 +124,7 @@ export async function deleteTeamAction(
     revalidatePath("/admin")
     return { success: true, data: undefined }
   } catch (error) {
-    console.error("Failed to delete team:", error)
+    logger.error({ err: error }, 'Failed to delete team')
     return {
       success: false,
       error: error instanceof Error ? error.message : "팀 삭제 중 오류가 발생했어요",

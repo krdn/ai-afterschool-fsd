@@ -7,6 +7,7 @@ import { calculateCompatibilityScore, type CompatibilityScore } from "@/features
 import { upsertCompatibilityResult } from '@/features/matching'
 import { fetchPairAnalyses } from '@/features/matching'
 import { ok, fail, type ActionResult } from "@/lib/errors/action-result"
+import { logger } from "@/lib/logger"
 
 /**
  * 선생님-학생 궁합 분석 실행
@@ -92,9 +93,9 @@ export async function batchAnalyzeCompatibility(
       const compatibilityResults = await Promise.all(
         teachers.map((teacher) =>
           analyzeCompatibility(teacher.id, studentId).catch((error) => {
-            console.error(
-              `궁합 분석 실패 (Teacher: ${teacher.id}, Student: ${studentId}):`,
-              error
+            logger.error(
+              { err: error, teacherId: teacher.id, studentId },
+              '궁합 분석 실패'
             )
             return null
           })

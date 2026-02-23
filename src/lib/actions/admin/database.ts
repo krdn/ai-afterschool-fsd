@@ -6,6 +6,7 @@ import { db } from "@/lib/db/client"
 import argon2 from "argon2"
 import { runSeed } from "@/lib/db/seed"
 import type { SeedResult, SeedOptions } from "@/lib/db/seed"
+import { logger } from "@/lib/logger"
 
 // ---------------------------------------------------------------------------
 // 결과 타입
@@ -52,7 +53,7 @@ export async function runSeedAction(): Promise<ActionResult<SeedResult>> {
     revalidatePath("/admin")
     return { success: true, data: result }
   } catch (error) {
-    console.error("Failed to run seed:", error)
+    logger.error({ err: error }, 'Failed to run seed')
     return {
       success: false,
       error: error instanceof Error ? error.message : "시드 데이터 로드 중 오류가 발생했어요",
@@ -114,7 +115,7 @@ export async function runDemoSeedAction(
     revalidatePath("/dashboard")
     return { success: true, data: result }
   } catch (error) {
-    console.error("Failed to run demo seed:", error)
+    logger.error({ err: error }, 'Failed to run demo seed')
     return {
       success: false,
       error: error instanceof Error ? error.message : "데모 시드 실행 중 오류가 발생했어요",
