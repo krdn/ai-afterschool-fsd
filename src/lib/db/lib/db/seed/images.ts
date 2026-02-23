@@ -22,6 +22,7 @@ export async function uploadSeedImages(
   let cloudinary: any
   let buildResizedImageUrl: (publicId: string) => string
   try {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore: apps/web 컨텍스트에서 실행될 때 제공되는 모듈
     const mod = await import("@/lib/cloudinary")
     if (!mod.isCloudinaryConfigured) {
