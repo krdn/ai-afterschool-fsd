@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { runDemoSeedAction } from '@/app/[locale]/(dashboard)/admin/database/actions'
+import { runDemoSeedAction } from '@/lib/actions/admin/database'
 import {
   ALL_SEED_GROUPS,
   SEED_GROUP_DEPENDENCIES,

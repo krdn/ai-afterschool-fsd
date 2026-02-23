@@ -10,7 +10,7 @@ import { ProviderList } from '@/components/admin/llm-providers/provider-list';
 import { FeatureMappingList } from '@/components/admin/llm-features/feature-mapping-list';
 import type { ProviderWithModels } from '@/features/ai-engine';
 import type { MatchMode, FallbackMode } from '@/features/ai-engine';
-import type { DailyUsageData, ProviderUsageData, FeatureUsageData } from '@/app/[locale]/(dashboard)/admin/llm-usage/usage-charts';
+import type { DailyUsageData, ProviderUsageData, FeatureUsageData } from '@/types/llm-usage';
 
 interface FeatureMapping {
   id: string;

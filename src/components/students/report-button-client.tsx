@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Download, Loader2, FileText, AlertCircle } from 'lucide-react'
-import { generateConsultationReport } from '@/app/[locale]/(dashboard)/students/[id]/report/actions'
+import { generateConsultationReport } from '@/lib/actions/student/report'
 
 type ReportStatus = 'none' | 'generating' | 'complete' | 'failed'
 

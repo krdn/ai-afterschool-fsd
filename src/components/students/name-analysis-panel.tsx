@@ -5,7 +5,7 @@ import { format } from "date-fns"
 import { ko } from "date-fns/locale"
 import { Sparkles, AlertCircle, Type, Trash2, Loader2 } from "lucide-react"
 import { NameHelpDialog } from "@/components/students/name-help-dialog"
-import { runNameAnalysisAction } from "@/app/[locale]/(dashboard)/students/[id]/name/actions"
+import { runNameAnalysisAction } from "@/lib/actions/student/name"
 import { runNameAnalysis, generateNameLLMInterpretation } from "@/lib/actions/student/name-interpretation"
 import type { NameNumerologyResult } from "@/features/analysis"
 import {

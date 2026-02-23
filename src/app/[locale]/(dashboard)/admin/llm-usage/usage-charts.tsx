@@ -50,30 +50,13 @@ const FEATURE_LABELS: Record<string, string> = {
 };
 
 // =============================================================================
-// Types
+// Types (re-export from shared types)
 // =============================================================================
 
-export interface DailyUsageData {
-  date: string;
-  requests: number;
-  inputTokens: number;
-  outputTokens: number;
-  costUsd: number;
-  avgResponseTimeMs: number;
-}
+export type { DailyUsageData, ProviderUsageData, FeatureUsageData } from "@/types/llm-usage";
 
-export interface ProviderUsageData {
-  provider: string;
-  totalRequests: number;
-  totalCostUsd: number;
-  successRate: number;
-}
-
-export interface FeatureUsageData {
-  featureType: string;
-  totalRequests: number;
-  totalCostUsd: number;
-}
+// 로컬에서 사용하기 위해 import
+import type { DailyUsageData, ProviderUsageData, FeatureUsageData } from "@/types/llm-usage";
 
 // =============================================================================
 // Daily Cost Trend Chart

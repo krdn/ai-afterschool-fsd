@@ -9,7 +9,7 @@ import { ReservationList } from "@/components/counseling/ReservationList"
 import { ReservationForm } from "@/components/counseling/ReservationForm"
 import { ReservationCalendarView } from "@/components/counseling/ReservationCalendarView"
 import { getReservationsAction } from "@/lib/actions/counseling/reservations-query"
-import type { ReservationWithRelations } from "@/components/counseling/ReservationCard"
+import type { ReservationWithRelations } from "@/types/counseling"
 import type { CounselingSessionData } from "./types"
 
 interface CounselingPageTabsProps {
