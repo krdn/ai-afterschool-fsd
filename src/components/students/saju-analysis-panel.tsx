@@ -8,6 +8,7 @@ import { runSajuAnalysisAction, getMergedPromptOptionsAction, simplifyInterpreta
 import type { SajuResult } from "@/features/analysis"
 import type { ProviderName } from "@/features/ai-engine"
 import type { AnalysisPromptMeta } from "@/features/ai-engine/prompts"
+import { hanjaLabel, toDate, formatBirthTime } from "@/components/common/saju-utils"
 import { MarkdownRenderer } from "@/components/ui/markdown-renderer"
 import { ProviderSelector } from "@/components/students/provider-selector"
 import { PromptSelector } from "@/components/students/prompt-selector"
@@ -40,36 +41,6 @@ type SajuAnalysisPanelProps = {
   onAnalysisComplete?: () => void
   lastUsedProvider?: string | null
   lastUsedModel?: string | null
-}
-
-function toDate(value: Date | string) {
-  return value instanceof Date ? value : new Date(value)
-}
-
-const HANJA_MAP: Record<string, string> = {
-  갑: "甲", 을: "乙", 병: "丙", 정: "丁", 무: "戊",
-  기: "己", 경: "庚", 신: "辛", 임: "壬", 계: "癸",
-  자: "子", 축: "丑", 인: "寅", 묘: "卯", 진: "辰", 사: "巳",
-  오: "午", 미: "未", 유: "酉", 술: "戌", 해: "亥",
-}
-
-const BRANCH_HANJA: Record<string, string> = {
-  자: "子", 축: "丑", 인: "寅", 묘: "卯", 진: "辰", 사: "巳",
-  오: "午", 미: "未", 신: "申", 유: "酉", 술: "戌", 해: "亥",
-}
-
-function hanjaLabel(stem: string, branch: string) {
-  const stemHanja = HANJA_MAP[stem] ?? stem
-  const branchHanja = BRANCH_HANJA[branch] ?? branch
-  return `${stemHanja}${branchHanja}(${stem}${branch})`
-}
-
-function formatBirthTime(hour: number | null, minute: number | null) {
-  if (hour === null) {
-    return "미상"
-  }
-  const safeMinute = minute ?? 0
-  return `${String(hour).padStart(2, "0")}:${String(safeMinute).padStart(2, "0")}`
 }
 
 export function SajuAnalysisPanel({ student, analysis, enabledProviders = [], onAnalysisComplete, lastUsedProvider, lastUsedModel }: SajuAnalysisPanelProps) {
