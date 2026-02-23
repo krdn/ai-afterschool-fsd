@@ -7,6 +7,7 @@
 
 import { generateText, streamText } from 'ai';
 import { db } from '@/lib/db/client';
+import { logger } from '@/lib/logger';
 import { getProviderRegistry } from './provider-registry';
 import { trackUsage, trackFailure } from './usage-tracker';
 import { isRetryableError } from './failover';
@@ -97,7 +98,7 @@ export async function generateWithProvider(options: GenerateOptions): Promise<im
     try {
       const isReady = await setupProviderEnv(provider);
       if (!isReady) {
-        console.warn(`Provider ${provider.providerType} not ready, skipping...`);
+        logger.warn({ provider: provider.providerType }, 'Provider not ready, skipping');
         continue;
       }
 
@@ -114,9 +115,7 @@ export async function generateWithProvider(options: GenerateOptions): Promise<im
 
       // LLM 거부 응답 감지 — 다음 모델로 폴백
       if (isRefusalResponse(result.text)) {
-        console.warn(
-          `[Universal Router] Model ${model.modelId} refused the request, trying next provider...`
-        );
+        logger.warn({ modelId: model.modelId }, '[Universal Router] Model refused the request, trying next provider');
         lastError = new Error(`Model ${model.modelId} refused: ${result.text.slice(0, 100)}`);
         continue;
       }
@@ -147,7 +146,7 @@ export async function generateWithProvider(options: GenerateOptions): Promise<im
       const responseTimeMs = Date.now() - startTime;
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
-      console.error(`Provider ${provider.providerType} failed:`, errorMessage);
+      logger.error({ detail: errorMessage, provider: provider.providerType }, 'Provider failed');
 
       await trackFailure({
         provider: provider.providerType as import('./providers/types').ProviderName,
@@ -162,7 +161,7 @@ export async function generateWithProvider(options: GenerateOptions): Promise<im
 
       // 재시도 불가능한 에러는 폴 백 체인 중단
       if (!isRetryableError(lastError)) {
-        console.warn(`[Universal Router] Error is not retryable, stopping failover chain: ${lastError.message}`);
+        logger.warn({ err: lastError }, '[Universal Router] Error is not retryable, stopping failover chain');
         break;
       }
     }
@@ -254,7 +253,7 @@ export async function streamWithProvider(options: GenerateOptions): Promise<Stre
       };
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
-      console.error(`Provider ${provider.providerType} failed:`, lastError.message);
+      logger.error({ err: lastError, provider: provider.providerType }, 'Provider failed');
     }
   }
 

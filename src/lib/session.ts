@@ -1,6 +1,7 @@
 import 'server-only'
 import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
+import { logger } from '@/lib/logger'
 
 let _encodedKey: Uint8Array | null = null
 
@@ -46,7 +47,7 @@ export async function decrypt(
       expiresAt: new Date(payload.expiresAt as string),
     }
   } catch (error) {
-    console.error('Session decryption failed:', error)
+    logger.error({ err: error }, 'Session decryption failed')
     return null
   }
 }

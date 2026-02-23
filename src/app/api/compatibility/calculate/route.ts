@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { z } from "zod"
 import { verifySession } from "@/lib/dal"
 import { analyzeCompatibility } from "@/lib/actions/matching/compatibility"
+import { logger } from "@/lib/logger"
 
 /**
  * Request body schema for compatibility calculation
@@ -74,7 +75,7 @@ export async function POST(request: Request) {
     // 500 Internal Server Error: Other errors
     const errorMessage =
       error instanceof Error ? error.message : "Failed to calculate compatibility"
-    console.error("Compatibility calculation error:", error)
+    logger.error({ err: error }, "Compatibility calculation error")
     return NextResponse.json({ error: errorMessage }, { status: 500 })
   }
 }

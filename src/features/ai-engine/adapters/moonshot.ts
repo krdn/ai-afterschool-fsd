@@ -6,6 +6,7 @@
 
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
 import { generateText, type LanguageModel } from 'ai';
+import { logger } from '@/lib/logger';
 import { BaseAdapter } from './base';
 import type {
   ProviderConfig,
@@ -133,7 +134,7 @@ export class MoonshotAdapter extends BaseAdapter {
       });
 
       if (!response.ok) {
-        console.error('Moonshot API error:', response.status);
+        logger.error({ detail: response.status }, 'Moonshot API error');
         return this.getDefaultModels();
       }
 
@@ -152,7 +153,7 @@ export class MoonshotAdapter extends BaseAdapter {
         supportsTools: true,
       }));
     } catch (error) {
-      console.error('Failed to fetch Moonshot models:', error);
+      logger.error({ err: error }, 'Failed to fetch Moonshot models');
       return this.getDefaultModels();
     }
   }

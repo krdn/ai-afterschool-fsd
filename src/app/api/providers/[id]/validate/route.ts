@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifySession } from '@/lib/dal';
 import { db } from '@/lib/db/client';
 import { getProviderRegistry } from '@/features/ai-engine';
+import { logger } from '@/lib/logger';
 
 interface RouteParams {
   params: Promise<{
@@ -66,7 +67,7 @@ export async function POST(
       }, { status: 400 });
     }
   } catch (error) {
-    console.error('Error validating provider:', error);
+    logger.error({ err: error }, 'Error validating provider');
     const errorMessage = error instanceof Error ? error.message : 'Failed to validate provider';
     return NextResponse.json(
       { valid: false, error: errorMessage },

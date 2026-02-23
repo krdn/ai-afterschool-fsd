@@ -3,6 +3,7 @@
 import { verifySession } from '@/lib/dal'
 import { existsSync, readdirSync, statSync } from 'fs'
 import { join } from 'path'
+import { logger } from "@/lib/logger"
 
 export interface BackupFileEntry {
   name: string
@@ -43,7 +44,7 @@ export async function getBackupList(): Promise<BackupFileEntry[]> {
 
     return files
   } catch (error) {
-    console.error('Failed to read backup directory:', error)
+    logger.error({ err: error }, 'Failed to read backup directory')
     return []
   }
 }

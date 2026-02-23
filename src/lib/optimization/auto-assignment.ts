@@ -7,6 +7,7 @@
  */
 
 import { db } from "@/lib/db/client"
+import { logger } from "@/lib/logger"
 import { verifySession } from "@/lib/dal"
 import { calculateCompatibilityScore } from "@/features/analysis"
 import type { CompatibilityScore } from "@/features/analysis"
@@ -198,7 +199,7 @@ export async function generateAutoAssignment(
       // 부하 업데이트
       teacherLoads.set(bestTeacherId, teacherLoads.get(bestTeacherId)! + 1)
     } else {
-      console.warn(`Cannot assign student ${student.id}: no suitable teacher found`)
+      logger.warn({ studentId: student.id }, 'Cannot assign student: no suitable teacher found')
     }
   }
 

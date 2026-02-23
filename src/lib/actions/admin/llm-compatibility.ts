@@ -10,6 +10,7 @@ import {
   type CompatibilityTeacherData as TeacherData,
 } from "@/features/ai-engine/prompts"
 import type { TeacherRecommendation } from "@/lib/actions/matching/assignment"
+import { logger } from "@/lib/logger"
 import { fetchSubjectAnalyses, fetchBatchAnalyses } from '@/features/matching'
 
 // ---------------------------------------------------------------------------
@@ -102,7 +103,7 @@ async function ensureFeatureMapping() {
         fallbackMode: "any_available",
       },
     })
-    console.log("[LLM Compatibility] compatibility_analysis 매핑 자동 생성")
+    logger.info('[LLM Compatibility] compatibility_analysis 매핑 자동 생성')
   }
 
   mappingEnsured = true
@@ -220,8 +221,8 @@ export async function getLLMTeacherRecommendations(studentId: string, providerId
   try {
     llmRecommendations = parseLLMResponse(result.text)
   } catch (error) {
-    console.error("[LLM Compatibility] JSON 파싱 실패:", error)
-    console.error("[LLM Compatibility] 원본 응답:", result.text)
+    logger.error({ err: error }, '[LLM Compatibility] JSON 파싱 실패')
+    logger.error({ detail: result.text }, '[LLM Compatibility] 원본 응답')
     throw new Error(
       "AI 응답을 처리하는 중 오류가 발생했습니다. 다시 시도해주세요."
     )

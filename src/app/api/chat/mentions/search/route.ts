@@ -10,6 +10,7 @@ import { verifySession } from '@/lib/dal';
 import { db } from '@/lib/db/client';
 import type { MentionType, MentionSearchItem, MentionSearchResponse } from '@/lib/chat/mention-types';
 import type { VerifiedSession } from '@/lib/dal';
+import { logger } from '@/lib/logger';
 
 // 타입별 최대 결과 건수 (총 최대 15건)
 const RESULTS_PER_TYPE = 5;
@@ -181,7 +182,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     // 6. 응답
     return NextResponse.json({ students, teachers, teams } satisfies MentionSearchResponse);
   } catch (error) {
-    console.error('[MentionSearch] Error:', error);
+    logger.error({ err: error }, '[MentionSearch] Error');
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

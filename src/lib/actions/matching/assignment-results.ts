@@ -3,6 +3,7 @@
 import { db } from '@/lib/db/client'
 import { verifySession } from '@/lib/dal'
 import { ok, fail, type ActionResult } from '@/lib/errors/action-result'
+import { logger } from "@/lib/logger"
 
 /**
  * 배정 결과 집계 데이터
@@ -99,7 +100,7 @@ export async function getAssignmentResults(
       status: proposal.status
     })
   } catch (error) {
-    console.error('Failed to fetch assignment results:', error)
+    logger.error({ err: error }, 'Failed to fetch assignment results')
     return fail(error instanceof Error ? error.message : '배정 결과를 불러오는데 실패했습니다.')
   }
 }

@@ -7,6 +7,7 @@
 
 import { createOllama } from 'ollama-ai-provider-v2';
 import { generateText, streamText, type LanguageModel } from 'ai';
+import { logger } from '@/lib/logger';
 import { BaseAdapter } from './base';
 import type {
   ProviderConfig,
@@ -93,11 +94,11 @@ export class OllamaAdapter extends BaseAdapter {
       // 연결 테스트 - /api/version 호출
       const versionUrl = baseUrl.replace(/\/api$/, '/api/version');
 
-      console.log('[OllamaAdapter] Validating URL:', versionUrl);
+      logger.debug({ versionUrl }, '[OllamaAdapter] Validating URL');
 
       const controller = new AbortController();
       const timeout = setTimeout(() => {
-        console.log('[OllamaAdapter] Timeout after 10s');
+        logger.debug('[OllamaAdapter] Timeout after 10s');
         controller.abort();
       }, 10000);
 
@@ -200,7 +201,7 @@ export class OllamaAdapter extends BaseAdapter {
         isValid: true,
       };
     } catch (error) {
-      console.error('[OllamaAdapter] Validation error:', error);
+      logger.error({ err: error }, '[OllamaAdapter] Validation error');
 
       // 더 구체적인 오류 메시지
       let errorMessage = '알 수 없는 오류';
@@ -240,7 +241,7 @@ export class OllamaAdapter extends BaseAdapter {
         // 프록시에서 모델을 가져오지 못하면 직접 Ollama /api/tags 폴백
         // OLLAMA_DIRECT_URL이 설정되어 있으면 해당 URL을 사용
         const directUrl = this.getDirectUrl(baseUrl);
-        console.log('[OllamaAdapter] 프록시에서 모델 없음, 직접 Ollama 서버로 폴백:', directUrl);
+        logger.debug({ directUrl }, '[OllamaAdapter] 프록시에서 모델 없음, 직접 Ollama 서버로 폴백');
         return await this.fetchDirectModels(directUrl);
       }
 

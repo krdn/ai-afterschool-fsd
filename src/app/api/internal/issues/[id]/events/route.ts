@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db/client'
 import type { IssueStatus, Prisma } from '@/lib/db'
+import { logger } from '@/lib/logger'
 
 const INTERNAL_API_SECRET = process.env.INTERNAL_API_SECRET
 
@@ -81,7 +82,7 @@ export async function POST(
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Internal event API error:', error)
+    logger.error({ err: error }, 'Internal event API error')
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

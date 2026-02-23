@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { format } from "date-fns"
 import { ko } from "date-fns/locale"
-import type { ParentCounselingReservation, ReservationStatus } from '@/lib/db'
+import type { ReservationStatus } from '@/lib/db'
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -25,25 +25,8 @@ import {
 } from "@/lib/actions/counseling/reservations-status"
 import { toast } from "sonner"
 
-export type ReservationWithRelations = ParentCounselingReservation & {
-  student: {
-    id: string
-    name: string
-    school: string | null
-    grade: number | null
-  }
-  parent: {
-    id: string
-    name: string
-    phone: string
-    email: string | null
-    relation: string
-  }
-  teacher: {
-    id: string
-    name: string
-  }
-}
+export type { ReservationWithRelations } from "@/types/counseling"
+import type { ReservationWithRelations } from "@/types/counseling"
 
 interface ReservationCardProps {
   reservation: ReservationWithRelations

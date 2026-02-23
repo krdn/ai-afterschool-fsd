@@ -11,6 +11,7 @@ import type {
   MonthlyTrend,
 } from "@/types/statistics"
 import { ok, fail, type ActionResult } from "@/lib/errors/action-result"
+import { logger } from "@/lib/logger"
 
 /**
  * 선생님별 월간 상담 통계 조회
@@ -94,7 +95,7 @@ export async function getTeacherMonthlyStatsAction(params?: {
 
     return ok(data)
   } catch (error) {
-    console.error("Error fetching teacher monthly stats:", error)
+    logger.error({ err: error }, 'Error fetching teacher monthly stats')
     return fail("선생님별 월간 통계 조회에 실패했습니다.")
   }
 }
@@ -180,7 +181,7 @@ export async function getStudentCumulativeStatsAction(params?: {
 
     return ok(data)
   } catch (error) {
-    console.error("Error fetching student cumulative stats:", error)
+    logger.error({ err: error }, 'Error fetching student cumulative stats')
     return fail("학생별 누적 통계 조회에 실패했습니다.")
   }
 }
@@ -258,7 +259,7 @@ export async function getCounselingTypeDistributionAction(params?: {
 
     return ok(data)
   } catch (error) {
-    console.error("Error fetching counseling type distribution:", error)
+    logger.error({ err: error }, 'Error fetching counseling type distribution')
     return fail("상담 유형별 분포 조회에 실패했습니다.")
   }
 }
@@ -355,7 +356,7 @@ export async function getMonthlyTrendAction(params?: {
 
     return ok(data)
   } catch (error) {
-    console.error("Error fetching monthly trend:", error)
+    logger.error({ err: error }, 'Error fetching monthly trend')
     return fail("월별 상담 추이 조회에 실패했습니다.")
   }
 }

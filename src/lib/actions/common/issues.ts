@@ -8,6 +8,7 @@ import { CATEGORY_LABEL_MAP } from "@/lib/github/constants"
 import { isGitHubConfigured } from "@/lib/github/client"
 import { Prisma, type IssueCategory, type IssuePriority, type IssueStatus } from '@/lib/db'
 import { okVoid, fail, type ActionVoidResult } from "@/lib/errors/action-result"
+import { logger } from "@/lib/logger"
 
 /** getIssues에서 include 옵션에 맞는 Issue 타입 */
 type IssueWithRelations = Prisma.IssueGetPayload<{
@@ -191,7 +192,7 @@ export async function createIssue(
         }
       } catch (githubError) {
         // GitHub 연동 실패: DB 이슈는 생성된 상태 유지
-        console.error('GitHub integration failed:', githubError)
+        logger.error({ err: githubError }, 'GitHub integration failed')
         partialGitHubFailure = true
       }
 
@@ -236,7 +237,7 @@ export async function createIssue(
       issueId: issue.id,
     }
   } catch (error) {
-    console.error("Failed to create issue:", error)
+    logger.error({ err: error }, 'Failed to create issue')
     return {
       errors: {
         _form: ["이슈 생성 중 오류가 발생했어요"],
@@ -423,7 +424,7 @@ export async function updateIssueStatus(
 
     return okVoid()
   } catch (error) {
-    console.error("Failed to update issue status:", error)
+    logger.error({ err: error }, 'Failed to update issue status')
     return fail("이슈 상태 변경 중 오류가 발생했어요")
   }
 }
@@ -483,7 +484,7 @@ export async function assignIssue(
 
     return okVoid()
   } catch (error) {
-    console.error("Failed to assign issue:", error)
+    logger.error({ err: error }, 'Failed to assign issue')
     return fail("담당자 변경 중 오류가 발생했어요")
   }
 }

@@ -136,7 +136,12 @@ function SidebarContent({
                   role="button"
                   tabIndex={0}
                   onClick={() => handleSelectSession(s.id)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSelectSession(s.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault()
+                      handleSelectSession(s.id)
+                    }
+                  }}
                   className={cn(
                     "w-full min-w-0 flex items-center gap-2 px-2 py-2 rounded-md text-sm text-left hover:bg-gray-100 group transition-colors cursor-pointer",
                     currentSessionId === s.id && "bg-gray-100 font-medium"

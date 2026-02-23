@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/session'
 import { db } from '@/lib/db/client'
-import type { Team } from '@/lib/db'
+import { TeamSchema } from '@/lib/validations/teams'
+import { logger } from '@/lib/logger'
 
 /**
  * GET /api/teams
@@ -123,7 +124,7 @@ export async function GET(req: NextRequest) {
       total: formattedTeams.length,
     })
   } catch (error) {
-    console.error('Teams API error:', error)
+    logger.error({ err: error }, 'Teams API error')
     return NextResponse.json(
       { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
@@ -159,14 +160,14 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json()
-    const { name } = body
-
-    if (!name || typeof name !== 'string') {
+    const parsed = TeamSchema.safeParse(body)
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: 'Team name is required' },
+        { error: parsed.error.issues[0].message },
         { status: 400 }
       )
     }
+    const { name } = parsed.data
 
     // 팀 생성
     const team = await db.team.create({
@@ -185,7 +186,7 @@ export async function POST(req: NextRequest) {
       },
     })
   } catch (error) {
-    console.error('Team creation error:', error)
+    logger.error({ err: error }, 'Team creation error')
 
     // Prisma unique constraint error
     if (error instanceof Error && error.message.includes('Unique constraint')) {

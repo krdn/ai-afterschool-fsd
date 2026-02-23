@@ -4,6 +4,7 @@ import { redirect } from "next/navigation"
 import { verifySession } from "@/lib/dal"
 import { db } from "@/lib/db/client"
 import { TeamSchema, type TeamFormState } from "@/lib/validations/teams"
+import { logger } from "@/lib/logger"
 
 export async function createTeam(
   prevState: TeamFormState,
@@ -50,7 +51,7 @@ export async function createTeam(
       data: { name },
     })
   } catch (error) {
-    console.error("Failed to create team:", error)
+    logger.error({ err: error }, 'Failed to create team')
     return {
       errors: {
         _form: ["팀 생성 중 오류가 발생했어요"],
@@ -120,7 +121,7 @@ export async function updateTeam(
       data: { name },
     })
   } catch (error) {
-    console.error("Failed to update team:", error)
+    logger.error({ err: error }, 'Failed to update team')
     return {
       errors: {
         _form: ["팀 수정 중 오류가 발생했어요"],
@@ -161,7 +162,7 @@ export async function deleteTeam(id: string): Promise<void> {
       where: { id },
     })
   } catch (error) {
-    console.error("Failed to delete team:", error)
+    logger.error({ err: error }, 'Failed to delete team')
     throw new Error("팀 삭제 중 오류가 발생했어요")
   }
 

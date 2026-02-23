@@ -9,7 +9,7 @@ import { FeatureMappingList } from '@/components/admin/llm-features/feature-mapp
 import { getFeatureMappingsAction } from '@/lib/actions/admin/feature-mappings';
 import { getProvidersAction } from '@/lib/actions/admin/providers';
 import { verifySession } from '@/lib/dal';
-import type { MatchMode, FallbackMode } from '@/features/ai-engine';
+import type { MatchMode, FallbackMode, FeatureMappingConfig } from '@/features/ai-engine';
 
 export const metadata: Metadata = {
   title: '기능별 LLM 매핑 | AI 애프터스쿨',
@@ -112,15 +112,15 @@ export default async function LLMFeaturesPage() {
 
       {/* 메인 콘텐츠 */}
       <FeatureMappingList
-        mappings={mappings.map((m) => ({
-          id: (m as unknown as Record<string, string>).id || '',
-          featureType: (m as unknown as Record<string, string>).featureType || '',
-          matchMode: (m as unknown as Record<string, string>).matchMode as MatchMode,
-          requiredTags: ((m as unknown as Record<string, string[]>).requiredTags) || [],
-          excludedTags: ((m as unknown as Record<string, string[]>).excludedTags) || [],
-          specificModelId: (m as unknown as Record<string, string | null>).specificModelId || null,
-          priority: (m as unknown as Record<string, number>).priority || 1,
-          fallbackMode: (m as unknown as Record<string, string>).fallbackMode as FallbackMode,
+        mappings={mappings.map((m: FeatureMappingConfig) => ({
+          id: m.id,
+          featureType: m.featureType,
+          matchMode: m.matchMode as MatchMode,
+          requiredTags: m.requiredTags || [],
+          excludedTags: m.excludedTags || [],
+          specificModelId: m.specificModelId || null,
+          priority: m.priority,
+          fallbackMode: m.fallbackMode as FallbackMode,
           specificModel: null,
         }))}
         providers={providers.map((p: { id: string; name: string; models?: { id: string; modelId: string; displayName: string }[] }) => ({

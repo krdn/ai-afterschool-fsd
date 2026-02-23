@@ -5,6 +5,7 @@ import { getRBACPrisma } from '@/lib/db/common/rbac'
 import { db } from '@/lib/db/client'
 import type { TeacherRole } from '@/lib/db/common/rbac'
 import { ok, fail, type ActionResult } from "@/lib/errors/action-result"
+import { logger } from "@/lib/logger"
 
 export interface TeacherStudentMetrics {
   totalStudents: number
@@ -194,7 +195,7 @@ export async function getTeacherStudents(
 
     return ok(filteredStudents)
   } catch (error) {
-    console.error('getTeacherStudents error:', error)
+    logger.error({ err: error }, 'getTeacherStudents error')
     return fail('Failed to fetch teacher students')
   }
 }
@@ -309,7 +310,7 @@ export async function getTeacherStudentMetrics(
       subjectDistribution,
     })
   } catch (error) {
-    console.error('getTeacherStudentMetrics error:', error)
+    logger.error({ err: error }, 'getTeacherStudentMetrics error')
     return fail('Failed to fetch teacher metrics')
   }
 }
@@ -380,7 +381,7 @@ export async function getStudentGradeTrend(
 
     return ok(trendData)
   } catch (error) {
-    console.error('getStudentGradeTrend error:', error)
+    logger.error({ err: error }, 'getStudentGradeTrend error')
     return fail('Failed to fetch grade trend')
   }
 }

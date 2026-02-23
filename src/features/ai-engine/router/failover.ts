@@ -1,4 +1,5 @@
 import type { ProviderName, FeatureType } from "../types"
+import { logger } from "@/lib/logger"
 
 export interface ProviderError {
   provider: ProviderName
@@ -79,10 +80,7 @@ export function logProviderError(
   context: Partial<FailoverContext>
 ): void {
   const { featureType, attempt = 1, previousProvider } = context
-  console.error(
-    `[LLM Failover] Provider ${provider} failed:`,
-    JSON.stringify({ timestamp: new Date().toISOString(), provider, featureType, attempt, previousProvider, error: { name: error.name, message: error.message }, isRetryable: isRetryableError(error) }, null, 2)
-  )
+  logger.error({ detail: { timestamp: new Date().toISOString(), provider, featureType, attempt, previousProvider, error: { name: error.name, message: error.message }, isRetryable: isRetryableError(error) } }, `[LLM Failover] Provider ${provider} failed`)
 }
 
 export function logFailoverChain(
@@ -90,17 +88,12 @@ export function logFailoverChain(
   toProvider: ProviderName,
   featureType: FeatureType
 ): void {
-  console.warn(
-    `[LLM Failover] Switching from ${fromProvider} to ${toProvider} for feature "${featureType}"`
-  )
+  logger.warn({ fromProvider, toProvider, featureType }, '[LLM Failover] Switching provider')
 }
 
 export function logFailoverSuccess(result: FailoverResult<unknown>): void {
   if (result.wasFailover) {
-    console.info(
-      `[LLM Failover] Successfully recovered using ${result.provider} ` +
-        `(failed over from ${result.failoverFrom}, attempts: ${result.totalAttempts})`
-    )
+    logger.info({ provider: result.provider, failoverFrom: result.failoverFrom, totalAttempts: result.totalAttempts }, '[LLM Failover] Successfully recovered')
   }
 }
 
@@ -156,14 +149,14 @@ export async function withFailover<T>(
           teacherId: context.teacherId,
           errorMessage: err.message,
           responseTimeMs: durationMs,
-        }).catch((trackErr) => {
-          console.error("[LLM Failover] Failed to track failure:", trackErr)
+        }).catch((err) => {
+          logger.error({ err }, '[LLM Failover] Failed to track failure')
         })
       }
 
       previousProvider = provider
       if (!isRetryableError(err)) {
-        console.warn(`[LLM Failover] Error is not retryable, stopping failover chain: ${err.message}`)
+        logger.warn({ err }, '[LLM Failover] Error is not retryable, stopping failover chain')
         break
       }
     }

@@ -6,6 +6,7 @@ import { z } from "zod";
 import { Prisma } from '@/lib/db';
 import { eventBus } from "@/lib/events/event-bus";
 import { ok, fail, type ActionResult } from "@/lib/errors/action-result";
+import { logger } from "@/lib/logger";
 
 // 분석 결과 스키마
 const AnalysisSchema = z.object({
@@ -98,7 +99,7 @@ export async function generateAnalysis(studentId: string) {
         return ok(mockResult);
 
     } catch (error) {
-        console.error("Analysis generation failed:", error);
+        logger.error({ err: error }, 'Analysis generation failed');
         return fail("분석 생성 중 오류가 발생했습니다.");
     }
 }
@@ -264,7 +265,7 @@ export async function getAnalysisHistory(
                 : "분석 이력이 없습니다."
         })
     } catch (error) {
-        console.error(`Failed to fetch ${type} analysis history:`, error)
+        logger.error({ err: error, type }, 'Failed to fetch analysis history')
         return fail(`${type} 분석 이력 조회 중 오류가 발생했습니다.`)
     }
 }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import argon2 from 'argon2'
 import { db } from '@/lib/db/client'
 import { createSession } from '@/lib/session'
+import { logger } from '@/lib/logger'
 
 export async function POST(req: NextRequest) {
   try {
@@ -47,7 +48,7 @@ export async function POST(req: NextRequest) {
       }
     })
   } catch (error) {
-    console.error('Login error:', error)
+    logger.error({ err: error }, 'Login error')
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

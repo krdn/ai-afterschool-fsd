@@ -1,5 +1,6 @@
 import 'server-only'
 import { db } from '@/lib/db/client'
+import { logger } from '@/lib/logger'
 import { logAuditAction } from '@/lib/dal'
 import type { TeacherRole } from '@/lib/db/common/rbac'
 import type {
@@ -182,7 +183,7 @@ async function handleAccessDenied(params: {
     })
   } catch {
     // 감사 로그 실패는 무시 (주 흐름 방해 안 함)
-    console.warn('[mention-resolver] 감사 로그 기록 실패:', params.entityId)
+    logger.warn({ entityId: params.entityId }, '[mention-resolver] 감사 로그 기록 실패')
   }
 
   const message = `${params.displayName}님은 접근 권한이 없어 제외되었습니다`

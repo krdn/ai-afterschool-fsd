@@ -1,5 +1,5 @@
 import { startOfMonth, endOfMonth, format } from "date-fns"
-import type { ReservationWithRelations } from "@/components/counseling/ReservationCard"
+import type { ReservationWithRelations } from "@/types/counseling"
 
 /**
  * 예약 목록을 날짜별로 그룹화

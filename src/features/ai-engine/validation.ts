@@ -1,4 +1,5 @@
 import sharp from 'sharp'
+import { logger } from '@/lib/logger'
 
 /**
  * 이미지 블러 감지 (Sharp 기반)
@@ -30,7 +31,7 @@ export async function detectBlur(imageBuffer: Buffer): Promise<{
       score: avgVariance
     }
   } catch (error) {
-    console.error('Blur detection error:', error)
+    logger.error({ err: error }, 'Blur detection error')
     return { isBlurry: false, score: 100 } // 에러 시 통과
   }
 }

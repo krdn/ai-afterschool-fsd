@@ -9,6 +9,7 @@ import { getSajuAnalysis } from '@/features/analysis'
 import { getEnabledProviders, getEnabledProvidersWithVision } from '@/features/ai-engine'
 import { getActiveGeneralPresetsByType } from '@/features/analysis'
 import type { ProviderName } from '@/features/ai-engine'
+import { logger } from "@/lib/logger"
 
 export type PromptOption = {
   id: string
@@ -186,7 +187,7 @@ export async function getTeacherAnalysisData(teacherId: string): Promise<Teacher
       namePromptOptions: toPromptOptions(namePresets),
     }
   } catch (error) {
-    console.error("Failed to load teacher analysis data:", error)
+    logger.error({ err: error }, 'Failed to load teacher analysis data')
     return {
       teacher: null,
       faceAnalysis: null,

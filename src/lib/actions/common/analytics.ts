@@ -5,6 +5,7 @@ import { getRBACPrisma } from "@/lib/db/common/rbac"
 import { db } from "@/lib/db/client"
 import { calculateImprovementRate, calculateGradeTrend } from "@/lib/analysis/grade-analytics"
 import { ok, fail, type ActionResult } from "@/lib/errors/action-result"
+import { logger } from "@/lib/logger"
 
 interface TeacherGradeComparison {
   teacherId: string
@@ -56,7 +57,7 @@ export async function getStudentImprovementAction(studentId: string) {
 
     return ok(result)
   } catch (error) {
-    console.error("Error calculating student improvement:", error)
+    logger.error({ err: error }, 'Error calculating student improvement')
     return fail("성적 향상률 계산에 실패했습니다.")
   }
 }
@@ -131,7 +132,7 @@ export async function getTeacherGradeAnalyticsAction(teacherId: string) {
       improvementCount: improvements.length,
     })
   } catch (error) {
-    console.error("Error calculating teacher grade analytics:", error)
+    logger.error({ err: error }, 'Error calculating teacher grade analytics')
     return fail("성적 분석에 실패했습니다.")
   }
 }
@@ -185,7 +186,7 @@ export async function getGradeTrendDataAction(
 
     return ok(trendData)
   } catch (error) {
-    console.error("Error calculating grade trend:", error)
+    logger.error({ err: error }, 'Error calculating grade trend')
     return fail("성적 추이 계산에 실패했습니다.")
   }
 }
@@ -260,7 +261,7 @@ export async function getCounselingStats(
       satisfactionAverage: Math.round(satisfactionAverage * 10) / 10,
     })
   } catch (error) {
-    console.error("Error fetching counseling stats:", error)
+    logger.error({ err: error }, 'Error fetching counseling stats')
     return fail("상담 통계 조회에 실패했습니다.")
   }
 }
@@ -332,7 +333,7 @@ export async function compareTeachersByGradeImprovement(
 
     return ok(teacherStats)
   } catch (error) {
-    console.error("Error comparing teachers:", error)
+    logger.error({ err: error }, 'Error comparing teachers')
     return fail("선생님 비교에 실패했습니다.")
   }
 }

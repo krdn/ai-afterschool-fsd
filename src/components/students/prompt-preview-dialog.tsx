@@ -11,7 +11,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { getPromptPreviewAction } from "@/app/[locale]/(dashboard)/students/[id]/saju/actions"
+import { getPromptPreviewAction } from "@/lib/actions/student/saju"
 import type { GenericPromptMeta } from "@/components/students/prompt-selector"
 import { MarkdownRenderer } from "@/components/ui/markdown-renderer"
 

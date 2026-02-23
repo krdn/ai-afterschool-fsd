@@ -10,6 +10,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifySession } from '@/lib/dal';
 import { db } from '@/lib/db/client';
 import type { AuthType, CostTier, QualityTier } from '@/features/ai-engine';
+import { logger } from '@/lib/logger';
 
 interface RouteParams {
   params: Promise<{
@@ -59,7 +60,7 @@ export async function GET(
 
     return NextResponse.json({ provider: providerWithKeyStatus });
   } catch (error) {
-    console.error('Error fetching provider:', error);
+    logger.error({ err: error }, 'Error fetching provider');
     return NextResponse.json(
       { error: 'Failed to fetch provider' },
       { status: 500 }
@@ -151,7 +152,7 @@ export async function PATCH(
       message: 'Provider updated successfully',
     });
   } catch (error) {
-    console.error('Error updating provider:', error);
+    logger.error({ err: error }, 'Error updating provider');
     const errorMessage = error instanceof Error ? error.message : 'Failed to update provider';
     return NextResponse.json(
       { error: errorMessage },
@@ -201,7 +202,7 @@ export async function DELETE(
       message: 'Provider deleted successfully',
     });
   } catch (error) {
-    console.error('Error deleting provider:', error);
+    logger.error({ err: error }, 'Error deleting provider');
     const errorMessage = error instanceof Error ? error.message : 'Failed to delete provider';
     return NextResponse.json(
       { error: errorMessage },

@@ -58,7 +58,7 @@ export function ProviderList({
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {providers.map((provider) => (
         <ProviderCard
-          key={(provider as unknown as { id: string }).id}
+          key={provider.id}
           provider={provider}
           onEdit={() => onEdit(provider)}
           onDelete={() => onDelete(provider)}

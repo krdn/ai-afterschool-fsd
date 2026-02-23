@@ -7,6 +7,7 @@
 
 import { createOpenAICompatible } from '@ai-sdk/openai-compatible';
 import { generateText, streamText, type LanguageModel } from 'ai';
+import { logger } from '@/lib/logger';
 import { BaseAdapter } from './base';
 import type {
   ProviderConfig,
@@ -149,7 +150,7 @@ export class OpenRouterAdapter extends BaseAdapter {
       });
 
       if (!response.ok) {
-        console.error('OpenRouter models API error:', response.status);
+        logger.error({ detail: response.status }, 'OpenRouter models API error');
         return this.getDefaultModels();
       }
 
@@ -179,7 +180,7 @@ export class OpenRouterAdapter extends BaseAdapter {
         supportsTools: model.supported_parameters?.includes('tools') ?? false,
       }));
     } catch (error) {
-      console.error('Failed to fetch OpenRouter models:', error);
+      logger.error({ err: error }, 'Failed to fetch OpenRouter models');
       return this.getDefaultModels();
     }
   }

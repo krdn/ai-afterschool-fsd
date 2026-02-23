@@ -10,6 +10,7 @@ import { upsertPalmAnalysis, getPalmAnalysis } from '@/features/analysis'
 import { extractJsonFromLLM } from "@/shared"
 import { eventBus } from "@/lib/events/event-bus"
 import { ok, type ActionResult } from "@/lib/errors/action-result"
+import { logger } from "@/lib/logger"
 
 /**
  * 선생님 손금 분석 실행 (통합 LLM 라우터 사용)
@@ -48,8 +49,9 @@ export async function runTeacherPalmAnalysis(
 
       // 폴백 발생 시 로깅
       if (response.wasFailover) {
-        console.info(
-          `[Teacher Palm Analysis] Failover occurred: ${response.failoverFrom} -> ${response.provider}`
+        logger.info(
+          { failoverFrom: response.failoverFrom, provider: response.provider },
+          '[Teacher Palm Analysis] Failover occurred'
         )
       }
 
@@ -82,13 +84,13 @@ export async function runTeacherPalmAnalysis(
       revalidatePath(`/teachers/${teacherId}`)
 
     } catch (error) {
-      console.error('Teacher palm analysis error:', error)
+      logger.error({ err: error }, 'Teacher palm analysis error')
 
       // FailoverError인 경우 상세 로깅
       if (error instanceof FailoverError) {
-        console.error(
-          `[Teacher Palm Analysis] All providers failed (${error.totalAttempts} attempts):`,
-          error.errors.map(e => `${e.provider}: ${e.error.message}`).join('; ')
+        logger.error(
+          { totalAttempts: error.totalAttempts, errors: error.errors.map(e => `${e.provider}: ${e.error.message}`).join('; ') },
+          '[Teacher Palm Analysis] All providers failed'
         )
       }
 

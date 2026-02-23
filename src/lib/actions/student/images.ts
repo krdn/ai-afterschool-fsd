@@ -9,6 +9,7 @@ import {
 } from "@/lib/validations/student-images"
 import { z } from "zod"
 import { okVoid, fail, type ActionVoidResult } from "@/lib/errors/action-result"
+import { logger } from "@/lib/logger"
 
 export type StudentImageTypeValue = StudentImageInput["type"]
 
@@ -27,7 +28,7 @@ export async function setStudentImage(
       validatedPayload = StudentImageSchema.parse(payload)
     } catch (error) {
       if (error instanceof z.ZodError) {
-        console.error("Validation error:", error.issues)
+        logger.error({ detail: error.issues }, 'Validation error')
         // 사용자 친화적인 에러 메시지 생성
         const firstError = error.issues[0]
         if (firstError.path.includes("bytes")) {
@@ -100,14 +101,14 @@ export async function setStudentImage(
       try {
         await cloudinary.uploader.destroy(existingImage.publicId)
       } catch (error) {
-        console.error("Failed to delete old Cloudinary asset:", error)
+        logger.error({ err: error }, 'Failed to delete old Cloudinary asset')
         // 실패해도 메인 작업은 성공한 것으로 처리
       }
     }
 
     return okVoid()
   } catch (error) {
-    console.error("setStudentImage error:", error)
+    logger.error({ err: error }, 'setStudentImage error')
 
     // 네트워크 또는 Cloudinary 에러 처리
     if (error instanceof Error) {
@@ -170,13 +171,13 @@ export async function deleteStudentImage(
     try {
       await cloudinary.uploader.destroy(existingImage.publicId)
     } catch (error) {
-      console.error("Failed to delete Cloudinary asset:", error)
+      logger.error({ err: error }, 'Failed to delete Cloudinary asset')
       // 실패해도 DB 삭제는 성공한 것으로 처리
     }
 
     return okVoid()
   } catch (error) {
-    console.error("deleteStudentImage error:", error)
+    logger.error({ err: error }, 'deleteStudentImage error')
     return fail("이미지 삭제 중 오류가 발생했어요. 다시 시도해주세요")
   }
 }
