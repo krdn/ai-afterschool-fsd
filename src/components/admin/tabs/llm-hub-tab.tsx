@@ -275,17 +275,17 @@ export function LLMHubTab({
 import dynamic from 'next/dynamic';
 
 const UsageCharts = dynamic(
-  () => import('@/app/[locale]/(dashboard)/admin/llm-usage/usage-charts').then((mod) => mod.UsageCharts),
+  () => import('@/components/admin/llm-usage/usage-charts').then((mod) => mod.UsageCharts),
   { ssr: false, loading: () => <div className="h-64 animate-pulse bg-muted rounded-lg" /> }
 );
 
 const CostSummaryCards = dynamic(
-  () => import('@/app/[locale]/(dashboard)/admin/llm-usage/cost-alerts').then((mod) => mod.CostSummaryCards),
+  () => import('@/components/admin/llm-usage/cost-alerts').then((mod) => mod.CostSummaryCards),
   { ssr: false }
 );
 
 const CostAlerts = dynamic(
-  () => import('@/app/[locale]/(dashboard)/admin/llm-usage/cost-alerts').then((mod) => mod.CostAlerts),
+  () => import('@/components/admin/llm-usage/cost-alerts').then((mod) => mod.CostAlerts),
   { ssr: false }
 );
 
