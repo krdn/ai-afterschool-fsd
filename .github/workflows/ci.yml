@@ -13,6 +13,11 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
       - name: Setup pnpm
         run: corepack enable pnpm
 
@@ -31,5 +36,21 @@ jobs:
       - name: Build
         run: pnpm run build
         env:
-          # Sentry 소스맵 업로드 비활성화 (CI에서는 불필요)
           SENTRY_AUTH_TOKEN: ""
+
+      - name: Unit Tests
+        run: |
+          if find src -name '*.test.ts' -o -name '*.test.tsx' -o -name '*.spec.ts' -o -name '*.spec.tsx' 2>/dev/null | grep -q .; then
+            pnpm run test
+          else
+            echo "::notice::No unit test files found — skipping"
+          fi
+
+      - name: E2E Tests
+        run: |
+          if [ -d "e2e" ] && find e2e -name '*.spec.ts' -o -name '*.test.ts' 2>/dev/null | grep -q .; then
+            pnpm exec playwright install --with-deps chromium
+            pnpm run test:e2e
+          else
+            echo "::notice::No E2E test files found — skipping"
+          fi

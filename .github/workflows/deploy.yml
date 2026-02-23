@@ -5,9 +5,54 @@ on:
     branches:
       - main
 
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
 jobs:
+  ci-gate:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Setup pnpm
+        run: corepack enable pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma Client
+        run: pnpm dlx prisma generate
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Type Check
+        run: pnpm run typecheck
+
+      - name: Build
+        run: pnpm run build
+        env:
+          SENTRY_AUTH_TOKEN: ""
+
+      - name: Unit Tests
+        run: |
+          if find src -name '*.test.ts' -o -name '*.test.tsx' -o -name '*.spec.ts' -o -name '*.spec.tsx' 2>/dev/null | grep -q .; then
+            pnpm run test
+          else
+            echo "::notice::No unit test files found — skipping"
+          fi
+
   deploy:
-    runs-on: self-hosted # 직접 구축한 운영 서버의 러너 타겟팅
+    needs: ci-gate
+    runs-on: self-hosted
 
     steps:
       - name: Checkout Code
@@ -15,8 +60,6 @@ jobs:
 
       - name: Restore production .env
         run: |
-          # 운영 .env는 ~/.env.ai-afterschool-fsd에 보관
-          # checkout이 작업 디렉토리를 교체하므로 외부에서 복원
           ENV_STORE="$HOME/.env.ai-afterschool-fsd"
           if [ -f "$ENV_STORE" ]; then
             cp "$ENV_STORE" .env
@@ -25,7 +68,63 @@ jobs:
             echo "::warning::운영 .env가 없어 .env.example을 사용합니다. $ENV_STORE에 운영 .env를 배치하세요."
           fi
 
-      - name: Build and Deploy using Docker Compose
+      - name: Backup current image for rollback
         run: |
-          docker compose up -d --build
-          docker image prune -f
+          if docker image inspect ai-afterschool-fsd:latest >/dev/null 2>&1; then
+            docker tag ai-afterschool-fsd:latest ai-afterschool-fsd:rollback
+            echo "ROLLBACK_AVAILABLE=true" >> "$GITHUB_ENV"
+          else
+            echo "::notice::최초 배포 — 롤백 이미지 없음"
+            echo "ROLLBACK_AVAILABLE=false" >> "$GITHUB_ENV"
+          fi
+
+      - name: Build and deploy
+        run: docker compose up -d --build
+
+      - name: Wait for healthy
+        id: healthcheck
+        run: |
+          echo "헬스체크 대기 중 (최대 120초)..."
+          for i in $(seq 1 24); do
+            if curl -sf http://127.0.0.1:3001/api/health > /dev/null 2>&1; then
+              echo "::notice::헬스체크 통과 (${i}회차, $((i * 5))초)"
+              echo "healthy=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::헬스체크 실패 — 120초 초과"
+          echo "healthy=false" >> "$GITHUB_OUTPUT"
+          exit 1
+
+      - name: Cleanup on success
+        if: steps.healthcheck.outputs.healthy == 'true'
+        run: docker image prune -f
+
+      - name: Rollback on failure
+        if: failure() && env.ROLLBACK_AVAILABLE == 'true'
+        run: |
+          echo "::warning::배포 실패 — 롤백 시작"
+          docker tag ai-afterschool-fsd:rollback ai-afterschool-fsd:latest
+          docker compose up -d
+          echo "::notice::롤백 이미지로 컨테이너 재시작 완료"
+
+      - name: Verify rollback health
+        if: failure() && env.ROLLBACK_AVAILABLE == 'true'
+        run: |
+          echo "롤백 헬스체크 대기 중 (최대 60초)..."
+          for i in $(seq 1 12); do
+            if curl -sf http://127.0.0.1:3001/api/health > /dev/null 2>&1; then
+              echo "::warning::롤백 성공 — 이전 버전으로 복원됨 (${i}회차, $((i * 5))초)"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::롤백 후에도 헬스체크 실패 — 수동 복구가 필요합니다"
+          exit 1
+
+      - name: Rollback unavailable
+        if: failure() && env.ROLLBACK_AVAILABLE == 'false'
+        run: |
+          echo "::error::롤백 불가 — 이전 이미지가 없습니다. 수동 복구가 필요합니다."
+          exit 1
