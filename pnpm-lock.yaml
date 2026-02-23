@@ -8,6 +8,30 @@ importers:
 
   .:
     dependencies:
+      '@ai-sdk/anthropic':
+        specifier: ^3.0.44
+        version: 3.0.46(zod@4.3.6)
+      '@ai-sdk/cohere':
+        specifier: ^3.0.19
+        version: 3.0.21(zod@4.3.6)
+      '@ai-sdk/deepseek':
+        specifier: ^2.0.18
+        version: 2.0.20(zod@4.3.6)
+      '@ai-sdk/google':
+        specifier: ^3.0.18
+        version: 3.0.30(zod@4.3.6)
+      '@ai-sdk/mistral':
+        specifier: ^3.0.19
+        version: 3.0.20(zod@4.3.6)
+      '@ai-sdk/openai':
+        specifier: ^3.0.23
+        version: 3.0.30(zod@4.3.6)
+      '@ai-sdk/openai-compatible':
+        specifier: ^2.0.30
+        version: 2.0.30(zod@4.3.6)
+      '@ai-sdk/xai':
+        specifier: ^3.0.50
+        version: 3.0.57(zod@4.3.6)
       '@anthropic-ai/sdk':
         specifier: ^0.71.2
         version: 0.71.2(zod@4.3.6)
@@ -50,6 +74,9 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      ai:
+        specifier: ^6.0.64
+        version: 6.0.97(zod@4.3.6)
       argon2:
         specifier: ^0.44.0
         version: 0.44.0
@@ -101,6 +128,9 @@ importers:
       octokit:
         specifier: ^5.0.5
         version: 5.0.5
+      ollama-ai-provider-v2:
+        specifier: ^3.0.3
+        version: 3.3.1(ai@6.0.97(zod@4.3.6))(zod@4.3.6)
       pg:
         specifier: ^8.17.2
         version: 8.18.0
@@ -171,30 +201,6 @@ importers:
         specifier: ^4.3.6
         version: 4.3.6
     devDependencies:
-      '@ai-sdk/anthropic':
-        specifier: ^3.0.44
-        version: 3.0.46(zod@4.3.6)
-      '@ai-sdk/cohere':
-        specifier: ^3.0.19
-        version: 3.0.21(zod@4.3.6)
-      '@ai-sdk/deepseek':
-        specifier: ^2.0.18
-        version: 2.0.20(zod@4.3.6)
-      '@ai-sdk/google':
-        specifier: ^3.0.18
-        version: 3.0.30(zod@4.3.6)
-      '@ai-sdk/mistral':
-        specifier: ^3.0.19
-        version: 3.0.20(zod@4.3.6)
-      '@ai-sdk/openai':
-        specifier: ^3.0.23
-        version: 3.0.30(zod@4.3.6)
-      '@ai-sdk/openai-compatible':
-        specifier: ^2.0.30
-        version: 2.0.30(zod@4.3.6)
-      '@ai-sdk/xai':
-        specifier: ^3.0.50
-        version: 3.0.57(zod@4.3.6)
       '@eslint/eslintrc':
         specifier: ^3.3.3
         version: 3.3.3
@@ -234,9 +240,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^8.56.0
         version: 8.56.0(eslint@10.0.1(jiti@2.6.1))(typescript@5.9.3)
-      ai:
-        specifier: ^6.0.64
-        version: 6.0.97(zod@4.3.6)
       dotenv:
         specifier: ^17.3.1
         version: 17.3.1
@@ -261,9 +264,6 @@ importers:
       eslint-plugin-react-hooks:
         specifier: ^7.0.1
         version: 7.0.1(eslint@10.0.1(jiti@2.6.1))
-      ollama-ai-provider-v2:
-        specifier: ^3.0.3
-        version: 3.3.1(ai@6.0.97(zod@4.3.6))(zod@4.3.6)
       prettier:
         specifier: ^3
         version: 3.8.1
