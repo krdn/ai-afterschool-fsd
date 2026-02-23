@@ -16,6 +16,21 @@ const securityHeaders = [
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   // 불필요한 브라우저 기능(카메라, 마이크, 위치) 비활성화
   { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+  // HTTPS 강제 (1년, 서브도메인 포함)
+  { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" },
+  // 콘텐츠 보안 정책 (XSS 방어)
+  {
+    key: "Content-Security-Policy",
+    value: [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' data: blob: https://res.cloudinary.com",
+      "font-src 'self'",
+      "connect-src 'self' https://*.sentry.io https://res.cloudinary.com",
+      "frame-ancestors 'none'",
+    ].join("; "),
+  },
 ];
 
 const nextConfig: NextConfig = {
