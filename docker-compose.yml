@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   web:
@@ -9,7 +9,7 @@ services:
     container_name: ai-afterschool-fsd-web
     restart: always
     ports:
-      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:3001:3000"
     environment:
       - NODE_ENV=production
       - PORT=3000
