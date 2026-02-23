@@ -19,7 +19,11 @@ services:
       - ./data:/app/data
     networks:
       - ai-network
+      - db-network
 
 networks:
   ai-network:
     driver: bridge
+  db-network:
+    external: true
+    name: ai-afterschool-ex_internal
