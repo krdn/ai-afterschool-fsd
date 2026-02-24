@@ -27,7 +27,7 @@ type FormView = "list" | "form"
 
 type TabType = "history" | "reservations" | "calendar"
 
-export function CounselingPageTabs({ initialTab, sessions, session, children }: CounselingPageTabsProps) {
+export function CounselingPageTabs({ initialTab, sessions: _sessions, session: _session, children }: CounselingPageTabsProps) {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<TabType>(
     (initialTab === "reservations" || initialTab === "calendar") ? initialTab as TabType : "history"
@@ -37,7 +37,7 @@ export function CounselingPageTabs({ initialTab, sessions, session, children }: 
   const [reservations, setReservations] = useState<ReservationWithRelations[]>([])
 
   // 캘린더 뷰 관련 상태
-  const [calendarViewDate, setCalendarViewDate] = useState<Date>(new Date())
+  const [calendarViewDate, _setCalendarViewDate] = useState<Date>(new Date())
   const [calendarDateFilter, setCalendarDateFilter] = useState<Date | undefined>(undefined)
 
   // 컴포넌트 마운트 시 예약 목록 로드

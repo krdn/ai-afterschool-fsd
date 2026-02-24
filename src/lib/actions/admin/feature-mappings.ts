@@ -15,7 +15,6 @@ import type {
   FeatureMappingInput,
   FeatureMappingConfig,
   ResolutionRequirements,
-  ResolutionResult,
 } from '@/features/ai-engine';
 import { ok, fail, okVoid, type ActionResult, type ActionVoidResult } from "@/lib/errors/action-result";
 

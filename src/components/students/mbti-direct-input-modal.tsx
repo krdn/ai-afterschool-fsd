@@ -36,7 +36,7 @@ const MBTI_TYPES = [
 ]
 
 export function MbtiDirectInputModal({
-  studentId,
+  studentId: _studentId,
   studentName,
   existingData,
   onSave,

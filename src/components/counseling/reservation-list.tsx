@@ -85,18 +85,6 @@ export function ReservationList({ reservations, onRefresh, dateFilter }: Reserva
     setInternalDateFilter(undefined)
   }, [])
 
-  // 상태 라벨
-  const getStatusLabel = (status: ReservationStatus | "ALL"): string => {
-    const labels: Record<ReservationStatus | "ALL", string> = {
-      ALL: "전체",
-      SCHEDULED: "예약",
-      COMPLETED: "완료",
-      CANCELLED: "취소",
-      NO_SHOW: "노쇼",
-    }
-    return labels[status]
-  }
-
   // 필터 중인지 확인
   const isFiltering = statusFilter !== "ALL" || debouncedSearch.trim() || internalDateFilter
 

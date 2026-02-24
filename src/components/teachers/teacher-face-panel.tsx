@@ -39,7 +39,7 @@ type Props = {
 
 export function TeacherFacePanel({
   teacherId,
-  teacherName,
+  teacherName: _teacherName,
   analysis: initialAnalysis,
   faceImageUrl,
   enabledProviders = [],

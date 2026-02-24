@@ -1,7 +1,6 @@
-import { BookOpen, Sparkles, AlertCircle } from "lucide-react"
+import { BookOpen, AlertCircle } from "lucide-react"
 import { format } from "date-fns"
 import { getPersonalitySummary } from '@/features/analysis'
-import { generateLearningStrategy } from "@/lib/actions/student/personality-integration"
 import { LearningStrategyRetryButton } from "./learning-strategy-retry-button"
 import type { PersonalitySummary } from '@/lib/db'
 
@@ -30,7 +29,7 @@ type Props = {
   summary?: PersonalitySummary | null
 }
 
-export async function LearningStrategyPanel({ studentId, teacherId, summary: prefetchedSummary }: Props) {
+export async function LearningStrategyPanel({ studentId, teacherId: _teacherId, summary: prefetchedSummary }: Props) {
   const summary = prefetchedSummary !== undefined
     ? prefetchedSummary
     : await getPersonalitySummary(studentId)

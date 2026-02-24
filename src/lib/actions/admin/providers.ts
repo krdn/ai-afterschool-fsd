@@ -17,11 +17,9 @@ import {
 } from '@/features/ai-engine';
 import {
   getProviderRegistry,
-  ProviderRegistry,
 } from '@/features/ai-engine';
 import type {
   ProviderInput,
-  ProviderConfig,
   ProviderWithModels,
   ModelConfig,
   ValidationResult,

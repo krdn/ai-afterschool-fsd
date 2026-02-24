@@ -29,7 +29,7 @@ export function AISummaryGenerator({
 }: AISummaryGeneratorProps) {
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedSummary, setGeneratedSummary] = useState<string | null>(null)
-  const [showRegenerate, setShowRegenerate] = useState(false)
+  const [_showRegenerate, setShowRegenerate] = useState(false)
 
   const handleGenerate = async () => {
     setIsGenerating(true)

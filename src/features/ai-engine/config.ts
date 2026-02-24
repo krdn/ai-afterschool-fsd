@@ -83,7 +83,7 @@ export async function getLLMConfig(provider: ProviderName) {
  * providers 테이블에 제공자를 저장(upsert)합니다.
  */
 export async function saveLLMConfig(input: LLMConfigInput) {
-  const { provider, apiKey, isEnabled, baseUrl, defaultModel } = input;
+  const { provider, apiKey, isEnabled, baseUrl, defaultModel: _defaultModel } = input;
   const providerConfig = PROVIDER_CONFIGS[provider];
 
   // 기존 provider 레코드 조회

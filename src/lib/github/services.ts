@@ -1,7 +1,7 @@
 import 'server-only'
 import { getOctokit, getRepoConfig, isGitHubConfigured } from './client'
 import { checkRateLimitFromHeaders } from './utils'
-import { CATEGORY_LABEL_MAP, LABEL_COLORS, LABEL_DESCRIPTIONS } from './constants'
+import { LABEL_COLORS, LABEL_DESCRIPTIONS } from './constants'
 import { logSystemAction } from '@/lib/dal'
 import { generateBranchName } from './utils'
 import type { IssueCategory } from '@/lib/db'

@@ -1,7 +1,6 @@
 'use server';
 
 import { verifySession } from '@/lib/dal';
-import { db } from '@/lib/db/client';
 import { checkAllBudgetThresholds, getBudgetSummary, type BudgetAlert } from '@/features/ai-engine';
 import { ok, fail, type ActionResult } from '@/lib/errors/action-result';
 

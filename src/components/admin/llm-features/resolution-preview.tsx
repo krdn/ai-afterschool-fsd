@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertCircle, ArrowDown, CheckCircle2, RefreshCw, Server } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { resolveFeatureAction, getResolutionChainAction } from '@/lib/actions/admin/feature-mappings';
+import { getResolutionChainAction } from '@/lib/actions/admin/feature-mappings';
 import type { ResolutionRequirements } from '@/features/ai-engine';
 
 interface ResolutionPreviewProps {
@@ -42,7 +42,7 @@ interface ResolutionChainItem extends ResolutionResult {
   fallbackMode: string;
 }
 
-export function ResolutionPreview({ featureType, requirements }: ResolutionPreviewProps) {
+export function ResolutionPreview({ featureType, requirements: _requirements }: ResolutionPreviewProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [primaryResult, setPrimaryResult] = useState<ResolutionResult | null>(null);

@@ -16,7 +16,7 @@ interface ReportButtonClientProps {
 export function ReportButtonClient({
   studentId,
   initialStatus,
-  initialFileUrl,
+  initialFileUrl: _initialFileUrl,
 }: ReportButtonClientProps) {
   const [status, setStatus] = useState<ReportStatus>(initialStatus)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)

@@ -9,7 +9,7 @@ import { eventBus } from "@/lib/events/event-bus"
 import { generateWithProvider, generateWithSpecificProvider } from '@/features/ai-engine'
 import { getZodiacPrompt, type ZodiacPromptId } from "@/features/ai-engine/prompts"
 import type { ProviderName } from '@/features/ai-engine'
-import { ok, type ActionResult } from "@/lib/errors/action-result"
+import { ok } from "@/lib/errors/action-result"
 
 /**
  * 역할에 따른 teacherId 반환 (TEACHER만 본인 학생으로 제한)

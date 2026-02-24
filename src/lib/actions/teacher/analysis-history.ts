@@ -1,7 +1,7 @@
 'use server'
 
 import { db as prisma } from "@/lib/db/client"
-import { ok, fail, type ActionResult } from "@/lib/errors/action-result"
+import { ok, fail } from "@/lib/errors/action-result"
 import { logger } from "@/lib/logger"
 
 /**

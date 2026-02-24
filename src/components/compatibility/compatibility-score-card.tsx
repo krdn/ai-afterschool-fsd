@@ -38,7 +38,7 @@ interface CompatibilityScoreCardProps {
 }
 
 export function CompatibilityScoreCard({
-  score,
+  score: _score,
   breakdown,
   reasons,
 }: CompatibilityScoreCardProps) {

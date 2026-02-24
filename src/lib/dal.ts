@@ -3,7 +3,7 @@ import { cookies } from 'next/headers'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { cache } from 'react'
-import { decrypt, updateSession } from '@/lib/session'
+import { decrypt } from '@/lib/session'
 import { db } from '@/lib/db/client'
 import { setRLSSessionContext, getRBACPrisma } from '@/lib/db/common/rbac'
 

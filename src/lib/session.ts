@@ -74,9 +74,9 @@ export async function createSession(
 }
 
 export async function updateSession(
-  userId: string,
-  role: SessionPayload['role'],
-  teamId: string | null
+  _userId: string,
+  _role: SessionPayload['role'],
+  _teamId: string | null
 ): Promise<void> {
   // NOTE: Session update is disabled in Next.js 15
   // Cookies can only be modified in Server Actions or Route Handlers

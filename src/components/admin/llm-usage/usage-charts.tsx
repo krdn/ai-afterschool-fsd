@@ -31,15 +31,6 @@ const PROVIDER_COLORS: Record<string, string> = {
   ollama: "#8B5CF6", // violet
 };
 
-const FEATURE_COLORS: Record<string, string> = {
-  learning_analysis: "#3B82F6",
-  counseling_suggest: "#10B981",
-  report_generate: "#F59E0B",
-  face_analysis: "#EF4444",
-  palm_analysis: "#8B5CF6",
-  personality_summary: "#EC4899",
-};
-
 const FEATURE_LABELS: Record<string, string> = {
   learning_analysis: "학습 분석",
   counseling_suggest: "상담 제안",

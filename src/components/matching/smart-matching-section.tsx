@@ -55,7 +55,7 @@ export function SmartMatchingSection({
   const [studentName, setStudentName] = useState<string>("")
   const [isLoading, setIsLoading] = useState(false)
   const [assigningTeacherId, setAssigningTeacherId] = useState<string | null>(null)
-  const [isPending, startTransition] = useTransition()
+  const [_isPending, startTransition] = useTransition()
 
   // 배정 확인 다이얼로그 상태
   const [confirmDialog, setConfirmDialog] = useState<{

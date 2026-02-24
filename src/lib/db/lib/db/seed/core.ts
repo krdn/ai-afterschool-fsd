@@ -18,7 +18,6 @@ import type { SeedTeacher, SeedStudent, SeedParent, SeedProvider } from "./data"
 import {
   ALL_SEED_GROUPS,
   SEED_GROUP_DEPENDENCIES,
-  type SeedGroup,
   type SeedOptions,
   type SeedResult,
 } from "./constants"

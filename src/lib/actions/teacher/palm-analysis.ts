@@ -9,7 +9,7 @@ import { db } from "@/lib/db/client"
 import { upsertPalmAnalysis, getPalmAnalysis } from '@/features/analysis'
 import { extractJsonFromLLM } from "@/shared"
 import { eventBus } from "@/lib/events/event-bus"
-import { ok, type ActionResult } from "@/lib/errors/action-result"
+import { ok } from "@/lib/errors/action-result"
 import { logger } from "@/lib/logger"
 
 /**
@@ -24,7 +24,6 @@ export async function runTeacherPalmAnalysis(
   hand: "left" | "right"
 ) {
   const session = await verifySession()
-  if (!session) throw new Error("Unauthorized")
 
   // 백그라운드에서 분석 실행
   after(async () => {
@@ -118,7 +117,7 @@ export async function runTeacherPalmAnalysis(
  * 선생님 손금 분석 결과 조회
  */
 export async function getTeacherPalmAnalysisAction(teacherId: string) {
-  const session = await verifySession()
+  const _session = await verifySession()
 
   const analysis = await getPalmAnalysis('TEACHER', teacherId)
 

@@ -10,7 +10,7 @@ export async function detectBlur(imageBuffer: Buffer): Promise<{
   score: number
 }> {
   try {
-    const { data, info } = await sharp(imageBuffer)
+    const { data, info: _info } = await sharp(imageBuffer)
       .greyscale()
       .resize(300, 300, { fit: 'cover' })
       .raw()
@@ -63,7 +63,7 @@ export async function validateImageBasic(imageBuffer: Buffer): Promise<{
         format: metadata.format || 'unknown'
       }
     }
-  } catch (error) {
+  } catch {
     return { valid: false, reason: '이미지 포맷을 확인할 수 없습니다.' }
   }
 }

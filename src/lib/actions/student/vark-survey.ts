@@ -15,7 +15,7 @@ import { generateWithProvider, generateWithSpecificProvider } from '@/features/a
 import { getVarkPrompt, type VarkPromptId } from "@/features/ai-engine/prompts"
 import type { ProviderName } from '@/features/ai-engine'
 import { eventBus } from "@/lib/events/event-bus"
-import { ok, type ActionResult } from "@/lib/errors/action-result"
+import { ok } from "@/lib/errors/action-result"
 import questions from "@/data/vark/questions.json"
 import descriptions from "@/data/vark/descriptions.json"
 

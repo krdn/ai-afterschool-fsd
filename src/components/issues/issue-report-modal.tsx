@@ -82,7 +82,7 @@ export function IssueReportModal({ isOpen, onClose, userRole }: IssueReportModal
             message: result.errors?._form?.[0] || '이슈 등록에 실패했습니다.',
           })
         }
-      } catch (error) {
+      } catch {
         setSubmitResult({
           success: false,
           message: '이슈 등록 중 오류가 발생했습니다.',

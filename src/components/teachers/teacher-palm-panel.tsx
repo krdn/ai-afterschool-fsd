@@ -38,7 +38,7 @@ type Props = {
 
 export function TeacherPalmPanel({
   teacherId,
-  teacherName,
+  teacherName: _teacherName,
   analysis,
   palmImageUrl,
   enabledProviders = [],

@@ -44,7 +44,7 @@ export class LocalPDFStorage implements PDFStorage {
     return await fs.readFile(fullPath)
   }
 
-  async getPresignedUrl(filename: string, expiresIn: number = 3600): Promise<string> {
+  async getPresignedUrl(filename: string, _expiresIn: number = 3600): Promise<string> {
     // For local storage, return a direct URL path
     // Note: expiresIn is ignored for local storage
     return `/reports/${filename}`

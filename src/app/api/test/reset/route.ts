@@ -21,7 +21,7 @@ import { logger } from '@/lib/logger'
  * 응답: { success: true, resetCount: number }
  * 에러 처리: 인증 실패 시 401, 서버 에러 시 500
  */
-export async function POST(req: NextRequest) {
+export async function POST(_req: NextRequest) {
   try {
     // 인증 확인
     const session = await getSession()
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 트랜잭션으로 안전하게 삭제
-    const result = await db.$transaction(async (tx) => {
+    const result = await db.$transaction(async (_tx) => {
       const resetCount = 0
 
       // isTest 플래그가 있는 테스트용 학생 조회

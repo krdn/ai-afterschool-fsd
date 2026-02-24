@@ -7,8 +7,6 @@
 
 import { PrismaClient, type FeatureMapping, type Model, type Provider } from '@prisma/client';
 import type {
-  CostTier,
-  QualityTier,
   FeatureMappingInput,
   FeatureMappingConfig,
   ResolutionResult,

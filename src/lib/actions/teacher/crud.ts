@@ -7,7 +7,7 @@ import { verifySession } from "@/lib/dal"
 import { db } from "@/lib/db/client"
 import { TeacherSchema, UpdateTeacherSchema } from "@/lib/validations/teachers"
 import { NameHanjaSchema, type NameHanjaInput } from "@/lib/validations/students"
-import { ok, fail, okVoid, type ActionVoidResult } from "@/lib/errors/action-result"
+import { fail, okVoid, type ActionVoidResult } from "@/lib/errors/action-result"
 import { logger } from "@/lib/logger"
 
 function parseNameHanjaPayload(value: FormDataEntryValue | null): {

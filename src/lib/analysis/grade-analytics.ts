@@ -129,7 +129,7 @@ export function calculateGradeTrend(
 
   Array.from(groupMap.entries())
     .sort(([a], [b]) => a.localeCompare(b))
-    .forEach(([key, records]) => {
+    .forEach(([_key, records]) => {
       const avgScore =
         records.reduce((sum, r) => sum + r.score, 0) / records.length
 

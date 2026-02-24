@@ -10,7 +10,7 @@ import { upsertFaceAnalysis, getFaceAnalysis } from '@/features/analysis'
 import { extractJsonFromLLM } from "@/shared"
 import type { ProviderName } from '@/features/ai-engine'
 import { eventBus } from "@/lib/events/event-bus"
-import { ok, fail, type ActionResult } from "@/lib/errors/action-result"
+import { ok, fail } from "@/lib/errors/action-result"
 import { logger } from "@/lib/logger"
 
 /**

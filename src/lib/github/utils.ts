@@ -1,6 +1,6 @@
 import 'server-only'
 import { CATEGORY_BRANCH_PREFIX, RATE_LIMIT_THRESHOLD } from './constants'
-import { getOctokit, getRepoConfig } from './client'
+import { getOctokit } from './client'
 import { logSystemAction } from '@/lib/dal'
 import type { IssueCategory } from '@/lib/db'
 
