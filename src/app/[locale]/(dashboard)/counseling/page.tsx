@@ -261,7 +261,7 @@ function CounselingHistoryContent({
   totalSessions,
   avgDuration,
   followUpCount,
-  canViewAll,
+  canViewAll: _canViewAll,
   canViewTeam,
   teachers,
 }: CounselingHistoryContentProps) {

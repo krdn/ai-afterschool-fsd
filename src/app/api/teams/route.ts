@@ -18,7 +18,7 @@ import { logger } from '@/lib/logger'
  * 응답: { teams: Array<{ id, name, leaderId, teacherCount }> }
  * 에러 처리: 인증 실패 시 401, 권한 없음 시 403
  */
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     // 인증 확인
     const session = await getSession()
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
       )
     }
 
-    const { userId, role, teamId } = session
+    const { role, teamId } = session
 
     // RBAC에 따라 팀 목록 필터링
     type TeamWithCount = {

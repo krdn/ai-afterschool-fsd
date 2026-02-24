@@ -192,13 +192,7 @@ export default function DebugMarkdownPage() {
           <div>
             <h3 className="font-semibold mb-2">B의 HTML:</h3>
             <pre className="bg-gray-800 text-blue-400 p-4 rounded text-xs overflow-auto h-64">
-              {mounted ? (
-                (() => {
-                  const div = document.createElement('div')
-                  // 실제로 ReactMarkdown이 생성한 HTML을 보여줄 수 없으므로 설명만
-                  return "디코딩 후 렌더링된 HTML이 여기에 표시됩니다"
-                })()
-              ) : "로딩중..."}
+              {mounted ? "디코딩 후 렌더링된 HTML이 여기에 표시됩니다" : "로딩중..."}
             </pre>
           </div>
         </div>

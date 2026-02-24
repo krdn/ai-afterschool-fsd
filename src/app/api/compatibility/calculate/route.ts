@@ -35,7 +35,7 @@ const CalculateCompatibilitySchema = z.object({
  */
 export async function POST(request: Request) {
   // 인증 확인
-  const session = await verifySession()
+  await verifySession()
 
   // Request body 파싱
   let payload: unknown
