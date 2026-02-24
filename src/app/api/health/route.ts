@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { db, pool } from '@/lib/db/client'
-import { existsSync, readdirSync, statSync } from 'fs'
+import { existsSync, readFileSync, readdirSync, statSync } from 'fs'
 import { logger } from '@/lib/logger'
 import { join } from 'path'
 
@@ -56,7 +56,7 @@ export async function GET() {
   // Optional: Add version from package.json
   try {
     const packagePath = process.cwd() + '/package.json'
-    const pkg = await import(packagePath)
+    const pkg = JSON.parse(readFileSync(packagePath, 'utf-8'))
     results.version = pkg.version
   } catch {
     // Version is optional
