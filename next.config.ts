@@ -23,11 +23,12 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://upload-widget.cloudinary.com https://widget.cloudinary.com",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://res.cloudinary.com",
       "font-src 'self'",
-      "connect-src 'self' https://*.sentry.io https://res.cloudinary.com",
+      "connect-src 'self' https://*.sentry.io https://res.cloudinary.com https://api.cloudinary.com",
+      "frame-src https://upload-widget.cloudinary.com https://widget.cloudinary.com",
       "frame-ancestors 'none'",
     ].join("; "),
   },
@@ -35,6 +36,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  // pino는 thread-stream worker를 사용하므로 번들링에서 제외해야 함
+  serverExternalPackages: ["pino", "pino-pretty"],
   eslint: {
     ignoreDuringBuilds: false,
   },

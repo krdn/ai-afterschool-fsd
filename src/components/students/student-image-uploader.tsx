@@ -121,7 +121,6 @@ export function StudentImageUploader({
                 clientAllowedFormats: allowedFormats,
                 sources: ["local", "camera", "url"],
                 folder: uploadFolder,
-                uploadPreset: process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
               }}
               onOpen={(_widget) => {
                 // 위젯이 열릴 때 추가 검증이 필요하면 여기서 처리
