@@ -2,6 +2,16 @@ import { createCipheriv, createDecipheriv, randomBytes } from "crypto"
 
 const ALGORITHM = "aes-256-gcm"
 
+/**
+ * API Key 암호화에 필요한 환경변수가 설정되어 있는지 확인합니다.
+ *
+ * @returns 환경변수가 올바르게 설정되어 있으면 true
+ */
+export function isEncryptionConfigured(): boolean {
+  const key = process.env.API_KEY_ENCRYPTION_SECRET;
+  return !!key && key.length === 64;
+}
+
 function getEncryptionKey(): Buffer {
   const key = process.env.API_KEY_ENCRYPTION_SECRET
   if (!key || key.length !== 64) {

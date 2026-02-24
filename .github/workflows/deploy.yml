@@ -70,6 +70,17 @@ jobs:
             echo "::warning::운영 .env가 없어 .env.example을 사용합니다. $ENV_STORE에 운영 .env를 배치하세요."
           fi
 
+      - name: Validate required environment variables
+        run: |
+          if [ -f .env ]; then
+            SECRET=$(grep -oP '^API_KEY_ENCRYPTION_SECRET=\K.+' .env 2>/dev/null || true)
+            if [ -z "$SECRET" ]; then
+              NEW_SECRET=$(openssl rand -hex 32)
+              echo "API_KEY_ENCRYPTION_SECRET=$NEW_SECRET" >> .env
+              echo "::warning::API_KEY_ENCRYPTION_SECRET이 비어있어 자동 생성했습니다. 운영 .env 원본도 업데이트하세요."
+            fi
+          fi
+
       - name: Backup current image for rollback
         run: |
           if docker image inspect ai-afterschool-fsd:latest >/dev/null 2>&1; then

@@ -23,7 +23,7 @@ import type {
   ModelConfig,
   ValidationResult,
 } from './types';
-import { encryptApiKey } from './encryption';
+import { encryptApiKey, isEncryptionConfigured } from './encryption';
 import { DEFAULT_MODELS } from './registry-defaults';
 import { validateProvider, syncProviderModels } from './registry-sync';
 
@@ -84,6 +84,13 @@ export class ProviderRegistry {
    * @returns 생성된 제공자 설정
    */
   async register(input: ProviderInput): Promise<ProviderWithModels> {
+    // API 키 암호화 전 환경변수 검증
+    if (input.apiKey && !isEncryptionConfigured()) {
+      throw new Error(
+        'API Key 암호화 설정이 필요합니다. 관리자에게 API_KEY_ENCRYPTION_SECRET 환경변수 설정을 요청하세요.'
+      );
+    }
+
     // API 키 암호화
     const apiKeyEncrypted = input.apiKey
       ? encryptApiKey(input.apiKey)
@@ -141,6 +148,11 @@ export class ProviderRegistry {
 
     // API 키가 변경되면 암호화 및 검증 상태 리셋
     if (input.apiKey !== undefined) {
+      if (input.apiKey && !isEncryptionConfigured()) {
+        throw new Error(
+          'API Key 암호화 설정이 필요합니다. 관리자에게 API_KEY_ENCRYPTION_SECRET 환경변수 설정을 요청하세요.'
+        );
+      }
       updateData.apiKeyEncrypted = input.apiKey
         ? encryptApiKey(input.apiKey)
         : null;
