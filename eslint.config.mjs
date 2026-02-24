@@ -1,5 +1,6 @@
 import tseslint from "typescript-eslint";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
+import nextPlugin from "@next/eslint-plugin-next";
 import boundaries from "eslint-plugin-boundaries";
 
 export default tseslint.config(
@@ -27,6 +28,15 @@ export default tseslint.config(
       "@typescript-eslint/no-explicit-any": "warn",
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn",
+    },
+  },
+  // Next.js 전용 규칙
+  {
+    plugins: {
+      "@next/next": nextPlugin,
+    },
+    rules: {
+      ...nextPlugin.configs.recommended.rules,
     },
   },
   // FSD 레이어 경계 규칙
