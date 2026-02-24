@@ -268,6 +268,7 @@ async function seedParents(
           name: parent.name,
           phone: parent.phone,
           relation: parent.relation,
+          isPrimary: parent.isPrimary ?? false,
         },
       })
       result.parents.updated++
@@ -277,6 +278,7 @@ async function seedParents(
           name: parent.name,
           phone: parent.phone,
           relation: parent.relation,
+          isPrimary: parent.isPrimary ?? false,
           student: { connect: { id: studentId } },
         },
       })

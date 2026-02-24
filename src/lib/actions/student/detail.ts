@@ -77,7 +77,7 @@ export async function getStudentById(id: string) {
         return await db.student.findFirst({
             where: { id, teacherId: session.userId },
             include: {
-                parents: true,
+                parents: { orderBy: [{ isPrimary: "desc" }, { createdAt: "asc" }] },
                 teacher: true,
                 images: true
             }
@@ -87,7 +87,7 @@ export async function getStudentById(id: string) {
     return await db.student.findUnique({
         where: { id },
         include: {
-            parents: true,
+            parents: { orderBy: [{ isPrimary: "desc" }, { createdAt: "asc" }] },
             teacher: true,
             images: true
         }

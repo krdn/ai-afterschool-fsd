@@ -270,30 +270,31 @@ export type SeedParent = {
   phone: string
   relation: ParentRelation
   studentName: string
+  isPrimary?: boolean
 }
 
 export const SEED_PARENTS: SeedParent[] = [
   // 김나경 학부모
   { name: "김태호", phone: "010-7700-3001", relation: "FATHER", studentName: "김나경" },
-  { name: "박서연", phone: "010-7700-3002", relation: "MOTHER", studentName: "김나경" },
+  { name: "박서연", phone: "010-7700-3002", relation: "MOTHER", studentName: "김나경", isPrimary: true },
   // 윤지민 학부모
   { name: "윤상철", phone: "010-7700-3003", relation: "FATHER", studentName: "윤지민" },
-  { name: "한미영", phone: "010-7700-3004", relation: "MOTHER", studentName: "윤지민" },
+  { name: "한미영", phone: "010-7700-3004", relation: "MOTHER", studentName: "윤지민", isPrimary: true },
   // 이원희 학부모
   { name: "이정훈", phone: "010-7700-3005", relation: "FATHER", studentName: "이원희" },
-  { name: "최윤정", phone: "010-7700-3006", relation: "MOTHER", studentName: "이원희" },
+  { name: "최윤정", phone: "010-7700-3006", relation: "MOTHER", studentName: "이원희", isPrimary: true },
   // 이채영 학부모
   { name: "이동수", phone: "010-7700-3007", relation: "FATHER", studentName: "이채영" },
-  { name: "김혜진", phone: "010-7700-3008", relation: "MOTHER", studentName: "이채영" },
+  { name: "김혜진", phone: "010-7700-3008", relation: "MOTHER", studentName: "이채영", isPrimary: true },
   // 이현서 학부모
   { name: "이민재", phone: "010-7700-3009", relation: "FATHER", studentName: "이현서" },
-  { name: "정은주", phone: "010-7700-3010", relation: "MOTHER", studentName: "이현서" },
+  { name: "정은주", phone: "010-7700-3010", relation: "MOTHER", studentName: "이현서", isPrimary: true },
   // 정수민 학부모
   { name: "정대현", phone: "010-7700-3011", relation: "FATHER", studentName: "정수민" },
-  { name: "오수진", phone: "010-7700-3012", relation: "MOTHER", studentName: "정수민" },
+  { name: "오수진", phone: "010-7700-3012", relation: "MOTHER", studentName: "정수민", isPrimary: true },
   // 최수아 학부모
   { name: "최영호", phone: "010-7700-3013", relation: "FATHER", studentName: "최수아" },
-  { name: "송미래", phone: "010-7700-3014", relation: "MOTHER", studentName: "최수아" },
+  { name: "송미래", phone: "010-7700-3014", relation: "MOTHER", studentName: "최수아", isPrimary: true },
 ]
 
 // ---------------------------------------------------------------------------

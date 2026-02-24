@@ -52,8 +52,16 @@ const baseStudentSchema = z.object({
   targetUniversity: z.string().optional(),
   targetMajor: z.string().optional(),
   bloodType: z.enum(["A", "B", "AB", "O"]).optional().nullable(),
-  parentName: z.string().optional(),
-  parentPhone: z
+  fatherName: z.string().optional(),
+  fatherPhone: z
+    .string()
+    .optional()
+    .refine(
+      (val) => !val || phoneRegex.test(val),
+      "010-0000-0000 형식으로 입력해주세요"
+    ),
+  motherName: z.string().optional(),
+  motherPhone: z
     .string()
     .optional()
     .refine(

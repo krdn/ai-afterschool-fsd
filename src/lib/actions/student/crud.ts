@@ -33,8 +33,10 @@ export type StudentFormState = {
     targetUniversity?: string[]
     targetMajor?: string[]
     bloodType?: string[]
-    parentName?: string[]
-    parentPhone?: string[]
+    fatherName?: string[]
+    fatherPhone?: string[]
+    motherName?: string[]
+    motherPhone?: string[]
     _form?: string[]
   }
   message?: string
@@ -170,8 +172,10 @@ export async function createStudent(
     targetUniversity: formData.get("targetUniversity") || undefined,
     targetMajor: formData.get("targetMajor") || undefined,
     bloodType: formData.get("bloodType") || null,
-    parentName: formData.get("parentName") || undefined,
-    parentPhone: formData.get("parentPhone") || undefined,
+    fatherName: formData.get("fatherName") || undefined,
+    fatherPhone: formData.get("fatherPhone") || undefined,
+    motherName: formData.get("motherName") || undefined,
+    motherPhone: formData.get("motherPhone") || undefined,
   })
 
   if (!validatedFields.success) {
@@ -204,8 +208,10 @@ export async function createStudent(
   const {
     birthTimeHour,
     birthTimeMinute,
-    parentName,
-    parentPhone,
+    fatherName,
+    fatherPhone,
+    motherName,
+    motherPhone,
     ...studentData
   } = validatedFields.data
   const birthTime = normalizeBirthTimeInput(birthTimeHour, birthTimeMinute)
@@ -223,14 +229,28 @@ export async function createStudent(
 
     studentId = student.id
 
-    if (parentName) {
+    // 어머니 보호자 생성 (isPrimary 우선)
+    if (motherName) {
       await db.parent.create({
         data: {
           studentId,
-          name: parentName,
-          phone: parentPhone || "",
+          name: motherName,
+          phone: motherPhone || "",
           relation: "MOTHER",
           isPrimary: true,
+        },
+      })
+    }
+
+    // 아버지 보호자 생성
+    if (fatherName) {
+      await db.parent.create({
+        data: {
+          studentId,
+          name: fatherName,
+          phone: fatherPhone || "",
+          relation: "FATHER",
+          isPrimary: !motherName, // 어머니가 없을 때만 isPrimary
         },
       })
     }
@@ -293,8 +313,10 @@ export async function updateStudent(
     targetUniversity: formData.get("targetUniversity") || undefined,
     targetMajor: formData.get("targetMajor") || undefined,
     bloodType: formData.get("bloodType") || null,
-    parentName: formData.get("parentName") || undefined,
-    parentPhone: formData.get("parentPhone") || undefined,
+    fatherName: formData.get("fatherName") || undefined,
+    fatherPhone: formData.get("fatherPhone") || undefined,
+    motherName: formData.get("motherName") || undefined,
+    motherPhone: formData.get("motherPhone") || undefined,
   })
 
   if (!validatedFields.success) {
@@ -330,8 +352,10 @@ export async function updateStudent(
     const {
       birthTimeHour: _birthTimeHour,
       birthTimeMinute: _birthTimeMinute,
-      parentName,
-      parentPhone,
+      fatherName,
+      fatherPhone,
+      motherName,
+      motherPhone,
       ...updateData
     } = validatedFields.data
     const shouldMarkRecalculation = Boolean(
@@ -372,28 +396,65 @@ export async function updateStudent(
       )
     }
 
-    if (parentName) {
-      const existingParent = await db.parent.findFirst({
-        where: { studentId, isPrimary: true },
-      })
+    // relation별 보호자 upsert/삭제
+    const parentEntries: Array<{
+      relation: "FATHER" | "MOTHER"
+      name: string | undefined
+      phone: string | undefined
+    }> = [
+      { relation: "MOTHER", name: motherName, phone: motherPhone },
+      { relation: "FATHER", name: fatherName, phone: fatherPhone },
+    ]
 
-      if (existingParent) {
-        await db.parent.update({
-          where: { id: existingParent.id },
-          data: {
-            name: parentName,
-            phone: parentPhone || "",
-          },
+    const existingParents = await db.parent.findMany({
+      where: { studentId },
+    })
+
+    for (const entry of parentEntries) {
+      const existing = existingParents.find(
+        (p) => p.relation === entry.relation
+      )
+
+      if (entry.name) {
+        if (existing) {
+          await db.parent.update({
+            where: { id: existing.id },
+            data: {
+              name: entry.name,
+              phone: entry.phone || "",
+            },
+          })
+        } else {
+          await db.parent.create({
+            data: {
+              studentId,
+              name: entry.name,
+              phone: entry.phone || "",
+              relation: entry.relation,
+              isPrimary: false, // 아래에서 재설정
+            },
+          })
+        }
+      } else if (existing) {
+        await db.parent.delete({
+          where: { id: existing.id },
         })
-      } else {
-        await db.parent.create({
-          data: {
-            studentId,
-            name: parentName,
-            phone: parentPhone || "",
-            relation: "MOTHER",
-            isPrimary: true,
-          },
+      }
+    }
+
+    // isPrimary 재설정: 어머니 우선, 없으면 아버지
+    const remainingParents = await db.parent.findMany({
+      where: { studentId },
+      orderBy: { createdAt: "asc" },
+    })
+    if (remainingParents.length > 0) {
+      const primaryId =
+        remainingParents.find((p) => p.relation === "MOTHER")?.id ??
+        remainingParents[0].id
+      for (const p of remainingParents) {
+        await db.parent.update({
+          where: { id: p.id },
+          data: { isPrimary: p.id === primaryId },
         })
       }
     }

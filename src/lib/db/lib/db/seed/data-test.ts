@@ -124,12 +124,14 @@ const parents: SeedParent[] = [
     phone: "010-2000-0001",
     relation: "FATHER",
     studentName: "홍길동",
+    isPrimary: true,
   },
   {
     name: "김어머니",
     phone: "010-2000-0002",
     relation: "MOTHER",
     studentName: "김영희",
+    isPrimary: true,
   },
 ]
 

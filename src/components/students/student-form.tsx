@@ -37,6 +37,7 @@ interface StudentFormProps {
       id: string
       name: string
       phone: string | null
+      relation: string
     }>
   }
 }
@@ -317,39 +318,78 @@ export function StudentForm({ student }: StudentFormProps) {
       </div>
 
       <div className="border-t pt-4 mt-4">
-        <h3 className="font-semibold mb-2">학부모 정보</h3>
-        <div className="space-y-2">
-          <div>
-            <label htmlFor="parentName" className="block text-sm font-medium">
-              부모님 성함
-            </label>
-            <input
-              type="text"
-              name="parentName"
-              id="parentName"
-              defaultValue={student?.parents?.[0]?.name}
-              className="border p-2 w-full rounded"
-              data-testid="parent-name-input"
-            />
+        <h3 className="font-semibold mb-3">학부모 정보</h3>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-gray-700">어머니</p>
+            <div>
+              <label htmlFor="motherName" className="block text-sm font-medium">
+                성함
+              </label>
+              <input
+                type="text"
+                name="motherName"
+                id="motherName"
+                defaultValue={student?.parents?.find(p => p.relation === "MOTHER")?.name}
+                className="border p-2 w-full rounded"
+                data-testid="mother-name-input"
+              />
+            </div>
+            <div>
+              <label htmlFor="motherPhone" className="block text-sm font-medium">
+                연락처
+              </label>
+              <input
+                type="text"
+                name="motherPhone"
+                id="motherPhone"
+                defaultValue={student?.parents?.find(p => p.relation === "MOTHER")?.phone ?? ""}
+                placeholder="010-0000-0000"
+                className="border p-2 w-full rounded"
+                data-testid="mother-phone-input"
+              />
+              {state.errors?.motherPhone && (
+                <p className="text-red-500 text-xs mt-1">
+                  {state.errors.motherPhone[0]}
+                </p>
+              )}
+            </div>
           </div>
-          <div>
-            <label htmlFor="parentPhone" className="block text-sm font-medium">
-              부모님 연락처
-            </label>
-            <input
-              type="text"
-              name="parentPhone"
-              id="parentPhone"
-              defaultValue={student?.parents?.[0]?.phone ?? ""}
-              placeholder="010-0000-0000"
-              className="border p-2 w-full rounded"
-              data-testid="parent-phone-input"
-            />
-            {state.errors?.parentPhone && (
-              <p className="text-red-500 text-xs mt-1">
-                {state.errors.parentPhone[0]}
-              </p>
-            )}
+
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-gray-700">아버지</p>
+            <div>
+              <label htmlFor="fatherName" className="block text-sm font-medium">
+                성함
+              </label>
+              <input
+                type="text"
+                name="fatherName"
+                id="fatherName"
+                defaultValue={student?.parents?.find(p => p.relation === "FATHER")?.name}
+                className="border p-2 w-full rounded"
+                data-testid="father-name-input"
+              />
+            </div>
+            <div>
+              <label htmlFor="fatherPhone" className="block text-sm font-medium">
+                연락처
+              </label>
+              <input
+                type="text"
+                name="fatherPhone"
+                id="fatherPhone"
+                defaultValue={student?.parents?.find(p => p.relation === "FATHER")?.phone ?? ""}
+                placeholder="010-0000-0000"
+                className="border p-2 w-full rounded"
+                data-testid="father-phone-input"
+              />
+              {state.errors?.fatherPhone && (
+                <p className="text-red-500 text-xs mt-1">
+                  {state.errors.fatherPhone[0]}
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </div>
