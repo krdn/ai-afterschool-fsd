@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import type { CounselingSession, Student, Teacher } from '@/lib/db'
-import { CounselingSessionCard, type CounselingSessionWithRelations } from "./CounselingSessionCard"
-import { CounselingSessionModal } from "./CounselingSessionModal"
+import { CounselingSessionCard, type CounselingSessionWithRelations } from "./counseling-session-card"
+import { CounselingSessionModal } from "./counseling-session-modal"
 
 interface CounselingHistoryListProps {
   sessions: CounselingSessionWithRelations[]

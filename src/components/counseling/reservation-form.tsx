@@ -12,8 +12,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ReservationCalendar } from "./ReservationCalendar"
-import { TimeSlotGrid } from "./TimeSlotGrid"
+import { ReservationCalendar } from "./reservation-calendar"
+import { TimeSlotGrid } from "./time-slot-grid"
 import { createReservationAction } from "@/lib/actions/counseling/reservations"
 import { getReservationsAction } from "@/lib/actions/counseling/reservations-query"
 import { getStudentsAction, type StudentWithParents } from "@/lib/actions/student/crud"

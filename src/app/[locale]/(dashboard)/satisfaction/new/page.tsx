@@ -1,6 +1,5 @@
 import { verifySession } from "@/lib/dal"
 import { getRBACPrisma } from "@/lib/db/common/rbac"
-import { StudentSatisfactionForm } from "@/components/satisfaction/StudentSatisfactionForm"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Select,

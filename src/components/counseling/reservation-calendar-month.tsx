@@ -5,7 +5,7 @@ import "react-day-picker/style.css"
 import { ko } from "date-fns/locale"
 import { cn } from "@/lib/utils"
 import { getReservationCountByDate } from "@/lib/utils/calendar"
-import type { ReservationWithRelations } from "./ReservationCard"
+import type { ReservationWithRelations } from "./reservation-card"
 
 interface CustomDayButtonProps extends DayButtonProps {
   reservationCount?: number

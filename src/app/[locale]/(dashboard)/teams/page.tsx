@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { getTeams } from '@/lib/actions/common/teams'
 import { EmptyState } from '@/components/students/empty-state'
 import { Users } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 
 /**
  * 팀 목록 페이지

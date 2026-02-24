@@ -1,13 +1,13 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { StatisticsCards } from "./StatisticsCards"
-import { CounselingTrendChart } from "./CounselingTrendChart"
-import { CounselingTypeChart } from "./CounselingTypeChart"
-import { TeacherStatsTable } from "./TeacherStatsTable"
-import { FollowUpList } from "./FollowUpList"
-import { DateRangeFilter } from "./DateRangeFilter"
-import { CsvExportButton } from "./CsvExportButton"
+import { StatisticsCards } from "./statistics-cards"
+import { CounselingTrendChart } from "./counseling-trend-chart"
+import { CounselingTypeChart } from "./counseling-type-chart"
+import { TeacherStatsTable } from "./teacher-stats-table"
+import { FollowUpList } from "./follow-up-list"
+import { DateRangeFilter } from "./date-range-filter"
+import { CsvExportButton } from "./csv-export-button"
 import type {
   TeacherMonthlyStats,
   TypeDistribution,

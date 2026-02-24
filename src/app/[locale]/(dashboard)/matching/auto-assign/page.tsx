@@ -3,7 +3,7 @@ import { db } from "@/lib/db/client"
 import { listAssignmentProposals } from '@/features/matching'
 import { getAssignmentResults } from "@/lib/actions/matching/assignment-results"
 import { AutoAssignmentSuggestion } from "@/components/assignment/auto-assignment-suggestion"
-import { AssignmentResultCard } from "@/components/matching/AssignmentResultCard"
+import { AssignmentResultCard } from "@/components/matching/assignment-result-card"
 import {
   Card,
   CardContent,

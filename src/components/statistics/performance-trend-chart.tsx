@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { DateRangeFilter } from '@/components/statistics/DateRangeFilter'
+import { DateRangeFilter } from '@/components/statistics/date-range-filter'
 import { getDateRangeFromPreset, ExtendedDatePreset, DEFAULT_PRESETS } from '@/shared'
 import { DateRange } from '@/types/statistics'
 import { Loader2 } from 'lucide-react'

@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react"
 import { getReservationsAction } from "@/lib/actions/counseling/reservations-query"
-import { ReservationCalendarMonth } from "./ReservationCalendarMonth"
-import { ReservationCalendarWeek } from "./ReservationCalendarWeek"
+import { ReservationCalendarMonth } from "./reservation-calendar-month"
+import { ReservationCalendarWeek } from "./reservation-calendar-week"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import type { ReservationWithRelations } from "./ReservationCard"
+import type { ReservationWithRelations } from "./reservation-card"
 
 type CalendarViewType = "month" | "week"
 

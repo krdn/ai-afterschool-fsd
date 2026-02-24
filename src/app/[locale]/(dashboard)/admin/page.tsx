@@ -28,7 +28,7 @@ import { join } from 'path'
 
 // AI 프롬프트 관리 (통합)
 import { AnalysisPromptsTab } from '@/components/admin/tabs/analysis-prompts-tab'
-import { getAllGeneralPresetsByType, seedGeneralPresets, type AnalysisType } from '@/features/analysis'
+import { getAllGeneralPresetsByType, seedGeneralPresets } from '@/features/analysis'
 import {
   getSajuSeedData,
   getFaceSeedData,

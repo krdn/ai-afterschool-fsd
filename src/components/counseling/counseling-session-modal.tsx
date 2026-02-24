@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import type { CounselingSessionWithRelations } from "./CounselingSessionCard"
+import type { CounselingSessionWithRelations } from "./counseling-session-card"
 
 interface CounselingSessionModalProps {
   session: CounselingSessionWithRelations

@@ -1,14 +1,14 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { PerformanceDashboard } from "@/components/analytics/PerformanceDashboard"
-import { TrendDataPoint as GradeTrendDataPoint } from "@/components/analytics/GradeTrendChart"
-import { PerformanceTrendChart, TrendDataPoint } from "@/components/statistics/PerformanceTrendChart"
+import { PerformanceDashboard } from "@/components/analytics/performance-dashboard"
+import { TrendDataPoint as GradeTrendDataPoint } from "@/components/analytics/grade-trend-chart"
+import { PerformanceTrendChart, TrendDataPoint } from "@/components/statistics/performance-trend-chart"
 import { Card, CardContent } from "@/components/ui/card"
 import { Loader2, AlertCircle } from "lucide-react"
 import { getTeachers } from "@/lib/actions/teacher/crud"
 import { compareTeachersByGradeImprovement, getCounselingStats, CounselingStats } from "@/lib/actions/common/analytics"
-import { TeacherWithMetrics } from "@/components/analytics/TeacherPerformanceCard"
+import { TeacherWithMetrics } from "@/components/analytics/teacher-performance-card"
 import { getTeacherStudentMetrics } from "@/lib/actions/teacher/performance"
 import { DateRange } from "@/types/statistics"
 

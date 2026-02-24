@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { TeacherPerformanceCard, TeacherWithMetrics } from "./TeacherPerformanceCard"
+import { TeacherPerformanceCard, TeacherWithMetrics } from "./teacher-performance-card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface PerformanceMetricsGridProps {
