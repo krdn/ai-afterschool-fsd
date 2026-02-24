@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
-import { CounselingSessionForm } from "@/components/counseling/CounselingSessionForm"
+import { CounselingSessionForm } from "@/components/counseling/counseling-session-form"
 import { useRouter } from "next/navigation"
 
 interface Student {

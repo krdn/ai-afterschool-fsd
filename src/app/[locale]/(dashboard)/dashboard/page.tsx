@@ -1,5 +1,5 @@
 import { getUpcomingCounseling } from '@/lib/actions/counseling/upcoming'
-import { UpcomingCounselingWidget } from '@/components/counseling/UpcomingCounselingWidget'
+import { UpcomingCounselingWidget } from '@/components/counseling/upcoming-counseling-widget'
 
 export default async function DashboardPage() {
   const result = await getUpcomingCounseling()

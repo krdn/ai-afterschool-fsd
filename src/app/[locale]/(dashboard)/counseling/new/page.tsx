@@ -1,6 +1,6 @@
 import { verifySession } from "@/lib/dal"
 import { getRBACPrisma } from "@/lib/db/common/rbac"
-import { NewCounselingClient } from "@/components/counseling/NewCounselingClient"
+import { NewCounselingClient } from "@/components/counseling/new-counseling-client"
 
 export default async function NewCounselingPage() {
   const session = await verifySession()

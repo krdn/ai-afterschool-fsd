@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
-import { ReservationCard, type ReservationWithRelations } from "./ReservationCard"
+import { ReservationCard, type ReservationWithRelations } from "./reservation-card"
 import type { ReservationStatus } from '@/lib/db'
 
 interface ReservationListProps {

@@ -11,9 +11,9 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet"
-import { PersonalitySummaryCard } from "@/components/counseling/PersonalitySummaryCard"
-import { CompatibilityScoreCard } from "@/components/counseling/CompatibilityScoreCard"
-import { AISummaryGenerator } from "@/components/counseling/AISummaryGenerator"
+import { PersonalitySummaryCard } from "@/components/counseling/personality-summary-card"
+import { CompatibilityScoreCard } from "@/components/counseling/compatibility-score-card"
+import { AISummaryGenerator } from "@/components/counseling/ai-summary-generator"
 import {
   getStudentAISupportDataAction,
   type AISupportData,

@@ -2,9 +2,9 @@ import { format } from "date-fns"
 import { ko } from "date-fns/locale"
 import { Calendar } from "lucide-react"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { CounselingHistoryList } from "./CounselingHistoryList"
-import type { CounselingSessionWithRelations } from "./CounselingSessionCard"
-import type { ReservationWithRelations } from "./ReservationCard"
+import { CounselingHistoryList } from "./counseling-history-list"
+import type { CounselingSessionWithRelations } from "./counseling-session-card"
+import type { ReservationWithRelations } from "./reservation-card"
 
 interface CounselingSectionProps {
   sessions: CounselingSessionWithRelations[]

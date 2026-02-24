@@ -3,7 +3,7 @@
 import { startOfWeek, endOfWeek, format, isSameDay } from "date-fns"
 import { ko } from "date-fns/locale"
 import { cn } from "@/lib/utils"
-import type { ReservationWithRelations } from "./ReservationCard"
+import type { ReservationWithRelations } from "./reservation-card"
 
 // 영업시간 (9:00 ~ 18:00, 30분 단위)
 const TIME_SLOTS = [

@@ -1,10 +1,10 @@
 import type { TeamCompositionAnalysis } from "@/features/matching"
 import { analyzeTeamComposition } from "@/lib/analysis/team-composition"
 import { getTeamById } from "@/lib/actions/common/teams"
-import { PersonalityDiversityChart } from "./PersonalityDiversityChart"
-import { MBTIDistributionChart } from "./MBTIDistributionChart"
-import { ExpertiseCoverageChart } from "./ExpertiseCoverageChart"
-import { TeamRecommendationCard } from "./TeamRecommendationCard"
+import { PersonalityDiversityChart } from "./personality-diversity-chart"
+import { MBTIDistributionChart } from "./mbti-distribution-chart"
+import { ExpertiseCoverageChart } from "./expertise-coverage-chart"
+import { TeamRecommendationCard } from "./team-recommendation-card"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface TeamCompositionPanelProps {

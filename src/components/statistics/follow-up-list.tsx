@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { FollowUpCard } from "./FollowUpCard"
+import { FollowUpCard } from "./follow-up-card"
 
 interface FollowUpListProps {
   items: FollowUpItem[]

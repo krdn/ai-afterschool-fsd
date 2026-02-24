@@ -4,9 +4,9 @@ import { getRBACPrisma } from "@/lib/db/common/rbac"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { MessageSquare } from "lucide-react"
-import { CounselingPageTabs } from "@/components/counseling/CounselingPageTabs"
-import { CounselingSearchBar } from "@/components/counseling/CounselingSearchBar"
-import { CounselingFilters } from "@/components/counseling/CounselingFilters"
+import { CounselingPageTabs } from "@/components/counseling/counseling-page-tabs"
+import { CounselingSearchBar } from "@/components/counseling/counseling-search-bar"
+import { CounselingFilters } from "@/components/counseling/counseling-filters"
 import type { CounselingType, Prisma } from '@/lib/db'
 import type { CounselingSessionData } from "@/components/counseling/types"
 

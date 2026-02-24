@@ -1,4 +1,4 @@
-import { StatisticsDashboard } from "@/components/statistics/StatisticsDashboard"
+import { StatisticsDashboard } from "@/components/statistics/statistics-dashboard"
 import {
   getTeacherMonthlyStatsAction,
   getCounselingTypeDistributionAction,
