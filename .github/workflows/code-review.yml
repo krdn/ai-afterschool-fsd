@@ -1,0 +1,188 @@
+name: AI Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  review:
+    runs-on: self-hosted
+    # 봇이 만든 PR은 건너뜀 (무한 루프 방지)
+    if: github.actor != 'github-actions[bot]'
+    # CI 통과 후 실행
+    needs: []
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get PR diff
+        id: diff
+        run: |
+          # lock 파일, 자동생성 파일 제외한 diff 추출
+          git diff origin/${{ github.base_ref }}...HEAD \
+            -- . \
+            ':!pnpm-lock.yaml' \
+            ':!*.lock' \
+            ':!*.generated.*' \
+            ':!*.min.*' \
+            > /tmp/pr-diff.txt
+
+          DIFF_SIZE=$(wc -c < /tmp/pr-diff.txt)
+          echo "size=$DIFF_SIZE" >> "$GITHUB_OUTPUT"
+          echo "diff 크기: ${DIFF_SIZE} bytes"
+
+      - name: Get changed files
+        run: |
+          git diff --name-only origin/${{ github.base_ref }}...HEAD \
+            -- . \
+            ':!pnpm-lock.yaml' \
+            ':!*.lock' \
+            ':!*.generated.*' \
+            ':!*.min.*' \
+            > /tmp/changed-files.txt
+
+      - name: Skip if diff too small
+        id: check
+        run: |
+          SIZE=${{ steps.diff.outputs.size }}
+          if [ "$SIZE" -lt 50 ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "diff가 너무 작아 리뷰 건너뜀 (${SIZE} bytes)"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: AI Review with GLM-5
+        if: steps.check.outputs.skip != 'true'
+        id: review
+        env:
+          ZHIPU_API_KEY: ${{ secrets.ZHIPU_API_KEY }}
+        run: |
+          # 시스템 프롬프트 읽기
+          SYSTEM_PROMPT=$(cat .github/prompts/review-system.md)
+
+          # diff 읽기 (100KB 제한 — 토큰 절약)
+          DIFF=$(head -c 100000 /tmp/pr-diff.txt)
+          FILES=$(cat /tmp/changed-files.txt)
+
+          # JSON 페이로드 구성
+          PAYLOAD=$(jq -n \
+            --arg model "glm-5" \
+            --arg system "$SYSTEM_PROMPT" \
+            --arg user "## 변경된 파일
+          $FILES
+
+          ## Diff
+          \`\`\`diff
+          $DIFF
+          \`\`\`" \
+            '{
+              model: $model,
+              messages: [
+                { role: "system", content: $system },
+                { role: "user", content: $user }
+              ],
+              max_tokens: 2048,
+              temperature: 0.3
+            }')
+
+          # GLM-5 API 호출 (재시도 2회, 지수 백오프)
+          MAX_RETRIES=2
+          RETRY_DELAY=5
+          SUCCESS=false
+
+          for ATTEMPT in $(seq 0 $MAX_RETRIES); do
+            if [ "$ATTEMPT" -gt 0 ]; then
+              WAIT=$((RETRY_DELAY * ATTEMPT))
+              echo "재시도 ${ATTEMPT}/${MAX_RETRIES} (${WAIT}초 대기)"
+              sleep $WAIT
+            fi
+
+            RESPONSE=$(curl -s -w "\n%{http_code}" \
+              -X POST "https://api.z.ai/api/paas/v4/chat/completions" \
+              -H "Content-Type: application/json" \
+              -H "Authorization: Bearer $ZHIPU_API_KEY" \
+              -d "$PAYLOAD")
+
+            HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+            BODY=$(echo "$RESPONSE" | sed '$d')
+
+            if [ "$HTTP_CODE" -eq 200 ]; then
+              echo "$BODY" | jq -r '.choices[0].message.content // "응답 파싱 실패"' > /tmp/review-result.txt
+              SUCCESS=true
+              break
+            fi
+
+            echo "API 호출 실패 (HTTP $HTTP_CODE)"
+
+            # 401/403은 인증 문제 — 재시도 무의미
+            if [ "$HTTP_CODE" -eq 401 ] || [ "$HTTP_CODE" -eq 403 ]; then
+              echo "인증 실패 — 재시도하지 않음"
+              break
+            fi
+          done
+
+          if [ "$SUCCESS" = false ]; then
+            echo "API 호출 실패 (HTTP $HTTP_CODE). 수동 리뷰가 필요합니다." > /tmp/review-result.txt
+          fi
+
+          echo "리뷰 완료"
+
+      - name: Post review comment
+        if: steps.check.outputs.skip != 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const review = fs.readFileSync('/tmp/review-result.txt', 'utf-8').trim();
+            const marker = '<!-- ai-review -->';
+
+            const body = [
+              marker,
+              '## AI Code Review (GLM-5)',
+              '',
+              review,
+              '',
+              `---`,
+              `_PR diff ${${{ steps.diff.outputs.size }}} bytes | ${new Date().toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })}_`,
+            ].join('\n');
+
+            // 기존 봇 코멘트 찾기
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(c =>
+              c.body && c.body.includes(marker)
+            );
+
+            if (botComment) {
+              // 기존 코멘트 업데이트
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body,
+              });
+              console.log(`코멘트 업데이트: ${botComment.id}`);
+            } else {
+              // 새 코멘트 작성
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body,
+              });
+              console.log('새 코멘트 작성');
+            }
