@@ -1,39 +1,18 @@
 "use client"
 
-import { useState, useTransition, useEffect } from "react"
-import { format } from "date-fns"
-import { ko } from "date-fns/locale"
-import { Loader2, RefreshCw, Sparkles, Trash2 } from "lucide-react"
 import { runTeacherSajuAnalysis, simplifyTeacherInterpretation } from "@/lib/actions/teacher/analysis"
-import { getMergedPromptOptionsAction } from "@/lib/actions/student/saju"
-import type { SajuResult } from "@/features/analysis"
-import type { ProviderName } from "@/features/ai-engine"
-import type { AnalysisPromptMeta } from "@/features/ai-engine/prompts"
-import { hanjaLabel, toDate, formatBirthTime } from "@/components/common/saju-utils"
-import { MarkdownRenderer } from "@/components/ui/markdown-renderer"
-import { ProviderSelector } from "@/components/students/provider-selector"
-import { PromptSelector } from "@/components/students/prompt-selector"
-import { SajuHelpDialog } from "@/components/students/saju-help-dialog"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Textarea } from "@/components/ui/textarea"
-import {
-  AlertDialog, AlertDialogAction, AlertDialogCancel,
-  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
-  AlertDialogHeader, AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
 import { resetAnalysis } from "@/lib/actions/reset-analysis"
-
-type TeacherSajuAnalysis = {
-  result: unknown
-  interpretation: string | null
-  calculatedAt: Date | string
-} | null
+import { SajuPanel, type AnalysisRunResult } from "@/components/common/saju-panel"
+import type { ProviderName } from "@/features/ai-engine"
 
 type Props = {
   teacherId: string
   teacherName: string
-  analysis: TeacherSajuAnalysis
+  analysis: {
+    result: unknown
+    interpretation: string | null
+    calculatedAt: Date | string
+  } | null
   teacherBirthDate?: Date | string | null
   teacherBirthTimeHour?: number | null
   teacherBirthTimeMinute?: number | null
@@ -43,6 +22,34 @@ type Props = {
   lastUsedModel?: string | null
 }
 
+async function handleRunAnalysis(
+  subjectId: string,
+  provider: string,
+  promptId: string,
+  extra?: string,
+  forceRefresh?: boolean
+): Promise<AnalysisRunResult> {
+  const res = await runTeacherSajuAnalysis(subjectId, provider, promptId, extra, forceRefresh)
+  if (!res.success) {
+    throw new Error(res.error ?? '사주 분석에 실패했습니다.')
+  }
+  return {
+    llmFailed: res.data.llmFailed,
+    llmError: res.data.llmError,
+    usedProvider: res.data.usedProvider,
+    usedModel: res.data.usedModel,
+    cached: res.data.cached,
+  }
+}
+
+async function handleSimplify(interpretation: string, provider: string) {
+  return simplifyTeacherInterpretation(interpretation, provider)
+}
+
+async function handleReset(subjectId: string) {
+  return resetAnalysis("saju", "TEACHER", subjectId)
+}
+
 export function TeacherSajuPanel({
   teacherId,
   teacherName,
@@ -50,404 +57,27 @@ export function TeacherSajuPanel({
   teacherBirthDate,
   teacherBirthTimeHour,
   teacherBirthTimeMinute,
-  enabledProviders = [],
+  enabledProviders,
   onAnalysisComplete,
   lastUsedProvider,
   lastUsedModel,
 }: Props) {
-  const [isPending, startTransition] = useTransition()
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [selectedProvider, setSelectedProvider] = useState('built-in')
-  const [selectedPromptId, setSelectedPromptId] = useState<string>('default')
-  const [additionalRequest, setAdditionalRequest] = useState('')
-  const [providerLabel, setProviderLabel] = useState<string | null>(() => {
-    if (!lastUsedProvider) return null
-    const model = lastUsedModel && lastUsedModel !== 'default' ? ` (${lastUsedModel})` : ''
-    return `${lastUsedProvider}${model}`
-  })
-  const [promptLabel, setPromptLabel] = useState<string | null>(null)
-  const [viewMode, setViewMode] = useState<"markdown" | "rendered">("rendered")
-  const [promptOptions, setPromptOptions] = useState<AnalysisPromptMeta[]>([])
-  const [simplifiedText, setSimplifiedText] = useState<string | null>(null)
-  const [isSimplifying, setIsSimplifying] = useState(false)
-  const [showSimplified, setShowSimplified] = useState(false)
-  const [simplifyError, setSimplifyError] = useState<string | null>(null)
-  const [isCached, setIsCached] = useState(false)
-  const [showResetDialog, setShowResetDialog] = useState(false)
-  const [isResetting, startResetTransition] = useTransition()
-
-  function handleReset() {
-    startResetTransition(async () => {
-      const result = await resetAnalysis("saju", "TEACHER", teacherId)
-      if (result.success) {
-        onAnalysisComplete?.()
-      } else {
-        setErrorMessage(result.error ?? "초기화 실패")
-      }
-      setShowResetDialog(false)
-    })
-  }
-
-  // DB에서 프롬프트 옵션 실시간 로드
-  useEffect(() => {
-    getMergedPromptOptionsAction().then(setPromptOptions).catch(console.error)
-  }, [])
-
-  const result = analysis?.result as SajuResult | undefined
-  const isLLM = selectedProvider !== 'built-in'
-  const canAnalyze = Boolean(teacherBirthDate)
-
-  const handleSimplify = async () => {
-    if (!analysis?.interpretation) return
-    if (simplifiedText) {
-      setShowSimplified(!showSimplified)
-      return
-    }
-    setIsSimplifying(true)
-    setSimplifyError(null)
-    try {
-      const res = await simplifyTeacherInterpretation(
-        analysis.interpretation,
-        selectedProvider === 'built-in' ? 'auto' : selectedProvider
-      )
-      setSimplifiedText(res.text)
-      setShowSimplified(true)
-    } catch {
-      setSimplifyError('쉽게 풀이 생성에 실패했습니다. 다시 시도해주세요.')
-    } finally {
-      setIsSimplifying(false)
-    }
-  }
-
-  const handleRunAnalysis = (forceRefresh = false) => {
-    startTransition(async () => {
-      setErrorMessage(null)
-      setProviderLabel(null)
-      setPromptLabel(null)
-      setSimplifiedText(null)
-      setShowSimplified(false)
-      setSimplifyError(null)
-      setIsCached(false)
-      try {
-        const promptId = isLLM ? selectedPromptId : 'default'
-        const extra = isLLM ? additionalRequest.trim() || undefined : undefined
-        const res = await runTeacherSajuAnalysis(teacherId, selectedProvider, promptId, extra, forceRefresh)
-        if (!res.success) {
-          setErrorMessage(res.error ?? '사주 분석에 실패했습니다.')
-          return
-        }
-        if (res.data.llmFailed) {
-          setErrorMessage(`내장 알고리즘으로 대체 해석했습니다. ${res.data.llmError || 'LLM 설정을 확인해주세요.'}`)
-          setProviderLabel('내장 알고리즘')
-        } else {
-          const model = res.data.usedModel && res.data.usedModel !== 'default' ? ` (${res.data.usedModel})` : ''
-          setProviderLabel(`${res.data.usedProvider}${model}`)
-          setIsCached(res.data.cached ?? false)
-        }
-        if (promptId !== 'default') {
-          const meta = promptOptions.find((p) => p.id === promptId)
-          if (meta) setPromptLabel(meta.name)
-        }
-        onAnalysisComplete?.()
-      } catch (error) {
-        console.error("Failed to run saju analysis", error)
-        setErrorMessage(`사주 분석에 실패했습니다. (원인: ${error instanceof Error ? error.message : '알 수 없는 오류'}) 다시 시도해주세요.`)
-      }
-    })
-  }
-
-  const calculatedAt = analysis?.calculatedAt ? toDate(analysis.calculatedAt) : null
-
   return (
-    <Card>
-      <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-2">
-          <CardTitle>사주 분석</CardTitle>
-          <SajuHelpDialog />
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="gap-1"
-            onClick={() => handleRunAnalysis(true)}
-            disabled={isPending || !canAnalyze}
-            title="캐시 무시하고 새로 분석"
-          >
-            {isPending ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <RefreshCw className="h-4 w-4" />
-            )}
-            새로고침
-          </Button>
-          {analysis && (
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-1 text-destructive hover:text-destructive"
-              onClick={() => setShowResetDialog(true)}
-              disabled={isResetting}
-              title="분석 결과 초기화"
-            >
-              <Trash2 className="h-4 w-4" />
-              초기화
-            </Button>
-          )}
-          <div className="text-xs text-gray-500">
-            {calculatedAt
-              ? `최근 계산: ${format(calculatedAt, "yyyy.MM.dd HH:mm", { locale: ko })}`
-              : "아직 분석되지 않았어요."}
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-gray-600">1. 기본 정보</h3>
-          <div className="rounded-md bg-gray-50 p-4 text-sm text-gray-700">
-            <p>선생님: {teacherName}</p>
-            {teacherBirthDate ? (
-              <>
-                <p>
-                  생년월일: {format(toDate(teacherBirthDate), "yyyy년 M월 d일", { locale: ko })}
-                </p>
-                <p>
-                  출생 시간: {formatBirthTime(teacherBirthTimeHour, teacherBirthTimeMinute)}
-                  {(teacherBirthTimeHour === null || teacherBirthTimeHour === undefined) ? " (시주 계산 제외)" : ""}
-                </p>
-              </>
-            ) : (
-              <p className="text-amber-600">생년월일 정보가 없어 분석을 실행할 수 없어요.</p>
-            )}
-          </div>
-
-          {/* 분석 설정 영역 */}
-          <div className="rounded-md border border-gray-200 p-4 space-y-3">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 flex-wrap">
-              <ProviderSelector
-                selectedProvider={selectedProvider}
-                onProviderChange={setSelectedProvider}
-                availableProviders={enabledProviders}
-                showBuiltIn
-                disabled={isPending}
-              />
-              {isLLM && (
-                <PromptSelector
-                  selectedPromptId={selectedPromptId}
-                  onPromptChange={setSelectedPromptId}
-                  promptOptions={promptOptions}
-                  disabled={isPending}
-                  showInfoCard
-                />
-              )}
-            </div>
-
-            {isLLM && (
-              <div className="space-y-1">
-                <label className="text-xs text-gray-500">
-                  추가 요청 / 특이사항 (선택)
-                </label>
-                <Textarea
-                  placeholder="예: 최근 스트레스가 많습니다. 건강 운세를 중점적으로 부탁드립니다."
-                  value={additionalRequest}
-                  onChange={(e) => setAdditionalRequest(e.target.value)}
-                  disabled={isPending}
-                  rows={2}
-                  className="text-sm resize-none"
-                  maxLength={500}
-                />
-                <p className="text-[10px] text-gray-400 text-right">
-                  {additionalRequest.length}/500
-                </p>
-              </div>
-            )}
-
-            <Button
-              type="button"
-              disabled={isPending || !canAnalyze}
-              onClick={() => handleRunAnalysis(false)}
-              className="w-full sm:w-auto"
-            >
-              {isPending ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin mr-1" />
-                  분석 중...
-                </>
-              ) : (
-                "사주 분석 실행"
-              )}
-            </Button>
-          </div>
-
-          {!canAnalyze && (
-            <p className="text-xs text-amber-600">
-              생년월일 정보를 먼저 입력해주세요. (선생님 정보 수정)
-            </p>
-          )}
-
-          {errorMessage && (
-            <div className="flex items-center justify-between gap-4 mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-700">{errorMessage}</p>
-              <Button onClick={() => handleRunAnalysis(false)} disabled={isPending} variant="outline" size="sm">
-                {isPending ? (
-                  <><Loader2 className="w-4 h-4 animate-spin mr-1" />재시도 중...</>
-                ) : (
-                  <><RefreshCw className="w-4 h-4 mr-1" />다시 시도</>
-                )}
-              </Button>
-            </div>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-gray-600">2. 사주 구조</h3>
-          {result ? (
-            <div className="grid gap-3 rounded-md border border-gray-200 bg-white p-4 text-sm">
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                <div>
-                  <p className="text-xs text-gray-500">연주</p>
-                  <p className="font-medium">
-                    {hanjaLabel(result.pillars.year.stem, result.pillars.year.branch)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500">월주</p>
-                  <p className="font-medium">
-                    {hanjaLabel(result.pillars.month.stem, result.pillars.month.branch)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500">일주</p>
-                  <p className="font-medium">
-                    {hanjaLabel(result.pillars.day.stem, result.pillars.day.branch)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500">시주</p>
-                  <p className="font-medium">
-                    {result.pillars.hour
-                      ? hanjaLabel(result.pillars.hour.stem, result.pillars.hour.branch)
-                      : "미상"}
-                  </p>
-                </div>
-              </div>
-              <div className="text-xs text-gray-500">
-                절기: {result.meta.solarTerm} · 오행 균형: 목 {result.elements.목} / 화 {result.elements.화} / 토 {result.elements.토} / 금 {result.elements.금} / 수 {result.elements.수}
-              </div>
-            </div>
-          ) : (
-            <div className="rounded-md bg-gray-50 p-4 text-sm text-gray-500">
-              아직 계산된 사주 구조가 없습니다.
-            </div>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold text-gray-600">3. 해석</h3>
-            {providerLabel && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">
-                {providerLabel}
-              </span>
-            )}
-            {promptLabel && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-purple-50 text-purple-600 border border-purple-200">
-                {promptLabel}
-              </span>
-            )}
-            {isCached && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-50 text-yellow-700 border border-yellow-200">
-                ⚡ 캐시됨
-              </span>
-            )}
-            {analysis?.interpretation && selectedProvider !== 'built-in' && (
-              <button
-                type="button"
-                disabled={isSimplifying}
-                onClick={handleSimplify}
-                className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs rounded-full border transition-colors ${
-                  showSimplified
-                    ? 'bg-amber-100 text-amber-700 border-amber-300'
-                    : 'bg-white text-gray-500 border-gray-200 hover:bg-amber-50 hover:text-amber-600 hover:border-amber-200'
-                }`}
-              >
-                {isSimplifying ? (
-                  <Loader2 className="h-3 w-3 animate-spin" />
-                ) : (
-                  <Sparkles className="h-3 w-3" />
-                )}
-                쉽게 풀이
-              </button>
-            )}
-            {analysis?.interpretation && (
-              <div className="ml-auto flex rounded-md border border-gray-200 text-xs overflow-hidden">
-                <button
-                  type="button"
-                  className={`px-2.5 py-1 transition-colors ${viewMode === "rendered" ? "bg-gray-800 text-white" : "bg-white text-gray-500 hover:bg-gray-50"}`}
-                  onClick={() => setViewMode("rendered")}
-                >
-                  미리보기
-                </button>
-                <button
-                  type="button"
-                  className={`px-2.5 py-1 border-l border-gray-200 transition-colors ${viewMode === "markdown" ? "bg-gray-800 text-white" : "bg-white text-gray-500 hover:bg-gray-50"}`}
-                  onClick={() => setViewMode("markdown")}
-                >
-                  원문
-                </button>
-              </div>
-            )}
-          </div>
-          {analysis?.interpretation?.trim() ? (
-            <>
-              {showSimplified && simplifiedText && (
-                <div className="flex items-center gap-1 mb-2">
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-200">
-                    <Sparkles className="inline h-3 w-3 mr-0.5" />
-                    쉽게 풀이 보기 중
-                  </span>
-                </div>
-              )}
-              {viewMode === "rendered" ? (
-                <div className="rounded-md border border-gray-200 bg-white p-4 max-h-[500px] overflow-y-auto">
-                  <MarkdownRenderer content={showSimplified && simplifiedText ? simplifiedText : analysis.interpretation} />
-                </div>
-              ) : (
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 text-sm leading-6 text-gray-700 whitespace-pre-wrap font-mono">
-                  {showSimplified && simplifiedText ? simplifiedText : analysis.interpretation}
-                </div>
-              )}
-              {simplifyError && (
-                <p className="text-xs text-red-500 mt-1">{simplifyError}</p>
-              )}
-            </>
-          ) : (
-            <div className="rounded-md bg-gray-50 p-4 text-sm text-gray-500">
-              사주 해석이 아직 생성되지 않았어요.
-            </div>
-          )}
-        </div>
-      </CardContent>
-
-      <AlertDialog open={showResetDialog} onOpenChange={setShowResetDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>사주 분석 결과를 초기화할까요?</AlertDialogTitle>
-            <AlertDialogDescription>
-              현재 분석 결과가 삭제됩니다. 이력은 유지됩니다.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>취소</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleReset}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {isResetting ? <Loader2 className="h-4 w-4 animate-spin" /> : "초기화"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </Card>
+    <SajuPanel
+      subjectId={teacherId}
+      subjectLabel={`선생님: ${teacherName}`}
+      birthDate={teacherBirthDate}
+      birthTimeHour={teacherBirthTimeHour}
+      birthTimeMinute={teacherBirthTimeMinute}
+      analysis={analysis}
+      onRunAnalysis={handleRunAnalysis}
+      onSimplify={handleSimplify}
+      onReset={handleReset}
+      enabledProviders={enabledProviders}
+      onAnalysisComplete={onAnalysisComplete}
+      lastUsedProvider={lastUsedProvider}
+      lastUsedModel={lastUsedModel}
+      placeholder="예: 최근 스트레스가 많습니다. 건강 운세를 중점적으로 부탁드립니다."
+    />
   )
 }
