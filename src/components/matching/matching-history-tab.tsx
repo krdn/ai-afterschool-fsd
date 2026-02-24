@@ -12,7 +12,6 @@ import { getMatchingHistory, type MatchingHistoryParams } from '@/lib/actions/ma
 import { getTeachers } from '@/lib/actions/teacher/crud'
 import type { AuditLogEntry } from '@/lib/actions/admin/audit'
 import { Loader2, ChevronLeft, ChevronRight, Filter } from 'lucide-react'
-import { toast } from 'sonner'
 
 interface Teacher {
   id: string
@@ -110,6 +109,7 @@ export function MatchingHistoryTab({ initialFilters = {} }: MatchingHistoryTabPr
   // 필터 또는 페이지 변경 시 로그 조회
   useEffect(() => {
     fetchLogs()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, page])
 
   // 필터 적용 핸들러

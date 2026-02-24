@@ -77,7 +77,7 @@ export function StudentForm({ student }: StudentFormProps) {
     null
   )
   const [profileRemoved, setProfileRemoved] = useState(false)
-  const [isDeleting, startDeleteTransition] = useTransition()
+  const [_isDeleting, startDeleteTransition] = useTransition()
   const [draftId] = useState(() => crypto.randomUUID())
   const [nameHanjaText, setNameHanjaText] = useState(
     () => student ? extractInitialHanjaText(student.nameHanja) : ""

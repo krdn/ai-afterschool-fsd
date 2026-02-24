@@ -38,30 +38,6 @@ const allowedFormats = ["jpg", "jpeg", "png", "heic"]
 // 파일 크기 제한: 10MB
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB in bytes
 
-// 파일 업로드 전 검증
-function validateFileBeforeUpload(file: File): boolean {
-  // 파일 크기 검증 (10MB)
-  if (file.size > MAX_FILE_SIZE) {
-    toast.error("파일 크기 초과", {
-      description: "파일은 최대 10MB까지 업로드할 수 있어요",
-      id: "file-size-error",
-    })
-    return false
-  }
-
-  // 파일 형식 검증
-  const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/heic"]
-  if (!ALLOWED_TYPES.includes(file.type)) {
-    toast.error("파일 형식 오류", {
-      description: "JPG, PNG, WebP, HEIC 형식만 지원해요",
-      id: "file-type-error",
-    })
-    return false
-  }
-
-  return true
-}
-
 // Cloudinary URL에서 publicId 추출
 function extractPublicId(url: string): string {
   // 예: https://res.cloudinary.com/.../image/upload/v123456/students/student123/profile/abc123
@@ -147,7 +123,7 @@ export function StudentImageUploader({
                 folder: uploadFolder,
                 uploadPreset: process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET,
               }}
-              onOpen={(widget) => {
+              onOpen={(_widget) => {
                 // 위젯이 열릴 때 추가 검증이 필요하면 여기서 처리
               }}
               onUploadAdded={() => {

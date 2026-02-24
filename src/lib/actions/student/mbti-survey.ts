@@ -15,7 +15,7 @@ import { generateWithProvider, generateWithSpecificProvider } from '@/features/a
 import { MBTI_INTERPRETATION_PROMPT, getMbtiPrompt, type MbtiPromptId } from "@/features/ai-engine/prompts"
 import type { ProviderName } from '@/features/ai-engine'
 import { eventBus } from "@/lib/events/event-bus"
-import { ok, fail, type ActionResult } from "@/lib/errors/action-result"
+import { ok } from "@/lib/errors/action-result"
 import questions from "@/data/mbti/questions.json"
 import descriptions from "@/data/mbti/descriptions.json"
 

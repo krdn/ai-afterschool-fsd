@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { getHelpTopic, getRelatedTopics, type HelpTopic } from '@/lib/help/help-content';
+import { getHelpTopic, getRelatedTopics } from '@/lib/help/help-content';
 import { MarkdownRenderer } from '@/components/ui/markdown-renderer';
 
 interface InlineHelpProps {

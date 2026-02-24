@@ -22,7 +22,6 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import {
-  getAllHelpTopics,
   getCategories,
   searchHelp,
   getHelpByCategory,
@@ -64,8 +63,6 @@ export function HelpCenter({
   const [isDetailOpen, setIsDetailOpen] = React.useState(false);
 
   const categories = getCategories();
-  const allTopics = getAllHelpTopics();
-
   // 검색 또는 카테고리별 주제 필터링
   const filteredTopics = React.useMemo(() => {
     if (searchQuery.trim()) {

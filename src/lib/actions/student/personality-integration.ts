@@ -13,7 +13,7 @@ import { generateWithProvider, FailoverError } from '@/features/ai-engine'
 import { buildLearningStrategyPrompt, buildCareerGuidancePrompt } from "@/features/ai-engine/prompts"
 import { LearningStrategySchema, CareerGuidanceSchema } from "@/lib/validations/personality"
 import { extractJsonFromLLM } from "@/shared"
-import { ok, fail, type ActionResult } from "@/lib/errors/action-result"
+import { ok, fail } from "@/lib/errors/action-result"
 import { logger } from "@/lib/logger"
 
 /**

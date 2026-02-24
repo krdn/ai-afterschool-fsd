@@ -5,13 +5,6 @@ import type { CompatibilityScore } from "@/features/analysis"
 /**
  * CompatibilityResult 생성/업데이트 페이로드
  */
-type CompatibilityResultPayload = {
-  overallScore: number
-  breakdown: Prisma.JsonValue
-  reasons?: Prisma.JsonValue | null
-  calculatedAt?: Date
-}
-
 /**
  * 선생님-학생 궁합 결과 생성/업데이트
  *

@@ -7,7 +7,6 @@
 import { Prisma } from '@/lib/db'
 import { db } from "@/lib/db/client"
 import type { DetailedAssignment as Assignment } from "../types"
-import type { CompatibilityScore } from "@/features/analysis"
 
 /**
  * AssignmentProposal 요약 타입

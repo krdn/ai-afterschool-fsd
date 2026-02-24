@@ -32,7 +32,7 @@ export class AnthropicAdapter extends BaseAdapter {
     const effectiveApiKey = effectiveConfig.apiKeyEncrypted
       ? this.decryptApiKey(effectiveConfig.apiKeyEncrypted)
       : this.apiKey;
-    const effectiveBaseUrl = effectiveConfig.baseUrl || this.baseUrl;
+    const _effectiveBaseUrl = effectiveConfig.baseUrl || this.baseUrl;
 
     if (effectiveApiKey) {
       const custom = createAnthropic({

@@ -38,7 +38,7 @@ type Props = {
   onDataChange?: () => void
 }
 
-export function VarkAnalysisPanel({ studentId, studentName, analysis, enabledProviders = [], promptOptions = [], onDataChange }: Props) {
+export function VarkAnalysisPanel({ studentId, studentName: _studentName, analysis, enabledProviders = [], promptOptions = [], onDataChange }: Props) {
   const [isGeneratingAI, setIsGeneratingAI] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [showResetDialog, setShowResetDialog] = useState(false)

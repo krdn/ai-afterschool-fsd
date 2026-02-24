@@ -3,7 +3,7 @@
 import { verifySession } from "@/lib/dal"
 import { getRBACPrisma } from "@/lib/db/common/rbac"
 import { CounselingType, Prisma } from '@/lib/db'
-import { startOfMonth, endOfMonth, subMonths } from "date-fns"
+import { startOfMonth, subMonths } from "date-fns"
 import type {
   TeacherMonthlyStats,
   StudentCumulativeStats,

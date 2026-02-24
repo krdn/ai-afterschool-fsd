@@ -69,7 +69,6 @@ export interface OllamaConnectionResult {
 
 export async function testOllamaConnection(options?: { baseUrl?: string; apiKey?: string }): Promise<OllamaConnectionResult> {
   const baseUrl = ensureHttps(options?.baseUrl || getOllamaDirectUrl());
-  const isProxy = !!options?.apiKey;
   const startTime = Date.now();
 
   try {
@@ -154,13 +153,16 @@ export async function getOllamaModels(options?: { baseUrl?: string; apiKey?: str
       return [];
     }
 
-    const data = await response.json() as { data?: any[]; models?: any[] };
+    const data = await response.json() as {
+      data?: { id: string; name: string; ollama?: { size?: number; digest?: string; modified_at?: string } }[];
+      models?: OllamaModel[];
+    };
 
     // Open WebUI 프록시: { data: [{ id, name, ollama: { size } }] }
     if (isProxy && data.data) {
       return data.data
-        .filter((m: { ollama?: unknown }) => m.ollama)
-        .map((m: { id: string; name: string; ollama?: { size?: number; digest?: string; modified_at?: string } }) => ({
+        .filter((m) => m.ollama)
+        .map((m) => ({
           name: m.id,
           size: m.ollama?.size ?? 0,
           digest: m.ollama?.digest ?? '',

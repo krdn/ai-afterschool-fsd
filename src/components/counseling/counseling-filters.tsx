@@ -11,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import type { CounselingType } from '@/lib/db'
 
 interface CounselingFiltersProps {
   canViewTeam: boolean

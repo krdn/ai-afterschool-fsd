@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { DatePreset } from "@/types/statistics"
 import { ExtendedDatePreset, PRESET_LABELS, DEFAULT_PRESETS } from "@/shared"
 
 interface DateRangeFilterProps {

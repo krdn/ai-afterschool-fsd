@@ -182,12 +182,6 @@ export function FeatureMappingList({ mappings, providers }: FeatureMappingListPr
     return FEATURE_TYPES.find((f) => f.value === value)?.label || value;
   };
 
-  // 모든 기능에 대한 테스트 결과 요약
-  const testAllFeatures = async () => {
-    // TODO: 전체 테스트 기능 구현
-    console.log('Testing all features...');
-  };
-
   return (
     <div className="space-y-6">
       {/* 전체 요약 카드 */}

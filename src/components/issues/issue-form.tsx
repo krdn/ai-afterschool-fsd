@@ -13,7 +13,6 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { IssueSchema } from '@/lib/validations/issues'
-import { z } from 'zod'
 import type { IssueCategory } from '@/lib/db'
 
 export interface IssueFormData {

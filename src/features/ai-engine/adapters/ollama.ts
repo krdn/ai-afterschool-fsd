@@ -167,7 +167,7 @@ export class OllamaAdapter extends BaseAdapter {
           };
         }
 
-        const modelsData = await modelsResponse.json() as { data?: any[]; models?: any[] };
+        const modelsData = await modelsResponse.json() as { data?: Record<string, unknown>[]; models?: Record<string, unknown>[] };
         const modelCount = apiKey
           ? (modelsData.data?.length ?? 0)
           : (modelsData.models?.length ?? 0);
@@ -270,12 +270,12 @@ export class OllamaAdapter extends BaseAdapter {
 
       if (!response.ok) return [];
 
-      const data = await response.json() as { data?: any[] };
+      const data = await response.json() as { data?: { id: string; name: string; ollama?: { size?: number } }[] };
       if (!data.data) return [];
 
       return data.data
-        .filter((m: { ollama?: unknown }) => m.ollama)
-        .map((m: { id: string; name: string; ollama?: { size?: number } }) => ({
+        .filter((m) => m.ollama)
+        .map((m) => ({
           id: m.id,
           modelId: m.id,
           displayName: m.name || m.id,
@@ -311,9 +311,9 @@ export class OllamaAdapter extends BaseAdapter {
 
       if (!response.ok) return [];
 
-      const data = await response.json() as { models?: any[] };
+      const data = await response.json() as { models?: { name: string }[] };
       const models = data.models || [];
-      return models.map((m: { name: string }) => ({
+      return models.map((m) => ({
         id: m.name,
         modelId: m.name,
         displayName: m.name,

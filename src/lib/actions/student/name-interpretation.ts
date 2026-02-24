@@ -11,7 +11,7 @@ import { eventBus } from "@/lib/events/event-bus"
 import { generateWithProvider, generateWithSpecificProvider } from '@/features/ai-engine'
 import { getNamePrompt, type NamePromptId } from "@/features/ai-engine/prompts"
 import type { ProviderName } from '@/features/ai-engine'
-import { ok, type ActionResult } from "@/lib/errors/action-result"
+import { ok } from "@/lib/errors/action-result"
 
 /**
  * 역할에 따른 teacherId 반환

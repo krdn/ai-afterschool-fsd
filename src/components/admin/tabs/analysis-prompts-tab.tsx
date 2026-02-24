@@ -9,8 +9,6 @@ import {
   X,
   Eye,
   EyeOff,
-  ChevronDown,
-  ChevronUp,
   Lock,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -78,27 +76,6 @@ function toEditing(p: AnalysisPromptPresetData): EditingPreset {
     isBuiltIn: p.isBuiltIn,
     sortOrder: p.sortOrder,
   }
-}
-
-// 분석 유형별 색상 테마
-const typeColors: Record<AnalysisType, string> = {
-  saju: "amber",
-  face: "blue",
-  palm: "purple",
-  mbti: "green",
-  vark: "teal",
-  name: "orange",
-  zodiac: "indigo",
-}
-
-const typeBadgeVariants: Record<AnalysisType, "default" | "secondary" | "outline"> = {
-  saju: "default",
-  face: "default",
-  palm: "default",
-  mbti: "default",
-  vark: "default",
-  name: "secondary",
-  zodiac: "secondary",
 }
 
 // 플레이스홀더 안내 메시지

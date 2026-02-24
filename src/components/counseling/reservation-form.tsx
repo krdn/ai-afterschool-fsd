@@ -18,7 +18,6 @@ import { createReservationAction } from "@/lib/actions/counseling/reservations"
 import { getReservationsAction } from "@/lib/actions/counseling/reservations-query"
 import { getStudentsAction, type StudentWithParents } from "@/lib/actions/student/crud"
 import { toast } from "sonner"
-import { ReservationStatus } from '@/lib/db'
 
 interface ReservationFormProps {
   onCancel: () => void

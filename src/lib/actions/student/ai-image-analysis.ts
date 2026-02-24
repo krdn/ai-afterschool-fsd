@@ -11,7 +11,7 @@ import { upsertFaceAnalysis } from '@/features/analysis'
 import { upsertPalmAnalysis } from '@/features/analysis'
 import type { ProviderName } from '@/features/ai-engine'
 import { eventBus } from "@/lib/events/event-bus"
-import { ok, fail, type ActionResult } from "@/lib/errors/action-result"
+import { ok, fail } from "@/lib/errors/action-result"
 import { logger } from "@/lib/logger"
 
 /**

@@ -33,13 +33,6 @@ type TeacherTableProps = {
   currentRole: string
 }
 
-const roleLabels: Record<Teacher['role'], string> = {
-  DIRECTOR: '원장',
-  TEAM_LEADER: '팀장',
-  MANAGER: '매니저',
-  TEACHER: '선생님',
-}
-
 export function TeacherTable({ data, currentUserId, currentRole }: TeacherTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [globalFilter, setGlobalFilter] = React.useState('')

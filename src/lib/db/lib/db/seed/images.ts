@@ -19,6 +19,7 @@ export async function uploadSeedImages(
   groups: SeedGroup[],
   dataOverride?: Partial<SeedDataSet>,
 ): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let cloudinary: any
   let buildResizedImageUrl: (publicId: string) => string
   try {

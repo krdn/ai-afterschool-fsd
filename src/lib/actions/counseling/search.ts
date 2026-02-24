@@ -1,6 +1,5 @@
 'use server'
 
-import { db } from '@/lib/db/client'
 import { verifySession } from '@/lib/dal'
 import { getRBACPrisma } from '@/lib/db/common/rbac'
 import type { CounselingType, Prisma } from '@/lib/db'

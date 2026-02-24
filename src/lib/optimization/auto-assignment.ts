@@ -41,7 +41,7 @@ export async function generateAutoAssignment(
   options: AutoAssignmentOptions = {}
 ): Promise<Assignment[]> {
   // 인증 및 RBAC 확인
-  const session = await verifySession()
+  const _session = await verifySession()
 
   // 선생님 목록 조회 (TEACHER, MANAGER, TEAM_LEADER만)
   const teachers = await db.teacher.findMany({

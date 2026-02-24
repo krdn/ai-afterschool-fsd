@@ -26,7 +26,6 @@ function getCoverageLabel(count: number, maxCount: number): string {
 
 export function ExpertiseCoverageChart({ coverage }: ExpertiseCoverageChartProps) {
   const maxSubjectTeachers = Math.max(...Object.values(coverage.subjects), 1)
-  const maxGradeTeachers = Math.max(...Object.values(coverage.grades), 1)
 
   const hasWeakSubjects = coverage.weakSubjects.length > 0
   const hasWeakGrades = coverage.weakGrades.length > 0

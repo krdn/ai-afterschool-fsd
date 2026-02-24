@@ -8,9 +8,36 @@
 
 
 /**
+ * 제공자 템플릿 타입
+ */
+interface ProviderTemplate {
+  templateId: string
+  name: string
+  providerType: string
+  description: string
+  logoUrl: string
+  defaultBaseUrl?: string
+  defaultAuthType: string
+  defaultCapabilities: string[]
+  defaultCostTier: string
+  defaultQualityTier: string
+  defaultModels: {
+    modelId: string
+    displayName: string
+    contextWindow: number
+    supportsVision: boolean
+  }[]
+  apiKeyInstructions: string
+  apiKeyUrl: string
+  helpUrl: string
+  isPopular: boolean
+  sortOrder: number
+}
+
+/**
  * 제공자 템플릿 목록
  */
-const providerTemplates: any[] = [
+const providerTemplates: ProviderTemplate[] = [
   // OpenAI (인기)
   {
     templateId: 'openai',
@@ -499,21 +526,21 @@ const providerTemplates: any[] = [
 /**
  * 모든 제공자 템플릿을 반환합니다.
  */
-export function getProviderTemplates(): any[] {
+export function getProviderTemplates(): ProviderTemplate[] {
   return [...providerTemplates].sort((a, b) => a.sortOrder - b.sortOrder);
 }
 
 /**
  * 특정 템플릿을 ID로 조회합니다.
  */
-export function getProviderTemplate(templateId: string): any {
+export function getProviderTemplate(templateId: string): ProviderTemplate | undefined {
   return providerTemplates.find((t) => t.templateId === templateId);
 }
 
 /**
  * 인기 제공자 템플릿만 반환합니다.
  */
-export function getPopularTemplates(): any[] {
+export function getPopularTemplates(): ProviderTemplate[] {
   return providerTemplates
     .filter((t) => t.isPopular)
     .sort((a, b) => a.sortOrder - b.sortOrder);

@@ -1,5 +1,4 @@
 import 'server-only'
-import { PrismaClient } from '@/lib/db'
 import { db } from '@/lib/db/client'
 
 export type TeacherRole = 'DIRECTOR' | 'TEAM_LEADER' | 'MANAGER' | 'TEACHER'

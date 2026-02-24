@@ -8,7 +8,7 @@ import { ProviderSelector } from "@/components/students/provider-selector"
 import { PromptSelector } from "@/components/students/prompt-selector"
 import type { GenericPromptMeta } from "@/components/students/prompt-selector"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardHeader, CardTitle } from "@/components/ui/card"
 
 // --- 에러 배너 ---
 export function AnalysisErrorBanner({

@@ -5,11 +5,11 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { Prisma } from '@/lib/db';
 import { eventBus } from "@/lib/events/event-bus";
-import { ok, fail, type ActionResult } from "@/lib/errors/action-result";
+import { ok, fail } from "@/lib/errors/action-result";
 import { logger } from "@/lib/logger";
 
 // 분석 결과 스키마
-const AnalysisSchema = z.object({
+const _AnalysisSchema = z.object({
     coreTraits: z.string(),
     scores: z.array(z.object({
         subject: z.string(),
