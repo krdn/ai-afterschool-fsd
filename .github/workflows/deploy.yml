@@ -70,16 +70,55 @@ jobs:
             echo "::warning::운영 .env가 없어 .env.example을 사용합니다. $ENV_STORE에 운영 .env를 배치하세요."
           fi
 
-      - name: Validate required environment variables
+      - name: Validate environment variables
         run: |
-          if [ -f .env ]; then
-            SECRET=$(grep -oP '^API_KEY_ENCRYPTION_SECRET=\K.+' .env 2>/dev/null || true)
-            if [ -z "$SECRET" ]; then
-              NEW_SECRET=$(openssl rand -hex 32)
-              echo "API_KEY_ENCRYPTION_SECRET=$NEW_SECRET" >> .env
-              echo "::warning::API_KEY_ENCRYPTION_SECRET이 비어있어 자동 생성했습니다. 운영 .env 원본도 업데이트하세요."
-            fi
+          ERRORS=()
+          WARNINGS=()
+
+          # --- 1) 자동 생성 가능한 변수 ---
+          SECRET=$(grep -oP '^API_KEY_ENCRYPTION_SECRET=\K.+' .env 2>/dev/null || true)
+          if [ -z "$SECRET" ]; then
+            NEW_SECRET=$(openssl rand -hex 32)
+            echo "API_KEY_ENCRYPTION_SECRET=$NEW_SECRET" >> .env
+            WARNINGS+=("API_KEY_ENCRYPTION_SECRET 자동 생성됨 — 운영 .env 원본도 업데이트하세요")
           fi
+
+          # --- 2) .env.example 기준: 운영 .env에 변수명이 존재하는지 검증 ---
+          #   .env.example에 값이 있는 변수 = 필수 (누락 시 에러)
+          #   .env.example에 값이 비어있는 변수 (KEY=) = 선택적 (누락 시 경고)
+          while IFS='=' read -r key val; do
+            # 주석, 빈 줄 건너뛰기
+            [[ "$key" =~ ^#.*$ || -z "$key" ]] && continue
+
+            prod_val=$(grep -oP "^${key}=\K.+" .env 2>/dev/null || true)
+            if [ -z "$prod_val" ]; then
+              if [ -z "$val" ]; then
+                WARNINGS+=("${key} (.env.example에 선택적)")
+              elif [[ "$key" == NEXT_PUBLIC_* ]]; then
+                ERRORS+=("${key} (빌드 시 클라이언트에 인라인)")
+              fi
+            fi
+          done < <(grep -E '^[A-Z_]+=' .env.example)
+
+          # --- 3) 서버 필수 변수 (런타임) ---
+          for var in DATABASE_URL SESSION_SECRET; do
+            val=$(grep -oP "^${var}=\K.+" .env 2>/dev/null || true)
+            if [ -z "$val" ]; then
+              ERRORS+=("${var} (서버 런타임 필수)")
+            fi
+          done
+
+          # --- 결과 출력 ---
+          for w in "${WARNINGS[@]}"; do
+            echo "::warning::${w}"
+          done
+
+          if [ ${#ERRORS[@]} -gt 0 ]; then
+            echo "::error::환경변수 누락: ${ERRORS[*]}"
+            echo "운영 .env (~/.env.ai-afterschool-fsd)에 추가 후 재배포하세요."
+            exit 1
+          fi
+          echo "::notice::환경변수 검증 통과"
 
       - name: Backup current image for rollback
         run: |
