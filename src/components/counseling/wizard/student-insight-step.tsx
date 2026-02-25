@@ -1,7 +1,7 @@
 // src/components/counseling/wizard/student-insight-step.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { toast } from 'sonner'
@@ -38,6 +38,8 @@ export function StudentInsightStep({
   const [insight, setInsight] = useState<StudentInsightData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isGenerating, setIsGenerating] = useState(false)
+  const onStudentNameLoadedRef = useRef(onStudentNameLoaded)
+  onStudentNameLoadedRef.current = onStudentNameLoaded
 
   // 학생 인사이트 데이터 로드
   useEffect(() => {
@@ -46,14 +48,14 @@ export function StudentInsightStep({
       const result = await getStudentInsightAction(studentId)
       if (result.success) {
         setInsight(result.data)
-        onStudentNameLoaded(result.data.studentName)
+        onStudentNameLoadedRef.current(result.data.studentName)
       } else {
         toast.error(result.error || '학생 정보를 불러오지 못했습니다.')
       }
       setIsLoading(false)
     }
     loadInsight()
-  }, [studentId, onStudentNameLoaded])
+  }, [studentId])
 
   // AI 보완 (분석 보고서 생성)
   const handleGenerate = async () => {

@@ -116,6 +116,11 @@ export function ReservationWizard({ onCancel, onSuccess }: ReservationWizardProp
     }
   }, [state, onSuccess])
 
+  // 학생 이름 로드 콜백 (안정적인 참조)
+  const handleStudentNameLoaded = useCallback((name: string) => {
+    setState(prev => ({ ...prev, studentName: name }))
+  }, [])
+
   // AI 스킵 (Step 2에서 AI 없이 진행)
   const handleSkip = useCallback(() => {
     handleSubmit(true)
@@ -150,7 +155,7 @@ export function ReservationWizard({ onCancel, onSuccess }: ReservationWizardProp
             setState(prev => ({ ...prev, isReportApproved: true }))
             completeStep(2)
           }}
-          onStudentNameLoaded={(name) => setState(prev => ({ ...prev, studentName: name }))}
+          onStudentNameLoaded={handleStudentNameLoaded}
           onSkip={handleSkip}
           onBack={() => goBack(2)}
           onNext={() => completeStep(2)}
