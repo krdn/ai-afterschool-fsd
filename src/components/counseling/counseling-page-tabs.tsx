@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { ReservationList } from "@/components/counseling/reservation-list"
-import { ReservationForm } from "@/components/counseling/reservation-form"
+import { ReservationWizard } from "@/components/counseling/wizard"
 import { ReservationCalendarView } from "@/components/counseling/reservation-calendar-view"
 import { getReservationsAction } from "@/lib/actions/counseling/reservations-query"
 import type { ReservationWithRelations } from "@/types/counseling"
@@ -112,7 +112,7 @@ export function CounselingPageTabs({ initialTab, children }: CounselingPageTabsP
             </>
           ) : (
             /* 예약 등록 폼 */
-            <ReservationForm
+            <ReservationWizard
               onCancel={() => {
                 setFormView("list")
                 router.refresh()
