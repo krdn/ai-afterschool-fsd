@@ -86,10 +86,13 @@ export class OllamaAdapter extends BaseAdapter {
 
   async validate(config: ProviderConfig): Promise<ValidationResult> {
     try {
-      const baseUrl = this.ensureHttps(config.baseUrl || this.baseUrl);
+      const rawBaseUrl = this.ensureHttps(config.baseUrl || this.baseUrl);
       const apiKey = config.apiKeyEncrypted
         ? this.decryptApiKey(config.apiKeyEncrypted)
         : this.apiKey;
+
+      // API 키가 없는 직접 모드에서는 OLLAMA_DIRECT_URL 우선 사용
+      const baseUrl = !apiKey ? this.getDirectUrl(rawBaseUrl) : rawBaseUrl;
 
       // 연결 테스트 - /api/version 호출
       const versionUrl = baseUrl.replace(/\/api$/, '/api/version');
@@ -246,7 +249,17 @@ export class OllamaAdapter extends BaseAdapter {
       }
 
       // 직접 Ollama /api/tags
-      return await this.fetchDirectModels(baseUrl);
+      // OLLAMA_DIRECT_URL 환경변수가 있으면 우선 사용 (baseUrl이 Open WebUI 등 프록시일 수 있음)
+      const directUrl = this.getDirectUrl(baseUrl);
+      const models = await this.fetchDirectModels(directUrl);
+      if (models.length > 0) {
+        return models;
+      }
+      // OLLAMA_DIRECT_URL로 실패 시 원래 baseUrl로 폴백
+      if (directUrl !== baseUrl) {
+        return await this.fetchDirectModels(baseUrl);
+      }
+      return models;
     } catch {
       return [];
     }
