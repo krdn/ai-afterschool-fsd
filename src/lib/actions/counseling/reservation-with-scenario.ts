@@ -38,7 +38,7 @@ export async function createReservationWithScenarioAction(
 
   // 학부모 소속 확인
   const parent = await db.parent.findFirst({
-    where: { id: parentId, students: { some: { id: studentId } } },
+    where: { id: parentId, studentId },
     select: { id: true },
   })
   if (!parent) return fail('해당 학부모를 찾을 수 없습니다.')
