@@ -37,7 +37,7 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   output: "standalone",
   // pino는 thread-stream worker를 사용하므로 번들링에서 제외해야 함
-  serverExternalPackages: ["pino", "pino-pretty"],
+  serverExternalPackages: ["pino", "pino-pretty", "cloudinary"],
   eslint: {
     ignoreDuringBuilds: false,
   },
