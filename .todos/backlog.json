@@ -1,0 +1,29 @@
+[
+  {
+    "id": "todo-001",
+    "content": "[보안] compatibility.ts verifySession() 반환값 미활용 - RBAC 미적용으로 팀 격리 무력화",
+    "priority": "high",
+    "category": "security",
+    "file": "src/lib/actions/matching/compatibility.ts",
+    "createdAt": "2026-02-26",
+    "status": "pending"
+  },
+  {
+    "id": "todo-002",
+    "content": "[보안] 상담 삭제(deleteCounselingAction) 소유권 검증 부재 - 타 선생님 기록 삭제 가능",
+    "priority": "high",
+    "category": "security",
+    "file": "src/lib/actions/common/performance.ts",
+    "createdAt": "2026-02-26",
+    "status": "pending"
+  },
+  {
+    "id": "todo-003",
+    "content": "[버그] 로그인 callbackUrl 무시 - /counseling 접근 시 로그인 후 /students로 리다이렉트",
+    "priority": "medium",
+    "category": "bug",
+    "file": "src/app/[locale]/(dashboard)/auth",
+    "createdAt": "2026-02-26",
+    "status": "pending"
+  }
+]

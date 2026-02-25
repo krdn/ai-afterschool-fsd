@@ -37,7 +37,7 @@ export function CounselingSessionForm({
 }: CounselingSessionFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [followUpRequired, setFollowUpRequired] = useState(false)
-  const [isPanelOpen, setIsPanelOpen] = useState(true)
+  const [isPanelOpen, setIsPanelOpen] = useState(false)
   const [appliedAISummary, setAppliedAISummary] = useState<string | null>(null)
 
   const form = useForm<CounselingFormData>({
@@ -97,9 +97,11 @@ export function CounselingSessionForm({
       if (result.success) {
         toast.success("상담 기록이 완료되었습니다.")
         form.reset()
+        setFollowUpRequired(false)
+        setAppliedAISummary(null)
         onSuccess?.()
       } else {
-        toast.error(result.error)
+        toast.error(result.error || "상담 기록 저장에 실패했습니다.")
       }
     } catch (error) {
       console.error("Counseling session creation error:", error)

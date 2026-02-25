@@ -1,12 +1,7 @@
-import Link from "next/link"
 import { verifySession } from "@/lib/dal"
 import { getRBACPrisma } from "@/lib/db/common/rbac"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { MessageSquare } from "lucide-react"
 import { CounselingPageTabs } from "@/components/counseling/counseling-page-tabs"
-import { CounselingSearchBar } from "@/components/counseling/counseling-search-bar"
-import { CounselingFilters } from "@/components/counseling/counseling-filters"
+import { CounselingHistoryContent } from "@/components/counseling/counseling-history-content"
 import type { CounselingType, Prisma } from '@/lib/db'
 import type { CounselingSessionData } from "@/components/counseling/types"
 
@@ -146,7 +141,16 @@ export default async function CounselingPage({
 
   const sessions = await rbacDb.counselingSession.findMany({
     where,
-    include: {
+    select: {
+      id: true,
+      sessionDate: true,
+      duration: true,
+      type: true,
+      summary: true,
+      followUpRequired: true,
+      followUpDate: true,
+      satisfactionScore: true,
+      aiSummary: true,
       student: {
         select: {
           id: true,
@@ -196,241 +200,18 @@ export default async function CounselingPage({
       {/* 탭 UI */}
       <CounselingPageTabs
         initialTab={params.tab}
-        sessions={sessions as CounselingSessionData[]}
-        session={session}
       >
         <CounselingHistoryContent
-          sessions={sessions}
+          sessions={sessions as CounselingSessionData[]}
           params={params}
           monthlyCount={monthlyCount}
           totalSessions={totalSessions}
           avgDuration={avgDuration}
           followUpCount={followUpCount}
-          canViewAll={canViewAll}
           canViewTeam={canViewTeam}
           teachers={teachers}
         />
       </CounselingPageTabs>
     </div>
   )
-}
-
-interface CounselingHistoryContentProps {
-  sessions: Array<{
-    id: string
-    student: {
-      id: string
-      name: string
-      school: string | null
-      grade: number | null
-    }
-    teacher: {
-      id: string
-      name: string
-      role: string
-    }
-    sessionDate: Date
-    duration: number
-    type: string
-    summary: string
-    followUpRequired: boolean
-    followUpDate: Date | null
-  }>
-  params: {
-    query?: string
-    studentName?: string
-    teacherName?: string
-    type?: string
-    startDate?: string
-    endDate?: string
-    followUpRequired?: string
-  }
-  monthlyCount: number
-  totalSessions: number
-  avgDuration: number
-  followUpCount: number
-  canViewAll: boolean
-  canViewTeam: boolean
-  teachers: Array<{ id: string; name: string }>
-}
-
-function CounselingHistoryContent({
-  sessions,
-  params,
-  monthlyCount,
-  totalSessions,
-  avgDuration,
-  followUpCount,
-  canViewAll: _canViewAll,
-  canViewTeam,
-  teachers,
-}: CounselingHistoryContentProps) {
-  return (
-    <div className="space-y-6">
-      <div className="flex justify-end">
-        <Button variant="outline" asChild data-testid="new-counseling-button">
-          <Link href="/counseling/new">새 상담 기록</Link>
-        </Button>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card data-testid="counseling-stat-card-monthly">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              이번 달 상담 횟수
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{monthlyCount}회</div>
-          </CardContent>
-        </Card>
-
-        <Card data-testid="counseling-stat-card-total">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              전체 상담 횟수
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{totalSessions}회</div>
-          </CardContent>
-        </Card>
-
-        <Card data-testid="counseling-stat-card-duration">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              평균 상담 시간
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">
-              {avgDuration.toFixed(0)}분
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card data-testid="counseling-stat-card-followup">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              후속 조치 예정
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{followUpCount}건</div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* 통합 검색 */}
-      <Card>
-        <CardHeader>
-          <CardTitle>통합 검색</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <CounselingSearchBar initialQuery={params.query || params.studentName || ""} />
-        </CardContent>
-      </Card>
-
-      {/* 다중 필터 */}
-      <Card data-testid="counseling-filters">
-        <CardHeader>
-          <CardTitle>필터</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <CounselingFilters canViewTeam={canViewTeam} teachers={teachers} />
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>상담 기록 ({sessions.length}건)</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {sessions.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
-                <MessageSquare className="h-8 w-8 text-gray-400" />
-              </div>
-              <h3 className="mb-2 text-lg font-medium text-gray-900">
-                조건에 맞는 상담 기록이 없어요
-              </h3>
-              <p className="mb-4 max-w-sm text-sm text-gray-500">
-                검색 조건을 변경하거나, 새 상담 기록을 추가해보세요.
-              </p>
-              <div className="flex gap-3">
-                <Button variant="outline" asChild>
-                  <Link href="/counseling">필터 초기화</Link>
-                </Button>
-                <Button asChild>
-                  <Link href="/counseling/new">새 상담 기록</Link>
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {sessions.map((session) => (
-                <div
-                  key={session.id}
-                  className="border rounded-lg p-4 space-y-2"
-                  data-testid="counseling-session"
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="font-medium">
-                        {session.student.name} ({session.student.school}{" "}
-                        {session.student.grade}학년)
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        {session.teacher.name} · {session.duration}분
-                      </div>
-                    </div>
-                    <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getTypeColor(
-                        session.type
-                      )}`}
-                    >
-                      {getTypeLabel(session.type)}
-                    </span>
-                  </div>
-                  <div className="text-sm text-gray-700">{session.summary}</div>
-                  {session.followUpRequired && (
-                    <div className="text-sm text-amber-600">
-                      후속 조치:{" "}
-                      {session.followUpDate
-                        ? new Date(session.followUpDate).toLocaleDateString(
-                            "ko-KR"
-                          )
-                        : "예정됨"}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  )
-}
-
-function getTypeLabel(type: string): string {
-  const labels: Record<string, string> = {
-    ACADEMIC: "학업",
-    CAREER: "진로",
-    PSYCHOLOGICAL: "심리",
-    BEHAVIORAL: "행동",
-  }
-  return labels[type] || type
-}
-
-function getTypeColor(type: string): string {
-  const colors: Record<string, string> = {
-    ACADEMIC: "bg-blue-100 text-blue-800",
-    CAREER: "bg-green-100 text-green-800",
-    PSYCHOLOGICAL: "bg-purple-100 text-purple-800",
-    BEHAVIORAL: "bg-orange-100 text-orange-800",
-  }
-  return colors[type] || "bg-gray-100 text-gray-800"
 }

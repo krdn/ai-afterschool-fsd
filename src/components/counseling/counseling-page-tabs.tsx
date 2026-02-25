@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
@@ -10,16 +10,8 @@ import { ReservationForm } from "@/components/counseling/reservation-form"
 import { ReservationCalendarView } from "@/components/counseling/reservation-calendar-view"
 import { getReservationsAction } from "@/lib/actions/counseling/reservations-query"
 import type { ReservationWithRelations } from "@/types/counseling"
-import type { CounselingSessionData } from "./types"
-
 interface CounselingPageTabsProps {
   initialTab?: string
-  sessions: CounselingSessionData[]
-  session: {
-    userId: string
-    role: string
-    teamId?: string | null
-  }
   children: React.ReactNode
 }
 
@@ -27,7 +19,7 @@ type FormView = "list" | "form"
 
 type TabType = "history" | "reservations" | "calendar"
 
-export function CounselingPageTabs({ initialTab, sessions: _sessions, session: _session, children }: CounselingPageTabsProps) {
+export function CounselingPageTabs({ initialTab, children }: CounselingPageTabsProps) {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<TabType>(
     (initialTab === "reservations" || initialTab === "calendar") ? initialTab as TabType : "history"

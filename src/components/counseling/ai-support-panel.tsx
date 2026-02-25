@@ -47,6 +47,13 @@ export function AISupportPanel({
   const [data, setData] = useState<AISupportData | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isCalculating, setIsCalculating] = useState(false)
+  const [autoCalcAttempted, setAutoCalcAttempted] = useState(false)
+
+  // studentId 변경 시 캐시된 데이터 초기화
+  useEffect(() => {
+    setData(null)
+    setAutoCalcAttempted(false)
+  }, [studentId])
 
   // 데이터 조회 (패널 열릴 때)
   useEffect(() => {
@@ -103,12 +110,13 @@ export function AISupportPanel({
     }
   }, [teacherId, studentId, isCalculating])
 
-  // 자동 궁합 계산 (궁합 점수가 없고 계산 가능할 때)
+  // 자동 궁합 계산 (궁합 점수가 없고 계산 가능할 때, 1회만 시도)
   useEffect(() => {
-    if (data && !data.compatibility && data.canCalculateCompatibility && !isCalculating) {
+    if (data && !data.compatibility && data.canCalculateCompatibility && !isCalculating && !autoCalcAttempted) {
+      setAutoCalcAttempted(true)
       handleCalculateCompatibility()
     }
-  }, [data, isCalculating, handleCalculateCompatibility])
+  }, [data, isCalculating, handleCalculateCompatibility, autoCalcAttempted])
 
   // 성향 분석 시작 핸들러 (학생 상세 페이지로 이동)
   const handleStartAnalysis = () => {

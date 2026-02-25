@@ -18,8 +18,12 @@ export function CounselingSessionCard({ session, onClick }: CounselingSessionCar
 
   return (
     <div
-      className="border rounded-lg p-4 space-y-3 hover:bg-gray-50 transition-colors cursor-pointer"
+      role="button"
+      tabIndex={0}
+      aria-label={`${session.student.name} 학생 ${typeLabel} 상담 기록 보기`}
+      className="border rounded-lg p-4 space-y-3 hover:bg-gray-50 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       onClick={onClick}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick?.() } }}
       data-testid="counseling-session-card"
     >
       {/* Header: Date and Type */}
