@@ -92,7 +92,7 @@ export async function syncProviderModels(
   const existingModelIds = new Set(existingModels.map((m) => m.modelId));
   const newModelIds = new Set(models.map((m) => m.modelId));
 
-  // 새 모델 추가
+  // 새 모델 추가 + 기존 모델 메타데이터 업데이트
   for (const model of models) {
     if (!existingModelIds.has(model.modelId)) {
       await db.model.create({
@@ -105,6 +105,25 @@ export async function syncProviderModels(
           supportsTools: model.supportsTools,
         },
       });
+    } else {
+      // 기존 모델의 메타데이터(supportsVision 등)가 변경되었으면 업데이트
+      const existing = existingModels.find((m) => m.modelId === model.modelId);
+      if (existing && (
+        existing.supportsVision !== model.supportsVision ||
+        existing.supportsTools !== model.supportsTools ||
+        existing.contextWindow !== model.contextWindow ||
+        existing.displayName !== model.displayName
+      )) {
+        await db.model.update({
+          where: { id: existing.id },
+          data: {
+            displayName: model.displayName,
+            contextWindow: model.contextWindow,
+            supportsVision: model.supportsVision,
+            supportsTools: model.supportsTools,
+          },
+        });
+      }
     }
   }
 

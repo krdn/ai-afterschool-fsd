@@ -129,14 +129,28 @@ export class ZhipuAdapter extends BaseAdapter {
         return this.getDefaultModels();
       }
 
-      return data.data.map((model) => ({
+      const apiModels: ModelInfo[] = data.data.map((model) => ({
         id: model.id,
         modelId: model.id,
         displayName: this.formatDisplayName(model.id),
-        contextWindow: 8192,
+        contextWindow: this.isVisionModel(model.id) ? 128000 : 8192,
         supportsVision: this.isVisionModel(model.id),
         supportsTools: true,
       }));
+
+      // API 응답에 Vision 모델이 없으면 디폴트 Vision 모델 보충
+      const hasVisionModel = apiModels.some((m) => m.supportsVision);
+      if (!hasVisionModel) {
+        const defaultVisionModels = this.getDefaultModels().filter((m) => m.supportsVision);
+        const apiModelIds = new Set(apiModels.map((m) => m.modelId));
+        for (const vm of defaultVisionModels) {
+          if (!apiModelIds.has(vm.modelId)) {
+            apiModels.push(vm);
+          }
+        }
+      }
+
+      return apiModels;
     } catch (error) {
       logger.error({ err: error }, 'Failed to fetch Zhipu models');
       return this.getDefaultModels();
