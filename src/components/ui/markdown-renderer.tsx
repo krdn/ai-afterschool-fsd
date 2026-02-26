@@ -70,11 +70,21 @@ type Props = {
   className?: string
 }
 
-// HTML entity 디코딩 함수
+// HTML entity 디코딩 함수 (XSS 안전)
 function decodeHtmlEntities(text: string): string {
-  const textarea = document.createElement('textarea');
-  textarea.innerHTML = text;
-  return textarea.value;
+  const entityMap: Record<string, string> = {
+    '&amp;': '&',
+    '&lt;': '<',
+    '&gt;': '>',
+    '&quot;': '"',
+    '&#39;': "'",
+    '&#35;': '#',
+    '&#42;': '*',
+    '&#x2F;': '/',
+    '&#x60;': '`',
+  };
+
+  return text.replace(/&[^;]+;/g, (entity) => entityMap[entity] || entity);
 }
 
 function stripMarkdownCodeBlock(content: string): string {

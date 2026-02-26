@@ -94,15 +94,16 @@ export function getFeatureResolver(): FeatureResolver {
 }
 
 /**
- * 제공자 환경 설정
- * API 키를 환경 변수에 설정합니다.
+ * 제공자 준비 상태 확인
+ *
+ * NOTE: 이전 버전에서는 process.env를 직접 수정했으나,
+ * 동시 요청 시 Race Condition 문제가 발생할 수 있어
+ * 이제는 검증만 수행합니다.
+ * 실제 API 키 설정은 createLanguageModel()의 Adapter 패턴에서 처리됩니다.
  */
 export async function setupProviderEnv(provider: Provider): Promise<boolean> {
   // Ollama는 내장 제공자 — API 키 불필요
   if (provider.providerType === 'ollama') {
-    if (provider.baseUrl) {
-      process.env.OLLAMA_BASE_URL = provider.baseUrl;
-    }
     return true;
   }
 
@@ -112,38 +113,6 @@ export async function setupProviderEnv(provider: Provider): Promise<boolean> {
 
   if (!provider.apiKeyEncrypted) {
     return false;
-  }
-
-  const apiKey = decryptApiKey(provider.apiKeyEncrypted);
-
-  switch (provider.providerType) {
-    case 'anthropic':
-      process.env.ANTHROPIC_API_KEY = apiKey;
-      break;
-    case 'openai':
-      process.env.OPENAI_API_KEY = apiKey;
-      break;
-    case 'google':
-      process.env.GOOGLE_GENERATIVE_AI_API_KEY = apiKey;
-      break;
-    case 'deepseek':
-      process.env.DEEPSEEK_API_KEY = apiKey;
-      break;
-    case 'mistral':
-      process.env.MISTRAL_API_KEY = apiKey;
-      break;
-    case 'cohere':
-      process.env.COHERE_API_KEY = apiKey;
-      break;
-    case 'xai':
-      process.env.XAI_API_KEY = apiKey;
-      break;
-    case 'zhipu':
-      process.env.ZHIPU_API_KEY = apiKey;
-      break;
-    case 'moonshot':
-      process.env.MOONSHOT_API_KEY = apiKey;
-      break;
   }
 
   return true;
