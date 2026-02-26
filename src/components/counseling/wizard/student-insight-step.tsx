@@ -9,6 +9,7 @@ import { ChevronLeft, ChevronRight, Sparkles, SkipForward, User, MessageSquare, 
 import { getStudentInsightAction, type StudentInsightData } from '@/lib/actions/counseling/student-insight'
 import { generateAnalysisReportAction } from '@/lib/actions/counseling/scenario-generation'
 import { MarkdownEditor } from './markdown-editor'
+import { ModelSelect, type ModelOverride } from './model-select'
 
 interface StudentInsightStepProps {
   studentId: string
@@ -38,6 +39,7 @@ export function StudentInsightStep({
   const [insight, setInsight] = useState<StudentInsightData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isGenerating, setIsGenerating] = useState(false)
+  const [modelOverride, setModelOverride] = useState<ModelOverride | undefined>()
   const onStudentNameLoadedRef = useRef(onStudentNameLoaded)
   onStudentNameLoadedRef.current = onStudentNameLoaded
 
@@ -61,7 +63,7 @@ export function StudentInsightStep({
   const handleGenerate = async () => {
     setIsGenerating(true)
     try {
-      const result = await generateAnalysisReportAction({ studentId, topic })
+      const result = await generateAnalysisReportAction({ studentId, topic, modelOverride })
       if (result.success) {
         onReportChange(result.data)
         toast.success('분석 보고서가 생성되었습니다.')
@@ -163,9 +165,13 @@ export function StudentInsightStep({
         </div>
       )}
 
-      {/* AI 보완 버튼 */}
+      {/* AI 보완 버튼 + 모델 선택 */}
       {!analysisReport && !isGenerating && (
-        <div className="flex justify-center">
+        <div className="flex items-center justify-center gap-3">
+          <ModelSelect
+            featureType="counseling_analysis"
+            onModelChange={setModelOverride}
+          />
           <Button onClick={handleGenerate} variant="outline" className="gap-2">
             <Sparkles className="h-4 w-4" />
             AI 보완 -- 분석 보고서 생성

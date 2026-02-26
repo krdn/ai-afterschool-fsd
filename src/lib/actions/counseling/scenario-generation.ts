@@ -12,10 +12,17 @@ import {
   buildParentSummaryPrompt,
 } from '@/features/ai-engine/prompts/counseling-scenario'
 
+// --- 모델 override 공통 스키마 ---
+const modelOverrideSchema = z.object({
+  providerId: z.string(),
+  modelId: z.string(),
+}).optional()
+
 // --- 1. 분석 보고서 생성 ---
 const analysisInputSchema = z.object({
   studentId: z.string().min(1),
   topic: z.string().min(2).max(200),
+  modelOverride: modelOverrideSchema,
 })
 
 export async function generateAnalysisReportAction(
@@ -68,6 +75,10 @@ export async function generateAnalysisReportAction(
       teacherId: session.userId,
       maxOutputTokens: 1000,
       temperature: 0.3,
+      ...(parsed.data.modelOverride && {
+        providerId: parsed.data.modelOverride.providerId,
+        modelId: parsed.data.modelOverride.modelId,
+      }),
     })
 
     if (!result.text) return fail('AI 응답이 비어있습니다. 다시 시도해주세요.')
@@ -83,6 +94,7 @@ const scenarioInputSchema = z.object({
   studentId: z.string().min(1),
   topic: z.string().min(2),
   approvedReport: z.string().min(10),
+  modelOverride: modelOverrideSchema,
 })
 
 export async function generateScenarioAction(
@@ -120,6 +132,10 @@ export async function generateScenarioAction(
       teacherId: session.userId,
       maxOutputTokens: 1500,
       temperature: 0.5,
+      ...(parsed.data.modelOverride && {
+        providerId: parsed.data.modelOverride.providerId,
+        modelId: parsed.data.modelOverride.modelId,
+      }),
     })
 
     if (!result.text) return fail('AI 응답이 비어있습니다. 다시 시도해주세요.')
@@ -136,6 +152,7 @@ const parentInputSchema = z.object({
   topic: z.string().min(2),
   scheduledAt: z.string().min(1),
   approvedScenario: z.string().min(10),
+  modelOverride: modelOverrideSchema,
 })
 
 export async function generateParentSummaryAction(
@@ -156,6 +173,10 @@ export async function generateParentSummaryAction(
       teacherId: session.userId,
       maxOutputTokens: 500,
       temperature: 0.3,
+      ...(parsed.data.modelOverride && {
+        providerId: parsed.data.modelOverride.providerId,
+        modelId: parsed.data.modelOverride.modelId,
+      }),
     })
 
     if (!result.text) return fail('AI 응답이 비어있습니다. 다시 시도해주세요.')

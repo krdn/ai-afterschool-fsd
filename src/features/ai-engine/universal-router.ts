@@ -33,6 +33,8 @@ export interface GenerateOptions {
   system?: string;
   /** 특정 제공자를 지정하여 호출 (지정하지 않으면 FeatureResolver 자동 라우팅) */
   providerId?: string;
+  /** 특정 모델을 지정하여 호출 (providerId와 함께 사용) */
+  modelId?: string;
   /** 멀티턴 대화용 메시지 배열 (지정 시 prompt 대신 사용) */
   messages?: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>;
 }
@@ -60,12 +62,12 @@ export { FailoverError } from './failover';
  * 텍스트를 생성합니다.
  */
 export async function generateWithProvider(options: GenerateOptions): Promise<import('./router-utils').GenerateResult> {
-  const { prompt, featureType, teacherId, maxOutputTokens, temperature, system, providerId } = options;
+  const { prompt, featureType, teacherId, maxOutputTokens, temperature, system, providerId, modelId } = options;
 
   let providerOrder: Array<{ provider: Provider; model: Model }>;
 
   if (providerId) {
-    // 특정 제공자가 지정된 경우: 해당 제공자의 기본 모델 사용
+    // 특정 제공자가 지정된 경우
     const provider = await db.provider.findUnique({
       where: { id: providerId },
       include: { models: true },
@@ -73,11 +75,14 @@ export async function generateWithProvider(options: GenerateOptions): Promise<im
     if (!provider || !provider.isEnabled) {
       throw new Error(`Provider "${providerId}" not found or disabled`);
     }
-    const defaultModel = provider.models.find((m: Model) => m.isDefault) || provider.models[0];
-    if (!defaultModel) {
-      throw new Error(`Provider "${provider.name}" has no models configured`);
+    // modelId가 지정되면 해당 모델 사용, 아니면 기본 모델
+    const selectedModel = modelId
+      ? provider.models.find((m: Model) => m.id === modelId)
+      : provider.models.find((m: Model) => m.isDefault) || provider.models[0];
+    if (!selectedModel) {
+      throw new Error(`Model not found for provider "${provider.name}"`);
     }
-    providerOrder = [{ provider: provider as unknown as Provider, model: defaultModel as unknown as Model }];
+    providerOrder = [{ provider: provider as unknown as Provider, model: selectedModel as unknown as Model }];
   } else {
     providerOrder = await getProviderOrder(featureType);
   }

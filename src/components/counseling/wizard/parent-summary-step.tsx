@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { ChevronLeft, Loader2 } from 'lucide-react'
 import { generateParentSummaryAction } from '@/lib/actions/counseling/scenario-generation'
 import { MarkdownEditor } from './markdown-editor'
+import { ModelSelect, type ModelOverride } from './model-select'
 
 interface ParentSummaryStepProps {
   studentName: string
@@ -35,6 +36,7 @@ export function ParentSummaryStep({
   isSubmitting,
 }: ParentSummaryStepProps) {
   const [isGenerating, setIsGenerating] = useState(false)
+  const [modelOverride, setModelOverride] = useState<ModelOverride | undefined>()
   const hasGenerated = useRef(false)
 
   // 마운트 시 자동 생성 (학부모 공유용이 아직 없는 경우)
@@ -53,6 +55,7 @@ export function ParentSummaryStep({
         topic,
         scheduledAt,
         approvedScenario,
+        modelOverride,
       })
       if (result.success) {
         onParentSummaryChange(result.data)
@@ -69,12 +72,19 @@ export function ParentSummaryStep({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium mb-1">학부모 공유용</h3>
-        <p className="text-sm text-muted-foreground">
-          학부모에게 전달할 상담 안내 메시지입니다. 민감 정보(심리 분석, 성격
-          진단 등)는 포함되지 않습니다.
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h3 className="text-lg font-medium mb-1">학부모 공유용</h3>
+          <p className="text-sm text-muted-foreground">
+            학부모에게 전달할 상담 안내 메시지입니다. 민감 정보(심리 분석, 성격
+            진단 등)는 포함되지 않습니다.
+          </p>
+        </div>
+        <ModelSelect
+          featureType="counseling_parent"
+          onModelChange={setModelOverride}
+          disabled={isGenerating}
+        />
       </div>
 
       <MarkdownEditor

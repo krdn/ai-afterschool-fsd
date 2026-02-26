@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { generateScenarioAction } from '@/lib/actions/counseling/scenario-generation'
 import { MarkdownEditor } from './markdown-editor'
+import { ModelSelect, type ModelOverride } from './model-select'
 
 interface ScenarioStepProps {
   studentId: string
@@ -31,6 +32,7 @@ export function ScenarioStep({
   onNext,
 }: ScenarioStepProps) {
   const [isGenerating, setIsGenerating] = useState(false)
+  const [modelOverride, setModelOverride] = useState<ModelOverride | undefined>()
   const hasGenerated = useRef(false)
 
   // 마운트 시 자동 생성 (시나리오가 아직 없는 경우)
@@ -48,6 +50,7 @@ export function ScenarioStep({
         studentId,
         topic,
         approvedReport,
+        modelOverride,
       })
       if (result.success) {
         onScenarioChange(result.data)
@@ -64,11 +67,18 @@ export function ScenarioStep({
 
   return (
     <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium mb-1">상담 시나리오</h3>
-        <p className="text-sm text-muted-foreground">
-          승인된 분석 보고서를 기반으로 30분 상담 시나리오가 생성됩니다. 필요 시 편집 후 승인해주세요.
-        </p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h3 className="text-lg font-medium mb-1">상담 시나리오</h3>
+          <p className="text-sm text-muted-foreground">
+            승인된 분석 보고서를 기반으로 30분 상담 시나리오가 생성됩니다. 필요 시 편집 후 승인해주세요.
+          </p>
+        </div>
+        <ModelSelect
+          featureType="counseling_scenario"
+          onModelChange={setModelOverride}
+          disabled={isGenerating}
+        />
       </div>
 
       <MarkdownEditor
