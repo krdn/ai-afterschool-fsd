@@ -7,6 +7,10 @@ import { db } from '@/lib/db/client'
 import { ReservationStatus } from '@/lib/db'
 import { ok, fail, type ActionResult } from '@/lib/errors/action-result'
 import { logger } from '@/lib/logger'
+import {
+  completeSessionSchema,
+  type CompleteSessionInput,
+} from '@/lib/validations/session-notes'
 
 // ---------------------------------------------------------------------------
 // startSessionAction — 상담 세션 시작
@@ -180,5 +184,81 @@ export async function getSessionWithNotesAction(
   } catch (error) {
     logger.error({ err: error }, 'Failed to get session with notes')
     return fail('상담 정보 조회 중 오류가 발생했습니다.')
+  }
+}
+
+// ---------------------------------------------------------------------------
+// completeSessionAction — 상담 세션 완료
+// ---------------------------------------------------------------------------
+
+export type CompleteSessionResult = {
+  sessionId: string
+}
+
+/**
+ * 상담 세션을 완료 처리한다.
+ *
+ * 1. completeSessionSchema 검증
+ * 2. RBAC 예약 조회 + IN_PROGRESS 상태 확인
+ * 3. 트랜잭션: CounselingSession 업데이트 + 예약 COMPLETED
+ * 4. revalidatePath
+ */
+export async function completeSessionAction(
+  input: CompleteSessionInput
+): Promise<ActionResult<CompleteSessionResult>> {
+  const session = await verifySession()
+  if (!session) return fail('인증되지 않은 요청입니다.')
+
+  const parsed = completeSessionSchema.safeParse(input)
+  if (!parsed.success) {
+    return fail(parsed.error.issues[0]?.message ?? '입력값이 올바르지 않습니다.')
+  }
+
+  const { sessionId, reservationId, type, duration, summary, aiSummary, followUpRequired, followUpDate, satisfactionScore } = parsed.data
+
+  const rbacDb = getRBACPrisma(session)
+
+  try {
+    // 예약 접근 권한 확인 (teacherId 필터) + IN_PROGRESS 상태 확인
+    const reservation = await rbacDb.parentCounselingReservation.findUnique({
+      where: { id: reservationId, teacherId: session.userId },
+    })
+
+    if (!reservation) return fail('예약을 찾을 수 없습니다.')
+    if (reservation.status !== ReservationStatus.IN_PROGRESS) {
+      return fail('진행 중인 상담만 완료할 수 있습니다.')
+    }
+
+    // 트랜잭션: 세션 업데이트 + 예약 COMPLETED
+    await db.$transaction(async (tx) => {
+      // CounselingSession 업데이트
+      await tx.counselingSession.update({
+        where: { id: sessionId },
+        data: {
+          type,
+          duration,
+          summary,
+          aiSummary: aiSummary ?? null,
+          followUpRequired,
+          followUpDate: followUpDate ? new Date(followUpDate) : null,
+          satisfactionScore: satisfactionScore ?? null,
+        },
+      })
+
+      // 예약 상태 COMPLETED로 변경
+      await tx.parentCounselingReservation.update({
+        where: { id: reservationId },
+        data: {
+          status: ReservationStatus.COMPLETED,
+        },
+      })
+    })
+
+    revalidatePath('/counseling')
+
+    return ok({ sessionId })
+  } catch (error) {
+    logger.error({ err: error }, 'Failed to complete counseling session')
+    return fail('상담 완료 처리 중 오류가 발생했습니다.')
   }
 }
