@@ -129,7 +129,7 @@ export async function login(
 
   // callbackUrl이 있으면 해당 경로로, 없으면 기본 /students로 리다이렉트
   const callbackUrl = formData.get("callbackUrl") as string | null
-  const safeCallback = callbackUrl && callbackUrl.startsWith("/") ? callbackUrl : "/students"
+  const safeCallback = callbackUrl && /^\/[^/]/.test(callbackUrl) ? callbackUrl : "/students"
   redirect(safeCallback)
 }
 
@@ -199,7 +199,7 @@ export async function signup(
   }
 
   const callbackUrl = formData.get("callbackUrl") as string | null
-  const safeCallback = callbackUrl && callbackUrl.startsWith("/") ? callbackUrl : "/students"
+  const safeCallback = callbackUrl && /^\/[^/]/.test(callbackUrl) ? callbackUrl : "/students"
   redirect(safeCallback)
 }
 
