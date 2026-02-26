@@ -11,9 +11,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Loader2, Send, Mail, MessageSquare, Phone } from 'lucide-react';
+import { Loader2, Send, Mail, MessageSquare, Phone, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { sendParentReportAction } from '@/lib/actions/student/parent-report';
 
@@ -95,36 +93,32 @@ export default function ParentReportSend({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="py-4">
-          <RadioGroup
-            value={method}
-            onValueChange={(v) => setMethod(v as SendMethod)}
-          >
-            {SEND_METHODS.map((m) => (
-              <div
-                key={m.value}
-                className={`flex items-center space-x-3 rounded-lg border p-4 cursor-pointer transition-colors ${
-                  method === m.value
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 hover:bg-gray-50'
-                }`}
-                onClick={() => setMethod(m.value)}
-              >
-                <RadioGroupItem value={m.value} id={m.value} />
-                <div className="flex items-center gap-3 flex-1">
-                  <div className="text-gray-500">{m.icon}</div>
-                  <div>
-                    <Label htmlFor={m.value} className="font-medium cursor-pointer">
-                      {m.label}
-                    </Label>
-                    <p className="text-xs text-gray-500 mt-0.5">
-                      {m.description}
-                    </p>
-                  </div>
+        <div className="py-4 space-y-2">
+          {SEND_METHODS.map((m) => (
+            <button
+              key={m.value}
+              type="button"
+              className={`flex items-center w-full rounded-lg border p-4 cursor-pointer transition-colors text-left ${
+                method === m.value
+                  ? 'border-blue-500 bg-blue-50'
+                  : 'border-gray-200 hover:bg-gray-50'
+              }`}
+              onClick={() => setMethod(m.value)}
+            >
+              <div className="flex items-center gap-3 flex-1">
+                <div className="text-gray-500">{m.icon}</div>
+                <div>
+                  <p className="font-medium text-sm">{m.label}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {m.description}
+                  </p>
                 </div>
               </div>
-            ))}
-          </RadioGroup>
+              {method === m.value && (
+                <Check className="w-5 h-5 text-blue-600 shrink-0" />
+              )}
+            </button>
+          ))}
 
           <p className="text-xs text-amber-600 mt-3 bg-amber-50 p-2 rounded">
             * 현재 발송 기능은 준비 중입니다. 발송 기록만 저장됩니다.

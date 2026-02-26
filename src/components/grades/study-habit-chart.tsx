@@ -202,8 +202,8 @@ export default function StudyHabitChart({
                       />
                       <YAxis tick={{ fontSize: 11 }} unit="분" />
                       <Tooltip
-                        formatter={(value: number) => [`${value}분`, '학습 시간']}
-                        labelFormatter={(label: string) => `날짜: ${label}`}
+                        formatter={((value: number) => [`${value}분`, '학습 시간']) as import('recharts').TooltipProps<number, string>['formatter']}
+                        labelFormatter={(label) => `날짜: ${label}`}
                       />
                       <Line
                         type="monotone"
@@ -232,8 +232,8 @@ export default function StudyHabitChart({
                           cx="50%"
                           cy="50%"
                           outerRadius={80}
-                          label={({ subject, percentage }: { subject: string; percentage: number }) =>
-                            `${subject} ${percentage}%`
+                          label={({ name, percent }: { name?: string; percent?: number }) =>
+                            `${name ?? ''} ${Math.round((percent ?? 0) * 100)}%`
                           }
                         >
                           {stats.subjectDistribution.map((_, index) => (
@@ -244,7 +244,7 @@ export default function StudyHabitChart({
                           ))}
                         </Pie>
                         <Tooltip
-                          formatter={(value: number) => [`${value}분`, '학습 시간']}
+                          formatter={((value: number) => [`${value}분`, '학습 시간']) as import('recharts').TooltipProps<number, string>['formatter']}
                         />
                         <Legend />
                       </PieChart>

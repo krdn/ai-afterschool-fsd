@@ -71,7 +71,7 @@ export async function addStudyLogAction(
     }
     logger.error({ err: error }, '학습 기록 등록 실패');
     const message = error instanceof z.ZodError
-      ? error.errors.map((e) => e.message).join(', ')
+      ? error.issues.map((e: z.ZodIssue) => e.message).join(', ')
       : '학습 기록 등록 중 오류가 발생했습니다.';
     return { success: false, message };
   }
