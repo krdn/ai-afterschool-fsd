@@ -33,6 +33,7 @@ export function SessionRecordForm({ reservation, onSave, onCancel }: SessionReco
   const [followUpRequired, setFollowUpRequired] = useState(false)
   const [followUpDate, setFollowUpDate] = useState('')
   const [satisfactionScore, setSatisfactionScore] = useState<string>('')
+  const [hoveredScore, setHoveredScore] = useState(0)
   const [isSaving, setIsSaving] = useState(false)
 
   // 기존 AI 보고서 유지
@@ -153,21 +154,30 @@ export function SessionRecordForm({ reservation, onSave, onCancel }: SessionReco
         )}
       </div>
 
-      {/* 만족도 */}
+      {/* 만족도 — 인터랙티브 별점 */}
       <div className="space-y-2">
         <Label>만족도</Label>
-        <Select value={satisfactionScore} onValueChange={setSatisfactionScore}>
-          <SelectTrigger>
-            <SelectValue placeholder="선택 (선택사항)" />
-          </SelectTrigger>
-          <SelectContent>
-            {[1, 2, 3, 4, 5].map((score) => (
-              <SelectItem key={score} value={String(score)}>
-                {'★'.repeat(score)}{'☆'.repeat(5 - score)} ({score}점)
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-1" onMouseLeave={() => setHoveredScore(0)}>
+          {[1, 2, 3, 4, 5].map((score) => {
+            const active = hoveredScore ? score <= hoveredScore : score <= Number(satisfactionScore)
+            return (
+              <button
+                key={score}
+                type="button"
+                className={`text-2xl transition-transform hover:scale-110 ${active ? 'text-amber-400 drop-shadow-sm' : 'text-gray-300'}`}
+                onMouseEnter={() => setHoveredScore(score)}
+                onClick={() => setSatisfactionScore(satisfactionScore === String(score) ? '' : String(score))}
+                aria-label={`만족도 ${score}점${satisfactionScore === String(score) ? ' (선택 해제)' : ''}`}
+              >
+                ★
+              </button>
+            )
+          })}
+          {satisfactionScore && (
+            <span className="ml-2 text-sm text-muted-foreground">{satisfactionScore}점</span>
+          )}
+        </div>
+        <p className="text-xs text-muted-foreground">클릭하여 선택, 다시 클릭하면 해제 (선택사항)</p>
       </div>
 
       {/* 버튼 */}
