@@ -27,6 +27,7 @@ export function ReservationList({ reservations, onRefresh, dateFilter }: Reserva
   const [internalDateFilter, setInternalDateFilter] = useState<Date | undefined>(undefined)
   const [debouncedSearch, setDebouncedSearch] = useState("")
   const [selectedReservationId, setSelectedReservationId] = useState<string | null>(null)
+  const [dialogMode, setDialogMode] = useState<'read' | 'edit' | 'record'>('read')
 
   // 외부 dateFilter가 변경되면 내부 상태 업데이트
   useEffect(() => {
@@ -85,6 +86,17 @@ export function ReservationList({ reservations, onRefresh, dateFilter }: Reserva
     setStatusFilter("ALL")
     setSearchQuery("")
     setInternalDateFilter(undefined)
+  }, [])
+
+  // 다이얼로그 열기 (모드 지정)
+  const openDialog = useCallback((id: string, mode: 'read' | 'edit' | 'record') => {
+    setSelectedReservationId(id)
+    setDialogMode(mode)
+  }, [])
+
+  const closeDialog = useCallback(() => {
+    setSelectedReservationId(null)
+    setDialogMode('read')
   }, [])
 
   // 필터 중인지 확인
@@ -222,15 +234,18 @@ export function ReservationList({ reservations, onRefresh, dateFilter }: Reserva
           <ReservationCard
             key={reservation.id}
             reservation={reservation}
-            onDetailClick={setSelectedReservationId}
+            onDetailClick={(id) => openDialog(id, 'read')}
+            onEditClick={(id) => openDialog(id, 'edit')}
+            onRecordClick={(id) => openDialog(id, 'record')}
           />
         ))}
       </div>
 
-      {/* 예약 상세 모달 */}
+      {/* 상세 다이얼로그 (3모드) */}
       <ReservationDetailDialog
         reservationId={selectedReservationId}
-        onClose={() => setSelectedReservationId(null)}
+        initialMode={dialogMode}
+        onClose={closeDialog}
       />
     </div>
   )
