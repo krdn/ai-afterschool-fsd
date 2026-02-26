@@ -395,10 +395,26 @@ model CounselingSession {
   student           Student                      @relation(fields: [studentId], references: [id], onDelete: Cascade)
   teacher           Teacher                      @relation(fields: [teacherId], references: [id], onDelete: Cascade)
   reservation       ParentCounselingReservation?
+  notes             CounselingNote[]
 
   @@index([studentId, sessionDate])
   @@index([teacherId, sessionDate])
   @@index([studentId, type])
+}
+
+model CounselingNote {
+  id                  String            @id @default(cuid())
+  counselingSessionId String
+  counselingSession   CounselingSession @relation(fields: [counselingSessionId], references: [id], onDelete: Cascade)
+  content             String
+  memo                String?
+  checked             Boolean           @default(false)
+  order               Int
+  source              String            @default("MANUAL")
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  @@index([counselingSessionId, order])
 }
 
 model StudentSatisfaction {
@@ -801,6 +817,7 @@ enum CounselingType {
 
 enum ReservationStatus {
   SCHEDULED
+  IN_PROGRESS
   COMPLETED
   CANCELLED
   NO_SHOW

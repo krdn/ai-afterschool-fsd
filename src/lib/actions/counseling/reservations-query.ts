@@ -104,6 +104,7 @@ export async function getReservationStatsAction(): Promise<ActionResult<Record<R
     // 상태별 개수를 객체로 변환
     const statsMap: Record<ReservationStatus, number> = {
       SCHEDULED: 0,
+      IN_PROGRESS: 0,
       COMPLETED: 0,
       CANCELLED: 0,
       NO_SHOW: 0,

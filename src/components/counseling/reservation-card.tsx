@@ -188,6 +188,7 @@ export function ReservationCard({
 function getStatusLabel(status: ReservationStatus): string {
   const labels: Record<ReservationStatus, string> = {
     SCHEDULED: "예약",
+    IN_PROGRESS: "진행 중",
     COMPLETED: "완료",
     CANCELLED: "취소",
     NO_SHOW: "노쇼",
@@ -198,6 +199,7 @@ function getStatusLabel(status: ReservationStatus): string {
 function getStatusVariant(status: ReservationStatus): "scheduled" | "completed" | "cancelled" | "noShow" {
   const variants: Record<ReservationStatus, "scheduled" | "completed" | "cancelled" | "noShow"> = {
     SCHEDULED: "scheduled",
+    IN_PROGRESS: "scheduled",
     COMPLETED: "completed",
     CANCELLED: "cancelled",
     NO_SHOW: "noShow",
