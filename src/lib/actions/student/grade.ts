@@ -8,6 +8,9 @@ import { getCurrentTeacher } from "@/lib/dal";
 import { okVoid, fail, type ActionVoidResult } from "@/lib/errors/action-result";
 import { logger } from "@/lib/logger";
 
+// 빈 문자열을 undefined로 변환하는 전처리 함수
+const emptyToUndefined = (value: unknown) => value === '' || value === null ? undefined : value;
+
 // 성적 입력 데이터 검증 스키마
 const GradeSchema = z.object({
     studentId: z.string(),
@@ -18,6 +21,12 @@ const GradeSchema = z.object({
     academicYear: z.coerce.number().int().min(2000).default(new Date().getFullYear()),
     semester: z.coerce.number().int().min(1).max(2).default(1),
     notes: z.string().optional(),
+    classAverage: z.preprocess(emptyToUndefined, z.coerce.number().min(0).max(100).optional()),
+    classStdDev: z.preprocess(emptyToUndefined, z.coerce.number().min(0).optional()),
+    gradeRank: z.preprocess(emptyToUndefined, z.coerce.number().int().min(1).max(9).optional()),
+    classRank: z.preprocess(emptyToUndefined, z.coerce.number().int().min(1).optional()),
+    totalStudents: z.preprocess(emptyToUndefined, z.coerce.number().int().min(1).optional()),
+    category: z.preprocess(emptyToUndefined, z.string().optional()),
 });
 
 /**
@@ -36,6 +45,12 @@ export async function addGrade(prevState: unknown, formData: FormData) {
             academicYear: formData.get('academicYear') || new Date().getFullYear(),
             semester: formData.get('semester') || 1,
             notes: formData.get('notes'),
+            classAverage: formData.get('classAverage'),
+            classStdDev: formData.get('classStdDev'),
+            gradeRank: formData.get('gradeRank'),
+            classRank: formData.get('classRank'),
+            totalStudents: formData.get('totalStudents'),
+            category: formData.get('category'),
         };
 
         const validatedData = GradeSchema.parse(rawData);
