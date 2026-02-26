@@ -4,6 +4,11 @@ import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from '@/components/ui/resizable'
 import type { SessionWithNotes } from '@/lib/actions/counseling/session-live'
 import { SessionReferencePanel } from './session-reference-panel'
 import { SessionChecklist } from './session-checklist'
@@ -51,27 +56,34 @@ export function SessionLivePage({ reservation }: SessionLivePageProps) {
         </div>
       </div>
 
-      {/* 분할 영역 */}
-      <div className="flex-1 grid grid-cols-[2fr_3fr] gap-4 p-4 overflow-hidden">
-        {/* 왼쪽: AI 자료 참조 패널 */}
-        <div className="border rounded-lg p-4 overflow-y-auto">
-          <SessionReferencePanel
-            aiSummary={counselingSession?.aiSummary ?? null}
-            topic={topic}
-          />
-        </div>
-        {/* 오른쪽: 체크리스트 */}
-        <div className="border rounded-lg p-4 overflow-y-auto">
-          {counselingSession ? (
-            <SessionChecklist
-              sessionId={counselingSession.id}
-              initialNotes={counselingSession.notes}
+      {/* 상하 분할 영역 */}
+      <ResizablePanelGroup direction="vertical" className="flex-1 p-4">
+        {/* 위쪽: AI 자료 참조 패널 */}
+        <ResizablePanel defaultSize={45} minSize={15}>
+          <div className="border rounded-lg p-4 h-full overflow-y-auto">
+            <SessionReferencePanel
+              aiSummary={counselingSession?.aiSummary ?? null}
+              topic={topic}
             />
-          ) : (
-            <p className="text-sm text-muted-foreground">상담 세션이 없습니다.</p>
-          )}
-        </div>
-      </div>
+          </div>
+        </ResizablePanel>
+
+        <ResizableHandle withHandle />
+
+        {/* 아래쪽: 체크리스트 */}
+        <ResizablePanel defaultSize={55} minSize={20}>
+          <div className="border rounded-lg p-4 h-full overflow-y-auto mt-1">
+            {counselingSession ? (
+              <SessionChecklist
+                sessionId={counselingSession.id}
+                initialNotes={counselingSession.notes}
+              />
+            ) : (
+              <p className="text-sm text-muted-foreground">상담 세션이 없습니다.</p>
+            )}
+          </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
 
       {/* 하단: 완료 폼 (조건부) */}
       {showCompleteForm && counselingSession && (
