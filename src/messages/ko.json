@@ -35,7 +35,8 @@
     "analytics": "분석",
     "admin": "관리자 도구",
     "issues": "이슈",
-    "aiChat": "AI 채팅"
+    "aiChat": "AI 채팅",
+    "grades": "성적 관리"
   },
   "Student": {
     "title": "학생 관리",

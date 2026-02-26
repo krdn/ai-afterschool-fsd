@@ -1,26 +1,50 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText } from 'lucide-react';
+import { getCurrentTeacher } from '@/lib/dal';
+import { db } from '@/lib/db/client';
+import GradeReportsManager from '@/components/grades/grade-reports-manager';
 
-export default function GradeReportsPage() {
+export default async function GradeReportsPage() {
+  const teacher = await getCurrentTeacher();
+
+  // 담당 학생 목록 조회
+  const students = await db.student.findMany({
+    where:
+      teacher.role === 'DIRECTOR'
+        ? {}
+        : teacher.role === 'TEAM_LEADER' || teacher.role === 'MANAGER'
+          ? { teamId: teacher.teamId }
+          : { teacherId: teacher.id },
+    select: {
+      id: true,
+      name: true,
+      school: true,
+      grade: true,
+      _count: {
+        select: {
+          parentGradeReports: true,
+        },
+      },
+    },
+    orderBy: { name: 'asc' },
+  });
+
+  // 최근 리포트 목록
+  const recentReports = await db.parentGradeReport.findMany({
+    take: 20,
+    orderBy: { createdAt: 'desc' },
+    include: {
+      student: {
+        select: { name: true, school: true, grade: true },
+      },
+      parent: {
+        select: { name: true, relation: true },
+      },
+    },
+  });
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="w-5 h-5 text-gray-400" />
-            학부모 리포트 관리
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-            <FileText className="w-12 h-12 mb-4" />
-            <p className="text-lg font-medium">Phase 4에서 구현 예정</p>
-            <p className="text-sm mt-2">
-              학부모에게 전달할 성적 리포트를 자동으로 생성하고 관리할 수 있습니다.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    <GradeReportsManager
+      students={students}
+      recentReports={recentReports}
+    />
   );
 }
