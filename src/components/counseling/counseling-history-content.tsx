@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { format } from "date-fns"
 import { ko } from "date-fns/locale"
-import { MessageSquare } from "lucide-react"
+import { MessageSquare, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CounselingSearchBar } from "./counseling-search-bar"
@@ -16,6 +16,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 import type { CounselingSessionData } from "./types"
 
 interface CounselingHistoryContentProps {
@@ -273,6 +276,17 @@ export function CounselingHistoryContent({
                   </div>
                 </div>
               )}
+
+              {/* AI 보고서 */}
+              {selectedSession.aiSummary && (
+                <div className="pt-3 border-t">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Sparkles className="h-4 w-4 text-muted-foreground" />
+                    <span className="text-sm font-medium">AI 보고서</span>
+                  </div>
+                  <AiSummaryTabs aiSummary={selectedSession.aiSummary} />
+                </div>
+              )}
             </div>
           </DialogContent>
         </Dialog>
@@ -299,4 +313,45 @@ function getTypeColor(type: string): string {
     BEHAVIORAL: "bg-orange-100 text-orange-800",
   }
   return colors[type] || "bg-gray-100 text-gray-800"
+}
+
+function AiSummaryTabs({ aiSummary }: { aiSummary: string }) {
+  const [tab, setTab] = useState("analysis")
+  const sections = parseAiSummary(aiSummary)
+
+  return (
+    <Tabs value={tab} onValueChange={setTab} className="w-full">
+      <TabsList className="grid w-full grid-cols-3">
+        <TabsTrigger value="analysis">분석 보고서</TabsTrigger>
+        <TabsTrigger value="scenario">시나리오</TabsTrigger>
+        <TabsTrigger value="parent">학부모 공유용</TabsTrigger>
+      </TabsList>
+      <TabsContent value="analysis" className="mt-3">
+        <div className="prose prose-sm max-w-none max-h-[300px] overflow-y-auto border rounded-lg p-4">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{sections.analysis}</ReactMarkdown>
+        </div>
+      </TabsContent>
+      <TabsContent value="scenario" className="mt-3">
+        <div className="prose prose-sm max-w-none max-h-[300px] overflow-y-auto border rounded-lg p-4">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{sections.scenario}</ReactMarkdown>
+        </div>
+      </TabsContent>
+      <TabsContent value="parent" className="mt-3">
+        <div className="prose prose-sm max-w-none max-h-[300px] overflow-y-auto border rounded-lg p-4">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>{sections.parent}</ReactMarkdown>
+        </div>
+      </TabsContent>
+    </Tabs>
+  )
+}
+
+function parseAiSummary(aiSummary: string) {
+  const parts = aiSummary.split(/\n---\n/)
+  const clean = (text: string) => text.replace(/^## .+\n\n?/, "").trim()
+
+  return {
+    analysis: parts[0] ? clean(parts[0]) : "내용 없음",
+    scenario: parts[1] ? clean(parts[1]) : "내용 없음",
+    parent: parts[2] ? clean(parts[2]) : "내용 없음",
+  }
 }

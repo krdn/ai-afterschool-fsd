@@ -30,9 +30,10 @@ import type { ReservationWithRelations } from "@/types/counseling"
 
 interface ReservationCardProps {
   reservation: ReservationWithRelations
+  onDetailClick?: (id: string) => void
 }
 
-export function ReservationCard({ reservation }: ReservationCardProps) {
+export function ReservationCard({ reservation, onDetailClick }: ReservationCardProps) {
   const router = useRouter()
   const [dialogOpen, setDialogOpen] = useState(false)
   const [dialogType, setDialogType] = useState<"complete" | "cancel" | "noShow" | null>(null)
@@ -94,7 +95,10 @@ export function ReservationCard({ reservation }: ReservationCardProps) {
 
   return (
     <>
-      <Card className="hover:shadow-md transition-shadow">
+      <Card
+        className="hover:shadow-md transition-shadow cursor-pointer"
+        onClick={() => onDetailClick?.(reservation.id)}
+      >
         <CardContent className="p-4">
           {/* Header: Date/Time + Status Badge */}
           <div className="flex items-center justify-between mb-3">
@@ -116,7 +120,7 @@ export function ReservationCard({ reservation }: ReservationCardProps) {
 
           {/* Footer: Status Change Buttons (SCHEDULED only) */}
           {reservation.status === "SCHEDULED" && (
-            <div className="flex gap-2 mt-3 pt-3 border-t">
+            <div className="flex gap-2 mt-3 pt-3 border-t" onClick={(e) => e.stopPropagation()}>
               <Button
                 type="button"
                 variant="outline"

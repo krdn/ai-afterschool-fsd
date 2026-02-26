@@ -217,6 +217,7 @@ export async function getReservationById(id: string, teacherId: string) {
           id: true,
           type: true,
           duration: true,
+          aiSummary: true,
         },
       },
     },

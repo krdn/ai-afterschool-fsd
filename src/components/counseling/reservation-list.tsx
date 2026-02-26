@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import { ReservationCard, type ReservationWithRelations } from "./reservation-card"
+import { ReservationDetailDialog } from "./reservation-detail-dialog"
 import type { ReservationStatus } from '@/lib/db'
 
 interface ReservationListProps {
@@ -25,6 +26,7 @@ export function ReservationList({ reservations, onRefresh, dateFilter }: Reserva
   const [searchQuery, setSearchQuery] = useState("")
   const [internalDateFilter, setInternalDateFilter] = useState<Date | undefined>(undefined)
   const [debouncedSearch, setDebouncedSearch] = useState("")
+  const [selectedReservationId, setSelectedReservationId] = useState<string | null>(null)
 
   // 외부 dateFilter가 변경되면 내부 상태 업데이트
   useEffect(() => {
@@ -217,9 +219,19 @@ export function ReservationList({ reservations, onRefresh, dateFilter }: Reserva
       {/* 예약 목록 */}
       <div className="space-y-3">
         {filteredReservations.map((reservation) => (
-          <ReservationCard key={reservation.id} reservation={reservation} />
+          <ReservationCard
+            key={reservation.id}
+            reservation={reservation}
+            onDetailClick={setSelectedReservationId}
+          />
         ))}
       </div>
+
+      {/* 예약 상세 모달 */}
+      <ReservationDetailDialog
+        reservationId={selectedReservationId}
+        onClose={() => setSelectedReservationId(null)}
+      />
     </div>
   )
 }
