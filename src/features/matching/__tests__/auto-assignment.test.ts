@@ -16,7 +16,6 @@ import {
 import type {
   CompatibilityScore,
   TeacherAnalysisData,
-  StudentAnalysisData,
 } from '../types';
 
 // =============================================================================
@@ -60,8 +59,9 @@ const createFixedScoreFn = (score: number): CompatibilityScoreFn => {
   return () => createMockScore(score);
 };
 
-// 선생님 ID에 따라 다른 점수 반환하는 mock scoreFn
-const createTeacherBasedScoreFn = (
+// 선생님 ID에 따라 다른 점수 반환하는 mock scoreFn (향후 사용 예정)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const _createTeacherBasedScoreFn = (
   scoreMap: Record<string, number>
 ): CompatibilityScoreFn => {
   return (teacher: TeacherAnalysisData) => {
@@ -109,13 +109,7 @@ describe('generateAutoAssignment', () => {
         createMockTeacher('t3'),
       ];
 
-      const scoreFn: CompatibilityScoreFn = (teacher) => {
-        // t2가 가장 높은 점수
-        const scores: Record<string, number> = { t1: 60, t2: 90, t3: 70 };
-        return createMockScore(scores[(teacher as { currentLoad: number }).currentLoad === 0 ? 't1' : 70]);
-      };
-
-      // 실제로는 teacher 객체에서 id를 가져올 수 없으므로 다른 방식으로 테스트
+      // 실제로는 teacher 객체에서 id를 가져올 수 없으므로 고정 점수로 테스트
       const result = generateAutoAssignment(students, teachers, createFixedScoreFn(80));
       expect(result).toHaveLength(1);
     });
