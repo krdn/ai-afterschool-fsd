@@ -64,6 +64,10 @@ export function SessionLivePage({ reservation }: SessionLivePageProps) {
             <SessionReferencePanel
               aiSummary={counselingSession?.aiSummary ?? null}
               topic={topic}
+              sessionId={counselingSession?.id ?? ''}
+              studentId={reservation.student.id}
+              studentName={studentName}
+              scheduledAt={reservation.scheduledAt.toISOString()}
             />
           </div>
         </ResizablePanel>
