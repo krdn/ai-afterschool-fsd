@@ -1,12 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import type { SessionWithNotes } from '@/lib/actions/counseling/session-live'
 import { SessionReferencePanel } from './session-reference-panel'
 import { SessionChecklist } from './session-checklist'
+import { SessionTimer } from './session-timer'
+import { SessionCompleteForm } from './session-complete-form'
 
 type SessionLivePageProps = {
   reservation: SessionWithNotes
@@ -15,10 +17,17 @@ type SessionLivePageProps = {
 export function SessionLivePage({ reservation }: SessionLivePageProps) {
   const router = useRouter()
   const [showCompleteForm, setShowCompleteForm] = useState(false)
+  const startTimeRef = useRef(new Date(reservation.counselingSession?.sessionDate ?? new Date()))
 
   const studentName = reservation.student.name
   const topic = reservation.topic
   const counselingSession = reservation.counselingSession
+
+  // 경과 시간 (분) 계산 — 완료 폼에 전달
+  const getElapsedMinutes = () => {
+    const diff = Date.now() - startTimeRef.current.getTime()
+    return Math.max(Math.round(diff / 60000), 5)
+  }
 
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)]">
@@ -35,9 +44,10 @@ export function SessionLivePage({ reservation }: SessionLivePageProps) {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          {/* SessionTimer placeholder — Task 10에서 구현 */}
-          <span className="text-sm text-muted-foreground font-mono">00:00</span>
-          <Button onClick={() => setShowCompleteForm(true)}>상담 완료</Button>
+          <SessionTimer startTime={startTimeRef.current} />
+          <Button onClick={() => setShowCompleteForm(true)} disabled={showCompleteForm}>
+            상담 완료
+          </Button>
         </div>
       </div>
 
@@ -63,9 +73,18 @@ export function SessionLivePage({ reservation }: SessionLivePageProps) {
         </div>
       </div>
 
-      {/* 하단: 완료 폼 (조건부) — Task 10에서 구현 */}
-      {showCompleteForm && (
-        <div className="border-t p-4">완료 폼 placeholder</div>
+      {/* 하단: 완료 폼 (조건부) */}
+      {showCompleteForm && counselingSession && (
+        <div className="border-t p-4 max-h-[50vh] overflow-y-auto">
+          <SessionCompleteForm
+            sessionId={counselingSession.id}
+            reservationId={reservation.id}
+            aiSummary={counselingSession.aiSummary}
+            notes={counselingSession.notes}
+            elapsedMinutes={getElapsedMinutes()}
+            onCancel={() => setShowCompleteForm(false)}
+          />
+        </div>
       )}
     </div>
   )
