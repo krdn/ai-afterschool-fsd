@@ -10,3 +10,4 @@ export * from "./reservations";
 export * from "./reservations-query";
 export * from "./reservations-status";
 export * from "./reservation-complete";
+export * from "./reservation-ai";
