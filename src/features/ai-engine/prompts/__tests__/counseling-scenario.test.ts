@@ -29,8 +29,8 @@ const fullPersonality = {
     result: { mbtiType: "INFJ", percentages: { I: 70, N: 65, F: 80, J: 75 } },
     calculatedAt: new Date(),
   },
-  face: { result: { personalityTraits: ["리더십", "창의성", "공감력"] }, calculatedAt: new Date() },
-  palm: { result: { personalityTraits: ["끈기", "분석력"] }, calculatedAt: new Date() },
+  face: { result: { personalityTraits: ["리더십", "창의성", "공감력"] }, analyzedAt: new Date() },
+  palm: { result: { personalityTraits: ["끈기", "분석력"] }, analyzedAt: new Date() },
 }
 
 // ---------------------------------------------------------------------------
