@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { useRouter } from 'next/navigation'
 import { Link } from '@/i18n/navigation'
 import { format } from 'date-fns'
 import { ko } from 'date-fns/locale'
@@ -55,7 +54,6 @@ export default function CounselingTab({
   studentName,
   teacherId,
 }: CounselingTabProps) {
-  const router = useRouter()
   const [sessions, setSessions] = useState<StudentCounselingSessionItem[]>([])
   const [loading, setLoading] = useState(true)
   const [formOpen, setFormOpen] = useState(false)
