@@ -93,3 +93,44 @@ export const completeReservationSchema = z.object({
 
 export type StatusTransitionInput = z.infer<typeof statusTransitionSchema>
 export type CompleteReservationInput = z.infer<typeof completeReservationSchema>
+
+/**
+ * 예약 완료 + 상담 기록 동시 저장 스키마
+ */
+export const completeWithRecordSchema = z.object({
+  reservationId: z.string().min(1, "예약 ID가 필요합니다"),
+  type: z.enum(["ACADEMIC", "CAREER", "PSYCHOLOGICAL", "BEHAVIORAL"], {
+    message: "상담 유형을 선택해주세요",
+  }),
+  duration: z
+    .number()
+    .min(5, "상담 시간은 최소 5분입니다")
+    .max(180, "상담 시간은 최대 180분입니다"),
+  summary: z
+    .string()
+    .min(10, "상담 내용은 10자 이상 입력해주세요")
+    .max(1000, "상담 내용은 1000자 이하여야 합니다"),
+  aiSummary: z.string().optional(),
+  followUpRequired: z.boolean(),
+  followUpDate: z
+    .string()
+    .optional()
+    .refine((val) => !val || !Number.isNaN(new Date(val).getTime()), {
+      message: "올바른 날짜 형식이 아닙니다",
+    }),
+  satisfactionScore: z
+    .number()
+    .min(1, "만족도는 1 이상이어야 합니다")
+    .max(5, "만족도는 5 이하여야 합니다")
+    .optional(),
+}).superRefine((data, ctx) => {
+  if (data.followUpRequired && !data.followUpDate) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "후속 조치 날짜를 입력해주세요",
+      path: ["followUpDate"],
+    })
+  }
+})
+
+export type CompleteWithRecordInput = z.infer<typeof completeWithRecordSchema>
