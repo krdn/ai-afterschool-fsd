@@ -179,7 +179,7 @@ describe("buildParentSummaryPrompt", () => {
 
   it("학부모 호칭을 포함한다", () => {
     const result = buildParentSummaryPrompt(baseParentParams)
-    expect(result).toContain("김철수 학부모님")
+    expect(result).toContain("**김철수** 학부모님")
   })
 
   it("상담 일시와 주제를 포함한다", () => {
@@ -190,7 +190,7 @@ describe("buildParentSummaryPrompt", () => {
 
   it("민감 정보 제외 지시사항을 포함한다", () => {
     const result = buildParentSummaryPrompt(baseParentParams)
-    expect(result).toContain("민감 정보는 절대 포함하지 마")
+    expect(result).toContain("민감 정보 절대 포함 금지")
   })
 
   it("승인된 시나리오를 참고 자료로 포함한다", () => {
@@ -200,6 +200,6 @@ describe("buildParentSummaryPrompt", () => {
 
   it("준비 요청사항 섹션을 포함한다", () => {
     const result = buildParentSummaryPrompt(baseParentParams)
-    expect(result).toContain("준비 요청사항")
+    expect(result).toContain("사전 준비 요청")
   })
 })
