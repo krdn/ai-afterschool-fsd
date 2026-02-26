@@ -4,6 +4,7 @@ import { useActionState, useEffect, useRef } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
 import { toast } from "sonner"
 import { useTranslations } from "next-intl"
 import { login, type AuthFormState } from "@/lib/actions/auth/login"
@@ -22,6 +23,8 @@ import {
 
 export function LoginForm() {
   const t = useTranslations("Auth")
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl")
   const [state, formAction, pending] = useActionState<AuthFormState, FormData>(
     login,
     { errors: {} }
@@ -56,6 +59,9 @@ export function LoginForm() {
       </CardHeader>
       <CardContent>
         <form action={formAction} className="space-y-4">
+          {callbackUrl && (
+            <input type="hidden" name="callbackUrl" value={callbackUrl} />
+          )}
           {state?.errors?._form && (
             <div className="p-3 rounded-md bg-red-50 text-red-600 text-sm" data-testid="form-error">
               {state.errors._form[0]}

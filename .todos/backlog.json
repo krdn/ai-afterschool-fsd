@@ -6,7 +6,8 @@
     "category": "security",
     "file": "src/lib/actions/matching/compatibility.ts",
     "createdAt": "2026-02-26",
-    "status": "pending"
+    "resolvedAt": "2026-02-26",
+    "status": "completed"
   },
   {
     "id": "todo-002",
@@ -15,15 +16,17 @@
     "category": "security",
     "file": "src/lib/actions/common/performance.ts",
     "createdAt": "2026-02-26",
-    "status": "pending"
+    "resolvedAt": "2026-02-26",
+    "status": "completed"
   },
   {
     "id": "todo-003",
     "content": "[버그] 로그인 callbackUrl 무시 - /counseling 접근 시 로그인 후 /students로 리다이렉트",
     "priority": "medium",
     "category": "bug",
-    "file": "src/app/[locale]/(dashboard)/auth",
+    "file": "src/lib/actions/auth/login.ts",
     "createdAt": "2026-02-26",
-    "status": "pending"
+    "resolvedAt": "2026-02-26",
+    "status": "completed"
   }
 ]

@@ -127,7 +127,10 @@ export async function login(
 
   await createSession(teacher.id, teacher.role, teacher.teamId)
 
-  redirect("/students")
+  // callbackUrl이 있으면 해당 경로로, 없으면 기본 /students로 리다이렉트
+  const callbackUrl = formData.get("callbackUrl") as string | null
+  const safeCallback = callbackUrl && callbackUrl.startsWith("/") ? callbackUrl : "/students"
+  redirect(safeCallback)
 }
 
 export async function signup(
@@ -195,7 +198,9 @@ export async function signup(
     throw error
   }
 
-  redirect("/students")
+  const callbackUrl = formData.get("callbackUrl") as string | null
+  const safeCallback = callbackUrl && callbackUrl.startsWith("/") ? callbackUrl : "/students"
+  redirect(safeCallback)
 }
 
 export async function logout(): Promise<void> {
