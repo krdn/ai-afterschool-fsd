@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import ReactMarkdown from 'react-markdown'
@@ -13,69 +14,121 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Badge } from '@/components/ui/badge'
-import { Loader2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Loader2, Pencil, CheckCircle } from 'lucide-react'
 import { getReservationByIdAction } from '@/lib/actions/counseling/reservations-query'
 import { toast } from 'sonner'
 import { getParentRelationLabel, parseAiSummary } from './utils'
+import { ReservationEditForm } from './reservation-edit-form'
+import { SessionRecordForm } from './session-record-form'
+
+export type DialogMode = 'read' | 'edit' | 'record'
 
 interface ReservationDetailDialogProps {
   reservationId: string | null
+  initialMode?: DialogMode
   onClose: () => void
 }
 
-type ReservationDetail = NonNullable<
+export type ReservationDetail = NonNullable<
   Extract<Awaited<ReturnType<typeof getReservationByIdAction>>, { success: true }>['data']
 >
 
 export function ReservationDetailDialog({
   reservationId,
+  initialMode = 'read',
   onClose,
 }: ReservationDetailDialogProps) {
+  const router = useRouter()
   const [detail, setDetail] = useState<ReservationDetail | null>(null)
   const [isLoading, setIsLoading] = useState(false)
-  const [aiTab, setAiTab] = useState('analysis')
+  const [mode, setMode] = useState<DialogMode>(initialMode)
 
   const stableOnClose = useCallback(onClose, [onClose])
+
+  // initialMode이 바뀌면 동기화
+  useEffect(() => {
+    if (reservationId) setMode(initialMode)
+  }, [initialMode, reservationId])
+
+  // 데이터 로드
+  const loadDetail = useCallback(async (id: string) => {
+    setIsLoading(true)
+    try {
+      const result = await getReservationByIdAction(id)
+      if (result.success) {
+        setDetail(result.data)
+      } else {
+        toast.error(result.error || '예약 정보를 불러오지 못했습니다.')
+        stableOnClose()
+      }
+    } catch {
+      toast.error('오류가 발생했습니다.')
+      stableOnClose()
+    } finally {
+      setIsLoading(false)
+    }
+  }, [stableOnClose])
 
   useEffect(() => {
     if (!reservationId) {
       setDetail(null)
+      setMode('read')
       return
     }
+    loadDetail(reservationId)
+  }, [reservationId, loadDetail])
 
-    const load = async () => {
-      setIsLoading(true)
-      setAiTab('analysis')
-      try {
-        const result = await getReservationByIdAction(reservationId)
-        if (result.success) {
-          setDetail(result.data)
-        } else {
-          toast.error(result.error || '예약 정보를 불러오지 못했습니다.')
-          stableOnClose()
-        }
-      } catch {
-        toast.error('오류가 발생했습니다.')
-        stableOnClose()
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    load()
-  }, [reservationId, stableOnClose])
+  // 수정 저장 성공 후 처리
+  const handleSaveSuccess = useCallback(() => {
+    setMode('read')
+    if (reservationId) loadDetail(reservationId)
+    router.refresh()
+  }, [reservationId, loadDetail, router])
 
-  const aiSummary = detail?.counselingSession?.aiSummary
+  // 완료 기록 저장 성공 (다이얼로그 닫기)
+  const handleRecordSuccess = useCallback(() => {
+    router.refresh()
+    stableOnClose()
+  }, [router, stableOnClose])
 
-  // aiSummary를 섹션별로 분리
-  const sections = aiSummary ? parseAiSummary(aiSummary) : null
+  // 다이얼로그 닫기
+  const handleClose = () => {
+    setMode('read')
+    onClose()
+  }
+
+  const isScheduled = detail?.status === 'SCHEDULED'
+  const dialogTitle = mode === 'edit' ? '예약 수정' : mode === 'record' ? '상담 기록 작성' : '예약 상세'
 
   return (
-    <Dialog open={!!reservationId} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+    <Dialog open={!!reservationId} onOpenChange={(open) => !open && handleClose()}>
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>예약 상세</DialogTitle>
-          {detail && (
+          <div className="flex items-center justify-between">
+            <DialogTitle>{dialogTitle}</DialogTitle>
+            {mode === 'read' && isScheduled && (
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setMode('edit')}
+                >
+                  <Pencil className="h-4 w-4 mr-1" />
+                  수정
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={() => setMode('record')}
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                >
+                  <CheckCircle className="h-4 w-4 mr-1" />
+                  완료
+                </Button>
+              </div>
+            )}
+          </div>
+          {detail && mode === 'read' && (
             <DialogDescription>
               {format(new Date(detail.scheduledAt), 'yyyy년 M월 d일 E요일 HH:mm', { locale: ko })}
             </DialogDescription>
@@ -89,60 +142,21 @@ export function ReservationDetailDialog({
           </div>
         ) : detail ? (
           <>
-
-            <div className="space-y-4">
-              {/* 기본 정보 */}
-              <div className="grid grid-cols-2 gap-3 text-sm">
-                <div>
-                  <span className="font-medium text-muted-foreground">학생</span>
-                  <p>{detail.student.name} {detail.student.school && `(${detail.student.school} ${detail.student.grade}학년)`}</p>
-                </div>
-                <div>
-                  <span className="font-medium text-muted-foreground">학부모</span>
-                  <p>{detail.parent.name} ({getParentRelationLabel(detail.parent.relation)})</p>
-                </div>
-                <div className="col-span-2">
-                  <span className="font-medium text-muted-foreground">상담 주제</span>
-                  <p>{detail.topic}</p>
-                </div>
-              </div>
-
-              {/* AI 문서 */}
-              {sections ? (
-                <Tabs value={aiTab} onValueChange={setAiTab} className="w-full">
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="analysis">분석 보고서</TabsTrigger>
-                    <TabsTrigger value="scenario">시나리오</TabsTrigger>
-                    <TabsTrigger value="parent">학부모 공유용</TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="analysis" className="mt-3">
-                    <div className="prose prose-sm max-w-none max-h-[400px] overflow-y-auto border rounded-lg p-4">
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                        {sections.analysis}
-                      </ReactMarkdown>
-                    </div>
-                  </TabsContent>
-                  <TabsContent value="scenario" className="mt-3">
-                    <div className="prose prose-sm max-w-none max-h-[400px] overflow-y-auto border rounded-lg p-4">
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                        {sections.scenario}
-                      </ReactMarkdown>
-                    </div>
-                  </TabsContent>
-                  <TabsContent value="parent" className="mt-3">
-                    <div className="prose prose-sm max-w-none max-h-[400px] overflow-y-auto border rounded-lg p-4">
-                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                        {sections.parent}
-                      </ReactMarkdown>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              ) : (
-                <div className="text-sm text-muted-foreground border rounded-lg p-4 text-center">
-                  AI 보고서가 없습니다. (AI 보완 없이 등록된 예약)
-                </div>
-              )}
-            </div>
+            {mode === 'read' && <DetailReadView detail={detail} />}
+            {mode === 'edit' && (
+              <ReservationEditForm
+                reservation={detail}
+                onSave={handleSaveSuccess}
+                onCancel={() => setMode('read')}
+              />
+            )}
+            {mode === 'record' && (
+              <SessionRecordForm
+                reservation={detail}
+                onSave={handleRecordSuccess}
+                onCancel={() => setMode('read')}
+              />
+            )}
           </>
         ) : null}
       </DialogContent>
@@ -150,3 +164,67 @@ export function ReservationDetailDialog({
   )
 }
 
+/**
+ * 읽기 모드 뷰 — 기존 상세 다이얼로그 본문을 추출
+ */
+function DetailReadView({ detail }: { detail: ReservationDetail }) {
+  const [aiTab, setAiTab] = useState('analysis')
+  const aiSummary = detail.counselingSession?.aiSummary
+  const sections = aiSummary ? parseAiSummary(aiSummary) : null
+
+  return (
+    <div className="space-y-4">
+      {/* 기본 정보 */}
+      <div className="grid grid-cols-2 gap-3 text-sm">
+        <div>
+          <span className="font-medium text-muted-foreground">학생</span>
+          <p>{detail.student.name} {detail.student.school && `(${detail.student.school} ${detail.student.grade}학년)`}</p>
+        </div>
+        <div>
+          <span className="font-medium text-muted-foreground">학부모</span>
+          <p>{detail.parent.name} ({getParentRelationLabel(detail.parent.relation)})</p>
+        </div>
+        <div className="col-span-2">
+          <span className="font-medium text-muted-foreground">상담 주제</span>
+          <p>{detail.topic}</p>
+        </div>
+      </div>
+
+      {/* AI 문서 */}
+      {sections ? (
+        <Tabs value={aiTab} onValueChange={setAiTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="analysis">분석 보고서</TabsTrigger>
+            <TabsTrigger value="scenario">시나리오</TabsTrigger>
+            <TabsTrigger value="parent">학부모 공유용</TabsTrigger>
+          </TabsList>
+          <TabsContent value="analysis" className="mt-3">
+            <div className="prose prose-sm max-w-none max-h-[400px] overflow-y-auto border rounded-lg p-4">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {sections.analysis}
+              </ReactMarkdown>
+            </div>
+          </TabsContent>
+          <TabsContent value="scenario" className="mt-3">
+            <div className="prose prose-sm max-w-none max-h-[400px] overflow-y-auto border rounded-lg p-4">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {sections.scenario}
+              </ReactMarkdown>
+            </div>
+          </TabsContent>
+          <TabsContent value="parent" className="mt-3">
+            <div className="prose prose-sm max-w-none max-h-[400px] overflow-y-auto border rounded-lg p-4">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {sections.parent}
+              </ReactMarkdown>
+            </div>
+          </TabsContent>
+        </Tabs>
+      ) : (
+        <div className="text-sm text-muted-foreground border rounded-lg p-4 text-center">
+          AI 보고서가 없습니다. (AI 보완 없이 등록된 예약)
+        </div>
+      )}
+    </div>
+  )
+}

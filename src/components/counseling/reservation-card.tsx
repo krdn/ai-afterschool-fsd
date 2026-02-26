@@ -19,7 +19,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import {
-  completeReservationAction,
   cancelReservationAction,
   markNoShowAction,
 } from "@/lib/actions/counseling/reservations-status"
@@ -32,38 +31,34 @@ import type { ReservationWithRelations } from "@/types/counseling"
 interface ReservationCardProps {
   reservation: ReservationWithRelations
   onDetailClick?: (id: string) => void
+  onEditClick?: (id: string) => void
+  onRecordClick?: (id: string) => void
 }
 
-export function ReservationCard({ reservation, onDetailClick }: ReservationCardProps) {
+export function ReservationCard({
+  reservation,
+  onDetailClick,
+  onEditClick,
+  onRecordClick,
+}: ReservationCardProps) {
   const router = useRouter()
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [dialogType, setDialogType] = useState<"complete" | "cancel" | "noShow" | null>(null)
+  const [dialogType, setDialogType] = useState<"cancel" | "noShow" | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
 
   const statusLabel = getStatusLabel(reservation.status)
   const statusVariant = getStatusVariant(reservation.status)
 
-  // 상태 변경 핸들러
-  const handleStatusChange = async (type: "complete" | "cancel" | "noShow") => {
+  // 상태 변경 핸들러 (취소/노쇼만)
+  const handleStatusChange = async (type: "cancel" | "noShow") => {
     setIsProcessing(true)
     try {
-      let result
-
-      switch (type) {
-        case "complete":
-          result = await completeReservationAction({ reservationId: reservation.id })
-          break
-        case "cancel":
-          result = await cancelReservationAction(reservation.id)
-          break
-        case "noShow":
-          result = await markNoShowAction(reservation.id)
-          break
-      }
+      const result = type === "cancel"
+        ? await cancelReservationAction(reservation.id)
+        : await markNoShowAction(reservation.id)
 
       if (result.success) {
-        const message = getSuccessMessage(type)
-        toast.success(message)
+        toast.success(type === "cancel" ? "예약이 취소되었습니다." : "노쇼로 처리되었습니다.")
         router.refresh()
       } else {
         toast.error(result.error || "상태 변경에 실패했습니다.")
@@ -78,17 +73,13 @@ export function ReservationCard({ reservation, onDetailClick }: ReservationCardP
     }
   }
 
-  // 다이얼로그 열기
-  const openDialog = (type: "complete" | "cancel" | "noShow") => {
+  const openDialog = (type: "cancel" | "noShow") => {
     setDialogType(type)
     setDialogOpen(true)
   }
 
-  // 다이얼로그 확인
   const handleConfirm = () => {
-    if (dialogType) {
-      handleStatusChange(dialogType)
-    }
+    if (dialogType) handleStatusChange(dialogType)
   }
 
   // 다이얼로그 내용
@@ -119,14 +110,24 @@ export function ReservationCard({ reservation, onDetailClick }: ReservationCardP
             <div className="text-sm text-gray-700">{reservation.topic}</div>
           </div>
 
-          {/* Footer: Status Change Buttons (SCHEDULED only) */}
+          {/* Footer: Action Buttons (SCHEDULED only) */}
           {reservation.status === "SCHEDULED" && (
             <div className="flex gap-2 mt-3 pt-3 border-t" onClick={(e) => e.stopPropagation()}>
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => openDialog("complete")}
+                onClick={() => onEditClick?.(reservation.id)}
+                disabled={isProcessing}
+                className="flex-1 bg-blue-50 text-blue-700 hover:bg-blue-100 border-blue-200"
+              >
+                수정
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => onRecordClick?.(reservation.id)}
                 disabled={isProcessing}
                 className="flex-1 bg-green-50 text-green-700 hover:bg-green-100 border-green-200"
               >
@@ -205,17 +206,10 @@ function getStatusVariant(status: ReservationStatus): "scheduled" | "completed" 
 }
 
 function getDialogContent(
-  type: "complete" | "cancel" | "noShow" | null,
+  type: "cancel" | "noShow" | null,
   studentName: string
 ) {
   switch (type) {
-    case "complete":
-      return {
-        title: "상담 완료 확인",
-        description: `${studentName} 학부모 상담을 완료 처리하시겠습니까? 상담 세션이 자동으로 생성됩니다.`,
-        confirmLabel: "완료",
-        buttonClass: "bg-green-600 hover:bg-green-700 text-white",
-      }
     case "cancel":
       return {
         title: "예약 취소 확인",
@@ -238,15 +232,6 @@ function getDialogContent(
         buttonClass: "",
       }
   }
-}
-
-function getSuccessMessage(type: "complete" | "cancel" | "noShow"): string {
-  const messages: Record<string, string> = {
-    complete: "상담이 완료되었습니다.",
-    cancel: "예약이 취소되었습니다.",
-    noShow: "노쇼로 처리되었습니다.",
-  }
-  return messages[type]
 }
 
 export default ReservationCard
