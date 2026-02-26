@@ -34,7 +34,7 @@ export function TimeSlotGrid({
           {format(selectedDate, "M월 d일 E요일", { locale: ko })} 시간 선택
         </p>
       )}
-      <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+      <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2" role="group" aria-label="시간 선택">
         {slots.map((slot) => {
           const isReserved = reservedSlots.includes(slot)
           const isSelected = selectedTime === slot

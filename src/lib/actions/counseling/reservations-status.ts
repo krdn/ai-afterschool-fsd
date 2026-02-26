@@ -93,8 +93,7 @@ export async function deleteReservationAction(
     await deleteReservation(reservationId, session.userId)
 
     // 6. 캐시 무효화
-    revalidatePath('/reservations')
-    revalidatePath(`/reservations/${reservationId}`)
+    revalidatePath('/counseling')
     revalidatePath(`/students/${existingReservation.studentId}`)
 
     return okVoid()
@@ -168,8 +167,7 @@ export async function completeReservationAction(
     })
 
     // 6. 캐시 무효화
-    revalidatePath('/reservations')
-    revalidatePath(`/reservations/${reservationId}`)
+    revalidatePath('/counseling')
     revalidatePath(`/students/${existingReservation.studentId}`)
 
     return ok({
@@ -236,8 +234,7 @@ export async function cancelReservationAction(
     })
 
     // 5. 캐시 무효화
-    revalidatePath('/reservations')
-    revalidatePath(`/reservations/${reservationId}`)
+    revalidatePath('/counseling')
     revalidatePath(`/students/${existingReservation.studentId}`)
 
     return ok({
@@ -303,8 +300,7 @@ export async function markNoShowAction(
     })
 
     // 5. 캐시 무효화
-    revalidatePath('/reservations')
-    revalidatePath(`/reservations/${reservationId}`)
+    revalidatePath('/counseling')
     revalidatePath(`/students/${existingReservation.studentId}`)
 
     return ok({

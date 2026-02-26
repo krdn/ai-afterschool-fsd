@@ -20,6 +20,7 @@ import {
 import { getReservationsAction } from '@/lib/actions/counseling/reservations-query'
 import { toast } from 'sonner'
 import { ChevronRight } from 'lucide-react'
+import { Link } from '@/i18n/navigation'
 
 interface ReservationInfoStepProps {
   data: {
@@ -212,8 +213,14 @@ export function ReservationInfoStep({
 
       {selectedStudent && parents.length === 0 && (
         <p className="text-sm text-muted-foreground">
-          해당 학생의 학부모 정보가 없습니다. 학생 상세 페이지에서 학부모를
-          등록해주세요.
+          해당 학생의 학부모 정보가 없습니다.{' '}
+          <Link
+            href={`/students/${selectedStudent.id}`}
+            className="text-blue-600 hover:underline"
+          >
+            학생 상세 페이지
+          </Link>
+          에서 학부모를 등록해주세요.
         </p>
       )}
 

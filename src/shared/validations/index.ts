@@ -2,7 +2,7 @@ export * from "./auth";
 export * from "./students";
 export * from "./teachers";
 export * from "./teams";
-export * from "./counseling";
+export * from "@/lib/validations/counseling";
 export * from "./satisfaction";
 export * from "./reservations";
 export * from "./issues";

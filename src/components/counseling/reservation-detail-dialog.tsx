@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge'
 import { Loader2 } from 'lucide-react'
 import { getReservationByIdAction } from '@/lib/actions/counseling/reservations-query'
 import { toast } from 'sonner'
+import { getParentRelationLabel, parseAiSummary } from './utils'
 
 interface ReservationDetailDialogProps {
   reservationId: string | null
@@ -149,28 +150,3 @@ export function ReservationDetailDialog({
   )
 }
 
-// aiSummary를 "---" 구분자로 분리하여 3개 섹션으로 파싱
-function parseAiSummary(aiSummary: string) {
-  const parts = aiSummary.split(/\n---\n/)
-
-  // 섹션 헤더(## 학생 분석 보고서 등) 제거
-  const clean = (text: string) =>
-    text.replace(/^## .+\n\n?/, '').trim()
-
-  return {
-    analysis: parts[0] ? clean(parts[0]) : '내용 없음',
-    scenario: parts[1] ? clean(parts[1]) : '내용 없음',
-    parent: parts[2] ? clean(parts[2]) : '내용 없음',
-  }
-}
-
-function getParentRelationLabel(relation: string): string {
-  const labels: Record<string, string> = {
-    FATHER: '아버지',
-    MOTHER: '어머니',
-    GRANDFATHER: '조부',
-    GRANDMOTHER: '조모',
-    OTHER: '기타',
-  }
-  return labels[relation] || relation
-}

@@ -65,7 +65,7 @@ export function CounselingPageTabs({ initialTab, children }: CounselingPageTabsP
       <TabsList>
         <TabsTrigger value="history" data-tab="history">상담 기록</TabsTrigger>
         <TabsTrigger value="reservations" data-tab="reservations">예약 관리</TabsTrigger>
-        <TabsTrigger value="calendar" data-tab="calendar">캘린더</TabsTrigger>
+        <TabsTrigger value="calendar" data-tab="calendar">예약 캘린더</TabsTrigger>
       </TabsList>
 
       {/* 상담 기록 탭 */}
@@ -135,28 +135,28 @@ export function CounselingPageTabs({ initialTab, children }: CounselingPageTabsP
             initialDate={calendarViewDate}
             onDateSelect={(date) => {
               setCalendarDateFilter(date)
-              // 캘린더에서 날짜 선택 시 자동으로 예약 관리 탭으로 전환
-              if (date) {
-                setSelectedDate(date)
-                setActiveTab("reservations")
-              }
             }}
           />
 
-          {/* 선택한 날짜 정보 표시 */}
+          {/* 선택한 날짜의 예약 목록 인라인 표시 */}
           {calendarDateFilter && (
-            <div className="text-center">
-              <p className="text-sm text-muted-foreground">
-                선택한 날짜: {calendarDateFilter.toLocaleDateString("ko-KR")}
-              </p>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setCalendarDateFilter(undefined)}
-                className="mt-2"
-              >
-                날짜 선택 초기화
-              </Button>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium">
+                  {calendarDateFilter.toLocaleDateString("ko-KR")} 예약 목록
+                </p>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setCalendarDateFilter(undefined)}
+                >
+                  날짜 선택 초기화
+                </Button>
+              </div>
+              <ReservationList
+                reservations={reservations}
+                dateFilter={calendarDateFilter}
+              />
             </div>
           )}
         </div>

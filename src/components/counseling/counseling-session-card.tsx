@@ -1,4 +1,5 @@
 import type { CounselingSession, Student, Teacher } from '@/lib/db'
+import { getTypeLabel, getTypeColor } from './utils'
 
 export type CounselingSessionWithRelations = CounselingSession & {
   student: Student
@@ -78,7 +79,7 @@ export function CounselingSessionCard({ session, onClick }: CounselingSessionCar
           </div>
 
           {satisfactionScore !== undefined && (
-            <div className="flex items-center gap-1 text-yellow-600">
+            <div className="flex items-center gap-1 text-yellow-600" role="img" aria-label={`만족도 ${satisfactionScore}점`}>
               {[...Array(5)].map((_, i) => (
                 <svg
                   key={i}
@@ -91,6 +92,7 @@ export function CounselingSessionCard({ session, onClick }: CounselingSessionCar
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
+                  aria-hidden="true"
                 >
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                 </svg>
@@ -120,22 +122,3 @@ function getRelativeTime(date: Date): string {
   return `${new Date(date).getFullYear()}년 ${new Date(date).getMonth() + 1}월`
 }
 
-function getTypeLabel(type: string): string {
-  const labels: Record<string, string> = {
-    ACADEMIC: "학업",
-    CAREER: "진로",
-    PSYCHOLOGICAL: "심리",
-    BEHAVIORAL: "행동",
-  }
-  return labels[type] || type
-}
-
-function getTypeColor(type: string): string {
-  const colors: Record<string, string> = {
-    ACADEMIC: "bg-blue-100 text-blue-800",
-    CAREER: "bg-green-100 text-green-800",
-    PSYCHOLOGICAL: "bg-purple-100 text-purple-800",
-    BEHAVIORAL: "bg-orange-100 text-orange-800",
-  }
-  return colors[type] || "bg-gray-100 text-gray-800"
-}

@@ -24,6 +24,7 @@ import {
   markNoShowAction,
 } from "@/lib/actions/counseling/reservations-status"
 import { toast } from "sonner"
+import { getParentRelationLabel } from "./utils"
 
 export type { ReservationWithRelations } from "@/types/counseling"
 import type { ReservationWithRelations } from "@/types/counseling"
@@ -201,17 +202,6 @@ function getStatusVariant(status: ReservationStatus): "scheduled" | "completed" 
     NO_SHOW: "noShow",
   }
   return variants[status]
-}
-
-function getParentRelationLabel(relation: string): string {
-  const labels: Record<string, string> = {
-    FATHER: "아버지",
-    MOTHER: "어머니",
-    GRANDFATHER: "조부",
-    GRANDMOTHER: "조모",
-    OTHER: "기타",
-  }
-  return labels[relation] || relation
 }
 
 function getDialogContent(

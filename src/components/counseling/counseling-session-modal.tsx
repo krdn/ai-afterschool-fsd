@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import type { CounselingSessionWithRelations } from "./counseling-session-card"
+import { getTypeLabel, getTypeColor } from "./utils"
 
 interface CounselingSessionModalProps {
   session: CounselingSessionWithRelations
@@ -74,7 +75,7 @@ export function CounselingSessionModal({ session, open, onOpenChange }: Counseli
           {session.satisfactionScore !== null && session.satisfactionScore !== undefined && (
             <div className="flex items-center gap-2">
               <span className="text-sm font-medium">만족도:</span>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1" role="img" aria-label={`만족도 ${session.satisfactionScore}점`}>
                 {[...Array(5)].map((_, i) => (
                   <svg
                     key={i}
@@ -84,6 +85,7 @@ export function CounselingSessionModal({ session, open, onOpenChange }: Counseli
                     fill={i < (session.satisfactionScore ?? 0) ? "currentColor" : "none"}
                     stroke="currentColor"
                     strokeWidth="2"
+                    aria-hidden="true"
                   >
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                   </svg>
@@ -98,23 +100,3 @@ export function CounselingSessionModal({ session, open, onOpenChange }: Counseli
   )
 }
 
-// Helper functions (reuse from CounselingSessionCard)
-function getTypeLabel(type: string): string {
-  const labels: Record<string, string> = {
-    ACADEMIC: "학업",
-    CAREER: "진로",
-    PSYCHOLOGICAL: "심리",
-    BEHAVIORAL: "행동",
-  }
-  return labels[type] || type
-}
-
-function getTypeColor(type: string): string {
-  const colors: Record<string, string> = {
-    ACADEMIC: "bg-blue-100 text-blue-800",
-    CAREER: "bg-green-100 text-green-800",
-    PSYCHOLOGICAL: "bg-purple-100 text-purple-800",
-    BEHAVIORAL: "bg-orange-100 text-orange-800",
-  }
-  return colors[type] || "bg-gray-100 text-gray-800"
-}

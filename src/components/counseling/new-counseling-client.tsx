@@ -20,13 +20,30 @@ interface Student {
   grade: number
 }
 
+export interface EditSessionData {
+  id: string
+  studentId: string
+  sessionDate: string
+  duration: number
+  type: string
+  summary: string
+  followUpRequired: boolean
+  followUpDate: string | null
+  satisfactionScore: number | null
+  aiSummary: string | null
+}
+
 interface NewCounselingClientProps {
   students: Student[]
   teacherId: string
+  editSession?: EditSessionData | null
 }
 
-export function NewCounselingClient({ students, teacherId }: NewCounselingClientProps) {
-  const [selectedStudentId, setSelectedStudentId] = useState<string>("")
+export function NewCounselingClient({ students, teacherId, editSession }: NewCounselingClientProps) {
+  const isEditMode = !!editSession
+  const [selectedStudentId, setSelectedStudentId] = useState<string>(
+    editSession?.studentId || ""
+  )
   const router = useRouter()
 
   const handleSuccess = () => {
@@ -39,8 +56,12 @@ export function NewCounselingClient({ students, teacherId }: NewCounselingClient
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">새 상담 기록</h1>
-          <p className="text-gray-600">선생님-학생 상담을 기록합니다</p>
+          <h1 className="text-3xl font-bold">
+            {isEditMode ? "상담 기록 수정" : "새 상담 기록"}
+          </h1>
+          <p className="text-gray-600">
+            {isEditMode ? "기존 상담 기록을 수정합니다" : "선생님-학생 상담을 기록합니다"}
+          </p>
         </div>
 
         <Card>
@@ -54,6 +75,7 @@ export function NewCounselingClient({ students, teacherId }: NewCounselingClient
                 <Select
                   value={selectedStudentId}
                   onValueChange={setSelectedStudentId}
+                  disabled={isEditMode}
                 >
                   <SelectTrigger id="student-select">
                     <SelectValue placeholder="학생을 선택하세요" />
@@ -66,9 +88,15 @@ export function NewCounselingClient({ students, teacherId }: NewCounselingClient
                     ))}
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-gray-500">
-                  학생을 선택한 후 아래 폼을 작성해주세요
-                </p>
+                {isEditMode ? (
+                  <p className="text-xs text-gray-500">
+                    수정 모드에서는 학생을 변경할 수 없습니다
+                  </p>
+                ) : (
+                  <p className="text-xs text-gray-500">
+                    학생을 선택한 후 아래 폼을 작성해주세요
+                  </p>
+                )}
               </div>
             </div>
           </CardContent>
@@ -77,9 +105,12 @@ export function NewCounselingClient({ students, teacherId }: NewCounselingClient
         <div id="counseling-form-container">
           {selectedStudentId && selectedStudent ? (
             <CounselingSessionForm
+              key={editSession?.id || selectedStudentId}
               studentId={selectedStudentId}
               studentName={selectedStudent.name}
               teacherId={teacherId}
+              sessionId={editSession?.id}
+              editData={editSession || undefined}
               onSuccess={handleSuccess}
             />
           ) : (

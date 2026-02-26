@@ -3,6 +3,7 @@
 
 import { useState, useCallback } from 'react'
 import { toast } from 'sonner'
+import { Button } from '@/components/ui/button'
 import { WizardStepper, type WizardStep } from './wizard-stepper'
 import { ReservationInfoStep } from './reservation-info-step'
 import { StudentInsightStep } from './student-insight-step'
@@ -202,13 +203,14 @@ export function ReservationWizard({ onCancel, onSuccess }: ReservationWizardProp
 
       {/* 취소 버튼 (항상 표시) */}
       <div className="flex justify-start">
-        <button
+        <Button
           type="button"
+          variant="ghost"
+          size="sm"
           onClick={onCancel}
-          className="text-sm text-muted-foreground hover:text-foreground"
         >
           취소
-        </button>
+        </Button>
       </div>
     </div>
   )

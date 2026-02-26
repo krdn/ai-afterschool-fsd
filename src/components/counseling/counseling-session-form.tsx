@@ -15,7 +15,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { recordCounselingAction } from "@/lib/actions/common/performance"
+import { recordCounselingAction, updateCounselingAction } from "@/lib/actions/common/performance"
+import type { EditSessionData } from "./new-counseling-client"
 import { counselingSchema, type CounselingFormData } from "@/lib/validations/counseling"
 import { toast } from "sonner"
 import { AISupportPanel } from "./ai-support-panel"
@@ -25,6 +26,7 @@ interface CounselingSessionFormProps {
   studentName: string
   teacherId: string
   sessionId?: string
+  editData?: EditSessionData
   onSuccess?: () => void
 }
 
@@ -33,23 +35,28 @@ export function CounselingSessionForm({
   studentName,
   teacherId,
   sessionId,
+  editData,
   onSuccess,
 }: CounselingSessionFormProps) {
+  const isEditMode = !!editData
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [followUpRequired, setFollowUpRequired] = useState(false)
+  const [followUpRequired, setFollowUpRequired] = useState(editData?.followUpRequired ?? false)
   const [isPanelOpen, setIsPanelOpen] = useState(false)
-  const [appliedAISummary, setAppliedAISummary] = useState<string | null>(null)
+  const [appliedAISummary, setAppliedAISummary] = useState<string | null>(
+    editData?.aiSummary ?? null
+  )
 
   const form = useForm<CounselingFormData>({
     resolver: zodResolver(counselingSchema),
     defaultValues: {
       studentId,
-      sessionDate: new Date().toISOString().split("T")[0],
-      duration: 30,
-      type: "ACADEMIC",
-      summary: "",
-      followUpRequired: false,
-      satisfactionScore: undefined,
+      sessionDate: editData?.sessionDate || new Date().toISOString().split("T")[0],
+      duration: editData?.duration ?? 30,
+      type: (editData?.type as CounselingFormData["type"]) || "ACADEMIC",
+      summary: editData?.summary || "",
+      followUpRequired: editData?.followUpRequired ?? false,
+      followUpDate: editData?.followUpDate || undefined,
+      satisfactionScore: editData?.satisfactionScore ?? undefined,
     },
     mode: "onChange",
   })
@@ -92,19 +99,26 @@ export function CounselingSessionForm({
         formData.append("aiSummary", appliedAISummary)
       }
 
-      const result = await recordCounselingAction(undefined, formData)
+      let result
+      if (isEditMode && editData) {
+        result = await updateCounselingAction(editData.id, undefined, formData)
+      } else {
+        result = await recordCounselingAction(undefined, formData)
+      }
 
       if (result.success) {
-        toast.success("상담 기록이 완료되었습니다.")
-        form.reset()
-        setFollowUpRequired(false)
-        setAppliedAISummary(null)
+        toast.success(isEditMode ? "상담 기록이 수정되었습니다." : "상담 기록이 완료되었습니다.")
+        if (!isEditMode) {
+          form.reset()
+          setFollowUpRequired(false)
+          setAppliedAISummary(null)
+        }
         onSuccess?.()
       } else {
         toast.error(result.error || "상담 기록 저장에 실패했습니다.")
       }
     } catch (error) {
-      console.error("Counseling session creation error:", error)
+      console.error("Counseling session error:", error)
       toast.error("오류가 발생했습니다. 다시 시도해주세요.")
     } finally {
       setIsSubmitting(false)
@@ -115,7 +129,7 @@ export function CounselingSessionForm({
     <>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>상담 기록</CardTitle>
+          <CardTitle>{isEditMode ? "상담 기록 수정" : "상담 기록"}</CardTitle>
           <Button
             type="button"
             variant="outline"
@@ -272,7 +286,7 @@ export function CounselingSessionForm({
 
           <div className="flex justify-end">
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "저장 중..." : "상담 기록 저장"}
+              {isSubmitting ? "저장 중..." : isEditMode ? "수정 완료" : "상담 기록 저장"}
             </Button>
           </div>
         </form>

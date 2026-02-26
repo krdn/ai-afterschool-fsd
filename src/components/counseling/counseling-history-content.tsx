@@ -1,10 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { Link } from "@/i18n/navigation"
 import { format } from "date-fns"
 import { ko } from "date-fns/locale"
-import { MessageSquare, Sparkles } from "lucide-react"
+import { MessageSquare, Pencil, Sparkles, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CounselingSearchBar } from "./counseling-search-bar"
@@ -13,13 +14,27 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { deleteCounselingAction } from "@/lib/actions/common/performance"
+import { toast } from "sonner"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import type { CounselingSessionData } from "./types"
+import { getTypeLabel, getTypeColor, parseAiSummary } from "./utils"
 
 interface CounselingHistoryContentProps {
   sessions: CounselingSessionData[]
@@ -50,12 +65,15 @@ export function CounselingHistoryContent({
   canViewTeam,
   teachers,
 }: CounselingHistoryContentProps) {
+  const router = useRouter()
   const [selectedSession, setSelectedSession] = useState<CounselingSessionData | null>(null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   return (
     <div className="space-y-6">
       <div className="flex justify-end">
-        <Button variant="outline" asChild data-testid="new-counseling-button">
+        <Button asChild data-testid="new-counseling-button">
           <Link href="/counseling/new">새 상담 기록</Link>
         </Button>
       </div>
@@ -163,6 +181,7 @@ export function CounselingHistoryContent({
                   type="button"
                   className="w-full text-left border rounded-lg p-4 space-y-2 hover:bg-gray-50 transition-colors cursor-pointer"
                   data-testid="counseling-session"
+                  aria-label={`${session.student.name} ${getTypeLabel(session.type)} 상담 기록 보기`}
                   onClick={() => setSelectedSession(session)}
                 >
                   <div className="flex items-center justify-between">
@@ -288,31 +307,75 @@ export function CounselingHistoryContent({
                 </div>
               )}
             </div>
+
+            <DialogFooter className="flex-row gap-2 sm:justify-between">
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => setDeleteDialogOpen(true)}
+                className="gap-1"
+              >
+                <Trash2 className="h-4 w-4" />
+                삭제
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                asChild
+                className="gap-1"
+              >
+                <Link href={`/counseling/new?editId=${selectedSession.id}`}>
+                  <Pencil className="h-4 w-4" />
+                  수정
+                </Link>
+              </Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       )}
+
+      {/* 삭제 확인 AlertDialog (Dialog 바깥에 배치하여 포커스 충돌 방지) */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>상담 기록 삭제</AlertDialogTitle>
+            <AlertDialogDescription>
+              {selectedSession?.student.name} 학생의 상담 기록을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>취소</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={isDeleting}
+              className="bg-red-600 hover:bg-red-700 text-white"
+              onClick={async (e) => {
+                e.preventDefault()
+                if (!selectedSession) return
+                setIsDeleting(true)
+                try {
+                  const result = await deleteCounselingAction(selectedSession.id)
+                  if (result.success) {
+                    toast.success("상담 기록이 삭제되었습니다.")
+                    setSelectedSession(null)
+                    setDeleteDialogOpen(false)
+                    router.refresh()
+                  } else {
+                    toast.error(result.error || "삭제에 실패했습니다.")
+                  }
+                } catch {
+                  toast.error("오류가 발생했습니다.")
+                } finally {
+                  setIsDeleting(false)
+                }
+              }}
+            >
+              {isDeleting ? "삭제 중..." : "삭제"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
-}
-
-function getTypeLabel(type: string): string {
-  const labels: Record<string, string> = {
-    ACADEMIC: "학업",
-    CAREER: "진로",
-    PSYCHOLOGICAL: "심리",
-    BEHAVIORAL: "행동",
-  }
-  return labels[type] || type
-}
-
-function getTypeColor(type: string): string {
-  const colors: Record<string, string> = {
-    ACADEMIC: "bg-blue-100 text-blue-800",
-    CAREER: "bg-green-100 text-green-800",
-    PSYCHOLOGICAL: "bg-purple-100 text-purple-800",
-    BEHAVIORAL: "bg-orange-100 text-orange-800",
-  }
-  return colors[type] || "bg-gray-100 text-gray-800"
 }
 
 function AiSummaryTabs({ aiSummary }: { aiSummary: string }) {
@@ -345,13 +408,3 @@ function AiSummaryTabs({ aiSummary }: { aiSummary: string }) {
   )
 }
 
-function parseAiSummary(aiSummary: string) {
-  const parts = aiSummary.split(/\n---\n/)
-  const clean = (text: string) => text.replace(/^## .+\n\n?/, "").trim()
-
-  return {
-    analysis: parts[0] ? clean(parts[0]) : "내용 없음",
-    scenario: parts[1] ? clean(parts[1]) : "내용 없음",
-    parent: parts[2] ? clean(parts[2]) : "내용 없음",
-  }
-}

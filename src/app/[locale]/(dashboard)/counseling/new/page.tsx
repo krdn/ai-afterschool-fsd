@@ -2,7 +2,13 @@ import { verifySession } from "@/lib/dal"
 import { getRBACPrisma } from "@/lib/db/common/rbac"
 import { NewCounselingClient } from "@/components/counseling/new-counseling-client"
 
-export default async function NewCounselingPage() {
+type PageProps = {
+  searchParams: Promise<{
+    editId?: string
+  }>
+}
+
+export default async function NewCounselingPage({ searchParams }: PageProps) {
   const session = await verifySession()
   if (!session) {
     return (
@@ -14,6 +20,7 @@ export default async function NewCounselingPage() {
     )
   }
 
+  const params = await searchParams
   const rbacDb = getRBACPrisma(session)
   const canViewAll = session.role === "DIRECTOR"
   const canViewTeam =
@@ -38,5 +45,40 @@ export default async function NewCounselingPage() {
     },
   })
 
-  return <NewCounselingClient students={students} teacherId={session.userId} />
+  // 수정 모드: editId가 있으면 기존 세션 데이터 로드
+  let editSession = null
+  if (params.editId) {
+    const existing = await rbacDb.counselingSession.findUnique({
+      where: { id: params.editId },
+      select: {
+        id: true,
+        studentId: true,
+        sessionDate: true,
+        duration: true,
+        type: true,
+        summary: true,
+        followUpRequired: true,
+        followUpDate: true,
+        satisfactionScore: true,
+        aiSummary: true,
+      },
+    })
+    if (existing) {
+      editSession = {
+        ...existing,
+        sessionDate: existing.sessionDate.toISOString().split("T")[0],
+        followUpDate: existing.followUpDate
+          ? existing.followUpDate.toISOString().split("T")[0]
+          : null,
+      }
+    }
+  }
+
+  return (
+    <NewCounselingClient
+      students={students}
+      teacherId={session.userId}
+      editSession={editSession}
+    />
+  )
 }

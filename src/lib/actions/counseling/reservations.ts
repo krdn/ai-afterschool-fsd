@@ -103,7 +103,7 @@ export async function createReservationAction(
     })
 
     // 7. 캐시 무효화
-    revalidatePath('/reservations')
+    revalidatePath('/counseling')
     revalidatePath(`/students/${studentId}`)
 
     return ok({
@@ -217,8 +217,7 @@ export async function updateReservationAction(
     })
 
     // 8. 캐시 무효화
-    revalidatePath('/reservations')
-    revalidatePath(`/reservations/${reservationId}`)
+    revalidatePath('/counseling')
     revalidatePath(`/students/${targetStudentId}`)
 
     return ok({

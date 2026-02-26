@@ -5,6 +5,7 @@ import { getReservationsAction } from "@/lib/actions/counseling/reservations-que
 import { ReservationCalendarMonth } from "./reservation-calendar-month"
 import { ReservationCalendarWeek } from "./reservation-calendar-week"
 import { Button } from "@/components/ui/button"
+import { Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { ReservationWithRelations } from "./reservation-card"
 
@@ -82,7 +83,8 @@ export function ReservationCalendarView({
   if (loading) {
     return (
       <div className="flex items-center justify-center py-12" data-testid="calendar-loading">
-        <div className="text-muted-foreground">로딩 중...</div>
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <span className="ml-2 text-sm text-muted-foreground">로딩 중...</span>
       </div>
     )
   }

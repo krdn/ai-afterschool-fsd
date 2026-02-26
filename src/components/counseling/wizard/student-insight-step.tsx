@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { toast } from 'sonner'
-import { ChevronLeft, ChevronRight, Sparkles, SkipForward, User, MessageSquare, TrendingUp } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Sparkles, SkipForward, User, MessageSquare, TrendingUp, Loader2 } from 'lucide-react'
 import { getStudentInsightAction, type StudentInsightData } from '@/lib/actions/counseling/student-insight'
 import { generateAnalysisReportAction } from '@/lib/actions/counseling/scenario-generation'
 import { MarkdownEditor } from './markdown-editor'
@@ -84,7 +84,8 @@ export function StudentInsightStep({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-[300px]">
-        <div className="text-sm text-muted-foreground">학생 정보를 불러오는 중...</div>
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <span className="ml-2 text-sm text-muted-foreground">학생 정보를 불러오는 중...</span>
       </div>
     )
   }
