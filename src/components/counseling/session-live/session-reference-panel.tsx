@@ -4,9 +4,8 @@ import { useCallback, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import { Pencil, Eye, Sparkles, Save, Loader2 } from 'lucide-react'
+import { MarkdownRenderer } from '@/components/ui/markdown-renderer'
+import { Pencil, Sparkles, Save, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { parseAiSummary } from '../utils'
 import { saveAISummaryAction } from '@/lib/actions/counseling/ai'
@@ -212,10 +211,8 @@ export function SessionReferencePanel({
               placeholder={`${TAB_LABELS[tab]} 내용을 입력하세요 (Markdown 지원)`}
             />
           ) : content ? (
-            <div className="prose prose-sm max-w-none h-full overflow-y-auto">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {content}
-              </ReactMarkdown>
+            <div className="h-full overflow-y-auto">
+              <MarkdownRenderer content={content} />
             </div>
           ) : (
             <div className="flex items-center justify-center h-full text-muted-foreground">

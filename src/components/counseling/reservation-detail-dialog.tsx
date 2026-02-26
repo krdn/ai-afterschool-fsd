@@ -4,8 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { ko } from 'date-fns/locale'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
+import { MarkdownRenderer } from '@/components/ui/markdown-renderer'
 import {
   Dialog,
   DialogContent,
@@ -242,24 +241,18 @@ function DetailReadView({ detail }: { detail: ReservationDetail }) {
             <TabsTrigger value="parent">학부모 공유용</TabsTrigger>
           </TabsList>
           <TabsContent value="analysis" className="mt-3">
-            <div className="prose prose-sm max-w-none max-h-[400px] overflow-y-auto border rounded-lg p-4">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {sections.analysis}
-              </ReactMarkdown>
+            <div className="max-h-[400px] overflow-y-auto border rounded-lg p-4">
+              <MarkdownRenderer content={sections.analysis} />
             </div>
           </TabsContent>
           <TabsContent value="scenario" className="mt-3">
-            <div className="prose prose-sm max-w-none max-h-[400px] overflow-y-auto border rounded-lg p-4">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {sections.scenario}
-              </ReactMarkdown>
+            <div className="max-h-[400px] overflow-y-auto border rounded-lg p-4">
+              <MarkdownRenderer content={sections.scenario} />
             </div>
           </TabsContent>
           <TabsContent value="parent" className="mt-3">
-            <div className="prose prose-sm max-w-none max-h-[400px] overflow-y-auto border rounded-lg p-4">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {sections.parent}
-              </ReactMarkdown>
+            <div className="max-h-[400px] overflow-y-auto border rounded-lg p-4">
+              <MarkdownRenderer content={sections.parent} />
             </div>
           </TabsContent>
         </Tabs>

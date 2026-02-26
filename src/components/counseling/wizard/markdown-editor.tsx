@@ -1,8 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import ReactMarkdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
+import { MarkdownRenderer } from '@/components/ui/markdown-renderer'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Eye, Pencil, RotateCcw, Check, Loader2, Copy } from 'lucide-react'
@@ -97,8 +96,8 @@ export function MarkdownEditor({
             disabled={isApproved}
           />
         ) : (
-          <div className="p-4 prose prose-sm max-w-none">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+          <div className="p-4">
+            <MarkdownRenderer content={content} />
           </div>
         )}
       </div>
