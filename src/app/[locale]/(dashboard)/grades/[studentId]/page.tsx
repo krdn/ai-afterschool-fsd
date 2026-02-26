@@ -9,7 +9,7 @@ export default async function GradeStudentDetailPage(props: {
 }) {
   const params = await props.params;
   const searchParams = await props.searchParams;
-  await getCurrentTeacher();
+  const teacher = await getCurrentTeacher();
 
   const student = await db.student.findUnique({
     where: { id: params.studentId },
@@ -43,6 +43,7 @@ export default async function GradeStudentDetailPage(props: {
       <GradeDetailTabs
         studentId={student.id}
         studentName={student.name}
+        teacherId={teacher.id}
         initialTab={searchParams.tab}
       />
     </div>
