@@ -8,7 +8,8 @@ import { analyzeGoalGap } from '@/features/grade-management/analysis/goal-gap-an
 import { generateStudyPlan } from '@/features/grade-management/analysis/study-plan-generator';
 import { generateCoachingReport, type CoachingReport } from '@/features/grade-management/analysis/coaching-report';
 import { checkTeacherAlerts } from '@/features/grade-management/analysis/teacher-alerts';
-import type { StrengthWeaknessResult, GoalGapResult, StudyPlanResult, TeacherAlert } from '@/features/grade-management/types';
+import { analyzePeerComparison } from '@/features/grade-management/peer-comparison/peer-comparison';
+import type { StrengthWeaknessResult, GoalGapResult, StudyPlanResult, TeacherAlert, PeerComparison } from '@/features/grade-management/types';
 
 /**
  * 학생 강점/약점 분석 Server Action
@@ -91,6 +92,23 @@ export async function checkStudentAlerts(
   } catch (error) {
     logger.error({ err: error, studentId }, '교사 알림 체크 Server Action 실패');
     const message = error instanceof Error ? error.message : '교사 알림 체크 중 오류가 발생했습니다.';
+    return fail(message);
+  }
+}
+
+/**
+ * 동료 비교 분석 Server Action
+ */
+export async function analyzeStudentPeerComparison(
+  studentId: string
+): Promise<ActionResult<PeerComparison>> {
+  try {
+    const teacher = await getCurrentTeacher();
+    const result = await analyzePeerComparison(studentId, teacher.id);
+    return ok(result);
+  } catch (error) {
+    logger.error({ err: error, studentId }, '동료 비교 분석 Server Action 실패');
+    const message = error instanceof Error ? error.message : '동료 비교 분석 중 오류가 발생했습니다.';
     return fail(message);
   }
 }
