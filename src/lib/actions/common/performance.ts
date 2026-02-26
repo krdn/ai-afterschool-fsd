@@ -204,6 +204,7 @@ export async function recordCounselingAction(
     })
 
     revalidatePath(`/students/${studentId}`)
+    revalidatePath('/counseling')
     return okVoid()
   } catch (error) {
     logger.error({ err: error }, '상담 기록 실패')
@@ -247,6 +248,7 @@ export async function updateCounselingAction(
       satisfactionScore,
     })
 
+    revalidatePath('/counseling')
     return okVoid()
   } catch (error) {
     logger.error({ err: error }, '상담 수정 실패')
@@ -267,6 +269,7 @@ export async function deleteCounselingAction(
 
   try {
     await deleteCounselingSession(counselingId)
+    revalidatePath('/counseling')
     return okVoid()
   } catch (error) {
     logger.error({ err: error }, '상담 삭제 실패')

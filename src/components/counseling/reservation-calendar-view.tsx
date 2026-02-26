@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { getReservationsAction } from "@/lib/actions/counseling/reservations-query"
 import { ReservationCalendarMonth } from "./reservation-calendar-month"
 import { ReservationCalendarWeek } from "./reservation-calendar-week"
@@ -21,48 +21,63 @@ export function ReservationCalendarView({
 }: ReservationCalendarViewProps) {
   const [viewType, setViewType] = useState<CalendarViewType>("month")
   const [selectedDate, setSelectedDate] = useState<Date>(initialDate || new Date())
+  const [displayMonth, setDisplayMonth] = useState<Date>(initialDate || new Date())
   const [reservations, setReservations] = useState<ReservationWithRelations[]>([])
   const [loading, setLoading] = useState(true)
+  const abortControllerRef = useRef<AbortController | null>(null)
 
-  // 예약 데이터 페칭
+  // 연/월이 변경될 때만 데이터 페칭 (Date 참조 비교 방지)
+  const yearMonth = `${displayMonth.getFullYear()}-${displayMonth.getMonth()}`
+
   useEffect(() => {
+    // 이전 요청 취소
+    abortControllerRef.current?.abort()
+    const controller = new AbortController()
+    abortControllerRef.current = controller
+
     async function fetchReservations() {
       setLoading(true)
       try {
-        // 월간/주간 모두 현재 월 기준으로 페칭 (주간 뷰에서 필터링)
-        const monthStart = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1)
-        const monthEnd = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0, 23, 59, 59)
+        const monthStart = new Date(displayMonth.getFullYear(), displayMonth.getMonth(), 1)
+        const monthEnd = new Date(displayMonth.getFullYear(), displayMonth.getMonth() + 1, 0, 23, 59, 59)
 
         const result = await getReservationsAction({
           dateFrom: monthStart.toISOString(),
           dateTo: monthEnd.toISOString(),
         })
 
-        if (result.success && result.data) {
+        if (!controller.signal.aborted && result.success && result.data) {
           setReservations(result.data)
         }
       } catch (error) {
-        console.error("Failed to fetch reservations:", error)
+        if (!controller.signal.aborted) {
+          console.error("Failed to fetch reservations:", error)
+        }
       } finally {
-        setLoading(false)
+        if (!controller.signal.aborted) {
+          setLoading(false)
+        }
       }
     }
 
     fetchReservations()
-  }, [selectedDate])
+
+    return () => controller.abort()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [yearMonth])
 
   // 날짜 선택 핸들러
-  const handleDateSelect = (date: Date | undefined) => {
+  const handleDateSelect = useCallback((date: Date | undefined) => {
     if (date) {
       setSelectedDate(date)
       onDateSelect?.(date)
     }
-  }
+  }, [onDateSelect])
 
-  // 월 변경 핸들러
-  const handleMonthChange = (month: Date) => {
-    setSelectedDate(month)
-  }
+  // 월 변경 핸들러 (날짜 선택과 분리 - 데이터 페칭만 트리거)
+  const handleMonthChange = useCallback((month: Date) => {
+    setDisplayMonth(month)
+  }, [])
 
   if (loading) {
     return (
@@ -107,6 +122,7 @@ export function ReservationCalendarView({
         <ReservationCalendarMonth
           reservations={reservations}
           selected={selectedDate}
+          displayMonth={displayMonth}
           onSelect={handleDateSelect}
           onMonthChange={handleMonthChange}
         />

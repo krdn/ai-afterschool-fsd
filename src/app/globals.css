@@ -124,3 +124,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* react-day-picker v9 — 커스텀 스타일 */
+.rdp-root {
+  --rdp-accent-color: oklch(0.205 0 0);
+  --rdp-accent-background-color: oklch(0.97 0 0);
+  --rdp-today-color: oklch(0.488 0.243 264.376);
+  --rdp-day_button-border-radius: 0.375rem;
+  --rdp-selected-border: 2px solid oklch(0.205 0 0);
+}

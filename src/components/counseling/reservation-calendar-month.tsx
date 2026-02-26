@@ -1,6 +1,7 @@
 "use client"
 
-import { DayPicker, DayButtonProps, UI, useDayPicker } from "react-day-picker"
+import React, { useMemo, useRef } from "react"
+import { DayPicker, DayButtonProps } from "react-day-picker"
 import "react-day-picker/style.css"
 import { ko } from "date-fns/locale"
 import { cn } from "@/lib/utils"
@@ -13,17 +14,21 @@ interface CustomDayButtonProps extends DayButtonProps {
 
 /**
  * Custom DayButton 컴포넌트
- * 예약 건수를 dot indicators로 표시
+ * 기본 button 엘리먼트를 직접 렌더링 (useDayPicker의 components.DayButton 재귀 방지)
  */
-function CustomDayButton({ day, reservationCount = 0, ...buttonProps }: CustomDayButtonProps) {
-  const { components, classNames } = useDayPicker()
+function CustomDayButton({ day, modifiers, reservationCount = 0, className, ...buttonProps }: CustomDayButtonProps) {
+  const ref = React.useRef<HTMLButtonElement>(null)
+
+  React.useEffect(() => {
+    if (modifiers.focused) ref.current?.focus()
+  }, [modifiers.focused])
 
   return (
-    <components.DayButton
+    <button
+      ref={ref}
       {...buttonProps}
-      day={day}
       className={cn(
-        classNames?.[UI.DayButton],
+        className,
         "relative h-14 w-14 flex flex-col items-center justify-center"
       )}
     >
@@ -39,13 +44,14 @@ function CustomDayButton({ day, reservationCount = 0, ...buttonProps }: CustomDa
           ))}
         </div>
       )}
-    </components.DayButton>
+    </button>
   )
 }
 
 interface ReservationCalendarMonthProps {
   reservations: ReservationWithRelations[]
   selected?: Date
+  displayMonth?: Date
   onSelect?: (date: Date | undefined) => void
   onMonthChange?: (month: Date) => void
   className?: string
@@ -58,32 +64,58 @@ interface ReservationCalendarMonthProps {
 export function ReservationCalendarMonth({
   reservations,
   selected,
+  displayMonth: controlledMonth,
   onSelect,
   onMonthChange,
   className,
 }: ReservationCalendarMonthProps) {
-  const reservationCounts = getReservationCountByDate(reservations, selected || new Date())
-  const reservedDates = reservations.map((r) => new Date(r.scheduledAt))
+  // displayMonth를 기준으로 예약 건수 계산 (selected 의존 제거로 무한 루프 방지)
+  const monthForCount = controlledMonth || selected || new Date()
+  const reservationCounts = useMemo(
+    () => getReservationCountByDate(reservations, monthForCount),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [reservations, monthForCount.getFullYear(), monthForCount.getMonth()]
+  )
+
+  const reservedDates = useMemo(
+    () => reservations.map((r) => new Date(r.scheduledAt)),
+    [reservations]
+  )
+
+  // reservationCounts를 ref로 관리하여 components의 useMemo 의존성에서 제거
+  const reservationCountsRef = useRef(reservationCounts)
+  reservationCountsRef.current = reservationCounts
+
+  // DayPicker의 components prop - 안정적인 참조 유지
+  // reservationCountsRef를 사용하여 의존성 없이 최신 데이터 접근
+  const dayPickerComponents = useMemo(
+    () => ({
+      DayButton: (props: DayButtonProps) => {
+        const dateKey = props.day.date.toISOString().split("T")[0]
+        const count = reservationCountsRef.current.get(dateKey) || 0
+        return <CustomDayButton {...props} reservationCount={count} />
+      },
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
+
+  const modifiers = useMemo(
+    () => ({ reserved: reservedDates }),
+    [reservedDates]
+  )
 
   return (
     <div className={cn("w-full", className)}>
       <DayPicker
         mode="single"
         selected={selected}
+        month={controlledMonth}
         onSelect={onSelect}
         onMonthChange={onMonthChange}
         locale={ko}
-        components={{
-          DayButton: (props) => {
-            const dateKey = props.day.date.toISOString().split("T")[0]
-            const count = reservationCounts.get(dateKey) || 0
-
-            return <CustomDayButton {...props} reservationCount={count} />
-          },
-        }}
-        modifiers={{
-          reserved: reservedDates,
-        }}
+        components={dayPickerComponents}
+        modifiers={modifiers}
         modifiersClassNames={{
           reserved: "bg-primary/10 border-primary/50",
         }}

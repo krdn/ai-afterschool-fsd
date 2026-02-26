@@ -18,4 +18,6 @@ export interface CounselingSessionData {
   summary: string
   followUpRequired: boolean
   followUpDate: Date | null
+  satisfactionScore: number | null
+  aiSummary: string | null
 }

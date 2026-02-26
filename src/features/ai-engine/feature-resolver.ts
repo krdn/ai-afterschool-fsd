@@ -345,7 +345,19 @@ export class FeatureResolver {
       });
     }
 
-    // 6. 모델 품질 기반 정렬: 무료(:free) 모델을 뒤로, 유명 모델을 앞으로
+    // 6. fallbackMode가 'any_available'이고 결과가 없으면 태그 조건 무시하고 전체 반환
+    if (results.length === 0 && mapping.fallbackMode === 'any_available') {
+      for (const model of models) {
+        results.push({
+          provider: model.provider,
+          model,
+          priority: mapping.priority,
+          fallbackMode: mapping.fallbackMode,
+        });
+      }
+    }
+
+    // 7. 모델 품질 기반 정렬: 무료(:free) 모델을 뒤로, 유명 모델을 앞으로
     results.sort((a, b) => {
       const aIsFree = a.model.modelId.includes(':free');
       const bIsFree = b.model.modelId.includes(':free');

@@ -233,6 +233,51 @@ const DEFAULT_FEATURE_MAPPINGS: Array<{
         },
       ],
     },
+
+    // 13. counseling_analysis (학생 분석 보고서)
+    {
+      featureType: 'counseling_analysis',
+      rules: [
+        {
+          matchMode: 'auto_tag',
+          priority: 1,
+          requiredTags: ['balanced'],
+          fallbackMode: 'any_available',
+        },
+      ],
+    },
+
+    // 14. counseling_scenario (상담 시나리오)
+    {
+      featureType: 'counseling_scenario',
+      rules: [
+        {
+          matchMode: 'auto_tag',
+          priority: 1,
+          requiredTags: ['balanced'],
+          fallbackMode: 'any_available',
+        },
+      ],
+    },
+
+    // 15. counseling_parent (학부모 공유용)
+    {
+      featureType: 'counseling_parent',
+      rules: [
+        {
+          matchMode: 'auto_tag',
+          priority: 1,
+          requiredTags: ['fast'],
+          fallbackMode: 'next_priority',
+        },
+        {
+          matchMode: 'auto_tag',
+          priority: 2,
+          requiredTags: ['balanced'],
+          fallbackMode: 'any_available',
+        },
+      ],
+    },
   ];
 
 /**
