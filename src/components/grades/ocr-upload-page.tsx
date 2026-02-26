@@ -88,8 +88,18 @@ export default function OcrUploadPage({ teacherId }: OcrUploadPageProps) {
 
       const result = await uploadAndProcessGradeImage(formData);
 
-      if (result.success && result.data) {
-        setOcrResult(result.data as OcrResult);
+      if (result.success && result.extractedData) {
+        setOcrResult({
+          scanId: result.scanId!,
+          subjects: (result.extractedData as { subjects?: Array<Record<string, unknown>> })?.subjects?.map((s) => ({
+            subject: String(s.name ?? s.subject ?? ''),
+            score: Number(s.rawScore ?? s.score ?? 0),
+            maxScore: s.maxScore != null ? Number(s.maxScore) : undefined,
+            confidence: Number(s.confidence ?? 0),
+          })) ?? [],
+          documentType,
+          rawData: result.extractedData,
+        });
         toast.success('OCR 분석이 완료되었습니다.');
       } else {
         toast.error(result.message || 'OCR 분석에 실패했습니다.');

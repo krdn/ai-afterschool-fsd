@@ -196,8 +196,8 @@ function validateByDocumentType(
 /**
  * Zod 에러에서 메시지를 추출합니다.
  */
-function extractZodErrors(error: { issues: Array<{ message: string; path: Array<string | number> }> }): string[] {
+function extractZodErrors(error: { issues: Array<{ message: string; path: PropertyKey[] }> }): string[] {
   return error.issues.map(
-    (issue) => `${issue.path.join('.')}: ${issue.message}`
+    (issue) => `${issue.path.map(String).join('.')}: ${issue.message}`
   );
 }

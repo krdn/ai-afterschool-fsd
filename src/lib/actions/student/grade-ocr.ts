@@ -6,7 +6,7 @@ import { getCurrentTeacher } from '@/lib/dal';
 import { logger } from '@/lib/logger';
 import { processGradeImage } from '@/features/grade-management/ocr/ocr-processor';
 import type { TranscriptOcrResult, MockExamOcrResult } from '@/features/grade-management/types';
-import type { OcrDocumentType } from '@/lib/db';
+import type { OcrDocumentType, Prisma } from '@/lib/db';
 
 // =============================================================================
 // 타입
@@ -81,7 +81,7 @@ export async function uploadAndProcessGradeImage(
     await prisma.gradeOcrScan.update({
       where: { id: scan.id },
       data: {
-        extractedData: ocrResult.extractedData as Record<string, unknown>,
+        extractedData: ocrResult.extractedData as unknown as Prisma.InputJsonValue,
         confidence: ocrResult.confidence,
         status: ocrResult.isValid ? 'REVIEWED' : 'FAILED',
         errorMessage: ocrResult.errors?.join('; ') || null,
@@ -191,7 +191,7 @@ export async function confirmOcrResult(
       where: { id: scanId },
       data: {
         status: 'CONFIRMED',
-        processedData: confirmedData as unknown as Record<string, unknown>,
+        processedData: confirmedData as unknown as Prisma.InputJsonValue,
       },
     });
 

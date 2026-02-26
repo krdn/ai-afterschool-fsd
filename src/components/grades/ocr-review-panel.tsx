@@ -81,11 +81,21 @@ export default function OcrReviewPanel({
 
     setIsConfirming(true);
     try {
-      const result = await confirmOcrResult({
-        scanId: ocrResult.scanId,
-        studentId: studentId.trim(),
-        subjects: ocrResult.subjects,
-      });
+      const confirmedData = {
+        documentInfo: { school: '', studentName: '', grade: 0, academicYear: new Date().getFullYear(), semester: 1 },
+        subjects: ocrResult.subjects.map((s) => ({
+          name: s.subject,
+          rawScore: s.score,
+          confidence: s.confidence,
+          maxScore: s.maxScore,
+          totalStudents: s.totalStudents,
+        })),
+      };
+      const result = await confirmOcrResult(
+        ocrResult.scanId,
+        confirmedData,
+        studentId.trim()
+      );
 
       if (result.success) {
         toast.success('성적이 저장되었습니다.');
