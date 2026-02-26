@@ -37,6 +37,10 @@ model Teacher {
   issueEvents                IssueEvent[]              @relation("IssueEventPerformer")
   sajuAnalysisHistories      TeacherSajuAnalysisHistory[]
   chatSessions               ChatSession[]
+  mockExamResults            MockExamResult[]
+  ocrScans                   GradeOcrScan[]
+  learningAnalyses           LearningAnalysis[]
+  studyLogs                  StudyLog[]
 }
 
 model Team {
@@ -91,6 +95,11 @@ model Student {
   varkAnalysis                   VarkAnalysis?
   varkSurveyDraft                VarkSurveyDraft?
   zodiacAnalysis                 ZodiacAnalysis?
+  mockExamResults                MockExamResult[]
+  ocrScans                       GradeOcrScan[]
+  learningAnalyses               LearningAnalysis[]
+  studyLogs                      StudyLog[]
+  parentGradeReports             ParentGradeReport[]
 
   @@index([teacherId])
   @@index([name])
@@ -368,6 +377,12 @@ model GradeHistory {
   academicYear    Int
   semester        Int
   notes           String?
+  classAverage    Float?
+  classStdDev     Float?
+  gradeRank       Int?
+  classRank       Int?
+  totalStudents   Int?
+  category        String?
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   student         Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
@@ -452,6 +467,7 @@ model Parent {
   student                Student                       @relation("StudentParents", fields: [studentId], references: [id], onDelete: Cascade)
   counselingReservations ParentCounselingReservation[]
   studentAsPrimary       Student[]                     @relation("StudentPrimaryParent")
+  gradeReports           ParentGradeReport[]
 
   @@index([studentId])
   @@index([studentId, isPrimary])
@@ -880,4 +896,150 @@ model ChatMessage {
 
   @@index([sessionId, createdAt])
   @@map("chat_messages")
+}
+
+// ============================================================================
+// 성적 관리 시스템 모델
+// ============================================================================
+
+model MockExamResult {
+  id             String    @id @default(cuid())
+  studentId      String
+  teacherId      String?
+  examName       String
+  examDate       DateTime
+  subject        String
+  rawScore       Float
+  standardScore  Float?
+  percentile     Float?
+  gradeRank      Int?
+  academicYear   Int
+  notes          String?
+  ocrSourceId    String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  student        Student       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacher        Teacher?      @relation(fields: [teacherId], references: [id], onDelete: SetNull)
+  ocrSource      GradeOcrScan? @relation(fields: [ocrSourceId], references: [id])
+
+  @@index([studentId, subject, examDate])
+  @@index([studentId, academicYear])
+  @@index([teacherId])
+  @@map("mock_exam_results")
+}
+
+model GradeOcrScan {
+  id              String          @id @default(cuid())
+  teacherId       String
+  studentId       String?
+  imageUrl        String
+  documentType    OcrDocumentType
+  extractedData   Json
+  processedData   Json?
+  status          OcrScanStatus   @default(PENDING)
+  confidence      Float?
+  errorMessage    String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  teacher         Teacher          @relation(fields: [teacherId], references: [id])
+  student         Student?         @relation(fields: [studentId], references: [id])
+  mockExamResults MockExamResult[]
+
+  @@index([teacherId])
+  @@index([studentId])
+  @@index([status])
+  @@map("grade_ocr_scans")
+}
+
+model LearningAnalysis {
+  id              String       @id @default(cuid())
+  studentId       String
+  teacherId       String?
+  analysisType    AnalysisType
+  targetExamType  String?
+  analysisData    Json
+  recommendations Json?
+  validUntil      DateTime?
+  version         Int          @default(1)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  student         Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacher         Teacher?  @relation(fields: [teacherId], references: [id], onDelete: SetNull)
+
+  @@index([studentId, analysisType])
+  @@index([studentId, createdAt])
+  @@map("learning_analyses")
+}
+
+model StudyLog {
+  id           String        @id @default(cuid())
+  studentId    String
+  teacherId    String?
+  subject      String?
+  studyDate    DateTime
+  durationMin  Int
+  taskType     StudyTaskType
+  completed    Boolean       @default(false)
+  notes        String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  student      Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  teacher      Teacher?  @relation(fields: [teacherId], references: [id], onDelete: SetNull)
+
+  @@index([studentId, studyDate])
+  @@index([studentId, subject])
+  @@index([teacherId])
+  @@map("study_logs")
+}
+
+model ParentGradeReport {
+  id            String    @id @default(cuid())
+  studentId     String
+  parentId      String?
+  reportPeriod  String
+  reportData    Json
+  pdfUrl        String?
+  sentAt        DateTime?
+  sentMethod    String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  student       Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  parent        Parent?   @relation(fields: [parentId], references: [id], onDelete: SetNull)
+
+  @@index([studentId, reportPeriod])
+  @@index([parentId])
+  @@map("parent_grade_reports")
+}
+
+enum OcrDocumentType {
+  TRANSCRIPT
+  MOCK_EXAM
+  CUSTOM
+}
+
+enum OcrScanStatus {
+  PENDING
+  PROCESSING
+  REVIEWED
+  CONFIRMED
+  FAILED
+}
+
+enum AnalysisType {
+  STRENGTH_WEAKNESS
+  STUDY_PLAN
+  GOAL_GAP
+  COACHING
+}
+
+enum StudyTaskType {
+  HOMEWORK
+  SELF_STUDY
+  TUTORING
+  REVIEW
 }
