@@ -15,9 +15,10 @@ import {
 } from '@/components/ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Button } from '@/components/ui/button'
-import { Loader2, Pencil, CheckCircle } from 'lucide-react'
+import { Loader2, Pencil, CheckCircle, Play, ArrowRight } from 'lucide-react'
 import { getReservationByIdAction } from '@/lib/actions/counseling/reservations-query'
 import { toast } from 'sonner'
+import { startSessionAction } from '@/lib/actions/counseling/session-live'
 import { getParentRelationLabel, parseAiSummary } from './utils'
 import { ReservationEditForm } from './reservation-edit-form'
 import { SessionRecordForm } from './session-record-form'
@@ -98,8 +99,29 @@ export function ReservationDetailDialog({
     onClose()
   }
 
+  const [isStarting, setIsStarting] = useState(false)
+
   const isScheduled = detail?.status === 'SCHEDULED'
+  const isInProgress = detail?.status === 'IN_PROGRESS'
   const dialogTitle = mode === 'edit' ? '예약 수정' : mode === 'record' ? '상담 기록 작성' : '예약 상세'
+
+  // 상담 시작 핸들러
+  const handleStartSession = async () => {
+    if (!reservationId) return
+    setIsStarting(true)
+    try {
+      const result = await startSessionAction(reservationId)
+      if (result.success) {
+        router.push(`/counseling/session/${reservationId}`)
+      } else {
+        toast.error(result.error || '상담 시작에 실패했습니다.')
+      }
+    } catch {
+      toast.error('상담 시작 중 오류가 발생했습니다.')
+    } finally {
+      setIsStarting(false)
+    }
+  }
 
   return (
     <Dialog open={!!reservationId} onOpenChange={(open) => !open && handleClose()}>
@@ -119,11 +141,32 @@ export function ReservationDetailDialog({
                 </Button>
                 <Button
                   size="sm"
+                  onClick={handleStartSession}
+                  disabled={isStarting}
+                  className="bg-blue-600 text-white hover:bg-blue-700"
+                >
+                  <Play className="h-4 w-4 mr-1" />
+                  {isStarting ? '시작 중...' : '상담 시작'}
+                </Button>
+                <Button
+                  size="sm"
                   onClick={() => setMode('record')}
                   className="bg-green-600 hover:bg-green-700 text-white"
                 >
                   <CheckCircle className="h-4 w-4 mr-1" />
                   완료
+                </Button>
+              </div>
+            )}
+            {mode === 'read' && isInProgress && (
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  onClick={() => router.push(`/counseling/session/${reservationId}`)}
+                  className="bg-indigo-600 text-white hover:bg-indigo-700"
+                >
+                  <ArrowRight className="h-4 w-4 mr-1" />
+                  상담 이어가기
                 </Button>
               </div>
             )}

@@ -155,6 +155,20 @@ export function ReservationCard({
               </Button>
             </div>
           )}
+
+          {/* Footer: IN_PROGRESS — 상담 이어가기 */}
+          {reservation.status === "IN_PROGRESS" && (
+            <div className="flex gap-2 mt-3 pt-3 border-t" onClick={(e) => e.stopPropagation()}>
+              <Button
+                type="button"
+                size="sm"
+                onClick={() => router.push(`/counseling/session/${reservation.id}`)}
+                className="flex-1 bg-indigo-600 text-white hover:bg-indigo-700"
+              >
+                상담 이어가기
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
 
@@ -196,10 +210,10 @@ function getStatusLabel(status: ReservationStatus): string {
   return labels[status]
 }
 
-function getStatusVariant(status: ReservationStatus): "scheduled" | "completed" | "cancelled" | "noShow" {
-  const variants: Record<ReservationStatus, "scheduled" | "completed" | "cancelled" | "noShow"> = {
+function getStatusVariant(status: ReservationStatus): "scheduled" | "inProgress" | "completed" | "cancelled" | "noShow" {
+  const variants: Record<ReservationStatus, "scheduled" | "inProgress" | "completed" | "cancelled" | "noShow"> = {
     SCHEDULED: "scheduled",
-    IN_PROGRESS: "scheduled",
+    IN_PROGRESS: "inProgress",
     COMPLETED: "completed",
     CANCELLED: "cancelled",
     NO_SHOW: "noShow",
