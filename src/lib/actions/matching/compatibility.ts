@@ -1,8 +1,8 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
-import { db } from "@/lib/db/client"
 import { verifySession } from "@/lib/dal"
+import { getRBACPrisma } from "@/lib/db/common/rbac"
 import { calculateCompatibilityScore, type CompatibilityScore } from "@/features/analysis"
 import { upsertCompatibilityResult } from '@/features/matching'
 import { fetchPairAnalyses } from '@/features/matching'
@@ -23,9 +23,10 @@ export async function analyzeCompatibility(
   teacherId: string,
   studentId: string
 ): Promise<ActionResult<{ score: CompatibilityScore }>> {
-  await verifySession()
+  const session = await verifySession()
+  const rbacDb = getRBACPrisma(session)
 
-  const teacher = await db.teacher.findUnique({
+  const teacher = await rbacDb.teacher.findUnique({
     where: { id: teacherId },
     select: {
       id: true,
@@ -76,9 +77,10 @@ export async function analyzeCompatibility(
 export async function batchAnalyzeCompatibility(
   studentIds: string[]
 ): Promise<ActionResult<{ results: { studentId: string; results: ActionResult<{ score: CompatibilityScore }>[] }[] }>> {
-  await verifySession()
+  const session = await verifySession()
+  const rbacDb = getRBACPrisma(session)
 
-  const teachers = await db.teacher.findMany({
+  const teachers = await rbacDb.teacher.findMany({
     select: {
       id: true,
     },

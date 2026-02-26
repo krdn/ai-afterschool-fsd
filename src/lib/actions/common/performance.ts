@@ -87,6 +87,9 @@ export async function recordGradeAction(
 
 /**
  * 성적 수정 Server Action
+ *
+ * RBAC: DIRECTOR, TEAM_LEADER, MANAGER - 팀 내 모든 성적 기록 수정 가능
+ *       TEACHER - 본인이 기록한 성적만 수정 가능
  */
 export async function updateGradeAction(
   gradeId: string,
@@ -96,6 +99,21 @@ export async function updateGradeAction(
   const session = await verifySession()
   if (!session) {
     return fail("인증이 필요합니다.")
+  }
+
+  // 소유권 검증
+  const rbacDb = getRBACPrisma(session)
+  const existing = await rbacDb.gradeHistory.findUnique({
+    where: { id: gradeId },
+    select: { teacherId: true },
+  })
+
+  if (!existing) {
+    return fail("성적 기록을 찾을 수 없거나 권한이 없습니다.")
+  }
+
+  if (session.role === "TEACHER" && existing.teacherId !== session.userId) {
+    return fail("본인이 기록한 성적만 수정할 수 있습니다.")
   }
 
   const score = parseFloat(formData.get("score") as string)
@@ -125,6 +143,9 @@ export async function updateGradeAction(
 
 /**
  * 성적 삭제 Server Action
+ *
+ * RBAC: DIRECTOR, TEAM_LEADER, MANAGER - 팀 내 모든 성적 기록 삭제 가능
+ *       TEACHER - 본인이 기록한 성적만 삭제 가능
  */
 export async function deleteGradeAction(
   gradeId: string
@@ -135,6 +156,20 @@ export async function deleteGradeAction(
   }
 
   try {
+    const rbacDb = getRBACPrisma(session)
+    const existing = await rbacDb.gradeHistory.findUnique({
+      where: { id: gradeId },
+      select: { teacherId: true },
+    })
+
+    if (!existing) {
+      return fail("성적 기록을 찾을 수 없거나 권한이 없습니다.")
+    }
+
+    if (session.role === "TEACHER" && existing.teacherId !== session.userId) {
+      return fail("본인이 기록한 성적만 삭제할 수 있습니다.")
+    }
+
     await deleteGradeHistory(gradeId)
     return okVoid()
   } catch (error) {
@@ -214,6 +249,9 @@ export async function recordCounselingAction(
 
 /**
  * 상담 수정 Server Action
+ *
+ * RBAC: DIRECTOR, TEAM_LEADER, MANAGER - 팀 내 모든 상담 기록 수정 가능
+ *       TEACHER - 본인이 작성한 상담 기록만 수정 가능
  */
 export async function updateCounselingAction(
   counselingId: string,
@@ -223,6 +261,21 @@ export async function updateCounselingAction(
   const session = await verifySession()
   if (!session) {
     return fail("인증이 필요합니다.")
+  }
+
+  // 소유권 검증
+  const rbacDb = getRBACPrisma(session)
+  const existing = await rbacDb.counselingSession.findUnique({
+    where: { id: counselingId },
+    select: { teacherId: true },
+  })
+
+  if (!existing) {
+    return fail("상담 기록을 찾을 수 없거나 권한이 없습니다.")
+  }
+
+  if (session.role === "TEACHER" && existing.teacherId !== session.userId) {
+    return fail("본인이 작성한 상담 기록만 수정할 수 있습니다.")
   }
 
   const summary = formData.get("summary") as string
@@ -258,6 +311,9 @@ export async function updateCounselingAction(
 
 /**
  * 상담 삭제 Server Action
+ *
+ * RBAC: DIRECTOR, TEAM_LEADER, MANAGER - 팀 내 모든 상담 기록 삭제 가능
+ *       TEACHER - 본인이 작성한 상담 기록만 삭제 가능
  */
 export async function deleteCounselingAction(
   counselingId: string
@@ -268,6 +324,21 @@ export async function deleteCounselingAction(
   }
 
   try {
+    // 소유권 검증: 본인이 작성한 기록인지 확인
+    const rbacDb = getRBACPrisma(session)
+    const existing = await rbacDb.counselingSession.findUnique({
+      where: { id: counselingId },
+      select: { teacherId: true },
+    })
+
+    if (!existing) {
+      return fail("상담 기록을 찾을 수 없거나 권한이 없습니다.")
+    }
+
+    if (session.role === "TEACHER" && existing.teacherId !== session.userId) {
+      return fail("본인이 작성한 상담 기록만 삭제할 수 있습니다.")
+    }
+
     await deleteCounselingSession(counselingId)
     revalidatePath('/counseling')
     return okVoid()
@@ -398,6 +469,9 @@ export async function updateSatisfactionAction(
 
 /**
  * 만족도 삭제 Server Action
+ *
+ * RBAC: DIRECTOR, TEAM_LEADER, MANAGER - 팀 내 모든 만족도 기록 삭제 가능
+ *       TEACHER - 본인이 기록한 만족도만 삭제 가능
  */
 export async function deleteSatisfactionAction(
   satisfactionId: string
@@ -408,6 +482,20 @@ export async function deleteSatisfactionAction(
   }
 
   try {
+    const rbacDb = getRBACPrisma(session)
+    const existing = await rbacDb.studentSatisfaction.findUnique({
+      where: { id: satisfactionId },
+      select: { teacherId: true },
+    })
+
+    if (!existing) {
+      return fail("만족도 기록을 찾을 수 없거나 권한이 없습니다.")
+    }
+
+    if (session.role === "TEACHER" && existing.teacherId !== session.userId) {
+      return fail("본인이 기록한 만족도만 삭제할 수 있습니다.")
+    }
+
     await deleteStudentSatisfaction(satisfactionId)
     return okVoid()
   } catch (error) {
