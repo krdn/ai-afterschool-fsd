@@ -7,6 +7,7 @@ import { Prisma } from '@/lib/db';
 import { eventBus } from "@/lib/events/event-bus";
 import { ok, fail } from "@/lib/errors/action-result";
 import { logger } from "@/lib/logger";
+import { verifySession } from "@/lib/dal";
 
 // 분석 결과 스키마
 const _AnalysisSchema = z.object({
@@ -24,6 +25,9 @@ const _AnalysisSchema = z.object({
 
 export async function generateAnalysis(studentId: string) {
     try {
+        // 0. 인증 확인
+        await verifySession();
+
         // 1. 학생 데이터 조회
         const student = await prisma.student.findUnique({
             where: { id: studentId },
@@ -105,6 +109,8 @@ export async function generateAnalysis(studentId: string) {
 }
 
 export async function getAnalysis(studentId: string) {
+    await verifySession();
+
     const analysis = await prisma.personalitySummary.findUnique({
         where: { studentId }
     });
@@ -122,6 +128,8 @@ export async function getAnalysisHistory(
     type: 'saju' | 'face' | 'palm' | 'mbti' | 'vark' | 'name' | 'zodiac'
 ) {
     try {
+        await verifySession();
+
         let historyItem = null
 
         switch (type) {

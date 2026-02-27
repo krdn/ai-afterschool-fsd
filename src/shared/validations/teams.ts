@@ -1,18 +1,7 @@
-import { z } from "zod";
-
-export const TeamSchema = z.object({
-  name: z
-    .string()
-    .min(1, "팀 이름을 입력해주세요")
-    .max(50, "팀 이름은 50자 이내로 입력해주세요"),
-});
-
-export type TeamInput = z.infer<typeof TeamSchema>;
-
-export type TeamFormState = {
-  errors?: {
-    name?: string[];
-    _form?: string[];
-  };
-  message?: string;
-};
+// Canonical source: @/lib/validations/teams
+// shared 레이어에서 접근이 필요한 경우를 위한 re-export
+export {
+  TeamSchema,
+  type TeamInput,
+  type TeamFormState,
+} from "@/lib/validations/teams"
