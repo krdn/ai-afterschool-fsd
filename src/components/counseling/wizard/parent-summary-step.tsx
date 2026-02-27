@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
-import { ChevronLeft, Loader2 } from 'lucide-react'
+import { ChevronLeft, Loader2, AlertCircle, RotateCcw } from 'lucide-react'
 import { generateParentSummaryAction } from '@/lib/actions/counseling/scenario-generation'
 import { MarkdownEditor } from './markdown-editor'
 import { ModelSelect, type ModelOverride } from './model-select'
@@ -36,6 +36,7 @@ export function ParentSummaryStep({
   isSubmitting,
 }: ParentSummaryStepProps) {
   const [isGenerating, setIsGenerating] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [modelOverride, setModelOverride] = useState<ModelOverride | undefined>()
   const hasGenerated = useRef(false)
 
@@ -49,6 +50,7 @@ export function ParentSummaryStep({
 
   const handleGenerate = async () => {
     setIsGenerating(true)
+    setErrorMessage(null)
     try {
       const result = await generateParentSummaryAction({
         studentName,
@@ -61,10 +63,14 @@ export function ParentSummaryStep({
         onParentSummaryChange(result.data)
         toast.success('학부모 공유용 메시지가 생성되었습니다.')
       } else {
-        toast.error(result.error || '메시지 생성에 실패했습니다.')
+        const msg = result.error || '메시지 생성에 실패했습니다.'
+        setErrorMessage(msg)
+        toast.error(msg)
       }
     } catch {
-      toast.error('오류가 발생했습니다.')
+      const msg = '오류가 발생했습니다. 다시 시도해주세요.'
+      setErrorMessage(msg)
+      toast.error(msg)
     } finally {
       setIsGenerating(false)
     }
@@ -86,6 +92,26 @@ export function ParentSummaryStep({
           disabled={isGenerating}
         />
       </div>
+
+      {/* 에러 발생 시 재시도 안내 */}
+      {errorMessage && !parentSummary && !isGenerating && (
+        <div className="flex items-center gap-3 rounded-lg border border-destructive/50 bg-destructive/5 p-4">
+          <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-medium text-destructive">메시지 생성 실패</p>
+            <p className="text-sm text-muted-foreground mt-0.5">{errorMessage}</p>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleGenerate}
+            className="shrink-0"
+          >
+            <RotateCcw className="h-3.5 w-3.5 mr-1" />
+            재시도
+          </Button>
+        </div>
+      )}
 
       <MarkdownEditor
         title="학부모 공유용 메시지"
