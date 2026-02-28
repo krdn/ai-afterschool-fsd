@@ -1,9 +1,10 @@
 /**
- * 상담 시나리오 생성 프롬프트 빌더 3종
+ * 상담 시나리오 생성 프롬프트 빌더 4종
  *
  * 1. buildAnalysisReportPrompt — 학생 분석 보고서
  * 2. buildScenarioPrompt — 상담 시나리오
  * 3. buildParentSummaryPrompt — 학부모 공유용
+ * 4. buildCounselingReportPrompt — 상담 종합 보고서 (교사용)
  *
  * DB에 활성 프리셋이 있으면 템플릿 변수 치환, 없으면 기본 하드코딩 프롬프트 사용
  */
@@ -339,4 +340,124 @@ ${approvedScenario}
 > 상담과 관련하여 궁금하신 점이 있으시면 편하게 연락 주세요.
 
 [따뜻한 마무리 인사]`.trim()
+}
+
+// ---------------------------------------------------------------------------
+// 4. 상담 종합 보고서 프롬프트 빌더 (교사용)
+// ---------------------------------------------------------------------------
+
+export interface CounselingReportPromptParams {
+  studentName: string
+  topic: string
+  counselingType: string   // 'ACADEMIC'|'CAREER'|'PSYCHOLOGICAL'|'BEHAVIORAL'
+  duration: number         // 분 단위
+  teacherSummary: string   // 교사가 작성한 요약
+  checklist: Array<{ content: string; checked: boolean; memo: string | null }>
+  aiReference: string | null  // Wizard에서 생성한 기존 aiSummary
+}
+
+function buildChecklistSection(
+  checklist: Array<{ content: string; checked: boolean; memo: string | null }>,
+): string {
+  if (checklist.length === 0) return '체크리스트 항목이 없습니다.'
+  return checklist.map(item => {
+    const prefix = item.checked ? '✓' : '✗'
+    const memo = item.memo ? ` (메모: ${item.memo})` : ''
+    return `${prefix} ${item.content}${memo}`
+  }).join('\n')
+}
+
+export async function buildCounselingReportPrompt(
+  params: CounselingReportPromptParams,
+): Promise<PromptBuildResult> {
+  const { studentName, topic, counselingType, duration, teacherSummary, checklist, aiReference } = params
+
+  const checklistSection = buildChecklistSection(checklist)
+  const counselingTypeLabel = typeMap[counselingType] || counselingType
+
+  // DB 프리셋 조회
+  const preset = await getActiveCounselingPreset('counseling_summary')
+  if (preset) {
+    return {
+      prompt: replaceTemplateVars(preset.promptTemplate, {
+        studentName, topic, counselingType, counselingTypeLabel,
+        duration, teacherSummary, checklistSection,
+        aiReference: aiReference ?? '',
+      }),
+      systemPrompt: preset.systemPrompt,
+      maxOutputTokens: preset.maxOutputTokens,
+      temperature: preset.temperature,
+    }
+  }
+
+  // 폴백: 기본 하드코딩 프롬프트
+  return { prompt: buildDefaultCounselingReportPrompt(params, counselingTypeLabel, checklistSection) }
+}
+
+function buildDefaultCounselingReportPrompt(
+  params: CounselingReportPromptParams,
+  counselingTypeLabel: string,
+  checklistSection: string,
+): string {
+  const { studentName, topic, duration, teacherSummary, aiReference } = params
+
+  const aiReferenceSection = aiReference
+    ? `## AI 사전 분석 참고자료\n${aiReference}`
+    : ''
+
+  return `너는 학교 상담 보고서 작성 전문가야. 아래 상담 결과 데이터를 기반으로 교사용 상담 종합 보고서를 작성해줘.
+
+## 상담 기본 정보
+- 학생: ${studentName}
+- 상담 주제: ${topic}
+- 상담 유형: ${counselingTypeLabel}
+- 상담 시간: ${duration}분
+
+## 교사 작성 상담 요약
+${teacherSummary}
+
+## 체크리스트 수행 결과
+${checklistSection}
+
+${aiReferenceSection}
+
+다음 형식으로 마크다운 보고서를 작성해줘. 반드시 아래 마크다운 문법 규칙을 지켜:
+- 각 섹션은 ### 제목으로 구분
+- 핵심 키워드는 **굵은 글씨**로 강조
+- 나열 항목은 - 또는 1. 목록 사용
+- 중요한 주의사항은 > 인용구로 표시
+- 수치 비교가 있으면 | 표 | 형식 | 사용
+
+### 상담 개요
+
+| 항목 | 내용 |
+|------|------|
+| **학생명** | ${studentName} |
+| **상담 유형** | ${counselingTypeLabel} |
+| **상담 주제** | ${topic} |
+| **소요 시간** | ${duration}분 |
+
+### 상담 내용 요약
+
+- **주요 논의 사항**: [교사 요약과 체크리스트를 기반으로 핵심 논의 내용 정리]
+- **학생 반응/태도**: [상담 중 학생의 전반적인 반응과 태도 분석]
+- **달성 항목**: [체크리스트에서 달성된 항목 요약]
+- **미달성 항목**: [체크리스트에서 미달성된 항목과 사유 분석]
+
+### 주요 발견사항
+
+1. [상담을 통해 발견된 핵심 사항 1]
+2. [상담을 통해 발견된 핵심 사항 2]
+3. [상담을 통해 발견된 핵심 사항 3]
+
+> **핵심 인사이트**: [가장 중요한 발견사항 한 줄 요약]
+
+### 후속 조치 권고
+
+- **단기 조치** (1-2주): [즉시 실행할 조치사항]
+- **중기 조치** (1개월): [중기적으로 추진할 조치사항]
+- **장기 조치** (학기 내): [장기적으로 관찰/추진할 사항]
+- **다음 상담 제안**: [다음 상담 주제 및 시기 권고]
+
+> **종합 평가**: [이번 상담의 전반적 성과와 향후 방향 2-3문장 요약]`.trim()
 }
