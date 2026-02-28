@@ -14,7 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Loader2, Sparkles } from 'lucide-react'
 import { completeSessionAction } from '@/lib/actions/counseling/session-live'
+import { generateCounselingReportAction } from '@/lib/actions/counseling/report-generation'
 import { toast } from 'sonner'
 import { getTypeLabel } from '../utils'
 
@@ -33,6 +35,19 @@ interface SessionCompleteFormProps {
   notes: NoteData[]
   elapsedMinutes: number
   onCancel: () => void
+  onGenerateReport?: (
+    data: {
+      type: string
+      duration: number
+      summary: string
+      followUpRequired: boolean
+      followUpDate?: string
+      satisfactionScore?: number
+    },
+    report: string
+  ) => void
+  topic?: string
+  studentName?: string
 }
 
 /**
@@ -64,6 +79,9 @@ export function SessionCompleteForm({
   notes,
   elapsedMinutes,
   onCancel,
+  onGenerateReport,
+  topic: _topic,
+  studentName: _studentName,
 }: SessionCompleteFormProps) {
   const router = useRouter()
   const [type, setType] = useState<string>('ACADEMIC')
@@ -74,6 +92,7 @@ export function SessionCompleteForm({
   const [satisfactionScore, setSatisfactionScore] = useState<string>('')
   const [hoveredScore, setHoveredScore] = useState(0)
   const [isSaving, setIsSaving] = useState(false)
+  const [isGeneratingReport, setIsGeneratingReport] = useState(false)
 
   const handleSubmit = async () => {
     if (!summary.trim() || summary.trim().length < 10) {
@@ -109,6 +128,47 @@ export function SessionCompleteForm({
       toast.error('오류가 발생했습니다.')
     } finally {
       setIsSaving(false)
+    }
+  }
+
+  const handleGenerateReport = async () => {
+    if (!summary.trim() || summary.trim().length < 10) {
+      toast.error('상담 내용을 10자 이상 입력해주세요.')
+      return
+    }
+    if (followUpRequired && !followUpDate) {
+      toast.error('후속 조치 날짜를 선택해주세요.')
+      return
+    }
+
+    setIsGeneratingReport(true)
+    try {
+      const result = await generateCounselingReportAction({
+        sessionId,
+        type: type as 'ACADEMIC' | 'CAREER' | 'PSYCHOLOGICAL' | 'BEHAVIORAL',
+        duration,
+        summary: summary.trim(),
+      })
+
+      if (result.success) {
+        onGenerateReport?.(
+          {
+            type,
+            duration,
+            summary: summary.trim(),
+            followUpRequired,
+            ...(followUpDate && { followUpDate }),
+            ...(satisfactionScore && { satisfactionScore: Number(satisfactionScore) }),
+          },
+          result.data
+        )
+      } else {
+        toast.error(result.error || 'AI 보고서 생성에 실패했습니다.')
+      }
+    } catch {
+      toast.error('AI 보고서 생성 중 오류가 발생했습니다.')
+    } finally {
+      setIsGeneratingReport(false)
     }
   }
 
@@ -215,16 +275,36 @@ export function SessionCompleteForm({
 
       {/* 버튼 */}
       <div className="flex gap-2 pt-2">
-        <Button variant="outline" onClick={onCancel} disabled={isSaving} className="flex-1">
+        <Button variant="outline" onClick={onCancel} disabled={isSaving || isGeneratingReport} className="flex-1">
           취소
         </Button>
-        <Button
-          onClick={handleSubmit}
-          disabled={isSaving}
-          className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-        >
-          {isSaving ? '처리 중...' : '상담 완료 및 저장'}
-        </Button>
+        {onGenerateReport ? (
+          <Button
+            onClick={handleGenerateReport}
+            disabled={isGeneratingReport || isSaving}
+            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            {isGeneratingReport ? (
+              <>
+                <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                AI 보고서 생성 중...
+              </>
+            ) : (
+              <>
+                <Sparkles className="h-4 w-4 mr-1" />
+                AI 보고서 생성하기
+              </>
+            )}
+          </Button>
+        ) : (
+          <Button
+            onClick={handleSubmit}
+            disabled={isSaving}
+            className="flex-1 bg-green-600 hover:bg-green-700 text-white"
+          >
+            {isSaving ? '처리 중...' : '상담 완료 및 저장'}
+          </Button>
+        )}
       </div>
     </div>
   )
