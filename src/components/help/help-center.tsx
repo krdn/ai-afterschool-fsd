@@ -129,7 +129,7 @@ export function HelpCenter({
           onValueChange={(value) => setActiveCategory(value as HelpCategory)}
           className="mt-4"
         >
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             {categories.map((cat) => (
               <TabsTrigger key={cat.id} value={cat.id} className="text-xs sm:text-sm">
                 {cat.label}

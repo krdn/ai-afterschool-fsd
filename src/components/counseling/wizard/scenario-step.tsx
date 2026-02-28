@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { ChevronLeft, ChevronRight, AlertCircle, RotateCcw } from 'lucide-react'
 import { generateScenarioAction } from '@/lib/actions/counseling/scenario-generation'
+import { InlineHelp } from '@/components/help/inline-help'
 import { MarkdownEditor } from './markdown-editor'
 import { ModelSelect, type ModelOverride } from './model-select'
 
@@ -75,7 +76,9 @@ export function ScenarioStep({
     <div className="space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="text-lg font-medium mb-1">상담 시나리오</h3>
+          <InlineHelp helpId="counseling-ai-prompts">
+            <h3 className="text-lg font-medium mb-1">상담 시나리오</h3>
+          </InlineHelp>
           <p className="text-sm text-muted-foreground">
             승인된 분석 보고서를 기반으로 30분 상담 시나리오가 생성됩니다. 필요 시 편집 후 승인해주세요.
           </p>

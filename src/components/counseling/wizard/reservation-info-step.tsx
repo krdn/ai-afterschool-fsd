@@ -21,6 +21,7 @@ import { getReservationsAction } from '@/lib/actions/counseling/reservations-que
 import { toast } from 'sonner'
 import { ChevronRight } from 'lucide-react'
 import { Link } from '@/i18n/navigation'
+import { InlineHelp } from '@/components/help/inline-help'
 
 interface ReservationInfoStepProps {
   data: {
@@ -141,6 +142,10 @@ export function ReservationInfoStep({
 
   return (
     <div className="space-y-6">
+      <InlineHelp helpId="counseling-reservation">
+        <h3 className="text-lg font-medium">예약 정보 입력</h3>
+      </InlineHelp>
+
       {/* 달력 + 시간슬롯 2컬럼 */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-3">

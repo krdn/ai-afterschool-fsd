@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { ChevronLeft, Loader2, AlertCircle, RotateCcw } from 'lucide-react'
 import { generateParentSummaryAction } from '@/lib/actions/counseling/scenario-generation'
+import { InlineHelp } from '@/components/help/inline-help'
 import { MarkdownEditor } from './markdown-editor'
 import { ModelSelect, type ModelOverride } from './model-select'
 
@@ -80,7 +81,9 @@ export function ParentSummaryStep({
     <div className="space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <h3 className="text-lg font-medium mb-1">학부모 공유용</h3>
+          <InlineHelp helpId="counseling-ai-pipeline">
+            <h3 className="text-lg font-medium mb-1">학부모 공유용</h3>
+          </InlineHelp>
           <p className="text-sm text-muted-foreground">
             학부모에게 전달할 상담 안내 메시지입니다. 민감 정보(심리 분석, 성격
             진단 등)는 포함되지 않습니다.

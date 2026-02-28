@@ -2,6 +2,7 @@ import { verifySession } from "@/lib/dal"
 import { getRBACPrisma } from "@/lib/db/common/rbac"
 import { CounselingPageTabs } from "@/components/counseling/counseling-page-tabs"
 import { CounselingHistoryContent } from "@/components/counseling/counseling-history-content"
+import { InlineHelp } from "@/components/help/inline-help"
 import type { CounselingType, Prisma } from '@/lib/db'
 import type { CounselingSessionData } from "@/components/counseling/types"
 
@@ -192,7 +193,9 @@ export default async function CounselingPage({
     <div className="container mx-auto px-4 py-8 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">상담 관리</h1>
+          <InlineHelp helpId="counseling-overview">
+            <h1 className="text-3xl font-bold">상담 관리</h1>
+          </InlineHelp>
           <p className="text-gray-600">선생님-학생 상담 기록과 예약을 관리합니다</p>
         </div>
       </div>

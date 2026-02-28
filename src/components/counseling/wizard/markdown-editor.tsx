@@ -8,7 +8,7 @@ import { Eye, Pencil, RotateCcw, Check, Loader2, Copy } from 'lucide-react'
 import { toast } from 'sonner'
 
 interface MarkdownEditorProps {
-  title: string
+  title: React.ReactNode
   content: string
   onChange: (content: string) => void
   onApprove: () => void
