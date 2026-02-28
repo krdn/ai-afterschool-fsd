@@ -59,7 +59,7 @@ export async function generateAnalysisReportAction(
 
     if (!student) return fail('학생을 찾을 수 없습니다.')
 
-    const prompt = buildAnalysisReportPrompt({
+    const buildResult = await buildAnalysisReportPrompt({
       studentName: student.name,
       school: student.school,
       grade: student.grade,
@@ -70,11 +70,12 @@ export async function generateAnalysisReportAction(
     })
 
     const result = await generateWithProvider({
-      prompt,
+      prompt: buildResult.prompt,
       featureType: 'counseling_analysis',
       teacherId: session.userId,
-      maxOutputTokens: 1000,
-      temperature: 0.3,
+      maxOutputTokens: buildResult.maxOutputTokens ?? 1000,
+      temperature: buildResult.temperature ?? 0.3,
+      ...(buildResult.systemPrompt && { systemPrompt: buildResult.systemPrompt }),
       ...(parsed.data.modelOverride && {
         providerId: parsed.data.modelOverride.providerId,
         modelId: parsed.data.modelOverride.modelId,
@@ -119,7 +120,7 @@ export async function generateScenarioAction(
 
     if (!student) return fail('학생을 찾을 수 없습니다.')
 
-    const prompt = buildScenarioPrompt({
+    const buildResult = await buildScenarioPrompt({
       studentName: student.name,
       topic,
       approvedReport,
@@ -127,11 +128,12 @@ export async function generateScenarioAction(
     })
 
     const result = await generateWithProvider({
-      prompt,
+      prompt: buildResult.prompt,
       featureType: 'counseling_scenario',
       teacherId: session.userId,
-      maxOutputTokens: 1500,
-      temperature: 0.5,
+      maxOutputTokens: buildResult.maxOutputTokens ?? 1500,
+      temperature: buildResult.temperature ?? 0.5,
+      ...(buildResult.systemPrompt && { systemPrompt: buildResult.systemPrompt }),
       ...(parsed.data.modelOverride && {
         providerId: parsed.data.modelOverride.providerId,
         modelId: parsed.data.modelOverride.modelId,
@@ -165,14 +167,15 @@ export async function generateParentSummaryAction(
   if (!parsed.success) return fail('입력값이 올바르지 않습니다.')
 
   try {
-    const prompt = buildParentSummaryPrompt(parsed.data)
+    const buildResult = await buildParentSummaryPrompt(parsed.data)
 
     const result = await generateWithProvider({
-      prompt,
+      prompt: buildResult.prompt,
       featureType: 'counseling_parent',
       teacherId: session.userId,
-      maxOutputTokens: 500,
-      temperature: 0.3,
+      maxOutputTokens: buildResult.maxOutputTokens ?? 500,
+      temperature: buildResult.temperature ?? 0.3,
+      ...(buildResult.systemPrompt && { systemPrompt: buildResult.systemPrompt }),
       ...(parsed.data.modelOverride && {
         providerId: parsed.data.modelOverride.providerId,
         modelId: parsed.data.modelOverride.modelId,

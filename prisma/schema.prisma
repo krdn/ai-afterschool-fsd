@@ -1043,3 +1043,24 @@ enum StudyTaskType {
   TUTORING
   REVIEW
 }
+
+// 상담 AI 프롬프트 프리셋
+model CounselingPromptPreset {
+  id              String   @id @default(cuid())
+  promptType      String   // analysis_report | scenario | parent_summary | counseling_summary | personality_summary
+  name            String
+  description     String   @default("")
+  promptTemplate  String
+  systemPrompt    String?
+  maxOutputTokens Int      @default(1000)
+  temperature     Float    @default(0.3)
+  isBuiltIn       Boolean  @default(false)
+  isActive        Boolean  @default(true)
+  sortOrder       Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([promptType, name])
+  @@index([promptType, isActive])
+  @@map("counseling_prompt_presets")
+}

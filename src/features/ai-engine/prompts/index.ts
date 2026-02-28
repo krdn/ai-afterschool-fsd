@@ -80,13 +80,8 @@ export {
   type TeacherData as CompatibilityTeacherData,
 } from "./compatibility"
 
-export {
-  buildCounselingSummaryPrompt,
-  buildPersonalitySummaryPrompt,
-  type CounselingSummaryPromptParams,
-  type PersonalitySummaryPromptParams,
-  type UnifiedPersonalityData,
-} from "./counseling"
+// counseling.ts는 DB 의존성(prompt-preset)이 있어 barrel export에서 제외
+// Server Action에서 직접 import: '@/features/ai-engine/prompts/counseling'
 
 export {
   buildLearningStrategyPrompt,

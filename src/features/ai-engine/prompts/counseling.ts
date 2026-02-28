@@ -2,7 +2,17 @@
  * 상담 및 성향 요약 프롬프트 빌더
  *
  * 통합 성향 데이터(UnifiedPersonalityData) 기반
+ * DB에 활성 프리셋이 있으면 템플릿 변수 치환, 없으면 기본 하드코딩 프롬프트 사용
  */
+
+import { replaceTemplateVars } from './template-utils'
+import type { PromptBuildResult } from './counseling-scenario'
+
+// DB 리포지토리는 서버 전용 — Client Component 번들 오염 방지를 위해 dynamic import 사용
+async function getActiveCounselingPreset(type: string) {
+  const { getActiveCounselingPreset: fn } = await import('@/features/counseling/repositories/prompt-preset')
+  return fn(type as Parameters<typeof fn>[0])
+}
 
 // ---------------------------------------------------------------------------
 // 타입 정의
@@ -65,104 +75,87 @@ export interface PersonalitySummaryPromptParams {
 }
 
 // ---------------------------------------------------------------------------
+// 공통 헬퍼
+// ---------------------------------------------------------------------------
+
+const typeMap: Record<string, string> = {
+  ACADEMIC: "학업",
+  CAREER: "진로",
+  PSYCHOLOGICAL: "심리",
+  BEHAVIORAL: "행동",
+}
+
+function buildPersonalitySectionText(personality: UnifiedPersonalityData | null): string {
+  if (!personality) return ""
+  const traits: string[] = []
+  if (personality.mbti.result) traits.push(`MBTI: ${personality.mbti.result.mbtiType}`)
+  if (personality.saju.interpretation) traits.push(`사주 특성: ${personality.saju.interpretation.slice(0, 100)}...`)
+  if (personality.name.interpretation) traits.push(`성명학 특성: ${personality.name.interpretation.slice(0, 100)}...`)
+  if (personality.face.result) {
+    const faceResult = personality.face.result as { personalityTraits?: string[] }
+    if (faceResult.personalityTraits && faceResult.personalityTraits.length > 0) {
+      traits.push(`관상 특성: ${faceResult.personalityTraits.slice(0, 3).join(", ")}`)
+    }
+  }
+  if (personality.palm.result) {
+    const palmResult = personality.palm.result as { personalityTraits?: string[] }
+    if (palmResult.personalityTraits && palmResult.personalityTraits.length > 0) {
+      traits.push(`손금 특성: ${palmResult.personalityTraits.slice(0, 3).join(", ")}`)
+    }
+  }
+  if (traits.length === 0) return ""
+  return `\n## 학생 성향 정보\n${traits.map((t) => `- ${t}`).join("\n")}\n`
+}
+
+function buildPreviousSessionsSectionText(
+  previousSessions: Array<{ summary: string; sessionDate: Date; type: string }>,
+): string {
+  if (previousSessions.length === 0) return ""
+  const sessionsList = previousSessions
+    .slice(0, 5)
+    .map((s) => {
+      const dateStr = s.sessionDate.toLocaleDateString("ko-KR", { month: "short", day: "numeric" })
+      const typeKorean = typeMap[s.type] || s.type
+      return `- [${dateStr}] ${typeKorean} 상담: ${s.summary.slice(0, 80)}${s.summary.length > 80 ? "..." : ""}`
+    })
+    .join("\n")
+  return `\n## 최근 상담 이력\n${sessionsList}\n`
+}
+
+// ---------------------------------------------------------------------------
 // 상담 요약 생성 프롬프트 빌더
 // ---------------------------------------------------------------------------
 
-/**
- * 상담 요약 생성 프롬프트 빌더
- * 상담 내용 + 학생 성향 + 이전 이력을 종합한 요약 프롬프트 생성
- *
- * @param params - 상담 요약 프롬프트 매개변수
- * @returns AI용 상담 요약 생성 프롬프트
- */
-export function buildCounselingSummaryPrompt(
+export async function buildCounselingSummaryPrompt(
   params: CounselingSummaryPromptParams
-): string {
-  const {
-    currentSummary,
-    sessionDate,
-    sessionType,
-    personality,
-    previousSessions,
-    studentName,
-  } = params
+): Promise<PromptBuildResult> {
+  const { currentSummary, sessionDate, sessionType, personality, previousSessions, studentName } = params
 
-  // 상담 유형 한글 변환
-  const typeMap: Record<string, string> = {
-    ACADEMIC: "학업",
-    CAREER: "진로",
-    PSYCHOLOGICAL: "심리",
-    BEHAVIORAL: "행동",
-  }
   const sessionTypeKorean = typeMap[sessionType] || sessionType
+  const sessionDateStr = sessionDate.toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" })
+  const personalitySection = buildPersonalitySectionText(personality)
+  const previousSessionsSection = buildPreviousSessionsSectionText(previousSessions)
 
-  // 날짜 포맷
-  const sessionDateStr = sessionDate.toLocaleDateString("ko-KR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  })
-
-  // 성향 정보 섹션 구성
-  let personalitySection = ""
-  if (personality) {
-    const traits: string[] = []
-
-    if (personality.mbti.result) {
-      traits.push(`MBTI: ${personality.mbti.result.mbtiType}`)
-    }
-
-    if (personality.saju.interpretation) {
-      traits.push(`사주 특성: ${personality.saju.interpretation.slice(0, 100)}...`)
-    }
-
-    if (personality.name.interpretation) {
-      traits.push(`성명학 특성: ${personality.name.interpretation.slice(0, 100)}...`)
-    }
-
-    if (personality.face.result) {
-      const faceResult = personality.face.result as { personalityTraits?: string[] }
-      if (faceResult.personalityTraits && faceResult.personalityTraits.length > 0) {
-        traits.push(`관상 특성: ${faceResult.personalityTraits.slice(0, 3).join(", ")}`)
-      }
-    }
-
-    if (personality.palm.result) {
-      const palmResult = personality.palm.result as { personalityTraits?: string[] }
-      if (palmResult.personalityTraits && palmResult.personalityTraits.length > 0) {
-        traits.push(`손금 특성: ${palmResult.personalityTraits.slice(0, 3).join(", ")}`)
-      }
-    }
-
-    if (traits.length > 0) {
-      personalitySection = `
-## 학생 성향 정보
-${traits.map((t) => `- ${t}`).join("\n")}
-`
+  const preset = await getActiveCounselingPreset('counseling_summary')
+  if (preset) {
+    return {
+      prompt: replaceTemplateVars(preset.promptTemplate, {
+        studentName, sessionDate: sessionDateStr, sessionType: sessionTypeKorean,
+        personalitySection, previousSessionsSection, currentSummary,
+      }),
+      systemPrompt: preset.systemPrompt,
+      maxOutputTokens: preset.maxOutputTokens,
+      temperature: preset.temperature,
     }
   }
 
-  // 이전 상담 이력 섹션 구성
-  let previousSessionsSection = ""
-  if (previousSessions.length > 0) {
-    const sessionsList = previousSessions
-      .slice(0, 5) // 최근 5개만
-      .map((s) => {
-        const dateStr = s.sessionDate.toLocaleDateString("ko-KR", {
-          month: "short",
-          day: "numeric",
-        })
-        const typeKorean = typeMap[s.type] || s.type
-        return `- [${dateStr}] ${typeKorean} 상담: ${s.summary.slice(0, 80)}${s.summary.length > 80 ? "..." : ""}`
-      })
-      .join("\n")
+  return { prompt: buildDefaultCounselingSummaryPrompt(studentName, sessionDateStr, sessionTypeKorean, personalitySection, previousSessionsSection, currentSummary) }
+}
 
-    previousSessionsSection = `
-## 최근 상담 이력
-${sessionsList}
-`
-  }
-
+function buildDefaultCounselingSummaryPrompt(
+  studentName: string, sessionDateStr: string, sessionTypeKorean: string,
+  personalitySection: string, previousSessionsSection: string, currentSummary: string,
+): string {
   return `
 너는 학생 상담 기록을 전문적으로 정리하는 교육 컨설턴트야.
 
@@ -206,76 +199,69 @@ ${currentSummary}
 // 성향 요약 생성 프롬프트 빌더
 // ---------------------------------------------------------------------------
 
-/**
- * 성향 요약 생성 프롬프트 빌더
- * MBTI, 사주, 성명학, 관상, 손금 분석 결과를 1-2문장으로 요약하는 프롬프트 생성
- *
- * @param params - 성향 요약 프롬프트 매개변수
- * @returns AI용 성향 요약 생성 프롬프트
- */
-export function buildPersonalitySummaryPrompt(
+export async function buildPersonalitySummaryPrompt(
   params: PersonalitySummaryPromptParams
-): string {
+): Promise<PromptBuildResult> {
   const { personality, studentName } = params
 
-  // 사용 가능한 분석 데이터 수집
-  const analysisDetails: string[] = []
+  // 분석 데이터 수집
+  const sections: Record<string, string> = {
+    mbtiSection: '', sajuSection: '', nameSection: '', faceSection: '', palmSection: '',
+  }
 
   if (personality.mbti.result) {
-    analysisDetails.push(`## MBTI
-- 유형: ${personality.mbti.result.mbtiType}
-- 비율: ${Object.entries(personality.mbti.result.percentages)
-      .map(([key, value]) => `${key}: ${value}%`)
-      .join(", ")}`)
+    sections.mbtiSection = `## MBTI\n- 유형: ${personality.mbti.result.mbtiType}\n- 비율: ${Object.entries(personality.mbti.result.percentages).map(([key, value]) => `${key}: ${value}%`).join(", ")}`
   }
-
   if (personality.saju.interpretation) {
-    analysisDetails.push(`## 사주 해석
-${personality.saju.interpretation}`)
+    sections.sajuSection = `## 사주 해석\n${personality.saju.interpretation}`
   }
-
   if (personality.name.interpretation) {
-    analysisDetails.push(`## 성명학 해석
-${personality.name.interpretation}`)
+    sections.nameSection = `## 성명학 해석\n${personality.name.interpretation}`
   }
-
   if (personality.face.result) {
-    const faceResult = personality.face.result as {
-      personalityTraits?: string[]
-      fortune?: { career?: string }
-    }
+    const faceResult = personality.face.result as { personalityTraits?: string[] }
     if (faceResult.personalityTraits && faceResult.personalityTraits.length > 0) {
-      analysisDetails.push(`## 관상 분석
-- 성격 특성: ${faceResult.personalityTraits.join(", ")}`)
+      sections.faceSection = `## 관상 분석\n- 성격 특성: ${faceResult.personalityTraits.join(", ")}`
     }
   }
-
   if (personality.palm.result) {
-    const palmResult = personality.palm.result as {
-      personalityTraits?: string[]
-      fortune?: { career?: string; talents?: string }
-    }
+    const palmResult = personality.palm.result as { personalityTraits?: string[] }
     if (palmResult.personalityTraits && palmResult.personalityTraits.length > 0) {
-      analysisDetails.push(`## 손금 분석
-- 성격 특성: ${palmResult.personalityTraits.join(", ")}`)
+      sections.palmSection = `## 손금 분석\n- 성격 특성: ${palmResult.personalityTraits.join(", ")}`
     }
   }
 
-  // 분석 데이터가 없는 경우
-  if (analysisDetails.length === 0) {
-    return `
-학생 ${studentName}의 성향 분석 데이터가 충분하지 않습니다.
-최소 1개 이상의 분석(MBTI, 사주, 성명학, 관상, 손금)이 필요합니다.
-`.trim()
+  const hasData = Object.values(sections).some(s => s.length > 0)
+  if (!hasData) {
+    return {
+      prompt: `학생 ${studentName}의 성향 분석 데이터가 충분하지 않습니다. 최소 1개 이상의 분석(MBTI, 사주, 성명학, 관상, 손금)이 필요합니다.`,
+    }
   }
 
+  const preset = await getActiveCounselingPreset('personality_summary')
+  if (preset) {
+    return {
+      prompt: replaceTemplateVars(preset.promptTemplate, {
+        studentName, ...sections,
+      }),
+      systemPrompt: preset.systemPrompt,
+      maxOutputTokens: preset.maxOutputTokens,
+      temperature: preset.temperature,
+    }
+  }
+
+  const analysisDetails = Object.values(sections).filter(s => s.length > 0).join("\n\n")
+  return { prompt: buildDefaultPersonalitySummaryPrompt(studentName, analysisDetails) }
+}
+
+function buildDefaultPersonalitySummaryPrompt(studentName: string, analysisDetails: string): string {
   return `
 너는 학생 성향 분석 전문가야.
 
 ## 학생 정보
 - 이름: ${studentName}
 
-${analysisDetails.join("\n\n")}
+${analysisDetails}
 
 ---
 
