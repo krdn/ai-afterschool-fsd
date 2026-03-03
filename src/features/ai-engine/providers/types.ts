@@ -13,6 +13,9 @@ export type FeatureType =
   | 'name_analysis'       // 이름풀이 해석
   | 'zodiac_analysis'       // 별자리 운세 해석
   | 'compatibility_analysis' // 궁합 분석
+  | 'grade_ocr'              // 성적표 OCR 분석
+  | 'grade_analysis'         // 성적 분석 & 학습 전략
+  | 'parent_report'          // 학부모 리포트 생성
   | 'general_chat';          // 일반 채팅
 
 export interface ProviderConfig {

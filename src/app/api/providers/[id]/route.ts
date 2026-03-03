@@ -10,6 +10,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifySession } from '@/lib/dal';
 import { db } from '@/lib/db/client';
 import type { AuthType, CostTier, QualityTier } from '@/features/ai-engine';
+import { encryptApiKey, isEncryptionConfigured } from '@/features/ai-engine/encryption';
+import { UpdateProviderSchema } from '@/lib/validations/providers';
 import { logger } from '@/lib/logger';
 
 interface RouteParams {
@@ -100,8 +102,16 @@ export async function PATCH(
       );
     }
 
-    // 요청 본문 파싱
+    // 요청 본문 파싱 및 검증
     const body = await request.json();
+    const parsed = UpdateProviderSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0].message },
+        { status: 400 }
+      );
+    }
+
     const {
       name,
       baseUrl,
@@ -112,7 +122,7 @@ export async function PATCH(
       costTier,
       qualityTier,
       isEnabled,
-    } = body;
+    } = parsed.data;
 
     // 업데이트 데이터 준비
     const updateData: Record<string, unknown> = {
@@ -128,7 +138,17 @@ export async function PATCH(
 
     // API 키가 변경되면 암호화 및 검증 상태 리셋
     if (apiKey !== undefined) {
-      updateData.apiKeyEncrypted = apiKey || null;
+      if (apiKey) {
+        if (!isEncryptionConfigured()) {
+          return NextResponse.json(
+            { error: 'API_KEY_ENCRYPTION_SECRET 환경 변수가 설정되지 않았습니다' },
+            { status: 500 }
+          );
+        }
+        updateData.apiKeyEncrypted = encryptApiKey(apiKey);
+      } else {
+        updateData.apiKeyEncrypted = null;
+      }
       updateData.isValidated = false;
       updateData.validatedAt = null;
     }

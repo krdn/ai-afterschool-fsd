@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { verifySession } from '@/lib/dal';
 import { getProviderTemplate } from '@/features/ai-engine';
 import type { ProviderInput, ProviderType, AuthType } from '@/features/ai-engine';
+import { encryptApiKey, isEncryptionConfigured } from '@/features/ai-engine/encryption';
 import { db } from '@/lib/db/client';
 import { CreateProviderSchema } from '@/lib/validations/providers';
 import { logger } from '@/lib/logger';
@@ -135,13 +136,25 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
+    // API Key 암호화
+    let encryptedKey: string | null = null;
+    if (finalConfig.apiKey) {
+      if (!isEncryptionConfigured()) {
+        return NextResponse.json(
+          { error: 'API_KEY_ENCRYPTION_SECRET 환경 변수가 설정되지 않았습니다' },
+          { status: 500 }
+        );
+      }
+      encryptedKey = encryptApiKey(finalConfig.apiKey);
+    }
+
     // 제공자 생성
     const provider = await db.provider.create({
       data: {
         name: finalConfig.name,
         providerType: finalConfig.providerType,
         baseUrl: finalConfig.baseUrl,
-        apiKeyEncrypted: finalConfig.apiKey || null,
+        apiKeyEncrypted: encryptedKey,
         authType: finalConfig.authType || 'api_key',
         customAuthHeader: finalConfig.customAuthHeader,
         capabilities: finalConfig.capabilities || [],

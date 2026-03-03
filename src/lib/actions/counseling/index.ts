@@ -13,5 +13,6 @@ export * from "./reservation-complete";
 export * from "./reservation-ai";
 export * from "./session-live";
 export * from "./session-notes";
+export * from "./prompt-presets";
 export * from "./session-checklist-ai";
 export * from "./student-sessions";

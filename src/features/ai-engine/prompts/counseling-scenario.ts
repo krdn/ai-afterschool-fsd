@@ -1,12 +1,22 @@
 /**
- * 상담 시나리오 생성 프롬프트 빌더 3종
+ * 상담 시나리오 생성 프롬프트 빌더 4종
  *
  * 1. buildAnalysisReportPrompt — 학생 분석 보고서
  * 2. buildScenarioPrompt — 상담 시나리오
  * 3. buildParentSummaryPrompt — 학부모 공유용
+ * 4. buildCounselingReportPrompt — 상담 종합 보고서 (교사용)
+ *
+ * DB에 활성 프리셋이 있으면 템플릿 변수 치환, 없으면 기본 하드코딩 프롬프트 사용
  */
 
 import type { UnifiedPersonalityData } from './counseling'
+import { replaceTemplateVars } from './template-utils'
+
+// DB 리포지토리는 서버 전용 — Client Component 번들 오염 방지를 위해 dynamic import 사용
+async function getActiveCounselingPreset(type: string) {
+  const { getActiveCounselingPreset: fn } = await import('@/features/counseling/repositories/prompt-preset')
+  return fn(type as Parameters<typeof fn>[0])
+}
 
 // ---------------------------------------------------------------------------
 // 타입 정의
@@ -36,57 +46,98 @@ export interface ParentSummaryPromptParams {
   approvedScenario: string
 }
 
+/** DB 프리셋의 추가 설정 반환용 */
+export type PromptBuildResult = {
+  prompt: string
+  systemPrompt?: string | null
+  maxOutputTokens?: number
+  temperature?: number
+}
+
+// ---------------------------------------------------------------------------
+// 공통 섹션 빌더 (분석 보고서용 데이터 전처리)
+// ---------------------------------------------------------------------------
+
+const typeMap: Record<string, string> = {
+  ACADEMIC: '학업', CAREER: '진로', PSYCHOLOGICAL: '심리', BEHAVIORAL: '행동'
+}
+
+function buildPersonalitySection(personality: UnifiedPersonalityData | null): string {
+  if (!personality) return '성향 분석 데이터가 없습니다.'
+  const parts: string[] = []
+  if (personality.mbti?.result?.mbtiType) parts.push(`- MBTI: ${personality.mbti.result.mbtiType}`)
+  if (personality.saju?.interpretation) parts.push(`- 사주 해석: ${personality.saju.interpretation.slice(0, 200)}`)
+  if (personality.name?.interpretation) parts.push(`- 성명학: ${personality.name.interpretation.slice(0, 200)}`)
+  if (personality.face?.result) {
+    const faceResult = personality.face.result as { personalityTraits?: string[] }
+    if (faceResult.personalityTraits && faceResult.personalityTraits.length > 0) {
+      parts.push(`- 관상 특성: ${faceResult.personalityTraits.slice(0, 3).join(', ')}`)
+    }
+  }
+  if (personality.palm?.result) {
+    const palmResult = personality.palm.result as { personalityTraits?: string[] }
+    if (palmResult.personalityTraits && palmResult.personalityTraits.length > 0) {
+      parts.push(`- 손금 특성: ${palmResult.personalityTraits.slice(0, 3).join(', ')}`)
+    }
+  }
+  return parts.length > 0 ? parts.join('\n') : '성향 분석 데이터가 없습니다.'
+}
+
+function buildPreviousSessionsSection(
+  previousSessions: Array<{ summary: string; sessionDate: Date; type: string }>,
+): string {
+  if (previousSessions.length === 0) return '이전 상담 이력이 없습니다. (첫 상담)'
+  return previousSessions.map((s, i) => {
+    const dateStr = new Date(s.sessionDate).toLocaleDateString('ko-KR')
+    return `${i + 1}. [${dateStr}] ${typeMap[s.type] || s.type} - ${s.summary.slice(0, 100)}`
+  }).join('\n')
+}
+
+function buildGradeHistorySection(
+  gradeHistory: Array<{ subject: string; score: number; testDate: Date }>,
+): string {
+  if (gradeHistory.length === 0) return '성적 데이터가 없습니다.'
+  return gradeHistory.slice(-10).map(g => {
+    const dateStr = new Date(g.testDate).toLocaleDateString('ko-KR')
+    return `- ${g.subject}: ${g.score}점 (${dateStr})`
+  }).join('\n')
+}
+
 // ---------------------------------------------------------------------------
 // 1. 분석 보고서 프롬프트 빌더
 // ---------------------------------------------------------------------------
 
-export function buildAnalysisReportPrompt(params: AnalysisReportPromptParams): string {
+export async function buildAnalysisReportPrompt(
+  params: AnalysisReportPromptParams,
+): Promise<PromptBuildResult> {
   const { studentName, school, grade, topic, personality, previousSessions, gradeHistory } = params
 
-  const typeMap: Record<string, string> = {
-    ACADEMIC: '학업', CAREER: '진로', PSYCHOLOGICAL: '심리', BEHAVIORAL: '행동'
-  }
+  const personalitySection = buildPersonalitySection(personality)
+  const previousSessionsSection = buildPreviousSessionsSection(previousSessions)
+  const gradeHistorySection = buildGradeHistorySection(gradeHistory)
 
-  // 성향 섹션 조립
-  let personalitySection = '성향 분석 데이터가 없습니다.'
-  if (personality) {
-    const parts: string[] = []
-    if (personality.mbti?.result?.mbtiType) parts.push(`- MBTI: ${personality.mbti.result.mbtiType}`)
-    if (personality.saju?.interpretation) parts.push(`- 사주 해석: ${personality.saju.interpretation.slice(0, 200)}`)
-    if (personality.name?.interpretation) parts.push(`- 성명학: ${personality.name.interpretation.slice(0, 200)}`)
-    if (personality.face?.result) {
-      const faceResult = personality.face.result as { personalityTraits?: string[] }
-      if (faceResult.personalityTraits && faceResult.personalityTraits.length > 0) {
-        parts.push(`- 관상 특성: ${faceResult.personalityTraits.slice(0, 3).join(', ')}`)
-      }
+  // DB 프리셋 조회
+  const preset = await getActiveCounselingPreset('analysis_report')
+  if (preset) {
+    return {
+      prompt: replaceTemplateVars(preset.promptTemplate, {
+        studentName, school, grade, topic,
+        personalitySection, previousSessionsSection, gradeHistorySection,
+      }),
+      systemPrompt: preset.systemPrompt,
+      maxOutputTokens: preset.maxOutputTokens,
+      temperature: preset.temperature,
     }
-    if (personality.palm?.result) {
-      const palmResult = personality.palm.result as { personalityTraits?: string[] }
-      if (palmResult.personalityTraits && palmResult.personalityTraits.length > 0) {
-        parts.push(`- 손금 특성: ${palmResult.personalityTraits.slice(0, 3).join(', ')}`)
-      }
-    }
-    if (parts.length > 0) personalitySection = parts.join('\n')
   }
 
-  // 이전 상담 섹션
-  let historySection = '이전 상담 이력이 없습니다. (첫 상담)'
-  if (previousSessions.length > 0) {
-    historySection = previousSessions.map((s, i) => {
-      const dateStr = new Date(s.sessionDate).toLocaleDateString('ko-KR')
-      return `${i + 1}. [${dateStr}] ${typeMap[s.type] || s.type} - ${s.summary.slice(0, 100)}`
-    }).join('\n')
-  }
+  // 폴백: 기본 하드코딩 프롬프트
+  return { prompt: buildDefaultAnalysisReportPrompt(studentName, school, grade, topic, personalitySection, previousSessionsSection, gradeHistorySection) }
+}
 
-  // 성적 섹션
-  let gradeSection = '성적 데이터가 없습니다.'
-  if (gradeHistory.length > 0) {
-    gradeSection = gradeHistory.slice(-10).map(g => {
-      const dateStr = new Date(g.testDate).toLocaleDateString('ko-KR')
-      return `- ${g.subject}: ${g.score}점 (${dateStr})`
-    }).join('\n')
-  }
-
+function buildDefaultAnalysisReportPrompt(
+  studentName: string, school: string, grade: number, topic: string,
+  personalitySection: string, historySection: string, gradeSection: string,
+): string {
   return `너는 학생 상담 전문 교육 컨설턴트야. 아래 학생 정보를 분석하여 상담 준비 보고서를 작성해줘.
 
 ## 학생 기본 정보
@@ -145,7 +196,28 @@ ${gradeSection}
 // 2. 상담 시나리오 프롬프트 빌더
 // ---------------------------------------------------------------------------
 
-export function buildScenarioPrompt(params: ScenarioPromptParams): string {
+export async function buildScenarioPrompt(
+  params: ScenarioPromptParams,
+): Promise<PromptBuildResult> {
+  const { studentName, topic, approvedReport, personalitySummary } = params
+
+  const preset = await getActiveCounselingPreset('scenario')
+  if (preset) {
+    return {
+      prompt: replaceTemplateVars(preset.promptTemplate, {
+        studentName, topic, approvedReport,
+        personalitySummary: personalitySummary ?? '',
+      }),
+      systemPrompt: preset.systemPrompt,
+      maxOutputTokens: preset.maxOutputTokens,
+      temperature: preset.temperature,
+    }
+  }
+
+  return { prompt: buildDefaultScenarioPrompt(params) }
+}
+
+function buildDefaultScenarioPrompt(params: ScenarioPromptParams): string {
   const { studentName, topic, approvedReport, personalitySummary } = params
 
   const summarySection = personalitySummary
@@ -204,7 +276,27 @@ ${approvedReport}
 // 3. 학부모 공유용 프롬프트 빌더
 // ---------------------------------------------------------------------------
 
-export function buildParentSummaryPrompt(params: ParentSummaryPromptParams): string {
+export async function buildParentSummaryPrompt(
+  params: ParentSummaryPromptParams,
+): Promise<PromptBuildResult> {
+  const { studentName, topic, scheduledAt, approvedScenario } = params
+
+  const preset = await getActiveCounselingPreset('parent_summary')
+  if (preset) {
+    return {
+      prompt: replaceTemplateVars(preset.promptTemplate, {
+        studentName, topic, scheduledAt, approvedScenario,
+      }),
+      systemPrompt: preset.systemPrompt,
+      maxOutputTokens: preset.maxOutputTokens,
+      temperature: preset.temperature,
+    }
+  }
+
+  return { prompt: buildDefaultParentSummaryPrompt(params) }
+}
+
+function buildDefaultParentSummaryPrompt(params: ParentSummaryPromptParams): string {
   const { studentName, topic, scheduledAt, approvedScenario } = params
 
   return `너는 학부모 커뮤니케이션 전문가야. 아래 상담 시나리오를 참고하여 학부모에게 보낼 상담 안내 메시지를 작성해줘.
@@ -248,4 +340,124 @@ ${approvedScenario}
 > 상담과 관련하여 궁금하신 점이 있으시면 편하게 연락 주세요.
 
 [따뜻한 마무리 인사]`.trim()
+}
+
+// ---------------------------------------------------------------------------
+// 4. 상담 종합 보고서 프롬프트 빌더 (교사용)
+// ---------------------------------------------------------------------------
+
+export interface CounselingReportPromptParams {
+  studentName: string
+  topic: string
+  counselingType: string   // 'ACADEMIC'|'CAREER'|'PSYCHOLOGICAL'|'BEHAVIORAL'
+  duration: number         // 분 단위
+  teacherSummary: string   // 교사가 작성한 요약
+  checklist: Array<{ content: string; checked: boolean; memo: string | null }>
+  aiReference: string | null  // Wizard에서 생성한 기존 aiSummary
+}
+
+function buildChecklistSection(
+  checklist: Array<{ content: string; checked: boolean; memo: string | null }>,
+): string {
+  if (checklist.length === 0) return '체크리스트 항목이 없습니다.'
+  return checklist.map(item => {
+    const prefix = item.checked ? '✓' : '✗'
+    const memo = item.memo ? ` (메모: ${item.memo})` : ''
+    return `${prefix} ${item.content}${memo}`
+  }).join('\n')
+}
+
+export async function buildCounselingReportPrompt(
+  params: CounselingReportPromptParams,
+): Promise<PromptBuildResult> {
+  const { studentName, topic, counselingType, duration, teacherSummary, checklist, aiReference } = params
+
+  const checklistSection = buildChecklistSection(checklist)
+  const counselingTypeLabel = typeMap[counselingType] || counselingType
+
+  // DB 프리셋 조회
+  const preset = await getActiveCounselingPreset('counseling_summary')
+  if (preset) {
+    return {
+      prompt: replaceTemplateVars(preset.promptTemplate, {
+        studentName, topic, counselingType, counselingTypeLabel,
+        duration, teacherSummary, checklistSection,
+        aiReference: aiReference ?? '',
+      }),
+      systemPrompt: preset.systemPrompt,
+      maxOutputTokens: preset.maxOutputTokens,
+      temperature: preset.temperature,
+    }
+  }
+
+  // 폴백: 기본 하드코딩 프롬프트
+  return { prompt: buildDefaultCounselingReportPrompt(params, counselingTypeLabel, checklistSection) }
+}
+
+function buildDefaultCounselingReportPrompt(
+  params: CounselingReportPromptParams,
+  counselingTypeLabel: string,
+  checklistSection: string,
+): string {
+  const { studentName, topic, duration, teacherSummary, aiReference } = params
+
+  const aiReferenceSection = aiReference
+    ? `## AI 사전 분석 참고자료\n${aiReference}`
+    : ''
+
+  return `너는 학교 상담 보고서 작성 전문가야. 아래 상담 결과 데이터를 기반으로 교사용 상담 종합 보고서를 작성해줘.
+
+## 상담 기본 정보
+- 학생: ${studentName}
+- 상담 주제: ${topic}
+- 상담 유형: ${counselingTypeLabel}
+- 상담 시간: ${duration}분
+
+## 교사 작성 상담 요약
+${teacherSummary}
+
+## 체크리스트 수행 결과
+${checklistSection}
+
+${aiReferenceSection}
+
+다음 형식으로 마크다운 보고서를 작성해줘. 반드시 아래 마크다운 문법 규칙을 지켜:
+- 각 섹션은 ### 제목으로 구분
+- 핵심 키워드는 **굵은 글씨**로 강조
+- 나열 항목은 - 또는 1. 목록 사용
+- 중요한 주의사항은 > 인용구로 표시
+- 수치 비교가 있으면 | 표 | 형식 | 사용
+
+### 상담 개요
+
+| 항목 | 내용 |
+|------|------|
+| **학생명** | ${studentName} |
+| **상담 유형** | ${counselingTypeLabel} |
+| **상담 주제** | ${topic} |
+| **소요 시간** | ${duration}분 |
+
+### 상담 내용 요약
+
+- **주요 논의 사항**: [교사 요약과 체크리스트를 기반으로 핵심 논의 내용 정리]
+- **학생 반응/태도**: [상담 중 학생의 전반적인 반응과 태도 분석]
+- **달성 항목**: [체크리스트에서 달성된 항목 요약]
+- **미달성 항목**: [체크리스트에서 미달성된 항목과 사유 분석]
+
+### 주요 발견사항
+
+1. [상담을 통해 발견된 핵심 사항 1]
+2. [상담을 통해 발견된 핵심 사항 2]
+3. [상담을 통해 발견된 핵심 사항 3]
+
+> **핵심 인사이트**: [가장 중요한 발견사항 한 줄 요약]
+
+### 후속 조치 권고
+
+- **단기 조치** (1-2주): [즉시 실행할 조치사항]
+- **중기 조치** (1개월): [중기적으로 추진할 조치사항]
+- **장기 조치** (학기 내): [장기적으로 관찰/추진할 사항]
+- **다음 상담 제안**: [다음 상담 주제 및 시기 권고]
+
+> **종합 평가**: [이번 상담의 전반적 성과와 향후 방향 2-3문장 요약]`.trim()
 }

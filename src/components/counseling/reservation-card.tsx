@@ -21,6 +21,7 @@ import {
 import {
   cancelReservationAction,
   markNoShowAction,
+  deleteReservationAction,
 } from "@/lib/actions/counseling/reservations-status"
 import { toast } from "sonner"
 import { getParentRelationLabel } from "./utils"
@@ -33,6 +34,7 @@ interface ReservationCardProps {
   onDetailClick?: (id: string) => void
   onEditClick?: (id: string) => void
   onRecordClick?: (id: string) => void
+  onDelete?: (id: string) => void
 }
 
 export function ReservationCard({
@@ -40,32 +42,44 @@ export function ReservationCard({
   onDetailClick,
   onEditClick,
   onRecordClick,
+  onDelete,
 }: ReservationCardProps) {
   const router = useRouter()
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [dialogType, setDialogType] = useState<"cancel" | "noShow" | null>(null)
+  const [dialogType, setDialogType] = useState<"cancel" | "noShow" | "delete" | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
 
   const statusLabel = getStatusLabel(reservation.status)
   const statusVariant = getStatusVariant(reservation.status)
 
-  // 상태 변경 핸들러 (취소/노쇼만)
-  const handleStatusChange = async (type: "cancel" | "noShow") => {
+  // 상태 변경 핸들러 (취소/노쇼/삭제)
+  const handleAction = async (type: "cancel" | "noShow" | "delete") => {
     setIsProcessing(true)
     try {
-      const result = type === "cancel"
-        ? await cancelReservationAction(reservation.id)
-        : await markNoShowAction(reservation.id)
-
-      if (result.success) {
-        toast.success(type === "cancel" ? "예약이 취소되었습니다." : "노쇼로 처리되었습니다.")
-        router.refresh()
+      if (type === "delete") {
+        const result = await deleteReservationAction({ reservationId: reservation.id })
+        if (result.success) {
+          toast.success("예약이 제거되었습니다.")
+          onDelete?.(reservation.id)
+          router.refresh()
+        } else {
+          toast.error(result.error || "예약 제거에 실패했습니다.")
+        }
       } else {
-        toast.error(result.error || "상태 변경에 실패했습니다.")
+        const result = type === "cancel"
+          ? await cancelReservationAction(reservation.id)
+          : await markNoShowAction(reservation.id)
+
+        if (result.success) {
+          toast.success(type === "cancel" ? "예약이 취소되었습니다." : "노쇼로 처리되었습니다.")
+          router.refresh()
+        } else {
+          toast.error(result.error || "상태 변경에 실패했습니다.")
+        }
       }
     } catch (error) {
-      console.error("Status change error:", error)
-      toast.error("상태 변경 중 오류가 발생했습니다.")
+      console.error("Action error:", error)
+      toast.error("처리 중 오류가 발생했습니다.")
     } finally {
       setIsProcessing(false)
       setDialogOpen(false)
@@ -73,17 +87,17 @@ export function ReservationCard({
     }
   }
 
-  const openDialog = (type: "cancel" | "noShow") => {
+  const openDialog = (type: "cancel" | "noShow" | "delete") => {
     setDialogType(type)
     setDialogOpen(true)
   }
 
   const handleConfirm = () => {
-    if (dialogType) handleStatusChange(dialogType)
+    if (dialogType) handleAction(dialogType)
   }
 
   // 다이얼로그 내용
-  const dialogContent = getDialogContent(dialogType, reservation.student.name)
+  const dialogContent = getDialogContent(dialogType, reservation.student.name, reservation.status)
 
   return (
     <>
@@ -156,7 +170,7 @@ export function ReservationCard({
             </div>
           )}
 
-          {/* Footer: IN_PROGRESS — 상담 이어가기 */}
+          {/* Footer: IN_PROGRESS — 상담 이어가기 + 제거 */}
           {reservation.status === "IN_PROGRESS" && (
             <div className="flex gap-2 mt-3 pt-3 border-t" onClick={(e) => e.stopPropagation()}>
               <Button
@@ -166,6 +180,32 @@ export function ReservationCard({
                 className="flex-1 bg-indigo-600 text-white hover:bg-indigo-700"
               >
                 상담 이어가기
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => openDialog("delete")}
+                disabled={isProcessing}
+                className="bg-red-50 text-red-700 hover:bg-red-100 border-red-200"
+              >
+                제거
+              </Button>
+            </div>
+          )}
+
+          {/* Footer: CANCELLED — 제거 */}
+          {reservation.status === "CANCELLED" && (
+            <div className="flex gap-2 mt-3 pt-3 border-t" onClick={(e) => e.stopPropagation()}>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => openDialog("delete")}
+                disabled={isProcessing}
+                className="bg-red-50 text-red-700 hover:bg-red-100 border-red-200"
+              >
+                제거
               </Button>
             </div>
           )}
@@ -222,8 +262,9 @@ function getStatusVariant(status: ReservationStatus): "scheduled" | "inProgress"
 }
 
 function getDialogContent(
-  type: "cancel" | "noShow" | null,
-  studentName: string
+  type: "cancel" | "noShow" | "delete" | null,
+  studentName: string,
+  status?: ReservationStatus
 ) {
   switch (type) {
     case "cancel":
@@ -240,6 +281,20 @@ function getDialogContent(
         confirmLabel: "노쇼",
         buttonClass: "bg-orange-600 hover:bg-orange-700 text-white",
       }
+    case "delete":
+      return status === "IN_PROGRESS"
+        ? {
+            title: "예약 제거 확인",
+            description: `${studentName} 학부모 상담 예약을 제거하시겠습니까? 진행 중인 상담 기록도 함께 삭제되며, 이 작업은 되돌릴 수 없습니다.`,
+            confirmLabel: "제거",
+            buttonClass: "bg-red-600 hover:bg-red-700 text-white",
+          }
+        : {
+            title: "예약 제거 확인",
+            description: `${studentName} 학부모 상담 예약을 목록에서 제거하시겠습니까?`,
+            confirmLabel: "제거",
+            buttonClass: "bg-red-600 hover:bg-red-700 text-white",
+          }
     default:
       return {
         title: "",

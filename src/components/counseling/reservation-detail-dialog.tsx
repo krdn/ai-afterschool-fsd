@@ -212,7 +212,11 @@ export function ReservationDetailDialog({
 function DetailReadView({ detail }: { detail: ReservationDetail }) {
   const [aiTab, setAiTab] = useState('analysis')
   const aiSummary = detail.counselingSession?.aiSummary
-  const sections = aiSummary ? parseAiSummary(aiSummary) : null
+  const isCompleted = detail.status === 'COMPLETED'
+
+  // COMPLETED 상태: aiSummary가 종합 보고서(--- 구분자 없음)일 수 있음
+  const hasWizardSections = aiSummary?.includes('\n---\n')
+  const sections = aiSummary && hasWizardSections ? parseAiSummary(aiSummary) : null
 
   return (
     <div className="space-y-4">
@@ -232,7 +236,17 @@ function DetailReadView({ detail }: { detail: ReservationDetail }) {
         </div>
       </div>
 
-      {/* AI 문서 */}
+      {/* 상담 요약 (COMPLETED일 때) */}
+      {isCompleted && detail.counselingSession?.summary && (
+        <div className="space-y-1">
+          <span className="text-sm font-medium text-muted-foreground">상담 요약</span>
+          <div className="border rounded-lg p-3 text-sm whitespace-pre-wrap">
+            {detail.counselingSession.summary}
+          </div>
+        </div>
+      )}
+
+      {/* AI 문서: Wizard 3탭 or 종합 보고서 */}
       {sections ? (
         <Tabs value={aiTab} onValueChange={setAiTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3">
@@ -256,6 +270,13 @@ function DetailReadView({ detail }: { detail: ReservationDetail }) {
             </div>
           </TabsContent>
         </Tabs>
+      ) : aiSummary ? (
+        <div className="space-y-1">
+          <span className="text-sm font-medium text-muted-foreground">AI 종합 보고서</span>
+          <div className="max-h-[400px] overflow-y-auto border rounded-lg p-4">
+            <MarkdownRenderer content={aiSummary} />
+          </div>
+        </div>
       ) : (
         <div className="text-sm text-muted-foreground border rounded-lg p-4 text-center">
           AI 보고서가 없습니다. (AI 보완 없이 등록된 예약)

@@ -39,6 +39,11 @@ import {
   getZodiacSeedData,
 } from '@/features/ai-engine/prompts'
 
+// 상담 프롬프트 관리
+import { CounselingPromptsTab } from '@/components/admin/tabs/counseling-prompts-tab'
+import { getAllPresetsByType } from '@/features/counseling/repositories/prompt-preset'
+import type { CounselingPromptType } from '@/features/counseling/repositories/prompt-preset-types'
+
 export const metadata = {
   title: '관리자 | AI AfterSchool',
   description: '시스템 관리 대시보드',
@@ -307,6 +312,16 @@ export default async function AdminPage() {
     zodiac: await getAllGeneralPresetsByType('zodiac'),
   }
 
+  // 상담 프롬프트 프리셋 조회
+  const counselingPromptTypes: CounselingPromptType[] = [
+    'analysis_report', 'scenario', 'parent_summary', 'counseling_summary', 'personality_summary',
+  ]
+  const counselingPromptPresets = Object.fromEntries(
+    await Promise.all(
+      counselingPromptTypes.map(async (type) => [type, await getAllPresetsByType(type)] as const)
+    )
+  ) as Record<CounselingPromptType, Awaited<ReturnType<typeof getAllPresetsByType>>>
+
   // Health 데이터 직접 수집 (self-referencing fetch 방지)
   const healthData = await getHealthData()
 
@@ -356,6 +371,11 @@ export default async function AdminPage() {
         {/* AI 프롬프트 관리 탭 (통합) */}
         <AdminTabsContent value="ai-prompts">
           <AnalysisPromptsTab initialPresets={analysisPromptPresets} />
+        </AdminTabsContent>
+
+        {/* 상담 프롬프트 관리 탭 */}
+        <AdminTabsContent value="counseling-prompts">
+          <CounselingPromptsTab initialPresets={counselingPromptPresets} />
         </AdminTabsContent>
 
         {/* 시스템 상태 탭 */}

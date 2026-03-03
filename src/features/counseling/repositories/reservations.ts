@@ -217,6 +217,7 @@ export async function getReservationById(id: string, teacherId: string) {
           id: true,
           type: true,
           duration: true,
+          summary: true,
           aiSummary: true,
         },
       },
@@ -343,40 +344,70 @@ export async function updateReservation(params: UpdateReservationParams) {
 }
 
 /**
+ * 삭제 가능한 예약 상태
+ * - SCHEDULED: 아직 시작 전
+ * - IN_PROGRESS: 진행 중 (연결된 CounselingSession도 함께 삭제)
+ * - CANCELLED: 이미 취소됨
+ */
+const DELETABLE_STATUSES: ReadonlySet<ReservationStatus> = new Set([
+  ReservationStatus.SCHEDULED,
+  ReservationStatus.IN_PROGRESS,
+  ReservationStatus.CANCELLED,
+])
+
+/**
  * 예약 삭제
- * - SCHEDULED 상태만 삭제 가능
- * - hard delete (Prisma cascade로 연관 데이터 자동 정리)
+ * - SCHEDULED, IN_PROGRESS, CANCELLED 상태만 삭제 가능
+ * - IN_PROGRESS인 경우 연결된 CounselingSession도 함께 삭제
+ * - 트랜잭션으로 원자적 처리
  *
  * @param reservationId 예약 ID
  * @param teacherId 선생님 ID
- * @throws {Error} SCHEDULED 상태가 아닌 경우
+ * @throws {Error} 삭제 불가능한 상태인 경우
  */
 export async function deleteReservation(reservationId: string, teacherId: string) {
-  // 1. 현재 예약 상태 확인
-  const existingReservation = await db.parentCounselingReservation.findUnique({
-    where: {
-      id: reservationId,
-      teacherId,
-    },
+  return await db.$transaction(async (tx) => {
+    // 1. 현재 예약 상태 확인
+    const existingReservation = await tx.parentCounselingReservation.findUnique({
+      where: {
+        id: reservationId,
+        teacherId,
+      },
+    })
+
+    if (!existingReservation) {
+      throw new Error('예약을 찾을 수 없습니다')
+    }
+
+    if (!DELETABLE_STATUSES.has(existingReservation.status)) {
+      throw new Error('완료되었거나 노쇼 처리된 예약은 삭제할 수 없습니다')
+    }
+
+    // 2. 연결된 CounselingSession 삭제 (IN_PROGRESS일 때)
+    if (existingReservation.counselingSessionId) {
+      await tx.counselingNote.deleteMany({
+        where: { counselingSessionId: existingReservation.counselingSessionId },
+      })
+      // 예약의 FK 해제 후 세션 삭제
+      await tx.parentCounselingReservation.update({
+        where: { id: reservationId },
+        data: { counselingSessionId: null },
+      })
+      await tx.counselingSession.delete({
+        where: { id: existingReservation.counselingSessionId },
+      })
+    }
+
+    // 3. hard delete
+    await tx.parentCounselingReservation.delete({
+      where: {
+        id: reservationId,
+        teacherId,
+      },
+    })
+
+    return { success: true }
   })
-
-  if (!existingReservation) {
-    throw new Error('예약을 찾을 수 없습니다')
-  }
-
-  if (existingReservation.status !== ReservationStatus.SCHEDULED) {
-    throw new Error('이미 완료된 예약은 삭제할 수 없습니다')
-  }
-
-  // 2. hard delete
-  await db.parentCounselingReservation.delete({
-    where: {
-      id: reservationId,
-      teacherId,
-    },
-  })
-
-  return { success: true }
 }
 
 /**

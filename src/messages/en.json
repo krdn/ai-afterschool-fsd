@@ -35,7 +35,8 @@
     "analytics": "Analytics",
     "admin": "Admin Tools",
     "issues": "Issues",
-    "aiChat": "AI Chat"
+    "aiChat": "AI Chat",
+    "grades": "Grades"
   },
   "Student": {
     "title": "Student Management",

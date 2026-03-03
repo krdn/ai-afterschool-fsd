@@ -21,6 +21,9 @@ interface ReservationListProps {
 }
 
 export function ReservationList({ reservations, onRefresh, dateFilter }: ReservationListProps) {
+  // 삭제된 예약 ID를 추적하여 즉시 목록에서 제거
+  const [deletedIds, setDeletedIds] = useState<Set<string>>(new Set())
+
   // 필터 상태
   const [statusFilter, setStatusFilter] = useState<ReservationStatus | "ALL">("ALL")
   const [searchQuery, setSearchQuery] = useState("")
@@ -47,6 +50,11 @@ export function ReservationList({ reservations, onRefresh, dateFilter }: Reserva
   const filteredReservations = useMemo(() => {
     return reservations
       .filter((reservation) => {
+        // 삭제된 항목 제외
+        if (deletedIds.has(reservation.id)) {
+          return false
+        }
+
         // 상태 필터
         if (statusFilter !== "ALL" && reservation.status !== statusFilter) {
           return false
@@ -79,7 +87,7 @@ export function ReservationList({ reservations, onRefresh, dateFilter }: Reserva
         // scheduledAt 기준 내림차순 (최신 순)
         return new Date(b.scheduledAt).getTime() - new Date(a.scheduledAt).getTime()
       })
-  }, [reservations, statusFilter, debouncedSearch, internalDateFilter])
+  }, [reservations, statusFilter, debouncedSearch, internalDateFilter, deletedIds])
 
   // 필터 리셋
   const handleResetFilters = useCallback(() => {
@@ -97,6 +105,11 @@ export function ReservationList({ reservations, onRefresh, dateFilter }: Reserva
   const closeDialog = useCallback(() => {
     setSelectedReservationId(null)
     setDialogMode('read')
+  }, [])
+
+  // 삭제 시 즉시 목록에서 제거
+  const handleDelete = useCallback((id: string) => {
+    setDeletedIds((prev) => new Set(prev).add(id))
   }, [])
 
   // 필터 중인지 확인
@@ -237,6 +250,7 @@ export function ReservationList({ reservations, onRefresh, dateFilter }: Reserva
             onDetailClick={(id) => openDialog(id, 'read')}
             onEditClick={(id) => openDialog(id, 'edit')}
             onRecordClick={(id) => openDialog(id, 'record')}
+            onDelete={handleDelete}
           />
         ))}
       </div>

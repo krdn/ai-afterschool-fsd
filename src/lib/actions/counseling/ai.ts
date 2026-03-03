@@ -7,7 +7,7 @@ import { db } from "@/lib/db/client"
 import { getUnifiedPersonalityData, upsertPersonalitySummary } from '@/features/analysis'
 import { getCompatibilityResult } from '@/features/matching'
 import { generateWithProvider, FailoverError } from '@/features/ai-engine'
-import { buildCounselingSummaryPrompt, buildPersonalitySummaryPrompt } from "@/features/ai-engine/prompts"
+import { buildCounselingSummaryPrompt, buildPersonalitySummaryPrompt } from "@/features/ai-engine/prompts/counseling"
 import { ok, fail, okVoid, type ActionResult, type ActionVoidResult } from "@/lib/errors/action-result"
 import { logger } from "@/lib/logger"
 
@@ -183,7 +183,7 @@ export async function generateCounselingSummaryAction(sessionId: string): Promis
   })
 
   // 6. 프롬프트 빌더로 프롬프트 생성
-  const prompt = buildCounselingSummaryPrompt({
+  const buildResult = await buildCounselingSummaryPrompt({
     currentSummary: counselingSession.summary,
     sessionDate: counselingSession.sessionDate,
     sessionType: counselingSession.type,
@@ -201,9 +201,10 @@ export async function generateCounselingSummaryAction(sessionId: string): Promis
     const response = await generateWithProvider({
       featureType: "counseling_suggest",
       teacherId: session.userId,
-      prompt,
-      maxOutputTokens: 500,
-      temperature: 0.3,
+      prompt: buildResult.prompt,
+      maxOutputTokens: buildResult.maxOutputTokens ?? 500,
+      temperature: buildResult.temperature ?? 0.3,
+      ...(buildResult.systemPrompt && { systemPrompt: buildResult.systemPrompt }),
     })
 
     // 폴백 발생 시 로깅
@@ -284,7 +285,7 @@ export async function generateCounselingSummaryFromContentAction(
   const personalityData = await getUnifiedPersonalityData(studentId, session.userId)
 
   // 5. 프롬프트 빌더로 프롬프트 생성
-  const prompt = buildCounselingSummaryPrompt({
+  const buildResult2 = await buildCounselingSummaryPrompt({
     currentSummary: content,
     sessionDate: new Date(),
     sessionType,
@@ -298,9 +299,10 @@ export async function generateCounselingSummaryFromContentAction(
     const response = await generateWithProvider({
       featureType: "counseling_suggest",
       teacherId: session.userId,
-      prompt,
-      maxOutputTokens: 500,
-      temperature: 0.3,
+      prompt: buildResult2.prompt,
+      maxOutputTokens: buildResult2.maxOutputTokens ?? 500,
+      temperature: buildResult2.temperature ?? 0.3,
+      ...(buildResult2.systemPrompt && { systemPrompt: buildResult2.systemPrompt }),
     })
 
     // 폴백 발생 시 로깅
@@ -446,7 +448,7 @@ export async function generatePersonalitySummaryAction(studentId: string): Promi
   }
 
   // 5. 프롬프트 빌더로 프롬프트 생성
-  const prompt = buildPersonalitySummaryPrompt({
+  const buildResult3 = await buildPersonalitySummaryPrompt({
     personality: personalityData,
     studentName: student.name,
   })
@@ -456,9 +458,10 @@ export async function generatePersonalitySummaryAction(studentId: string): Promi
     const response = await generateWithProvider({
       featureType: "personality_summary",
       teacherId: session.userId,
-      prompt,
-      maxOutputTokens: 500,
-      temperature: 0.3,
+      prompt: buildResult3.prompt,
+      maxOutputTokens: buildResult3.maxOutputTokens ?? 500,
+      temperature: buildResult3.temperature ?? 0.3,
+      ...(buildResult3.systemPrompt && { systemPrompt: buildResult3.systemPrompt }),
     })
 
     // 폴백 발생 시 로깅

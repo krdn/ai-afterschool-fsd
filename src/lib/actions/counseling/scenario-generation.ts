@@ -10,6 +10,7 @@ import {
   buildAnalysisReportPrompt,
   buildScenarioPrompt,
   buildParentSummaryPrompt,
+  type PromptBuildResult,
 } from '@/features/ai-engine/prompts/counseling-scenario'
 
 // --- 모델 override 공통 스키마 ---
@@ -18,11 +19,15 @@ const modelOverrideSchema = z.object({
   modelId: z.string(),
 }).optional()
 
+// --- 커스텀 프롬프트 (사용자가 편집한 프롬프트) ---
+const customPromptSchema = z.string().min(10).optional()
+
 // --- 1. 분석 보고서 생성 ---
 const analysisInputSchema = z.object({
   studentId: z.string().min(1),
   topic: z.string().min(2).max(200),
   modelOverride: modelOverrideSchema,
+  customPrompt: customPromptSchema,
 })
 
 export async function generateAnalysisReportAction(
@@ -32,6 +37,196 @@ export async function generateAnalysisReportAction(
   if (!session?.userId) return fail('인증이 필요합니다.')
 
   const parsed = analysisInputSchema.safeParse(input)
+  if (!parsed.success) return fail('입력값이 올바르지 않습니다.')
+
+  const { studentId, topic, customPrompt } = parsed.data
+
+  try {
+    const [student, personalityData, sessions, grades] = await Promise.all([
+      db.student.findFirst({
+        where: { id: studentId, teacherId: session.userId },
+        select: { name: true, school: true, grade: true },
+      }),
+      getUnifiedPersonalityData(studentId, session.userId),
+      db.counselingSession.findMany({
+        where: { studentId, teacherId: session.userId },
+        orderBy: { sessionDate: 'desc' },
+        take: 5,
+        select: { summary: true, sessionDate: true, type: true },
+      }),
+      db.gradeHistory.findMany({
+        where: { studentId },
+        orderBy: { testDate: 'desc' },
+        take: 10,
+        select: { subject: true, score: true, testDate: true },
+      }),
+    ])
+
+    if (!student) return fail('학생을 찾을 수 없습니다.')
+
+    const buildResult = await buildAnalysisReportPrompt({
+      studentName: student.name,
+      school: student.school,
+      grade: student.grade,
+      topic,
+      personality: personalityData,
+      previousSessions: sessions,
+      gradeHistory: grades,
+    })
+
+    // 사용자가 커스텀 프롬프트를 제공하면 빌더 결과 대신 사용
+    const finalPrompt = customPrompt || buildResult.prompt
+
+    const result = await generateWithProvider({
+      prompt: finalPrompt,
+      featureType: 'counseling_analysis',
+      teacherId: session.userId,
+      maxOutputTokens: buildResult.maxOutputTokens ?? 1000,
+      temperature: buildResult.temperature ?? 0.3,
+      ...(buildResult.systemPrompt && { systemPrompt: buildResult.systemPrompt }),
+      ...(parsed.data.modelOverride && {
+        providerId: parsed.data.modelOverride.providerId,
+        modelId: parsed.data.modelOverride.modelId,
+      }),
+    })
+
+    if (!result.text) return fail('AI 응답이 비어있습니다. 다시 시도해주세요.')
+    return ok(result.text)
+  } catch (error) {
+    console.error('분석 보고서 생성 실패:', error)
+    return fail('분석 보고서 생성에 실패했습니다. 다시 시도해주세요.')
+  }
+}
+
+// --- 2. 상담 시나리오 생성 ---
+const scenarioInputSchema = z.object({
+  studentId: z.string().min(1),
+  topic: z.string().min(2),
+  approvedReport: z.string().min(10),
+  modelOverride: modelOverrideSchema,
+  customPrompt: customPromptSchema,
+})
+
+export async function generateScenarioAction(
+  input: z.infer<typeof scenarioInputSchema>
+): Promise<ActionResult<string>> {
+  const session = await verifySession()
+  if (!session?.userId) return fail('인증이 필요합니다.')
+
+  const parsed = scenarioInputSchema.safeParse(input)
+  if (!parsed.success) return fail('입력값이 올바르지 않습니다.')
+
+  const { studentId, topic, approvedReport, customPrompt } = parsed.data
+
+  try {
+    const student = await db.student.findFirst({
+      where: { id: studentId, teacherId: session.userId },
+      select: {
+        name: true,
+        personalitySummary: { select: { coreTraits: true } },
+      },
+    })
+
+    if (!student) return fail('학생을 찾을 수 없습니다.')
+
+    const buildResult = await buildScenarioPrompt({
+      studentName: student.name,
+      topic,
+      approvedReport,
+      personalitySummary: student.personalitySummary?.coreTraits ?? null,
+    })
+
+    const finalPrompt = customPrompt || buildResult.prompt
+
+    const result = await generateWithProvider({
+      prompt: finalPrompt,
+      featureType: 'counseling_scenario',
+      teacherId: session.userId,
+      maxOutputTokens: buildResult.maxOutputTokens ?? 1500,
+      temperature: buildResult.temperature ?? 0.5,
+      ...(buildResult.systemPrompt && { systemPrompt: buildResult.systemPrompt }),
+      ...(parsed.data.modelOverride && {
+        providerId: parsed.data.modelOverride.providerId,
+        modelId: parsed.data.modelOverride.modelId,
+      }),
+    })
+
+    if (!result.text) return fail('AI 응답이 비어있습니다. 다시 시도해주세요.')
+    return ok(result.text)
+  } catch (error) {
+    console.error('상담 시나리오 생성 실패:', error)
+    return fail('상담 시나리오 생성에 실패했습니다. 다시 시도해주세요.')
+  }
+}
+
+// --- 3. 학부모 공유용 생성 ---
+const parentInputSchema = z.object({
+  studentName: z.string().min(1),
+  topic: z.string().min(2),
+  scheduledAt: z.string().min(1),
+  approvedScenario: z.string().min(10),
+  modelOverride: modelOverrideSchema,
+  customPrompt: customPromptSchema,
+})
+
+export async function generateParentSummaryAction(
+  input: z.infer<typeof parentInputSchema>
+): Promise<ActionResult<string>> {
+  const session = await verifySession()
+  if (!session?.userId) return fail('인증이 필요합니다.')
+
+  const parsed = parentInputSchema.safeParse(input)
+  if (!parsed.success) return fail('입력값이 올바르지 않습니다.')
+
+  try {
+    const buildResult = await buildParentSummaryPrompt(parsed.data)
+
+    const finalPrompt = parsed.data.customPrompt || buildResult.prompt
+
+    const result = await generateWithProvider({
+      prompt: finalPrompt,
+      featureType: 'counseling_parent',
+      teacherId: session.userId,
+      maxOutputTokens: buildResult.maxOutputTokens ?? 500,
+      temperature: buildResult.temperature ?? 0.3,
+      ...(buildResult.systemPrompt && { systemPrompt: buildResult.systemPrompt }),
+      ...(parsed.data.modelOverride && {
+        providerId: parsed.data.modelOverride.providerId,
+        modelId: parsed.data.modelOverride.modelId,
+      }),
+    })
+
+    if (!result.text) return fail('AI 응답이 비어있습니다. 다시 시도해주세요.')
+    return ok(result.text)
+  } catch (error) {
+    console.error('학부모 공유용 생성 실패:', error)
+    return fail('학부모 공유용 문서 생성에 실패했습니다. 다시 시도해주세요.')
+  }
+}
+
+// ---------------------------------------------------------------------------
+// 프롬프트 프리뷰 — 실제 AI 호출 없이 빌드된 프롬프트만 반환
+// ---------------------------------------------------------------------------
+
+export type PromptPreviewData = {
+  prompt: string
+  systemPrompt?: string | null
+  temperature?: number
+  maxOutputTokens?: number
+}
+
+const previewAnalysisSchema = z.object({
+  studentId: z.string().min(1),
+  topic: z.string().min(2).max(200),
+})
+
+export async function getAnalysisPromptPreviewAction(
+  input: z.infer<typeof previewAnalysisSchema>
+): Promise<ActionResult<PromptPreviewData>> {
+  const session = await verifySession()
+  if (!session?.userId) return fail('인증이 필요합니다.')
+
+  const parsed = previewAnalysisSchema.safeParse(input)
   if (!parsed.success) return fail('입력값이 올바르지 않습니다.')
 
   const { studentId, topic } = parsed.data
@@ -59,7 +254,7 @@ export async function generateAnalysisReportAction(
 
     if (!student) return fail('학생을 찾을 수 없습니다.')
 
-    const prompt = buildAnalysisReportPrompt({
+    const buildResult = await buildAnalysisReportPrompt({
       studentName: student.name,
       school: student.school,
       grade: student.grade,
@@ -69,41 +264,26 @@ export async function generateAnalysisReportAction(
       gradeHistory: grades,
     })
 
-    const result = await generateWithProvider({
-      prompt,
-      featureType: 'counseling_analysis',
-      teacherId: session.userId,
-      maxOutputTokens: 1000,
-      temperature: 0.3,
-      ...(parsed.data.modelOverride && {
-        providerId: parsed.data.modelOverride.providerId,
-        modelId: parsed.data.modelOverride.modelId,
-      }),
-    })
-
-    if (!result.text) return fail('AI 응답이 비어있습니다. 다시 시도해주세요.')
-    return ok(result.text)
+    return ok(buildResult)
   } catch (error) {
-    console.error('분석 보고서 생성 실패:', error)
-    return fail('분석 보고서 생성에 실패했습니다. 다시 시도해주세요.')
+    console.error('프롬프트 프리뷰 실패:', error)
+    return fail('프롬프트를 불러올 수 없습니다.')
   }
 }
 
-// --- 2. 상담 시나리오 생성 ---
-const scenarioInputSchema = z.object({
+const previewScenarioSchema = z.object({
   studentId: z.string().min(1),
   topic: z.string().min(2),
   approvedReport: z.string().min(10),
-  modelOverride: modelOverrideSchema,
 })
 
-export async function generateScenarioAction(
-  input: z.infer<typeof scenarioInputSchema>
-): Promise<ActionResult<string>> {
+export async function getScenarioPromptPreviewAction(
+  input: z.infer<typeof previewScenarioSchema>
+): Promise<ActionResult<PromptPreviewData>> {
   const session = await verifySession()
   if (!session?.userId) return fail('인증이 필요합니다.')
 
-  const parsed = scenarioInputSchema.safeParse(input)
+  const parsed = previewScenarioSchema.safeParse(input)
   if (!parsed.success) return fail('입력값이 올바르지 않습니다.')
 
   const { studentId, topic, approvedReport } = parsed.data
@@ -119,70 +299,41 @@ export async function generateScenarioAction(
 
     if (!student) return fail('학생을 찾을 수 없습니다.')
 
-    const prompt = buildScenarioPrompt({
+    const buildResult = await buildScenarioPrompt({
       studentName: student.name,
       topic,
       approvedReport,
       personalitySummary: student.personalitySummary?.coreTraits ?? null,
     })
 
-    const result = await generateWithProvider({
-      prompt,
-      featureType: 'counseling_scenario',
-      teacherId: session.userId,
-      maxOutputTokens: 1500,
-      temperature: 0.5,
-      ...(parsed.data.modelOverride && {
-        providerId: parsed.data.modelOverride.providerId,
-        modelId: parsed.data.modelOverride.modelId,
-      }),
-    })
-
-    if (!result.text) return fail('AI 응답이 비어있습니다. 다시 시도해주세요.')
-    return ok(result.text)
+    return ok(buildResult)
   } catch (error) {
-    console.error('상담 시나리오 생성 실패:', error)
-    return fail('상담 시나리오 생성에 실패했습니다. 다시 시도해주세요.')
+    console.error('프롬프트 프리뷰 실패:', error)
+    return fail('프롬프트를 불러올 수 없습니다.')
   }
 }
 
-// --- 3. 학부모 공유용 생성 ---
-const parentInputSchema = z.object({
+const previewParentSchema = z.object({
   studentName: z.string().min(1),
   topic: z.string().min(2),
   scheduledAt: z.string().min(1),
   approvedScenario: z.string().min(10),
-  modelOverride: modelOverrideSchema,
 })
 
-export async function generateParentSummaryAction(
-  input: z.infer<typeof parentInputSchema>
-): Promise<ActionResult<string>> {
+export async function getParentPromptPreviewAction(
+  input: z.infer<typeof previewParentSchema>
+): Promise<ActionResult<PromptPreviewData>> {
   const session = await verifySession()
   if (!session?.userId) return fail('인증이 필요합니다.')
 
-  const parsed = parentInputSchema.safeParse(input)
+  const parsed = previewParentSchema.safeParse(input)
   if (!parsed.success) return fail('입력값이 올바르지 않습니다.')
 
   try {
-    const prompt = buildParentSummaryPrompt(parsed.data)
-
-    const result = await generateWithProvider({
-      prompt,
-      featureType: 'counseling_parent',
-      teacherId: session.userId,
-      maxOutputTokens: 500,
-      temperature: 0.3,
-      ...(parsed.data.modelOverride && {
-        providerId: parsed.data.modelOverride.providerId,
-        modelId: parsed.data.modelOverride.modelId,
-      }),
-    })
-
-    if (!result.text) return fail('AI 응답이 비어있습니다. 다시 시도해주세요.')
-    return ok(result.text)
+    const buildResult = await buildParentSummaryPrompt(parsed.data)
+    return ok(buildResult)
   } catch (error) {
-    console.error('학부모 공유용 생성 실패:', error)
-    return fail('학부모 공유용 문서 생성에 실패했습니다. 다시 시도해주세요.')
+    console.error('프롬프트 프리뷰 실패:', error)
+    return fail('프롬프트를 불러올 수 없습니다.')
   }
 }
