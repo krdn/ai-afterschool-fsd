@@ -1,13 +1,14 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { ChevronLeft, Loader2, AlertCircle, RotateCcw } from 'lucide-react'
-import { generateParentSummaryAction } from '@/lib/actions/counseling/scenario-generation'
+import { generateParentSummaryAction, getParentPromptPreviewAction } from '@/lib/actions/counseling/scenario-generation'
 import { InlineHelp } from '@/components/help/inline-help'
 import { MarkdownEditor } from './markdown-editor'
 import { ModelSelect, type ModelOverride } from './model-select'
+import { PromptEditorPanel } from './prompt-editor-panel'
 
 interface ParentSummaryStepProps {
   studentName: string
@@ -39,6 +40,9 @@ export function ParentSummaryStep({
   const [isGenerating, setIsGenerating] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [modelOverride, setModelOverride] = useState<ModelOverride | undefined>()
+  const [defaultPrompt, setDefaultPrompt] = useState<string | null>(null)
+  const [isLoadingPrompt, setIsLoadingPrompt] = useState(false)
+  const [customPrompt, setCustomPrompt] = useState<string | undefined>()
   const hasGenerated = useRef(false)
 
   // 마운트 시 자동 생성 (학부모 공유용이 아직 없는 경우)
@@ -48,6 +52,18 @@ export function ParentSummaryStep({
       handleGenerate()
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // 프롬프트 프리뷰 로드
+  const loadPromptPreview = useCallback(async () => {
+    setIsLoadingPrompt(true)
+    try {
+      const result = await getParentPromptPreviewAction({ studentName, topic, scheduledAt, approvedScenario })
+      if (result.success) {
+        setDefaultPrompt(result.data.prompt)
+      }
+    } catch { /* ignore */ }
+    setIsLoadingPrompt(false)
+  }, [studentName, topic, scheduledAt, approvedScenario])
 
   const handleGenerate = async () => {
     setIsGenerating(true)
@@ -59,6 +75,7 @@ export function ParentSummaryStep({
         scheduledAt,
         approvedScenario,
         modelOverride,
+        customPrompt,
       })
       if (result.success) {
         onParentSummaryChange(result.data)
@@ -95,6 +112,15 @@ export function ParentSummaryStep({
           disabled={isGenerating}
         />
       </div>
+
+      {/* 프롬프트 편집 패널 */}
+      <PromptEditorPanel
+        promptType="parent_summary"
+        defaultPrompt={defaultPrompt}
+        isLoadingPrompt={isLoadingPrompt}
+        onPromptChange={setCustomPrompt}
+        onLoadPrompt={loadPromptPreview}
+      />
 
       {/* 에러 발생 시 재시도 안내 */}
       {errorMessage && !parentSummary && !isGenerating && (

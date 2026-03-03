@@ -1,13 +1,14 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { ChevronLeft, ChevronRight, AlertCircle, RotateCcw } from 'lucide-react'
-import { generateScenarioAction } from '@/lib/actions/counseling/scenario-generation'
+import { generateScenarioAction, getScenarioPromptPreviewAction } from '@/lib/actions/counseling/scenario-generation'
 import { InlineHelp } from '@/components/help/inline-help'
 import { MarkdownEditor } from './markdown-editor'
 import { ModelSelect, type ModelOverride } from './model-select'
+import { PromptEditorPanel } from './prompt-editor-panel'
 
 interface ScenarioStepProps {
   studentId: string
@@ -35,6 +36,9 @@ export function ScenarioStep({
   const [isGenerating, setIsGenerating] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [modelOverride, setModelOverride] = useState<ModelOverride | undefined>()
+  const [defaultPrompt, setDefaultPrompt] = useState<string | null>(null)
+  const [isLoadingPrompt, setIsLoadingPrompt] = useState(false)
+  const [customPrompt, setCustomPrompt] = useState<string | undefined>()
   const hasGenerated = useRef(false)
 
   // 마운트 시 자동 생성 (시나리오가 아직 없는 경우)
@@ -45,6 +49,18 @@ export function ScenarioStep({
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // 프롬프트 프리뷰 로드
+  const loadPromptPreview = useCallback(async () => {
+    setIsLoadingPrompt(true)
+    try {
+      const result = await getScenarioPromptPreviewAction({ studentId, topic, approvedReport })
+      if (result.success) {
+        setDefaultPrompt(result.data.prompt)
+      }
+    } catch { /* ignore */ }
+    setIsLoadingPrompt(false)
+  }, [studentId, topic, approvedReport])
+
   const handleGenerate = async () => {
     setIsGenerating(true)
     setErrorMessage(null)
@@ -54,6 +70,7 @@ export function ScenarioStep({
         topic,
         approvedReport,
         modelOverride,
+        customPrompt,
       })
       if (result.success) {
         onScenarioChange(result.data)
@@ -89,6 +106,15 @@ export function ScenarioStep({
           disabled={isGenerating}
         />
       </div>
+
+      {/* 프롬프트 편집 패널 */}
+      <PromptEditorPanel
+        promptType="scenario"
+        defaultPrompt={defaultPrompt}
+        isLoadingPrompt={isLoadingPrompt}
+        onPromptChange={setCustomPrompt}
+        onLoadPrompt={loadPromptPreview}
+      />
 
       {/* 에러 발생 시 재시도 안내 */}
       {errorMessage && !scenario && !isGenerating && (

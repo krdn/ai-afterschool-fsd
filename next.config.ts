@@ -5,6 +5,11 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
+// Voice WebSocket CSP: 환경변수에서 추출, 개발환경에서는 ws:// 허용
+const voiceWsCsp = process.env.NEXT_PUBLIC_VOICE_WS_URL
+  ? `${process.env.NEXT_PUBLIC_VOICE_WS_URL.replace(/\/$/, "")}`
+  : "";
+
 const securityHeaders = [
   // 브라우저가 MIME 타입을 추측하지 못하게 함 (MIME 스니핑 공격 방지)
   { key: "X-Content-Type-Options", value: "nosniff" },
@@ -15,7 +20,7 @@ const securityHeaders = [
   // 외부 사이트로 이동 시 Referrer 정보 최소화
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   // 불필요한 브라우저 기능(카메라, 마이크, 위치) 비활성화
-  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+  { key: "Permissions-Policy", value: "camera=(), microphone=(self), geolocation=()" },
   // HTTPS 강제 (1년, 서브도메인 포함)
   { key: "Strict-Transport-Security", value: "max-age=31536000; includeSubDomains" },
   // 콘텐츠 보안 정책 (XSS 방어)
@@ -27,7 +32,8 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://res.cloudinary.com",
       "font-src 'self'",
-      "connect-src 'self' https://*.sentry.io https://res.cloudinary.com https://api.cloudinary.com",
+      "media-src 'self' blob:",
+      `connect-src 'self' https://*.sentry.io https://res.cloudinary.com https://api.cloudinary.com ${voiceWsCsp}`.trim(),
       "frame-src https://upload-widget.cloudinary.com https://widget.cloudinary.com",
       "frame-ancestors 'none'",
     ].join("; "),

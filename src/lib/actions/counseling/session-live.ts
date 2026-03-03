@@ -1,16 +1,13 @@
-'use server'
+"use server"
 
-import { revalidatePath } from 'next/cache'
-import { verifySession } from '@/lib/dal'
-import { getRBACPrisma } from '@/lib/db/common/rbac'
-import { db } from '@/lib/db/client'
-import { ReservationStatus } from '@/lib/db'
-import { ok, fail, type ActionResult } from '@/lib/errors/action-result'
-import { logger } from '@/lib/logger'
-import {
-  completeSessionSchema,
-  type CompleteSessionInput,
-} from '@/lib/validations/session-notes'
+import { revalidatePath } from "next/cache"
+import { verifySession } from "@/lib/dal"
+import { getRBACPrisma } from "@/lib/db/common/rbac"
+import { db } from "@/lib/db/client"
+import { ReservationStatus } from "@/lib/db"
+import { ok, fail, type ActionResult } from "@/lib/errors/action-result"
+import { logger } from "@/lib/logger"
+import { completeSessionSchema, type CompleteSessionInput } from "@/lib/validations/session-notes"
 
 // ---------------------------------------------------------------------------
 // startSessionAction — 상담 세션 시작
@@ -33,7 +30,7 @@ export async function startSessionAction(
   reservationId: string
 ): Promise<ActionResult<StartSessionResult>> {
   const session = await verifySession()
-  if (!session) return fail('인증되지 않은 요청입니다.')
+  if (!session) return fail("인증되지 않은 요청입니다.")
 
   const rbacDb = getRBACPrisma(session)
 
@@ -47,9 +44,9 @@ export async function startSessionAction(
       },
     })
 
-    if (!reservation) return fail('예약을 찾을 수 없습니다.')
+    if (!reservation) return fail("예약을 찾을 수 없습니다.")
     if (reservation.status !== ReservationStatus.SCHEDULED) {
-      return fail('SCHEDULED 상태의 예약만 시작할 수 있습니다.')
+      return fail("SCHEDULED 상태의 예약만 시작할 수 있습니다.")
     }
 
     // 트랜잭션: CounselingSession 생성/재사용 + 예약 상태 변경
@@ -67,8 +64,8 @@ export async function startSessionAction(
             teacherId: session.userId,
             sessionDate: reservation.scheduledAt,
             duration: 0,
-            type: 'ACADEMIC',
-            summary: '',
+            type: "ACADEMIC",
+            summary: "",
           },
         })
         sessionId = newSession.id
@@ -86,12 +83,12 @@ export async function startSessionAction(
       return { sessionId, reservationId }
     })
 
-    revalidatePath('/counseling')
+    revalidatePath("/counseling")
 
     return ok(result)
   } catch (error) {
-    logger.error({ err: error }, 'Failed to start counseling session')
-    return fail('상담 시작 처리 중 오류가 발생했습니다.')
+    logger.error({ err: error }, "Failed to start counseling session")
+    return fail("상담 시작 처리 중 오류가 발생했습니다.")
   }
 }
 
@@ -125,6 +122,9 @@ export type SessionWithNotes = {
     followUpRequired: boolean
     followUpDate: Date | null
     satisfactionScore: number | null
+    audioNoteId: string | null
+    audioStatus: string | null
+    transcriptText: string | null
     notes: {
       id: string
       content: string
@@ -145,7 +145,7 @@ export async function getSessionWithNotesAction(
   reservationId: string
 ): Promise<ActionResult<SessionWithNotes>> {
   const session = await verifySession()
-  if (!session) return fail('인증되지 않은 요청입니다.')
+  if (!session) return fail("인증되지 않은 요청입니다.")
 
   const rbacDb = getRBACPrisma(session)
 
@@ -171,19 +171,19 @@ export async function getSessionWithNotesAction(
         counselingSession: {
           include: {
             notes: {
-              orderBy: { order: 'asc' },
+              orderBy: { order: "asc" },
             },
           },
         },
       },
     })
 
-    if (!reservation) return fail('예약을 찾을 수 없습니다.')
+    if (!reservation) return fail("예약을 찾을 수 없습니다.")
 
     return ok(reservation as SessionWithNotes)
   } catch (error) {
-    logger.error({ err: error }, 'Failed to get session with notes')
-    return fail('상담 정보 조회 중 오류가 발생했습니다.')
+    logger.error({ err: error }, "Failed to get session with notes")
+    return fail("상담 정보 조회 중 오류가 발생했습니다.")
   }
 }
 
@@ -207,14 +207,24 @@ export async function completeSessionAction(
   input: CompleteSessionInput
 ): Promise<ActionResult<CompleteSessionResult>> {
   const session = await verifySession()
-  if (!session) return fail('인증되지 않은 요청입니다.')
+  if (!session) return fail("인증되지 않은 요청입니다.")
 
   const parsed = completeSessionSchema.safeParse(input)
   if (!parsed.success) {
-    return fail(parsed.error.issues[0]?.message ?? '입력값이 올바르지 않습니다.')
+    return fail(parsed.error.issues[0]?.message ?? "입력값이 올바르지 않습니다.")
   }
 
-  const { sessionId, reservationId, type, duration, summary, aiSummary, followUpRequired, followUpDate, satisfactionScore } = parsed.data
+  const {
+    sessionId,
+    reservationId,
+    type,
+    duration,
+    summary,
+    aiSummary,
+    followUpRequired,
+    followUpDate,
+    satisfactionScore,
+  } = parsed.data
 
   const rbacDb = getRBACPrisma(session)
 
@@ -224,9 +234,9 @@ export async function completeSessionAction(
       where: { id: reservationId, teacherId: session.userId },
     })
 
-    if (!reservation) return fail('예약을 찾을 수 없습니다.')
+    if (!reservation) return fail("예약을 찾을 수 없습니다.")
     if (reservation.status !== ReservationStatus.IN_PROGRESS) {
-      return fail('진행 중인 상담만 완료할 수 있습니다.')
+      return fail("진행 중인 상담만 완료할 수 있습니다.")
     }
 
     // 트랜잭션: 세션 업데이트 + 예약 COMPLETED
@@ -254,11 +264,11 @@ export async function completeSessionAction(
       })
     })
 
-    revalidatePath('/counseling')
+    revalidatePath("/counseling")
 
     return ok({ sessionId })
   } catch (error) {
-    logger.error({ err: error }, 'Failed to complete counseling session')
-    return fail('상담 완료 처리 중 오류가 발생했습니다.')
+    logger.error({ err: error }, "Failed to complete counseling session")
+    return fail("상담 완료 처리 중 오류가 발생했습니다.")
   }
 }

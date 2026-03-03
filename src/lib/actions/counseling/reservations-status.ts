@@ -102,7 +102,7 @@ export async function deleteReservationAction(
 
     // 에러 메시지 처리
     if (error instanceof Error) {
-      if (error.message === '이미 완료된 예약은 삭제할 수 없습니다') {
+      if (error.message === '완료되었거나 노쇼 처리된 예약은 삭제할 수 없습니다') {
         return fail(error.message)
       }
     }

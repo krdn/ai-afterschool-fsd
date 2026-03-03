@@ -412,6 +412,11 @@ model CounselingSession {
   reservation       ParentCounselingReservation?
   notes             CounselingNote[]
 
+  // 음성 녹음 관련
+  audioNoteId      String?   // voice-recognition의 note UUID
+  audioStatus      String?   // uploading|processing|completed|failed
+  transcriptText   String?   @db.Text  // STT 전체 텍스트 (캐시)
+
   @@index([studentId, sessionDate])
   @@index([teacherId, sessionDate])
   @@index([studentId, type])

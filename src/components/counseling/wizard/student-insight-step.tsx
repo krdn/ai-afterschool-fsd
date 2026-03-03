@@ -1,14 +1,15 @@
 // src/components/counseling/wizard/student-insight-step.tsx
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { toast } from 'sonner'
 import { ChevronLeft, ChevronRight, Sparkles, SkipForward, User, MessageSquare, TrendingUp, Loader2, Brain, BookOpen, Heart, Eye, Scan, ExternalLink } from 'lucide-react'
 import { getStudentInsightAction, type StudentInsightData } from '@/lib/actions/counseling/student-insight'
-import { generateAnalysisReportAction } from '@/lib/actions/counseling/scenario-generation'
+import { generateAnalysisReportAction, getAnalysisPromptPreviewAction } from '@/lib/actions/counseling/scenario-generation'
 import { InlineHelp } from '@/components/help/inline-help'
+import { PromptEditorPanel } from './prompt-editor-panel'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -45,6 +46,9 @@ export function StudentInsightStep({
   const [isLoading, setIsLoading] = useState(true)
   const [isGenerating, setIsGenerating] = useState(false)
   const [modelOverride, setModelOverride] = useState<ModelOverride | undefined>()
+  const [defaultPrompt, setDefaultPrompt] = useState<string | null>(null)
+  const [isLoadingPrompt, setIsLoadingPrompt] = useState(false)
+  const [customPrompt, setCustomPrompt] = useState<string | undefined>()
   const onStudentNameLoadedRef = useRef(onStudentNameLoaded)
   onStudentNameLoadedRef.current = onStudentNameLoaded
 
@@ -64,11 +68,23 @@ export function StudentInsightStep({
     loadInsight()
   }, [studentId])
 
+  // 프롬프트 프리뷰 로드
+  const loadPromptPreview = useCallback(async () => {
+    setIsLoadingPrompt(true)
+    try {
+      const result = await getAnalysisPromptPreviewAction({ studentId, topic })
+      if (result.success) {
+        setDefaultPrompt(result.data.prompt)
+      }
+    } catch { /* ignore */ }
+    setIsLoadingPrompt(false)
+  }, [studentId, topic])
+
   // AI 보완 (분석 보고서 생성)
   const handleGenerate = async () => {
     setIsGenerating(true)
     try {
-      const result = await generateAnalysisReportAction({ studentId, topic, modelOverride })
+      const result = await generateAnalysisReportAction({ studentId, topic, modelOverride, customPrompt })
       if (result.success) {
         onReportChange(result.data)
         toast.success('분석 보고서가 생성되었습니다.')
@@ -174,17 +190,26 @@ export function StudentInsightStep({
         </div>
       )}
 
-      {/* AI 보완 버튼 + 모델 선택 */}
+      {/* AI 보완 버튼 + 모델 선택 + 프롬프트 편집 */}
       {!analysisReport && !isGenerating && (
-        <div className="flex items-center justify-center gap-3">
-          <ModelSelect
-            featureType="counseling_analysis"
-            onModelChange={setModelOverride}
+        <div className="space-y-2">
+          <div className="flex items-center justify-center gap-3">
+            <ModelSelect
+              featureType="counseling_analysis"
+              onModelChange={setModelOverride}
+            />
+            <Button onClick={handleGenerate} variant="outline" className="gap-2">
+              <Sparkles className="h-4 w-4" />
+              AI 보완 -- 분석 보고서 생성
+            </Button>
+          </div>
+          <PromptEditorPanel
+            promptType="analysis_report"
+            defaultPrompt={defaultPrompt}
+            isLoadingPrompt={isLoadingPrompt}
+            onPromptChange={setCustomPrompt}
+            onLoadPrompt={loadPromptPreview}
           />
-          <Button onClick={handleGenerate} variant="outline" className="gap-2">
-            <Sparkles className="h-4 w-4" />
-            AI 보완 -- 분석 보고서 생성
-          </Button>
         </div>
       )}
 
@@ -588,7 +613,6 @@ function MbtiDetailView({ mbti }: { mbti: { mbtiType: string; percentages: Recor
 // 사주/성명학 상세 뷰 (interpretation 마크다운 표시)
 // ---------------------------------------------------------------------------
 
-// TODO(human): 사주/성명학 상세 뷰에서 interpretation 텍스트를 어떻게 정제하여 보여줄지 구현
 function InterpretationDetailView({ title, interpretation, result, color }: {
   title: string
   interpretation: string | null
