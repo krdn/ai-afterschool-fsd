@@ -92,8 +92,10 @@ async function main(): Promise<void> {
   }
 }
 
-// 직접 실행 시
-if (require.main === module) {
+// 직접 실행 시 (ESM 호환)
+const isDirectRun = typeof import.meta.url === 'string' &&
+  import.meta.url === `file://${process.argv[1]}`
+if (isDirectRun) {
   main();
 }
 

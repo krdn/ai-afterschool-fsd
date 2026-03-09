@@ -2,6 +2,10 @@
  * 시드 이미지 업로드 (Cloudinary)
  *
  * 트랜잭션 밖에서 실행됩니다 — 외부 API는 DB 롤백 불가능하므로 의도적 분리.
+ *
+ * CLI(prisma db seed)와 Next.js 서버 양쪽에서 실행 가능하도록
+ * cloudinary SDK를 직접 import합니다 (@/lib/cloudinary는 "server-only" +
+ * @/ 별칭 문제로 CLI에서 로드 불가).
  */
 
 import type { PrismaClient } from '@/lib/db'
@@ -14,28 +18,49 @@ import {
   SEED_STUDENTS,
 } from "./data"
 
+const SQUARE_SIZE = 512
+
+/**
+ * CLI/서버 양쪽에서 동작하는 Cloudinary 초기화.
+ * 환경변수 미설정 시 null을 반환합니다.
+ */
+async function initCloudinary() {
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME
+  const apiKey = process.env.CLOUDINARY_API_KEY
+  const apiSecret = process.env.CLOUDINARY_API_SECRET
+
+  if (!cloudName || !apiKey || !apiSecret) return null
+
+  const { v2: cloudinary } = await import("cloudinary")
+  cloudinary.config({
+    cloud_name: cloudName,
+    api_key: apiKey,
+    api_secret: apiSecret,
+    secure: true,
+  })
+
+  const buildResizedImageUrl = (publicId: string) =>
+    cloudinary.url(publicId, {
+      secure: true,
+      transformation: [
+        { width: SQUARE_SIZE, height: SQUARE_SIZE, crop: "fill", gravity: "auto" },
+      ],
+    })
+
+  return { cloudinary, buildResizedImageUrl }
+}
+
 export async function uploadSeedImages(
   prisma: PrismaClient,
   groups: SeedGroup[],
   dataOverride?: Partial<SeedDataSet>,
 ): Promise<void> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let cloudinary: any
-  let buildResizedImageUrl: (publicId: string) => string
-  try {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore: apps/web 컨텍스트에서 실행될 때 제공되는 모듈
-    const mod = await import("@/lib/cloudinary")
-    if (!mod.isCloudinaryConfigured) {
-      console.log("[seed] Cloudinary 미설정 — 이미지 업로드를 건너뜁니다")
-      return
-    }
-    cloudinary = mod.cloudinary
-    buildResizedImageUrl = mod.buildResizedImageUrl
-  } catch {
-    console.log("[seed] Cloudinary 모듈 로드 실패 — 이미지 업로드를 건너뜁니다")
+  const cld = await initCloudinary()
+  if (!cld) {
+    console.log("[seed] Cloudinary 미설정 — 이미지 업로드를 건너뜁니다")
     return
   }
+  const { cloudinary, buildResizedImageUrl } = cld
 
   const projectRoot = process.cwd()
   const teachers = (dataOverride?.teachers ?? SEED_TEACHERS) as SeedTeacher[]
