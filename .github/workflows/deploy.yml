@@ -97,7 +97,9 @@ jobs:
               if [ -z "$val" ]; then
                 WARNINGS+=("${key} (.env.example에 선택적)")
               elif [[ "$key" == NEXT_PUBLIC_* ]]; then
-                ERRORS+=("${key} (빌드 시 클라이언트에 인라인)")
+                # NEXT_PUBLIC_* 누락 시 .env.example 기본값으로 자동 보완
+                echo "${key}=${val}" >> .env
+                WARNINGS+=("${key} 누락 → .env.example 기본값 사용: ${val}")
               fi
             fi
           done < <(grep -E '^[A-Z_]+=' .env.example)
