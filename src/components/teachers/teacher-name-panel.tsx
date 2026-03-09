@@ -24,7 +24,7 @@ import {
   AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { resetAnalysis } from "@/lib/actions/reset-analysis"
-import ReactMarkdown from "react-markdown"
+import { MarkdownRenderer } from "@/components/ui/markdown-renderer"
 
 type NameAnalysis = {
   result: unknown
@@ -54,6 +54,7 @@ export function TeacherNamePanel({ teacherId, teacherName, analysis, teacherName
   const [selectedPromptId, setSelectedPromptId] = useState("default")
   const [showResetDialog, setShowResetDialog] = useState(false)
   const [isResetting, startResetTransition] = useTransition()
+  const [viewMode, setViewMode] = useState<"rendered" | "markdown">("rendered")
 
   function handleReset() {
     startResetTransition(async () => {
@@ -268,11 +269,37 @@ export function TeacherNamePanel({ teacherId, teacherName, analysis, teacherName
 
         {/* 해석 결과 */}
         <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-gray-600">{analysis ? "4. 해석 결과" : "3. 해석"}</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-gray-600">{analysis ? "4. 해석 결과" : "3. 해석"}</h3>
+            {analysis?.interpretation && (
+              <div className="ml-auto flex rounded-md border border-gray-200 text-xs overflow-hidden">
+                <button
+                  type="button"
+                  className={`px-2.5 py-1 transition-colors ${viewMode === "rendered" ? "bg-gray-800 text-white" : "bg-white text-gray-500 hover:bg-gray-50"}`}
+                  onClick={() => setViewMode("rendered")}
+                >
+                  미리보기
+                </button>
+                <button
+                  type="button"
+                  className={`px-2.5 py-1 border-l border-gray-200 transition-colors ${viewMode === "markdown" ? "bg-gray-800 text-white" : "bg-white text-gray-500 hover:bg-gray-50"}`}
+                  onClick={() => setViewMode("markdown")}
+                >
+                  원문
+                </button>
+              </div>
+            )}
+          </div>
           {analysis?.interpretation ? (
-            <div className="prose prose-sm max-w-none rounded-md border border-gray-200 bg-white p-4">
-              <ReactMarkdown>{analysis.interpretation}</ReactMarkdown>
-            </div>
+            viewMode === "rendered" ? (
+              <div className="rounded-md border border-gray-200 bg-white p-4 max-h-[500px] overflow-y-auto">
+                <MarkdownRenderer content={analysis.interpretation} />
+              </div>
+            ) : (
+              <div className="rounded-md border border-gray-200 bg-gray-50 p-4 text-sm leading-6 text-gray-700 whitespace-pre-wrap font-mono">
+                {analysis.interpretation}
+              </div>
+            )
           ) : (
             <div className="rounded-md bg-gray-50 p-4 text-sm text-gray-500">
               이름풀이 해석이 아직 생성되지 않았어요.
