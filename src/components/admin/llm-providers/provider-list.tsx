@@ -3,6 +3,7 @@
 import { ProviderCard } from './provider-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 import type { ProviderWithModels } from '@/features/ai-engine';
@@ -54,9 +55,12 @@ export function ProviderList({
     );
   }
 
-  return (
+  const activeProviders = providers.filter((p) => p.isEnabled);
+  const inactiveProviders = providers.filter((p) => !p.isEnabled);
+
+  const renderGrid = (items: ProviderWithModels[]) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {providers.map((provider) => (
+      {items.map((provider) => (
         <ProviderCard
           key={provider.id}
           provider={provider}
@@ -66,6 +70,34 @@ export function ProviderList({
           onToggle={(enabled) => onToggle(provider, enabled)}
         />
       ))}
+    </div>
+  );
+
+  return (
+    <div className="space-y-8">
+      {/* 활성 제공자 */}
+      {activeProviders.length > 0 && (
+        <section>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="w-2.5 h-2.5 rounded-full bg-green-500" />
+            <h3 className="text-base font-semibold">활성 제공자</h3>
+            <Badge variant="secondary">{activeProviders.length}</Badge>
+          </div>
+          {renderGrid(activeProviders)}
+        </section>
+      )}
+
+      {/* 비활성 제공자 */}
+      {inactiveProviders.length > 0 && (
+        <section>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="w-2.5 h-2.5 rounded-full bg-gray-400" />
+            <h3 className="text-base font-semibold text-muted-foreground">비활성 제공자</h3>
+            <Badge variant="secondary">{inactiveProviders.length}</Badge>
+          </div>
+          {renderGrid(inactiveProviders)}
+        </section>
+      )}
     </div>
   );
 }

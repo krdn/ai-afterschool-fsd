@@ -5,6 +5,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
+import {
+  getCapabilityLabel,
+  filterDisplayCapabilities,
+  getCostTierLabel,
+  getCostTierBgStyle,
+  getQualityTierLabel,
+  getQualityTierBgStyle,
+} from '@/shared/utils/llm-display';
 import { Sparkles, Settings, Check } from 'lucide-react';
 import type { ProviderTemplate } from '@/features/ai-engine';
 
@@ -87,26 +95,31 @@ export function TemplateSelector({ templates, onSelect, selectedId }: TemplateSe
                     {template.description}
                   </p>
 
-                  {/* 기능 태그 */}
-                  <div className="flex flex-wrap gap-1 mb-3">
-                    {template.defaultCapabilities.slice(0, 3).map((cap) => (
-                      <Badge key={cap} variant="outline" className="text-xs">
-                        {getCapabilityLabel(cap)}
-                      </Badge>
-                    ))}
-                    {template.defaultCapabilities.length > 3 && (
-                      <Badge variant="outline" className="text-xs">
-                        +{template.defaultCapabilities.length - 3}
-                      </Badge>
-                    )}
-                  </div>
+                  {/* 기능 태그 (text 제외) */}
+                  {(() => {
+                    const caps = filterDisplayCapabilities(template.defaultCapabilities);
+                    return caps.length > 0 ? (
+                      <div className="flex flex-wrap gap-1 mb-3">
+                        {caps.slice(0, 3).map((cap) => (
+                          <Badge key={cap} variant="outline" className="text-xs">
+                            {getCapabilityLabel(cap)}
+                          </Badge>
+                        ))}
+                        {caps.length > 3 && (
+                          <Badge variant="outline" className="text-xs">
+                            +{caps.length - 3}
+                          </Badge>
+                        )}
+                      </div>
+                    ) : null;
+                  })()}
 
                   {/* 티어 정보 */}
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span className={cn('px-2 py-0.5 rounded', getCostTierStyle(template.defaultCostTier))}>
+                    <span className={cn('px-2 py-0.5 rounded', getCostTierBgStyle(template.defaultCostTier))}>
                       {getCostTierLabel(template.defaultCostTier)}
                     </span>
-                    <span className={cn('px-2 py-0.5 rounded', getQualityTierStyle(template.defaultQualityTier))}>
+                    <span className={cn('px-2 py-0.5 rounded', getQualityTierBgStyle(template.defaultQualityTier))}>
                       {getQualityTierLabel(template.defaultQualityTier)}
                     </span>
                   </div>
@@ -196,52 +209,3 @@ export function TemplateSelector({ templates, onSelect, selectedId }: TemplateSe
   );
 }
 
-// 헬퍼 함수들
-function getCapabilityLabel(capability: string): string {
-  const labels: Record<string, string> = {
-    vision: '시각',
-    function_calling: '함수',
-    json_mode: 'JSON',
-    streaming: '스트리밍',
-    tools: '도구',
-  };
-  return labels[capability] || capability;
-}
-
-function getCostTierLabel(tier: string): string {
-  const labels: Record<string, string> = {
-    free: '무료',
-    low: '저렴',
-    medium: '중간',
-    high: '고가',
-  };
-  return labels[tier] || tier;
-}
-
-function getCostTierStyle(tier: string): string {
-  const styles: Record<string, string> = {
-    free: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
-    low: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
-    medium: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
-    high: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
-  };
-  return styles[tier] || 'bg-gray-100 text-gray-700';
-}
-
-function getQualityTierLabel(tier: string): string {
-  const labels: Record<string, string> = {
-    fast: '빠름',
-    balanced: '균형',
-    premium: '프리미엄',
-  };
-  return labels[tier] || tier;
-}
-
-function getQualityTierStyle(tier: string): string {
-  const styles: Record<string, string> = {
-    fast: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
-    balanced: 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300',
-    premium: 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300',
-  };
-  return styles[tier] || 'bg-gray-100 text-gray-700';
-}

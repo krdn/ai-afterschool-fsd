@@ -18,6 +18,15 @@ import {
 } from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
 import {
+  getCapabilityLabel,
+  filterDisplayCapabilities,
+  getCostTierLabel,
+  getCostTierBorderStyle,
+  getQualityTierLabel,
+  getQualityTierBorderStyle,
+  formatContextWindow,
+} from '@/shared/utils/llm-display';
+import {
   CheckCircle2,
   XCircle,
   HelpCircle,
@@ -136,9 +145,9 @@ export function ProviderCard({
     </Badge>
   );
 
-  // 기능 태그 렌더링
+  // 기능 태그 렌더링 (text 제외)
   const renderCapabilityBadges = () => {
-    const caps = (provider.capabilities as string[]) || [];
+    const caps = filterDisplayCapabilities((provider.capabilities as string[]) || []);
     if (caps.length === 0) return null;
 
     return (
@@ -162,7 +171,7 @@ export function ProviderCard({
     <div className="flex items-center gap-2">
       <Badge
         variant="outline"
-        className={cn('text-xs gap-1', getCostTierStyle(provider.costTier as string))}
+        className={cn('text-xs gap-1', getCostTierBorderStyle(provider.costTier as string))}
       >
         <DollarSign className="w-3 h-3" />
         {getCostTierLabel(provider.costTier as string)}
@@ -170,7 +179,7 @@ export function ProviderCard({
 
       <Badge
         variant="outline"
-        className={cn('text-xs gap-1', getQualityTierStyle(provider.qualityTier as string))}
+        className={cn('text-xs gap-1', getQualityTierBorderStyle(provider.qualityTier as string))}
       >
         <Gauge className="w-3 h-3" />
         {getQualityTierLabel(provider.qualityTier as string)}
@@ -179,7 +188,10 @@ export function ProviderCard({
   );
 
   return (
-    <Card className={cn('transition-all duration-200', !provider.isEnabled && 'opacity-75')}>
+    <Card className={cn(
+      'transition-all duration-200 min-h-[280px] flex flex-col',
+      !provider.isEnabled && 'opacity-60 border-l-4 border-l-gray-300'
+    )}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
@@ -215,7 +227,7 @@ export function ProviderCard({
         </div>
       </CardHeader>
 
-      <CardContent className="pt-0 space-y-4">
+      <CardContent className="pt-0 space-y-4 flex-1 flex flex-col">
         {/* URL 정보 */}
         {provider.baseUrl ? (
           <p className="text-sm text-muted-foreground truncate">
@@ -312,7 +324,7 @@ export function ProviderCard({
         {renderTierBadges()}
 
         {/* 액션 버튼들 */}
-        <div className="flex items-center gap-2 pt-2">
+        <div className="flex items-center gap-2 mt-auto border-t pt-4">
           <Button
             variant="outline"
             size="sm"
@@ -370,62 +382,3 @@ export function ProviderCard({
   );
 }
 
-// 헬퍼 함수들
-function getCapabilityLabel(capability: string): string {
-  const labels: Record<string, string> = {
-    vision: 'Vision',
-    function_calling: 'Functions',
-    json_mode: 'JSON',
-    streaming: 'Streaming',
-    tools: 'Tools',
-  };
-  return labels[capability] || capability;
-}
-
-function getCostTierLabel(tier: string): string {
-  const labels: Record<string, string> = {
-    free: '무료',
-    low: '저렴',
-    medium: '중간',
-    high: '고가',
-  };
-  return labels[tier] || tier;
-}
-
-function getCostTierStyle(tier: string): string {
-  const styles: Record<string, string> = {
-    free: 'text-green-600 border-green-600',
-    low: 'text-blue-600 border-blue-600',
-    medium: 'text-yellow-600 border-yellow-600',
-    high: 'text-red-600 border-red-600',
-  };
-  return styles[tier] || '';
-}
-
-function getQualityTierLabel(tier: string): string {
-  const labels: Record<string, string> = {
-    fast: '빠름',
-    balanced: '균형',
-    premium: '프리미엄',
-  };
-  return labels[tier] || tier;
-}
-
-function getQualityTierStyle(tier: string): string {
-  const styles: Record<string, string> = {
-    fast: 'text-blue-600 border-blue-600',
-    balanced: 'text-green-600 border-green-600',
-    premium: 'text-purple-600 border-purple-600',
-  };
-  return styles[tier] || '';
-}
-
-/**
- * 컨텍스트 윈도우 포맷팅
- * 4000 -> 4K, 128000 -> 128K, 200000 -> 200K
- */
-function formatContextWindow(n?: number | null): string {
-  if (!n) return '';
-  if (n >= 1000) return `${(n / 1000).toFixed(0)}K`;
-  return `${n}`;
-}
