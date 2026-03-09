@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Afterschool FSD — 프로젝트 아키텍처</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0e1a;
+  --surface: #131829;
+  --surface2: #1c2340;
+  --surface3: #252d4a;
+  --border: #2a3358;
+  --border-hover: #4a5580;
+  --text: #e2e8f0;
+  --text-dim: #8892b0;
+  --text-muted: #5a6380;
+  --accent: #38bdf8;
+  --accent2: #818cf8;
+  --purple: #a78bfa;
+  --purple-bg: rgba(167,139,250,0.08);
+  --green: #4ade80;
+  --green-bg: rgba(74,222,128,0.08);
+  --yellow: #fbbf24;
+  --yellow-bg: rgba(251,191,36,0.08);
+  --orange: #fb923c;
+  --orange-bg: rgba(251,146,60,0.08);
+  --pink: #f472b6;
+  --pink-bg: rgba(244,114,182,0.08);
+  --red: #f87171;
+  --red-bg: rgba(248,113,113,0.08);
+  --cyan: #22d3ee;
+  --cyan-bg: rgba(34,211,238,0.08);
+  --blue: #60a5fa;
+  --blue-bg: rgba(96,165,250,0.08);
+}
+
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+code, .mono {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* 헤더 */
+.header {
+  text-align: center;
+  padding: 56px 24px 40px;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+  border-bottom: 1px solid var(--border);
+}
+
+.header h1 {
+  font-size: 2.4rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), var(--orange));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+}
+
+.header p { color: var(--text-dim); font-size: 1.05rem; }
+
+.header-badges {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid;
+}
+
+/* 네비게이션 */
+.nav {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 24px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+}
+
+.nav-btn {
+  padding: 8px 18px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.25s;
+}
+
+.nav-btn:hover { background: var(--surface3); color: var(--text); border-color: var(--border-hover); }
+
+.nav-btn.active {
+  background: linear-gradient(135deg, var(--accent), var(--orange));
+  color: var(--bg);
+  border-color: transparent;
+  box-shadow: 0 2px 12px rgba(56,189,248,0.25);
+}
+
+/* 섹션 */
+.section {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 48px 24px;
+  display: none;
+}
+
+.section.active { display: block; animation: fadeIn 0.4s ease; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+/* 카드 */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  transition: border-color 0.2s, transform 0.15s;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.card-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+/* 섹션 제목 */
+.section-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.section-desc {
+  color: var(--text-dim);
+  margin-bottom: 32px;
+  font-size: 0.95rem;
+}
+
+/* =========================================
+   섹션 1: FSD 레이어 계층도
+   ========================================= */
+
+.fsd-layer-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.fsd-layer {
+  border-radius: 12px;
+  padding: 18px 28px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border: 1px solid;
+  position: relative;
+  transition: all 0.25s;
+  cursor: default;
+}
+
+.fsd-layer:hover {
+  transform: translateX(6px);
+  filter: brightness(1.15);
+}
+
+.fsd-layer-arrow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+.layer-name {
+  font-size: 1rem;
+  font-weight: 800;
+  font-family: 'JetBrains Mono', monospace;
+  min-width: 100px;
+}
+
+.layer-desc {
+  color: var(--text-dim);
+  font-size: 0.88rem;
+  flex: 1;
+}
+
+.layer-items {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.layer-item {
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.layer-app { background: rgba(56,189,248,0.1); border-color: rgba(56,189,248,0.3); }
+.layer-components { background: rgba(167,139,250,0.1); border-color: rgba(167,139,250,0.3); }
+.layer-lib { background: rgba(251,146,60,0.1); border-color: rgba(251,146,60,0.3); }
+.layer-features { background: rgba(74,222,128,0.1); border-color: rgba(74,222,128,0.3); }
+.layer-shared { background: rgba(251,191,36,0.1); border-color: rgba(251,191,36,0.3); }
+
+/* =========================================
+   섹션 2: Feature Slices
+   ========================================= */
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+.feature-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: all 0.25s;
+}
+
+.feature-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+
+.feature-header {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.feature-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.feature-name {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.feature-path {
+  font-size: 0.72rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-muted);
+}
+
+.feature-body {
+  padding: 16px 24px 20px;
+}
+
+.feature-desc {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+}
+
+.feature-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.feature-tag {
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+}
+
+/* =========================================
+   섹션 3: 데이터 흐름
+   ========================================= */
+
+.flow-container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.flow-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.flow-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  align-items: center;
+}
+
+.flow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 120px;
+}
+
+.step-node {
+  width: 100%;
+  max-width: 160px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.step-node:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.step-label {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.flow-arrow {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  padding: 0 4px;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 18px;
+}
+
+.flow-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 28px;
+}
+
+/* =========================================
+   섹션 4: 기술 스택
+   ========================================= */
+
+.tech-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.tech-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.tech-section:hover { border-color: var(--border-hover); }
+
+.tech-section-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tech-list {
+  padding: 14px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tech-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tech-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.tech-ver {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  background: var(--surface2);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* =========================================
+   섹션 5: 디렉토리 구조
+   ========================================= */
+
+.dir-tree {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.dir-tree-header {
+  padding: 14px 20px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dir-tree-body {
+  padding: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  line-height: 2;
+  overflow-x: auto;
+}
+
+.dir-line {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  white-space: nowrap;
+  transition: background 0.15s;
+  padding: 1px 4px;
+  border-radius: 4px;
+  cursor: default;
+}
+
+.dir-line:hover { background: var(--surface2); }
+
+.dir-indent {
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.dir-icon { margin-right: 6px; }
+
+.dir-name { color: var(--text); font-weight: 600; }
+.dir-name.folder { color: var(--accent); }
+.dir-name.file { color: var(--text-dim); }
+.dir-name.special { color: var(--purple); }
+.dir-name.action { color: var(--green); }
+.dir-name.feature { color: var(--orange); }
+
+.dir-comment {
+  color: var(--text-muted);
+  margin-left: 12px;
+  font-size: 0.75rem;
+}
+
+/* =========================================
+   섹션 6: 인프라 & 컨벤션
+   ========================================= */
+
+.infra-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.infra-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.infra-table th {
+  background: var(--surface2);
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border);
+}
+
+.infra-table td {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(42,51,88,0.5);
+  vertical-align: top;
+}
+
+.infra-table tr:last-child td { border-bottom: none; }
+
+.infra-table tr:hover td { background: var(--surface2); }
+
+.infra-table .mono-cell {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--accent);
+}
+
+.infra-table .desc-cell {
+  color: var(--text-dim);
+  font-size: 0.82rem;
+}
+
+/* 코드 블록 */
+.code-panel {
+  background: #0d1117;
+  border: 1px solid #2a2a40;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+
+.code-header {
+  background: #161b22;
+  padding: 10px 16px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-bottom: 1px solid #2a2a40;
+  color: var(--text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.code-body {
+  padding: 18px 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.82rem;
+  line-height: 1.9;
+  overflow-x: auto;
+  white-space: pre;
+  color: var(--text);
+}
+
+.code-keyword { color: #ff7b72; }
+.code-string { color: #a5d6ff; }
+.code-comment { color: #6e7681; }
+.code-func { color: #d2a8ff; }
+.code-type { color: #79c0ff; }
+.code-num { color: #f0883e; }
+
+/* 이슈 목록 */
+.issue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.issue-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid;
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  transition: all 0.2s;
+}
+
+.issue-item:hover {
+  border-color: var(--border-hover);
+  border-left-color: inherit;
+  transform: translateX(3px);
+}
+
+.issue-severity {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.issue-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.issue-desc {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .header h1 { font-size: 1.7rem; }
+  .section { padding: 32px 16px; }
+  .infra-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; }
+  .tech-grid { grid-template-columns: 1fr; }
+  .flow-steps { flex-direction: column; align-items: flex-start; }
+  .flow-arrow { transform: rotate(90deg); margin: 0 0 0 60px; }
+  .fsd-layer { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .layer-items { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<div class="header">
+  <h1>AI Afterschool FSD</h1>
+  <p>AI 기반 방과후학교 종합 관리 시스템 — 아키텍처 & 프로젝트 구조 시각화</p>
+  <div class="header-badges">
+    <span class="badge" style="background:var(--blue-bg);border-color:var(--blue);color:var(--blue)">Next.js 15</span>
+    <span class="badge" style="background:var(--green-bg);border-color:var(--green);color:var(--green)">React 19</span>
+    <span class="badge" style="background:var(--purple-bg);border-color:var(--purple);color:var(--purple)">FSD Architecture</span>
+    <span class="badge" style="background:var(--orange-bg);border-color:var(--orange);color:var(--orange)">Prisma 7</span>
+    <span class="badge" style="background:var(--cyan-bg);border-color:var(--cyan);color:var(--cyan)">Vercel AI SDK v6</span>
+    <span class="badge" style="background:var(--yellow-bg);border-color:var(--yellow);color:var(--yellow)">11 LLM Providers</span>
+  </div>
+</div>
+
+<!-- 네비게이션 -->
+<div class="nav">
+  <button class="nav-btn active" onclick="showSection('fsd')">FSD 레이어</button>
+  <button class="nav-btn" onclick="showSection('features')">Feature Slices</button>
+  <button class="nav-btn" onclick="showSection('dataflow')">데이터 흐름</button>
+  <button class="nav-btn" onclick="showSection('techstack')">기술 스택</button>
+  <button class="nav-btn" onclick="showSection('directory')">디렉토리</button>
+  <button class="nav-btn" onclick="showSection('infra')">인프라 & 컨벤션</button>
+</div>
+
+<!-- ========== 섹션 1: FSD 레이어 ========== -->
+<div class="section active" id="fsd">
+  <div class="section-title">FSD 레이어 계층 구조</div>
+  <div class="section-desc">Feature-Sliced Design. 위에서 아래 방향의 단방향 의존성만 허용합니다. <code>eslint-plugin-boundaries</code>로 강제.</div>
+
+  <div class="fsd-layer-container">
+
+    <div class="fsd-layer" style="background:rgba(56,189,248,0.07);border-color:rgba(56,189,248,0.35);">
+      <div>
+        <div class="layer-name" style="color:var(--accent)">app</div>
+        <div class="layer-desc">페이지, 레이아웃, API Routes — 모든 레이어를 import할 수 있는 최상위 레이어</div>
+      </div>
+      <div class="layer-items">
+        <span class="layer-item" style="color:var(--accent)">pages</span>
+        <span class="layer-item" style="color:var(--accent)">layouts</span>
+        <span class="layer-item" style="color:var(--accent)">API routes</span>
+        <span class="layer-item" style="color:var(--accent)">[locale]</span>
+      </div>
+    </div>
+
+    <div class="fsd-layer-arrow">▼</div>
+
+    <div class="fsd-layer" style="background:rgba(167,139,250,0.07);border-color:rgba(167,139,250,0.35);">
+      <div>
+        <div class="layer-name" style="color:var(--purple)">components</div>
+        <div class="layer-desc">도메인별 UI 컴포넌트 — features, lib, shared만 import 가능. app import 금지.</div>
+      </div>
+      <div class="layer-items">
+        <span class="layer-item" style="color:var(--purple)">counseling</span>
+        <span class="layer-item" style="color:var(--purple)">grades</span>
+        <span class="layer-item" style="color:var(--purple)">students</span>
+        <span class="layer-item" style="color:var(--purple)">ui</span>
+        <span class="layer-item" style="color:var(--purple)">matching</span>
+      </div>
+    </div>
+
+    <div class="fsd-layer-arrow">▼</div>
+
+    <div class="fsd-layer" style="background:rgba(251,146,60,0.07);border-color:rgba(251,146,60,0.35);">
+      <div>
+        <div class="layer-name" style="color:var(--orange)">lib</div>
+        <div class="layer-desc">Server Actions, DAL, 유틸리티 — ★ FSD 변형: Server Actions가 feature 서비스 직접 호출</div>
+      </div>
+      <div class="layer-items">
+        <span class="layer-item" style="color:var(--orange)">actions/</span>
+        <span class="layer-item" style="color:var(--orange)">dal.ts</span>
+        <span class="layer-item" style="color:var(--orange)">session.ts</span>
+        <span class="layer-item" style="color:var(--orange)">db/</span>
+        <span class="layer-item" style="color:var(--orange)">errors/</span>
+      </div>
+    </div>
+
+    <div class="fsd-layer-arrow">▼</div>
+
+    <div class="fsd-layer" style="background:rgba(74,222,128,0.07);border-color:rgba(74,222,128,0.35);">
+      <div>
+        <div class="layer-name" style="color:var(--green)">features</div>
+        <div class="layer-desc">비즈니스 로직 — lib, shared만 import 가능. app/components import 금지.</div>
+      </div>
+      <div class="layer-items">
+        <span class="layer-item" style="color:var(--green)">ai-engine</span>
+        <span class="layer-item" style="color:var(--green)">analysis</span>
+        <span class="layer-item" style="color:var(--green)">counseling</span>
+        <span class="layer-item" style="color:var(--green)">grade-management</span>
+        <span class="layer-item" style="color:var(--green)">matching</span>
+        <span class="layer-item" style="color:var(--green)">report</span>
+      </div>
+    </div>
+
+    <div class="fsd-layer-arrow">▼</div>
+
+    <div class="fsd-layer" style="background:rgba(251,191,36,0.07);border-color:rgba(251,191,36,0.35);">
+      <div>
+        <div class="layer-name" style="color:var(--yellow)">shared</div>
+        <div class="layer-desc">공통 타입, 상수, 검증 스키마 — 의존성 없음. 최하위 레이어.</div>
+      </div>
+      <div class="layer-items">
+        <span class="layer-item" style="color:var(--yellow)">constants</span>
+        <span class="layer-item" style="color:var(--yellow)">types</span>
+        <span class="layer-item" style="color:var(--yellow)">utils</span>
+        <span class="layer-item" style="color:var(--yellow)">validations</span>
+        <span class="layer-item" style="color:var(--yellow)">errors</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 의존성 규칙 요약 -->
+  <div style="margin-top:32px;">
+    <div class="card">
+      <div class="card-title" style="color:var(--text-muted)">의존성 허용 행렬 (import 가능 방향)</div>
+      <div style="overflow-x:auto;margin-top:8px;">
+        <table style="width:100%;border-collapse:collapse;font-size:0.82rem;font-family:'JetBrains Mono',monospace;">
+          <thead>
+            <tr style="background:var(--surface2);">
+              <th style="padding:10px 16px;text-align:left;border-bottom:1px solid var(--border);color:var(--text-dim);">레이어 →</th>
+              <th style="padding:10px 16px;text-align:center;border-bottom:1px solid var(--border);color:var(--accent);">app</th>
+              <th style="padding:10px 16px;text-align:center;border-bottom:1px solid var(--border);color:var(--purple);">components</th>
+              <th style="padding:10px 16px;text-align:center;border-bottom:1px solid var(--border);color:var(--orange);">lib</th>
+              <th style="padding:10px 16px;text-align:center;border-bottom:1px solid var(--border);color:var(--green);">features</th>
+              <th style="padding:10px 16px;text-align:center;border-bottom:1px solid var(--border);color:var(--yellow);">shared</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:10px 16px;color:var(--accent);font-weight:700;border-bottom:1px solid rgba(42,51,88,0.5);">app</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--text-muted);">—</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--green);">✓</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--green);">✓</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--green);">✓</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--green);">✓</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 16px;color:var(--purple);font-weight:700;border-bottom:1px solid rgba(42,51,88,0.5);">components</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--red);">✗</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--text-muted);">—</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--green);">✓</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--green);">✓</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--green);">✓</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 16px;color:var(--orange);font-weight:700;border-bottom:1px solid rgba(42,51,88,0.5);">lib ★</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--red);">✗</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--red);">✗</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--text-muted);">—</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--green);">✓</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--green);">✓</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 16px;color:var(--green);font-weight:700;border-bottom:1px solid rgba(42,51,88,0.5);">features</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--red);">✗</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--red);">✗</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--green);">✓</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--text-muted);">—</td>
+              <td style="padding:10px 16px;text-align:center;border-bottom:1px solid rgba(42,51,88,0.5);color:var(--green);">✓</td>
+            </tr>
+            <tr>
+              <td style="padding:10px 16px;color:var(--yellow);font-weight:700;">shared</td>
+              <td style="padding:10px 16px;text-align:center;color:var(--red);">✗</td>
+              <td style="padding:10px 16px;text-align:center;color:var(--red);">✗</td>
+              <td style="padding:10px 16px;text-align:center;color:var(--red);">✗</td>
+              <td style="padding:10px 16px;text-align:center;color:var(--red);">✗</td>
+              <td style="padding:10px 16px;text-align:center;color:var(--text-muted);">—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 섹션 2: Feature Slices ========== -->
+<div class="section" id="features">
+  <div class="section-title">Feature Slices — 6개</div>
+  <div class="section-desc">각 Feature Slice는 독립적인 비즈니스 도메인을 담당합니다. 내부는 services/repositories/types 구조로 구성됩니다.</div>
+
+  <div class="features-grid">
+
+    <div class="feature-card">
+      <div class="feature-header" style="border-left:3px solid var(--cyan);">
+        <div class="feature-icon" style="background:var(--cyan-bg);">🤖</div>
+        <div>
+          <div class="feature-name">ai-engine</div>
+          <div class="feature-path">src/features/ai-engine/</div>
+        </div>
+      </div>
+      <div class="feature-body">
+        <div class="feature-desc">LLM 라우팅, 페일오버, 사용량 추적, 프롬프트 관리. 11개 AI Provider를 통합하는 Universal Router 패턴의 핵심.</div>
+        <div class="feature-tags">
+          <span class="feature-tag" style="color:var(--cyan);border-color:rgba(34,211,238,0.25);">universal-router.ts</span>
+          <span class="feature-tag" style="color:var(--cyan);border-color:rgba(34,211,238,0.25);">failover.ts</span>
+          <span class="feature-tag" style="color:var(--cyan);border-color:rgba(34,211,238,0.25);">usage-tracker.ts</span>
+          <span class="feature-tag" style="color:var(--cyan);border-color:rgba(34,211,238,0.25);">providers/</span>
+          <span class="feature-tag" style="color:var(--cyan);border-color:rgba(34,211,238,0.25);">prompts/</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-header" style="border-left:3px solid var(--purple);">
+        <div class="feature-icon" style="background:var(--purple-bg);">🧠</div>
+        <div>
+          <div class="feature-name">analysis</div>
+          <div class="feature-path">src/features/analysis/</div>
+        </div>
+      </div>
+      <div class="feature-body">
+        <div class="feature-desc">다양한 성격/학습 분석 기능. 사주, MBTI, VARK, 이름, 띠, 궁합 등 한국 문화 특화 분석 포함.</div>
+        <div class="feature-tags">
+          <span class="feature-tag" style="color:var(--purple);border-color:rgba(167,139,250,0.25);">사주(saju)</span>
+          <span class="feature-tag" style="color:var(--purple);border-color:rgba(167,139,250,0.25);">MBTI</span>
+          <span class="feature-tag" style="color:var(--purple);border-color:rgba(167,139,250,0.25);">VARK</span>
+          <span class="feature-tag" style="color:var(--purple);border-color:rgba(167,139,250,0.25);">이름 분석</span>
+          <span class="feature-tag" style="color:var(--purple);border-color:rgba(167,139,250,0.25);">궁합</span>
+          <span class="feature-tag" style="color:var(--purple);border-color:rgba(167,139,250,0.25);">띠(zodiac)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-header" style="border-left:3px solid var(--blue);">
+        <div class="feature-icon" style="background:var(--blue-bg);">💬</div>
+        <div>
+          <div class="feature-name">counseling</div>
+          <div class="feature-path">src/features/counseling/</div>
+        </div>
+      </div>
+      <div class="feature-body">
+        <div class="feature-desc">학생 상담 예약/세션 관리. AI 기반 보고서 생성/수정/확정 흐름. 상담 시나리오 자동 생성 포함.</div>
+        <div class="feature-tags">
+          <span class="feature-tag" style="color:var(--blue);border-color:rgba(96,165,250,0.25);">예약 관리</span>
+          <span class="feature-tag" style="color:var(--blue);border-color:rgba(96,165,250,0.25);">세션 관리</span>
+          <span class="feature-tag" style="color:var(--blue);border-color:rgba(96,165,250,0.25);">AI 보고서</span>
+          <span class="feature-tag" style="color:var(--blue);border-color:rgba(96,165,250,0.25);">repositories/</span>
+          <span class="feature-tag" style="color:var(--blue);border-color:rgba(96,165,250,0.25);">services/</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-header" style="border-left:3px solid var(--green);">
+        <div class="feature-icon" style="background:var(--green-bg);">📊</div>
+        <div>
+          <div class="feature-name">grade-management</div>
+          <div class="feature-path">src/features/grade-management/</div>
+        </div>
+      </div>
+      <div class="feature-body">
+        <div class="feature-desc">OCR 기반 성적표 스캔, AI 분석, 동료 비교, 학부모 리포트 생성. Vision LLM을 활용한 문서 추출 파이프라인.</div>
+        <div class="feature-tags">
+          <span class="feature-tag" style="color:var(--green);border-color:rgba(74,222,128,0.25);">OCR 추출</span>
+          <span class="feature-tag" style="color:var(--green);border-color:rgba(74,222,128,0.25);">AI 분석</span>
+          <span class="feature-tag" style="color:var(--green);border-color:rgba(74,222,128,0.25);">동료 비교</span>
+          <span class="feature-tag" style="color:var(--green);border-color:rgba(74,222,128,0.25);">학부모 리포트</span>
+          <span class="feature-tag" style="color:var(--green);border-color:rgba(74,222,128,0.25);">24h TTL 캐시</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-header" style="border-left:3px solid var(--orange);">
+        <div class="feature-icon" style="background:var(--orange-bg);">🔗</div>
+        <div>
+          <div class="feature-name">matching</div>
+          <div class="feature-path">src/features/matching/</div>
+        </div>
+      </div>
+      <div class="feature-body">
+        <div class="feature-desc">교사-학생 자동배정 시스템. 공정성 메트릭 기반 알고리즘으로 최적 매칭을 계산합니다.</div>
+        <div class="feature-tags">
+          <span class="feature-tag" style="color:var(--orange);border-color:rgba(251,146,60,0.25);">자동 배정</span>
+          <span class="feature-tag" style="color:var(--orange);border-color:rgba(251,146,60,0.25);">공정성 메트릭</span>
+          <span class="feature-tag" style="color:var(--orange);border-color:rgba(251,146,60,0.25);">최적화 알고리즘</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-card">
+      <div class="feature-header" style="border-left:3px solid var(--pink);">
+        <div class="feature-icon" style="background:var(--pink-bg);">📄</div>
+        <div>
+          <div class="feature-name">report</div>
+          <div class="feature-path">src/features/report/</div>
+        </div>
+      </div>
+      <div class="feature-body">
+        <div class="feature-desc">PDF 리포트 생성. @react-pdf/renderer를 사용하여 학생 분석 결과를 PDF 문서로 출력합니다.</div>
+        <div class="feature-tags">
+          <span class="feature-tag" style="color:var(--pink);border-color:rgba(244,114,182,0.25);">PDF 생성</span>
+          <span class="feature-tag" style="color:var(--pink);border-color:rgba(244,114,182,0.25);">@react-pdf/renderer</span>
+          <span class="feature-tag" style="color:var(--pink);border-color:rgba(244,114,182,0.25);">학생 리포트</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== 섹션 3: 데이터 흐름 ========== -->
+<div class="section" id="dataflow">
+  <div class="section-title">핵심 데이터 흐름</div>
+  <div class="section-desc">3가지 주요 데이터 흐름 패턴. 모든 상태 변경은 Server Action을 통해 처리됩니다.</div>
+
+  <div class="flow-container">
+
+    <!-- 흐름 1: Server Component 조회 -->
+    <div class="flow-card">
+      <div class="flow-title">
+        <span style="background:var(--blue-bg);color:var(--blue);padding:4px 10px;border-radius:6px;font-size:0.75rem;">READ</span>
+        Server Component 조회 흐름
+      </div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="step-node" style="border-color:rgba(96,165,250,0.4);color:var(--blue);">page.tsx</div>
+          <div class="step-label">Server Component</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-node" style="border-color:rgba(251,191,36,0.4);color:var(--yellow);">getCurrentTeacher()</div>
+          <div class="step-label">인증 확인</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-node" style="border-color:rgba(74,222,128,0.4);color:var(--green);">db.xxx.findMany()</div>
+          <div class="step-label">Prisma 쿼리</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-node" style="border-color:rgba(167,139,250,0.4);color:var(--purple);">&lt;ClientComponent/&gt;</div>
+          <div class="step-label">데이터 props 전달</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 흐름 2: Server Action 변경 -->
+    <div class="flow-card">
+      <div class="flow-title">
+        <span style="background:var(--orange-bg);color:var(--orange);padding:4px 10px;border-radius:6px;font-size:0.75rem;">WRITE</span>
+        Server Action 변경 흐름
+      </div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="step-node" style="border-color:rgba(167,139,250,0.4);color:var(--purple);">Client Component</div>
+          <div class="step-label">사용자 인터랙션</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-node" style="border-color:rgba(56,189,248,0.4);color:var(--accent);">Server Action</div>
+          <div class="step-label">lib/actions/</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-node" style="border-color:rgba(251,191,36,0.4);color:var(--yellow);">인증 + Zod</div>
+          <div class="step-label">검증 단계</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-node" style="border-color:rgba(74,222,128,0.4);color:var(--green);">Feature Service</div>
+          <div class="step-label">비즈니스 로직</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-node" style="border-color:rgba(251,146,60,0.4);color:var(--orange);">ok() / fail()</div>
+          <div class="step-label">ActionResult 반환</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 흐름 3: AI 분석 파이프라인 -->
+    <div class="flow-card">
+      <div class="flow-title">
+        <span style="background:var(--cyan-bg);color:var(--cyan);padding:4px 10px;border-radius:6px;font-size:0.75rem;">AI</span>
+        AI 분석 파이프라인
+      </div>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="step-node" style="border-color:rgba(34,211,238,0.4);color:var(--cyan);">이미지 업로드</div>
+          <div class="step-label">성적표 스캔</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-node" style="border-color:rgba(34,211,238,0.4);color:var(--cyan);">Vision LLM (OCR)</div>
+          <div class="step-label">텍스트 추출</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-node" style="border-color:rgba(251,191,36,0.4);color:var(--yellow);">Zod 검증</div>
+          <div class="step-label">타입 안전성</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-node" style="border-color:rgba(74,222,128,0.4);color:var(--green);">분석 서비스</div>
+          <div class="step-label">AI 분석 실행</div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-node" style="border-color:rgba(96,165,250,0.4);color:var(--blue);">캐시 저장</div>
+          <div class="step-label">24h TTL</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ActionResult 패턴 코드 -->
+    <div class="flow-card">
+      <div class="flow-title">
+        <span style="background:var(--purple-bg);color:var(--purple);padding:4px 10px;border-radius:6px;font-size:0.75rem;">PATTERN</span>
+        Server Action 템플릿 코드
+      </div>
+      <div class="code-panel">
+        <div class="code-header">
+          <span style="color:#f472b6;">TS</span> src/lib/actions/example.ts
+        </div>
+        <div class="code-body"><span class="code-string">'use server'</span>;
+<span class="code-keyword">import</span> { getCurrentTeacher } <span class="code-keyword">from</span> <span class="code-string">'@/lib/dal'</span>;
+<span class="code-keyword">import</span> { ok, fail, <span class="code-keyword">type</span> <span class="code-type">ActionResult</span> } <span class="code-keyword">from</span> <span class="code-string">'@/lib/errors/action-result'</span>;
+<span class="code-keyword">import</span> { logger } <span class="code-keyword">from</span> <span class="code-string">'@/lib/logger'</span>;
+
+<span class="code-keyword">export async function</span> <span class="code-func">myAction</span>(input: <span class="code-type">string</span>): <span class="code-type">Promise</span>&lt;<span class="code-type">ActionResult</span>&lt;<span class="code-type">MyType</span>&gt;&gt; {
+  <span class="code-keyword">try</span> {
+    <span class="code-keyword">const</span> teacher = <span class="code-keyword">await</span> <span class="code-func">getCurrentTeacher</span>();   <span class="code-comment">// ① 인증</span>
+    <span class="code-comment">// Zod safeParse()로 입력 검증</span>                     <span class="code-comment">// ② 검증</span>
+    <span class="code-keyword">const</span> result = <span class="code-keyword">await</span> <span class="code-func">featureService</span>(input, teacher.id); <span class="code-comment">// ③ 서비스</span>
+    <span class="code-func">revalidatePath</span>(<span class="code-string">'/path'</span>);                     <span class="code-comment">// ④ 캐시 무효화</span>
+    <span class="code-keyword">return</span> <span class="code-func">ok</span>(result);                             <span class="code-comment">// ⑤ 성공 반환</span>
+  } <span class="code-keyword">catch</span> (error) {
+    logger.<span class="code-func">error</span>({ err: error }, <span class="code-string">'Failed to do something'</span>);
+    <span class="code-keyword">return</span> <span class="code-func">fail</span>(error <span class="code-keyword">instanceof</span> Error ? error.message : <span class="code-string">'오류가 발생했습니다.'</span>);
+  }
+}</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== 섹션 4: 기술 스택 ========== -->
+<div class="section" id="techstack">
+  <div class="section-title">기술 스택</div>
+  <div class="section-desc">프론트엔드, 백엔드, AI/LLM, 개발/배포 도구 전체 스택입니다.</div>
+
+  <div class="tech-grid">
+
+    <div class="tech-section">
+      <div class="tech-section-header" style="color:var(--blue);">
+        <span>🖥️</span> 프론트엔드
+      </div>
+      <div class="tech-list">
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">Next.js</span>
+          <span class="tech-ver">15 (App Router)</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">React</span>
+          <span class="tech-ver">19</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">TypeScript</span>
+          <span class="tech-ver">5.5+</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">Tailwind CSS</span>
+          <span class="tech-ver">4</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">shadcn/ui + Radix UI</span>
+          <span class="tech-ver">CVA</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">next-intl</span>
+          <span class="tech-ver">ko/en i18n</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">react-hook-form</span>
+          <span class="tech-ver">v7</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">recharts</span>
+          <span class="tech-ver">v3</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">@tanstack/react-table</span>
+          <span class="tech-ver">v8</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tech-section">
+      <div class="tech-section-header" style="color:var(--green);">
+        <span>🔧</span> 백엔드 / 인프라
+      </div>
+      <div class="tech-list">
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">PostgreSQL</span>
+          <span class="tech-ver">42+ 모델</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">Prisma</span>
+          <span class="tech-ver">7 + @prisma/adapter-pg</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">JWT 인증</span>
+          <span class="tech-ver">jose, HS256</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">argon2</span>
+          <span class="tech-ver">비밀번호 해싱</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">pino</span>
+          <span class="tech-ver">구조화 로깅</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">Cloudinary + AWS S3</span>
+          <span class="tech-ver">파일 스토리지</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">Resend</span>
+          <span class="tech-ver">이메일</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">Sentry</span>
+          <span class="tech-ver">에러 추적</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tech-section">
+      <div class="tech-section-header" style="color:var(--cyan);">
+        <span>🤖</span> AI / LLM (11개 Provider)
+      </div>
+      <div class="tech-list">
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">Vercel AI SDK</span>
+          <span class="tech-ver">v6</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">OpenAI</span>
+          <span class="tech-ver">@ai-sdk/openai</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">Anthropic (Claude)</span>
+          <span class="tech-ver">@ai-sdk/anthropic</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">Google (Gemini)</span>
+          <span class="tech-ver">@ai-sdk/google</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">Mistral</span>
+          <span class="tech-ver">@ai-sdk/mistral</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">Cohere</span>
+          <span class="tech-ver">@ai-sdk/cohere</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">DeepSeek</span>
+          <span class="tech-ver">@ai-sdk/deepseek</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">Ollama (로컬)</span>
+          <span class="tech-ver">ollama-ai-provider-v2</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">ZhipuAI + xAI</span>
+          <span class="tech-ver">기타</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tech-section">
+      <div class="tech-section-header" style="color:var(--orange);">
+        <span>⚙️</span> 개발 / 배포
+      </div>
+      <div class="tech-list">
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">pnpm</span>
+          <span class="tech-ver">패키지 매니저</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">Turbopack</span>
+          <span class="tech-ver">개발 번들러</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">ESLint + boundaries</span>
+          <span class="tech-ver">레이어 의존성 강제</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">Vitest</span>
+          <span class="tech-ver">v4 단위 테스트</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">Playwright</span>
+          <span class="tech-ver">E2E 테스트</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">Docker</span>
+          <span class="tech-ver">multi-stage 빌드</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">GitHub Actions</span>
+          <span class="tech-ver">self-hosted runner</span>
+        </div>
+        <div class="tech-item">
+          <span class="tech-name" style="color:var(--text)">@react-pdf/renderer</span>
+          <span class="tech-ver">PDF 생성 v4</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========== 섹션 5: 디렉토리 구조 ========== -->
+<div class="section" id="directory">
+  <div class="section-title">디렉토리 구조</div>
+  <div class="section-desc">FSD 레이어 기반의 소스 코드 구조입니다. 각 디렉토리를 클릭하면 하이라이트됩니다.</div>
+
+  <div class="dir-tree">
+    <div class="dir-tree-header">
+      <span>📁</span> /src — 소스 루트
+    </div>
+    <div class="dir-tree-body">
+<div class="dir-line"><span class="dir-icon">📂</span><span class="dir-name folder">app/</span><span class="dir-comment">Next.js App Router (최상위 레이어)</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📂</span><span class="dir-name folder">[locale]/</span><span class="dir-comment">다국어(ko/en) 라우트</span></div>
+<div class="dir-line"><span class="dir-indent">    </span><span class="dir-icon">📂</span><span class="dir-name folder">(dashboard)/</span><span class="dir-comment">인증 필요 페이지 그룹</span></div>
+<div class="dir-line"><span class="dir-indent">      </span><span class="dir-icon">📄</span><span class="dir-name file">admin/</span><span class="dir-comment">관리자 페이지</span></div>
+<div class="dir-line"><span class="dir-indent">      </span><span class="dir-icon">📄</span><span class="dir-name file">counseling/</span><span class="dir-comment">상담 관리 페이지</span></div>
+<div class="dir-line"><span class="dir-indent">      </span><span class="dir-icon">📄</span><span class="dir-name file">grades/</span><span class="dir-comment">성적 관리 페이지</span></div>
+<div class="dir-line"><span class="dir-indent">      </span><span class="dir-icon">📄</span><span class="dir-name file">matching/</span><span class="dir-comment">매칭 페이지</span></div>
+<div class="dir-line"><span class="dir-indent">      </span><span class="dir-icon">📄</span><span class="dir-name file">students/ teachers/ teams/</span></div>
+<div class="dir-line"><span class="dir-indent">    </span><span class="dir-icon">📂</span><span class="dir-name folder">auth/</span><span class="dir-comment">인증 페이지 (로그인/회원가입)</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📂</span><span class="dir-name folder">api/</span><span class="dir-comment">API Routes</span></div>
+
+<div class="dir-line" style="margin-top:8px;"><span class="dir-icon">📂</span><span class="dir-name folder">components/</span><span class="dir-comment">도메인별 UI 컴포넌트 레이어</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📂</span><span class="dir-name folder">counseling/</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📂</span><span class="dir-name folder">grades/</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📂</span><span class="dir-name folder">students/ teachers/ matching/</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📂</span><span class="dir-name folder">ui/</span><span class="dir-comment">shadcn/ui 기반 공통 컴포넌트</span></div>
+
+<div class="dir-line" style="margin-top:8px;"><span class="dir-icon">📂</span><span class="dir-name feature">features/</span><span class="dir-comment">비즈니스 로직 레이어 (FSD 핵심)</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📂</span><span class="dir-name feature">ai-engine/</span><span class="dir-comment">LLM 라우팅, 페일오버, 사용량 추적</span></div>
+<div class="dir-line"><span class="dir-indent">    </span><span class="dir-icon">📄</span><span class="dir-name special">universal-router.ts</span><span class="dir-comment">핵심 라우터</span></div>
+<div class="dir-line"><span class="dir-indent">    </span><span class="dir-icon">📄</span><span class="dir-name file">providers/ prompts/ router/</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📂</span><span class="dir-name feature">analysis/</span><span class="dir-comment">사주, MBTI, VARK, 이름 분석</span></div>
+<div class="dir-line"><span class="dir-indent">    </span><span class="dir-icon">📄</span><span class="dir-name file">saju/ mbti/ vark/ name/ zodiac/ compatibility/</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📂</span><span class="dir-name feature">counseling/</span><span class="dir-comment">상담 예약/세션</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📂</span><span class="dir-name feature">grade-management/</span><span class="dir-comment">OCR 성적 처리</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📂</span><span class="dir-name feature">matching/</span><span class="dir-comment">교사-학생 자동배정</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📂</span><span class="dir-name feature">report/</span><span class="dir-comment">PDF 리포트 생성</span></div>
+
+<div class="dir-line" style="margin-top:8px;"><span class="dir-icon">📂</span><span class="dir-name folder">lib/</span><span class="dir-comment">서버 인프라 레이어</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📂</span><span class="dir-name action">actions/</span><span class="dir-comment">Server Actions ("use server")</span></div>
+<div class="dir-line"><span class="dir-indent">    </span><span class="dir-icon">📄</span><span class="dir-name file">auth/ counseling/ matching/ student/ teacher/</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📄</span><span class="dir-name special">dal.ts</span><span class="dir-comment">인증 + RBAC + RLS</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📄</span><span class="dir-name special">session.ts</span><span class="dir-comment">JWT 세션 (7일 만료)</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📂</span><span class="dir-name folder">db/</span><span class="dir-comment">Prisma 싱글톤 (max:10 연결)</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📂</span><span class="dir-name folder">errors/</span><span class="dir-comment">ActionResult 패턴 (ok/fail/fieldError)</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📂</span><span class="dir-name folder">validations/</span><span class="dir-comment">Zod 스키마 (canonical source)</span></div>
+
+<div class="dir-line" style="margin-top:8px;"><span class="dir-icon">📂</span><span class="dir-name folder">shared/</span><span class="dir-comment">공통 유틸리티 (최하위 레이어, 의존성 없음)</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📄</span><span class="dir-name file">constants/ types/ utils/ errors/</span></div>
+<div class="dir-line"><span class="dir-indent">  </span><span class="dir-icon">📂</span><span class="dir-name folder">validations/</span><span class="dir-comment">lib/validations re-export</span></div>
+
+<div class="dir-line" style="margin-top:8px;"><span class="dir-icon">📄</span><span class="dir-name special">middleware.ts</span><span class="dir-comment">Edge 미들웨어 (인증+i18n+Request ID)</span></div>
+<div class="dir-line"><span class="dir-icon">📂</span><span class="dir-name folder">hooks/</span><span class="dir-comment">Custom React Hooks</span></div>
+<div class="dir-line"><span class="dir-icon">📂</span><span class="dir-name folder">types/</span><span class="dir-comment">전역 TypeScript 타입 정의</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== 섹션 6: 인프라 & 컨벤션 ========== -->
+<div class="section" id="infra">
+  <div class="section-title">인프라 & 컨벤션</div>
+  <div class="section-desc">핵심 인프라 파일, 코딩 컨벤션, 알려진 이슈를 정리합니다.</div>
+
+  <div class="infra-grid">
+
+    <!-- 핵심 인프라 파일 -->
+    <div class="card" style="grid-column: 1 / -1;">
+      <div class="card-title" style="color:var(--accent);">핵심 인프라 파일</div>
+      <table class="infra-table">
+        <thead>
+          <tr>
+            <th>파일</th>
+            <th>역할</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono-cell">src/lib/dal.ts</td>
+            <td class="desc-cell">인증(verifySession) + RBAC + RLS 컨텍스트. 모든 Server Action의 인증 게이트웨이.</td>
+          </tr>
+          <tr>
+            <td class="mono-cell">src/lib/session.ts</td>
+            <td class="desc-cell">JWT 세션 생성/검증/삭제. 7일 만료, jose HS256 알고리즘.</td>
+          </tr>
+          <tr>
+            <td class="mono-cell">src/lib/db/client.ts</td>
+            <td class="desc-cell">Prisma 싱글톤. pg Pool max:10 연결 풀 관리.</td>
+          </tr>
+          <tr>
+            <td class="mono-cell">src/lib/errors/action-result.ts</td>
+            <td class="desc-cell">ActionResult 패턴 구현. ok(data) / fail(msg) / fieldError(fields) 반환.</td>
+          </tr>
+          <tr>
+            <td class="mono-cell">src/middleware.ts</td>
+            <td class="desc-cell">Edge 미들웨어. 인증 체크 + next-intl i18n 라우팅 + Request ID 주입.</td>
+          </tr>
+          <tr>
+            <td class="mono-cell">src/features/ai-engine/universal-router.ts</td>
+            <td class="desc-cell">LLM 라우팅/페일오버 핵심 로직. 11개 Provider 간 자동 전환.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 코딩 컨벤션 -->
+    <div class="card">
+      <div class="card-title" style="color:var(--green);">코딩 컨벤션</div>
+      <table class="infra-table">
+        <thead>
+          <tr>
+            <th>항목</th>
+            <th>규칙</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono-cell">파일명</td>
+            <td class="desc-cell">kebab-case<br><small>예: grade-dashboard.tsx</small></td>
+          </tr>
+          <tr>
+            <td class="mono-cell">타입 정의</td>
+            <td class="desc-cell">type 키워드 사용<br><small>interface 지양, Zod z.infer&lt;&gt; 추출</small></td>
+          </tr>
+          <tr>
+            <td class="mono-cell">Zod 파싱</td>
+            <td class="desc-cell">safeParse() 사용<br><small>parse() 금지</small></td>
+          </tr>
+          <tr>
+            <td class="mono-cell">Import 경로</td>
+            <td class="desc-cell">@/ 별칭 필수<br><small>상대 경로 지양</small></td>
+          </tr>
+          <tr>
+            <td class="mono-cell">인증</td>
+            <td class="desc-cell">Server Action 첫 줄 필수<br><small>verifySession() 또는 getCurrentTeacher()</small></td>
+          </tr>
+          <tr>
+            <td class="mono-cell">로깅</td>
+            <td class="desc-cell">logger.error({ err }, '영문')<br><small>사용자 에러는 한국어</small></td>
+          </tr>
+          <tr>
+            <td class="mono-cell">테스트</td>
+            <td class="desc-cell">__tests__/ 디렉토리<br><small>describe 한국어, vitest</small></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 알려진 이슈 -->
+    <div class="card">
+      <div class="card-title" style="color:var(--red);">알려진 이슈 & 기술 부채</div>
+      <div class="issue-list" style="margin-top:8px;">
+        <div class="issue-item" style="border-left-color:var(--red);">
+          <span class="issue-severity" style="background:var(--red-bg);color:var(--red);">HIGH</span>
+          <div>
+            <div class="issue-title">테스트 커버리지 부족</div>
+            <div class="issue-desc">2.8% (19/688 파일). Server Actions/API Routes 테스트 전무. Playwright E2E 미작성.</div>
+          </div>
+        </div>
+        <div class="issue-item" style="border-left-color:var(--yellow);">
+          <span class="issue-severity" style="background:var(--yellow-bg);color:var(--yellow);">MED</span>
+          <div>
+            <div class="issue-title">Server Action 패턴 혼재</div>
+            <div class="issue-desc">FormState(useActionState, 폼 전용) vs ActionResult(데이터 조회). 의도적 양립으로 일관성 부족.</div>
+          </div>
+        </div>
+        <div class="issue-item" style="border-left-color:var(--blue);">
+          <span class="issue-severity" style="background:var(--blue-bg);color:var(--blue);">LOW</span>
+          <div>
+            <div class="issue-title">Validation 위치 이중화</div>
+            <div class="issue-desc">canonical source: src/lib/validations/. shared/validations/는 re-export만 담당.</div>
+          </div>
+        </div>
+        <div class="issue-item" style="border-left-color:var(--blue);">
+          <span class="issue-severity" style="background:var(--blue-bg);color:var(--blue);">INFO</span>
+          <div>
+            <div class="issue-title">FSD feature 간 import</div>
+            <div class="issue-desc">grade-management → ai-engine 등 하향식 단방향만 허용. 순환 의존성 없음.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 주요 명령어 -->
+  <div style="margin-top:20px;">
+    <div class="card">
+      <div class="card-title" style="color:var(--purple);">주요 개발 명령어</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-top:12px;">
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;">
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;font-weight:700;">개발</div>
+          <code style="font-size:0.82rem;color:var(--accent);">pnpm dev</code><br>
+          <code style="font-size:0.82rem;color:var(--text-dim);">pnpm build</code>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;">
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;font-weight:700;">품질 검사</div>
+          <code style="font-size:0.82rem;color:var(--green);">pnpm lint</code><br>
+          <code style="font-size:0.82rem;color:var(--green);">pnpm typecheck</code>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;">
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;font-weight:700;">테스트</div>
+          <code style="font-size:0.82rem;color:var(--yellow);">pnpm test</code><br>
+          <code style="font-size:0.82rem;color:var(--yellow);">pnpm test:e2e</code>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;">
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;font-weight:700;">데이터베이스</div>
+          <code style="font-size:0.82rem;color:var(--orange);">pnpm db:push</code><br>
+          <code style="font-size:0.82rem;color:var(--orange);">pnpm db:generate</code>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>
