@@ -4,6 +4,7 @@ import { getCurrentTeacher } from '@/lib/dal';
 import { ok, fail, okVoid, type ActionResult, type ActionVoidResult } from '@/lib/errors/action-result';
 import { logger } from '@/lib/logger';
 import { revalidatePath } from 'next/cache';
+import { db } from '@/lib/db/client';
 import {
   generateParentReport,
   saveParentReport,
@@ -11,6 +12,7 @@ import {
   getParentReports,
   type ParentReportData,
 } from '@/features/grade-management/report/parent-report-generator';
+import { sendAlimtalk, sendSms, ALIMTALK_TEMPLATES } from '@/features/notification';
 
 // =============================================================================
 // 타입 정의
@@ -49,10 +51,9 @@ export async function generateParentReportAction(
 }
 
 /**
- * 학부모 리포트 발송 Server Action (placeholder)
+ * 학부모 리포트 발송 Server Action
  *
- * 실제 이메일/카카오 발송은 추후 구현합니다.
- * 현재는 발송 기록만 업데이트합니다.
+ * 알리고 API를 통해 카카오 알림톡 또는 SMS로 발송한다.
  */
 export async function sendParentReportAction(
   reportId: string,
@@ -61,14 +62,75 @@ export async function sendParentReportAction(
   try {
     await getCurrentTeacher();
 
-    // 발송 기록 업데이트
-    await markReportAsSent(reportId, method);
+    // 리포트 + 학부모 정보 조회
+    const report = await db.parentGradeReport.findUnique({
+      where: { id: reportId },
+      include: {
+        student: { select: { name: true } },
+        parent: { select: { name: true, phone: true } },
+      },
+    });
 
-    // TODO: 실제 발송 로직
-    // - email: nodemailer 또는 외부 이메일 서비스
-    // - kakao: 카카오 알림톡 API
-    // - sms: SMS 발송 서비스
-    logger.info({ reportId, method }, '학부모 리포트 발송 기록 (placeholder)');
+    if (!report) {
+      return fail('리포트를 찾을 수 없습니다.');
+    }
+
+    if (!report.parent?.phone) {
+      return fail('학부모 연락처가 등록되지 않았습니다.');
+    }
+
+    const reportData = report.reportData as unknown as ParentReportData;
+    const parentPhone = report.parent.phone;
+    const parentName = report.parent.name;
+    const studentName = report.student.name;
+
+    if (method === 'kakao') {
+      const message = buildGradeReportMessage(studentName, reportData);
+      const smsMessage = buildGradeReportSmsMessage(studentName, reportData);
+
+      const result = await sendAlimtalk({
+        templateCode: ALIMTALK_TEMPLATES.gradeReport,
+        receivers: [{
+          phone: parentPhone,
+          subject: `${studentName} 학생 성적 리포트`,
+          message,
+          name: parentName,
+          fallbackMessage: smsMessage,
+          fallbackSubject: `[성적리포트] ${studentName}`,
+        }],
+        failover: true,
+      });
+
+      if (!result.success) {
+        return fail(result.errorMessage ?? '알림톡 발송에 실패했습니다.');
+      }
+
+      await markReportAsSent(reportId, method, {
+        sendStatus: 'sent',
+        aligoMid: result.mid,
+      });
+    } else if (method === 'sms') {
+      const smsMessage = buildGradeReportSmsMessage(studentName, reportData);
+
+      const result = await sendSms({
+        receiver: parentPhone,
+        message: smsMessage,
+        title: `[성적리포트] ${studentName}`,
+      });
+
+      if (!result.success) {
+        return fail(result.errorMessage ?? 'SMS 발송에 실패했습니다.');
+      }
+
+      await markReportAsSent(reportId, method, {
+        sendStatus: 'sent',
+        aligoMid: result.mid,
+      });
+    } else {
+      // email: 추후 구현
+      await markReportAsSent(reportId, method);
+      logger.info({ reportId, method }, 'Email 발송은 아직 미구현');
+    }
 
     revalidatePath(`/grades/reports`);
     return okVoid();
@@ -92,4 +154,43 @@ export async function getParentReportsAction(
     logger.error({ err: error, studentId }, '학부모 리포트 조회 실패');
     return fail('리포트 히스토리를 불러오는 중 오류가 발생했습니다.');
   }
+}
+
+// =============================================================================
+// 내부 헬퍼
+// =============================================================================
+
+/**
+ * 알림톡용 성적 리포트 메시지를 생성한다.
+ */
+function buildGradeReportMessage(
+  studentName: string,
+  reportData: ParentReportData
+): string {
+  const subjects = reportData.subjectComments
+    .map((s) => `${s.subject}: ${s.score}점 - ${s.comment}`)
+    .join('\n');
+
+  return `[성적 리포트 안내]
+
+${studentName} 학생의 성적 리포트가 준비되었습니다.
+
+■ 기간: ${reportData.reportPeriod}
+■ 요약: ${reportData.summary}
+
+■ 과목별 성적
+${subjects}
+
+■ 선생님 한마디
+${reportData.teacherNote}`;
+}
+
+/**
+ * SMS 대체 발송용 축약 메시지를 생성한다.
+ */
+function buildGradeReportSmsMessage(
+  studentName: string,
+  reportData: ParentReportData
+): string {
+  return `[방과후학교] ${studentName} 학생 성적 리포트가 준비되었습니다. 기간: ${reportData.reportPeriod}`;
 }

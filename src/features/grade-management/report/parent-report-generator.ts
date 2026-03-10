@@ -148,17 +148,20 @@ export async function saveParentReport(
 }
 
 /**
- * 리포트 발송 기록을 업데이트한다. (실제 발송은 placeholder)
+ * 리포트 발송 기록을 업데이트한다.
  */
 export async function markReportAsSent(
   reportId: string,
-  method: 'email' | 'kakao' | 'sms'
+  method: 'email' | 'kakao' | 'sms',
+  options?: { sendStatus?: string; aligoMid?: string }
 ): Promise<void> {
   await db.parentGradeReport.update({
     where: { id: reportId },
     data: {
       sentAt: new Date(),
       sentMethod: method,
+      sendStatus: options?.sendStatus ?? 'sent',
+      aligoMid: options?.aligoMid ?? null,
     },
   });
 }
