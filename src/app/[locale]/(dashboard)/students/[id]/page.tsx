@@ -1,6 +1,7 @@
 import { getStudentById } from "@/lib/actions/student/detail";
 import AnalysisTab from "@/components/students/tabs/analysis-tab";
 import LearningTab from "@/components/students/tabs/learning-tab";
+import MatchingTab from "@/components/students/tabs/matching-tab";
 import CounselingTab from "@/components/students/tabs/counseling-tab";
 import ReportTab from "@/components/students/tabs/report-tab";
 import { notFound } from "next/navigation";
@@ -112,10 +113,11 @@ export default async function StudentDetailPage(props: {
                     <AnalysisTab studentId={student.id} />
                 )}
                 {currentTab === 'matching' && (
-                    <div data-testid="matching-tab-content">
-                        <h3 className="text-lg font-bold mb-4">선생님 매칭 궁합</h3>
-                        <p className="text-gray-500">담당 선생님과의 매칭 점수 및 상세 분석을 표시합니다.</p>
-                    </div>
+                    <MatchingTab
+                        studentId={student.id}
+                        studentName={student.name}
+                        currentTeacherId={student.teacherId}
+                    />
                 )}
                 {currentTab === 'counseling' && (
                     <CounselingTab

@@ -135,7 +135,9 @@ export function SmartMatchingSection({
     setAssigningTeacherId(teacherId)
 
     try {
-      await assignStudentToTeacher(selectedStudentId!, teacherId)
+      // 배정 시 궁합 점수도 함께 저장
+      const matchedTeacher = recommendations.find((r) => r.teacherId === teacherId)
+      await assignStudentToTeacher(selectedStudentId!, teacherId, matchedTeacher?.score)
       toast.success(
         `${studentName} 학생이 ${confirmDialog.teacherName} 선생님에게 배정되었습니다.`
       )

@@ -10,7 +10,7 @@ import {
   type Assignment,
   type AutoAssignmentOptions,
 } from "@/lib/optimization/auto-assignment"
-import { fetchSubjectAnalyses, fetchBatchAnalyses } from '@/features/matching'
+import { fetchSubjectAnalyses, fetchBatchAnalyses, upsertCompatibilityResult } from '@/features/matching'
 import { ok, okVoid, fail, type ActionResult, type ActionVoidResult } from "@/lib/errors/action-result"
 import { logger } from "@/lib/logger"
 /** 선생님 추천 항목 */
@@ -94,7 +94,8 @@ export async function unassignStudent(
  */
 export async function assignStudentToTeacher(
   studentId: string,
-  teacherId: string
+  teacherId: string,
+  compatibilityScore?: CompatibilityScore
 ): Promise<ActionVoidResult> {
   const session = await verifySession()
 
@@ -130,6 +131,16 @@ export async function assignStudentToTeacher(
   } catch (error) {
     logger.error({ err: error }, 'Failed to assign student to teacher')
     return fail("학생 배정 중 오류가 발생했습니다.")
+  }
+
+  // 궁합 점수가 전달되면 CompatibilityResult에 저장
+  if (compatibilityScore) {
+    try {
+      await upsertCompatibilityResult(teacherId, studentId, compatibilityScore)
+    } catch (error) {
+      // 궁합 저장 실패는 배정 자체를 롤백하지 않음
+      logger.warn({ err: error }, 'Failed to save compatibility result')
+    }
   }
 
   // 캐시 무효화
@@ -260,6 +271,113 @@ export async function assignStudentBatch(
   revalidatePath(`/teachers/${teacherId}`)
 
   return ok({ count: studentIds.length })
+}
+
+/** 학생의 배정된 선생님 궁합 결과 */
+export interface AssignedCompatibilityData {
+  teacherId: string
+  teacherName: string
+  teacherRole: string
+  overallScore: number
+  breakdown: CompatibilityScore["breakdown"]
+  reasons: string[]
+  calculatedAt: string
+}
+
+/**
+ * 학생의 현재 배정된 선생님과의 궁합 결과 조회
+ *
+ * CompatibilityResult 테이블에서 저장된 데이터를 반환합니다.
+ * 저장된 데이터가 없으면 실시간으로 계산합니다.
+ *
+ * @param studentId - 학생 ID
+ * @returns 배정된 선생님과의 궁합 데이터
+ */
+export async function getAssignedTeacherCompatibility(
+  studentId: string
+): Promise<ActionResult<AssignedCompatibilityData | null>> {
+  await verifySession()
+
+  // 학생 조회 (배정된 선생님 포함)
+  const student = await db.student.findUnique({
+    where: { id: studentId },
+    select: {
+      id: true,
+      name: true,
+      teacherId: true,
+      teacher: {
+        select: {
+          id: true,
+          name: true,
+          role: true,
+          _count: { select: { students: true } },
+        },
+      },
+    },
+  })
+
+  if (!student) return fail("학생을 찾을 수 없어요.")
+  if (!student.teacherId || !student.teacher) return ok(null)
+
+  // 저장된 궁합 결과 조회
+  const { getCompatibilityResult } = await import("@/features/matching")
+  const saved = await getCompatibilityResult(student.teacherId, studentId)
+
+  if (saved) {
+    const breakdown = saved.breakdown as CompatibilityScore["breakdown"]
+    const reasons = (saved.reasons ?? []) as string[]
+    return ok({
+      teacherId: student.teacher.id,
+      teacherName: student.teacher.name,
+      teacherRole: student.teacher.role,
+      overallScore: saved.overallScore,
+      breakdown,
+      reasons,
+      calculatedAt: saved.calculatedAt.toISOString(),
+    })
+  }
+
+  // 저장된 데이터 없으면 실시간 계산
+  const studentAnalyses = await fetchSubjectAnalyses(studentId, "STUDENT")
+  const teacherAnalyses = await fetchSubjectAnalyses(student.teacherId, "TEACHER")
+
+  const totalStudentCount = await db.student.count()
+  const totalTeacherCount = await db.teacher.count({
+    where: { role: { in: ["TEACHER", "MANAGER", "TEAM_LEADER"] } },
+  })
+  const averageLoad = totalTeacherCount > 0 ? totalStudentCount / totalTeacherCount : 15
+
+  const score = calculateCompatibilityScore(
+    {
+      mbti: teacherAnalyses.mbti,
+      saju: teacherAnalyses.saju,
+      name: teacherAnalyses.name,
+      currentLoad: student.teacher._count.students,
+    },
+    {
+      mbti: studentAnalyses.mbti,
+      saju: studentAnalyses.saju,
+      name: studentAnalyses.name,
+    },
+    averageLoad
+  )
+
+  // 계산 결과를 DB에 저장 (다음 조회 시 빠르게)
+  try {
+    await upsertCompatibilityResult(student.teacherId, studentId, score)
+  } catch (error) {
+    logger.warn({ err: error }, 'Failed to cache compatibility result')
+  }
+
+  return ok({
+    teacherId: student.teacher.id,
+    teacherName: student.teacher.name,
+    teacherRole: student.teacher.role,
+    overallScore: score.overall,
+    breakdown: score.breakdown,
+    reasons: score.reasons,
+    calculatedAt: new Date().toISOString(),
+  })
 }
 
 /**
