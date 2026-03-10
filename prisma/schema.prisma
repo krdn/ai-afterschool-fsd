@@ -1010,6 +1010,8 @@ model ParentGradeReport {
   pdfUrl        String?
   sentAt        DateTime?
   sentMethod    String?
+  sendStatus    String?
+  aligoMid      String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
