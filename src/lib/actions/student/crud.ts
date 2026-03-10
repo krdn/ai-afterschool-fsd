@@ -538,9 +538,9 @@ export async function getStudentsAction(pagination?: {
   }
 
   try {
-    const where = {
-      teacherId: session.userId,
-    }
+    // 역할별 학생 필터링: DIRECTOR는 전체, 나머지는 담당 학생만
+    const where: Prisma.StudentWhereInput =
+      session.role === "DIRECTOR" ? {} : { teacherId: session.userId }
 
     const selectFields = {
       id: true,
