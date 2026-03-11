@@ -1,10 +1,11 @@
 import 'server-only'
 import { db } from '@/lib/db/client'
+import type { TeacherRole } from '@/lib/db/common/rbac'
 import type { MentionItem } from './mention-types'
 
 type Session = {
   userId: string
-  role: string
+  role: TeacherRole
   teamId: string | null
 }
 
@@ -16,6 +17,7 @@ type EntityCacheEntry = {
 }
 
 const CACHE_TTL_MS = 5 * 60 * 1000 // 5분
+// 인메모리 캐시: standalone 단일 프로세스 전제. 학생 추가/삭제는 TTL 만료 후 반영됨.
 const entityCache = new Map<string, EntityCacheEntry>()
 
 async function getEntityNames(session: Session): Promise<Omit<EntityCacheEntry, 'expiry'>> {

@@ -32,10 +32,7 @@ export function createChatTools(session: Session) {
       execute: async ({ query, school, grade }) => {
         const where: Record<string, unknown> = {
           ...studentWhere(session),
-          OR: [
-            { name: { contains: query } },
-            { school: { contains: query } },
-          ],
+          name: { contains: query },
         }
         if (school) where.school = { contains: school }
         if (grade) where.grade = grade
@@ -180,55 +177,58 @@ export function createChatTools(session: Session) {
         })
         if (!student) return { error: '학생을 찾을 수 없거나 접근 권한이 없습니다.' }
         const type = analysisType ?? 'all'
-        const result: Record<string, unknown> = { studentName: student.name }
+        const queries: Array<[string, Promise<unknown>]> = []
         if (type === 'all' || type === 'saju') {
-          result.saju = await db.sajuAnalysis.findFirst({
+          queries.push(['saju', db.sajuAnalysis.findFirst({
             where: { subjectType: 'STUDENT', subjectId: studentId },
             select: { interpretation: true, calculatedAt: true },
-          })
+          })])
         }
         if (type === 'all' || type === 'mbti') {
-          result.mbti = await db.mbtiAnalysis.findFirst({
+          queries.push(['mbti', db.mbtiAnalysis.findFirst({
             where: { subjectType: 'STUDENT', subjectId: studentId },
             select: { mbtiType: true, interpretation: true },
-          })
+          })])
         }
         if (type === 'all' || type === 'vark') {
-          result.vark = await db.varkAnalysis.findFirst({
+          queries.push(['vark', db.varkAnalysis.findFirst({
             where: { studentId },
             select: { varkType: true, interpretation: true },
-          })
+          })])
         }
         if (type === 'all' || type === 'zodiac') {
-          result.zodiac = await db.zodiacAnalysis.findFirst({
+          queries.push(['zodiac', db.zodiacAnalysis.findFirst({
             where: { studentId },
             select: { zodiacSign: true, zodiacName: true, interpretation: true },
-          })
+          })])
         }
         if (type === 'all' || type === 'name') {
-          result.nameAnalysis = await db.nameAnalysis.findFirst({
+          queries.push(['nameAnalysis', db.nameAnalysis.findFirst({
             where: { subjectType: 'STUDENT', subjectId: studentId },
             select: { interpretation: true },
-          })
+          })])
         }
         if (type === 'all' || type === 'face') {
-          result.face = await db.faceAnalysis.findFirst({
+          queries.push(['face', db.faceAnalysis.findFirst({
             where: { subjectType: 'STUDENT', subjectId: studentId },
             select: { result: true },
-          })
+          })])
         }
         if (type === 'all' || type === 'palm') {
-          result.palm = await db.palmAnalysis.findFirst({
+          queries.push(['palm', db.palmAnalysis.findFirst({
             where: { subjectType: 'STUDENT', subjectId: studentId },
             select: { result: true },
-          })
+          })])
         }
         if (type === 'all' || type === 'personality') {
-          result.personality = await db.personalitySummary.findFirst({
+          queries.push(['personality', db.personalitySummary.findFirst({
             where: { studentId },
             select: { coreTraits: true },
-          })
+          })])
         }
+        const results = await Promise.all(queries.map(([, p]) => p))
+        const result: Record<string, unknown> = { studentName: student.name }
+        queries.forEach(([key], i) => { result[key] = results[i] })
         return result
       },
     }),
