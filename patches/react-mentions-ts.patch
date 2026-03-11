@@ -1,0 +1,65 @@
+diff --git a/dist/index.cjs b/dist/index.cjs
+index 94be5e6c6539668d9876428bd8ec251a0cc91403..5d2e5254666d41ae46919c96bb9a48582ea54acb 100644
+--- a/dist/index.cjs
++++ b/dist/index.cjs
+@@ -128,7 +128,7 @@ var ensureNumber = (value, fallback) => {
+   }
+   return fallback;
+ };
+-var applyChangeToValue = (value, plainTextValue, selection, config) => {
++var applyChangeToValue = (value, plainTextValue, selection, config, options) => {
+   let selectionStartBefore = normalizeSelectionPoint(selection.selectionStartBefore);
+   let selectionEndBefore = normalizeSelectionPoint(selection.selectionEndBefore);
+   const { selectionEndAfter } = selection;
+@@ -143,7 +143,7 @@ var applyChangeToValue = (value, plainTextValue, selection, config) => {
+   if (oldPlainTextValue === plainTextValue && selectionStartBefore === selectionEndBefore && selectionEndBefore === selectionEndAfter) {
+     return value;
+   }
+-  if (selectionStartBefore === selectionEndBefore && selectionEndBefore === selectionEndAfter && oldPlainTextValue.length === plainTextValue.length && oldPlainTextValue !== plainTextValue) {
++  if (!(options && options.isComposing) && selectionStartBefore === selectionEndBefore && selectionEndBefore === selectionEndAfter && oldPlainTextValue.length === plainTextValue.length && oldPlainTextValue !== plainTextValue) {
+     selectionStartBefore = Math.max(0, selectionStartBefore - 1);
+     selectionEndBefore = Math.max(0, selectionEndBefore - 1);
+   }
+@@ -1983,7 +1983,8 @@ var MentionsInput = class _MentionsInput extends React5__default.default.Compone
+         selectionEndBefore,
+         selectionEndAfter: ev.target.selectionEnd ?? selectionEndBefore
+       },
+-      this.state.config
++      this.state.config,
++      { isComposing: this._isComposing }
+     );
+     const {
+       mentions,
+diff --git a/dist/index.js b/dist/index.js
+index 3cc46cea3aa8d36563c531187d3bdf8c4accfd94..28386108e0af7d71f93ed616f8a2ec1685d6b11c 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -122,7 +122,7 @@ var ensureNumber = (value, fallback) => {
+   }
+   return fallback;
+ };
+-var applyChangeToValue = (value, plainTextValue, selection, config) => {
++var applyChangeToValue = (value, plainTextValue, selection, config, options) => {
+   let selectionStartBefore = normalizeSelectionPoint(selection.selectionStartBefore);
+   let selectionEndBefore = normalizeSelectionPoint(selection.selectionEndBefore);
+   const { selectionEndAfter } = selection;
+@@ -137,7 +137,8 @@ var applyChangeToValue = (value, plainTextValue, selection, config) => {
+   if (oldPlainTextValue === plainTextValue && selectionStartBefore === selectionEndBefore && selectionEndBefore === selectionEndAfter) {
+     return value;
+   }
+-  if (selectionStartBefore === selectionEndBefore && selectionEndBefore === selectionEndAfter && oldPlainTextValue.length === plainTextValue.length && oldPlainTextValue !== plainTextValue) {
++  // IME 조합 중에는 같은 위치에서 문자가 변경되므로 (예: ㅅ→서→석) selectionStart 보정을 건너뜀
++  if (!(options && options.isComposing) && selectionStartBefore === selectionEndBefore && selectionEndBefore === selectionEndAfter && oldPlainTextValue.length === plainTextValue.length && oldPlainTextValue !== plainTextValue) {
+     selectionStartBefore = Math.max(0, selectionStartBefore - 1);
+     selectionEndBefore = Math.max(0, selectionEndBefore - 1);
+   }
+@@ -1977,7 +1978,8 @@ var MentionsInput = class _MentionsInput extends React5.Component {
+         selectionEndBefore,
+         selectionEndAfter: ev.target.selectionEnd ?? selectionEndBefore
+       },
+-      this.state.config
++      this.state.config,
++      { isComposing: this._isComposing }
+     );
+     const {
+       mentions,
