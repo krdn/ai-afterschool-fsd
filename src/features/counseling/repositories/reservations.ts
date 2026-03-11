@@ -17,7 +17,7 @@ export interface CreateReservationParams {
  * 예약 목록 조회 파라미터
  */
 export interface GetReservationsParams {
-  teacherId: string
+  teacherId?: string
   studentId?: string
   dateFrom?: Date
   dateTo?: Date
@@ -123,7 +123,7 @@ export async function getReservations(params: GetReservationsParams) {
   const { teacherId, studentId, dateFrom, dateTo, status } = params
 
   const where: Prisma.ParentCounselingReservationWhereInput = {
-    teacherId,
+    ...(teacherId ? { teacherId } : {}),
   }
 
   // 학생 필터

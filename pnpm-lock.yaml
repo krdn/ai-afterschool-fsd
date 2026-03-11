@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  react-mentions-ts:
+    hash: 279e32c0ce9e9b487540ab7e83d76a4078c9f7282616d47b9c4b2e49d1c1d5ba
+    path: patches/react-mentions-ts.patch
+
 importers:
 
   .:
@@ -154,7 +159,7 @@ importers:
         version: 10.1.0(@types/react@19.2.14)(react@19.2.4)
       react-mentions-ts:
         specifier: 5.4.7
-        version: 5.4.7(class-variance-authority@0.7.1)(clsx@2.1.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.5.0)
+        version: 5.4.7(patch_hash=279e32c0ce9e9b487540ab7e83d76a4078c9f7282616d47b9c4b2e49d1c1d5ba)(class-variance-authority@0.7.1)(clsx@2.1.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.5.0)
       react-resizable-panels:
         specifier: ^4.6.5
         version: 4.6.5(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -12963,7 +12968,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  react-mentions-ts@5.4.7(class-variance-authority@0.7.1)(clsx@2.1.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.5.0):
+  react-mentions-ts@5.4.7(patch_hash=279e32c0ce9e9b487540ab7e83d76a4078c9f7282616d47b9c4b2e49d1c1d5ba)(class-variance-authority@0.7.1)(clsx@2.1.1)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(tailwind-merge@3.5.0):
     dependencies:
       class-variance-authority: 0.7.1
       clsx: 2.1.1

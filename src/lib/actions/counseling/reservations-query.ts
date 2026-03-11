@@ -35,9 +35,9 @@ export async function getReservationsAction(params: {
     const dateFrom = params.dateFrom ? new Date(params.dateFrom) : undefined
     const dateTo = params.dateTo ? new Date(params.dateTo) : undefined
 
-    // 조회 파라미터 구성
+    // 조회 파라미터 구성: DIRECTOR는 전체 예약, 나머지는 자신 예약만
     const getParams: GetReservationsParams = {
-      teacherId: session.userId,
+      teacherId: session.role === "DIRECTOR" ? undefined : session.userId,
       studentId: params.studentId,
       dateFrom,
       dateTo,
@@ -94,7 +94,8 @@ export async function getReservationStatsAction(): Promise<ActionResult<Record<R
     const stats = await db.parentCounselingReservation.groupBy({
       by: ['status'],
       where: {
-        teacherId: session.userId,
+        // DIRECTOR는 전체 예약 통계, 나머지는 자신 예약만
+        ...(session.role === "DIRECTOR" ? {} : { teacherId: session.userId }),
       },
       _count: {
         status: true,

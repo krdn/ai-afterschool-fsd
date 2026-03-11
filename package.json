@@ -125,6 +125,9 @@
       "@prisma/engines",
       "prisma",
       "argon2"
-    ]
+    ],
+    "patchedDependencies": {
+      "react-mentions-ts": "patches/react-mentions-ts.patch"
+    }
   }
 }

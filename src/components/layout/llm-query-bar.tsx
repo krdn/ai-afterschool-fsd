@@ -23,11 +23,9 @@ export function LLMQueryBar() {
   const [mentionMarkup, setMentionMarkup] = useState("")
   const [activeMentions, setActiveMentions] = useState<Array<{ id: string | number; display?: string | null }>>([])
   const prevTypeRef = useRef<string | null>(null)
-  const isComposingRef = useRef(false)
   const { fetchMentions } = useMention()
 
   const handleMentionsChange = useCallback((change: MentionsInputChangeEvent<MentionExtra>) => {
-    if (isComposingRef.current) return
     setMentionMarkup(change.value)
     setActiveMentions(change.mentions)
   }, [])
@@ -53,17 +51,9 @@ export function LLMQueryBar() {
     setActiveMentions([])
   }, [mentionMarkup, activeMentions, router, t])
 
-  const handleCompositionStart = useCallback(() => {
-    isComposingRef.current = true
-  }, [])
-
-  const handleCompositionEnd = useCallback(() => {
-    isComposingRef.current = false
-  }, [])
-
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing && !isComposingRef.current) {
+      if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
         e.preventDefault()
         handleSubmit()
       }
@@ -122,8 +112,6 @@ export function LLMQueryBar() {
             value={mentionMarkup}
             onMentionsChange={handleMentionsChange}
             onKeyDown={handleKeyDown}
-            onCompositionStart={handleCompositionStart}
-            onCompositionEnd={handleCompositionEnd}
             placeholder={t("placeholder")}
             a11ySuggestionsListLabel="멘션 검색 결과"
             suggestionsPlacement="below"
