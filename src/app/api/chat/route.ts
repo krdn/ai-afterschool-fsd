@@ -104,23 +104,23 @@ export async function POST(request: Request) {
       ];
     }
 
-    // user 메시지 DB 저장
-    await db.chatMessage.create({
-      data: {
-        sessionId: chatSessionId,
-        role: 'user',
-        content: trimmedPrompt,
-        mentionedEntities: mentionedEntitiesData
-          ? (mentionedEntitiesData as import('@/lib/db').Prisma.InputJsonValue)
-          : undefined,
-      },
-    });
-
-    // 세션 updatedAt 갱신
-    await db.chatSession.update({
-      where: { id: chatSessionId },
-      data: { updatedAt: new Date() },
-    });
+    // user 메시지 DB 저장 + 세션 updatedAt 갱신 (독립적이므로 병렬 실행)
+    await Promise.all([
+      db.chatMessage.create({
+        data: {
+          sessionId: chatSessionId,
+          role: 'user',
+          content: trimmedPrompt,
+          mentionedEntities: mentionedEntitiesData
+            ? (mentionedEntitiesData as import('@/lib/db').Prisma.InputJsonValue)
+            : undefined,
+        },
+      }),
+      db.chatSession.update({
+        where: { id: chatSessionId },
+        data: { updatedAt: new Date() },
+      }),
+    ]);
 
     // auto 모드
     let effectiveProviderId = providerId || undefined;

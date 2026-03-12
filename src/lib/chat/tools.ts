@@ -2,30 +2,24 @@ import 'server-only'
 import { tool } from 'ai'
 import { z } from 'zod'
 import { db } from '@/lib/db/client'
-import type { TeacherRole } from '@/lib/db/common/rbac'
+import type { ChatSession } from './mention-types'
 
-type Session = {
-  userId: string
-  role: TeacherRole
-  teamId: string | null
-}
-
-function studentWhere(session: Session) {
+function studentWhere(session: ChatSession) {
   if (session.role === 'DIRECTOR') return {}
   return { teamId: session.teamId }
 }
 
-function teacherWhere(session: Session) {
+function teacherWhere(session: ChatSession) {
   if (session.role === 'DIRECTOR') return {}
   return { teamId: session.teamId }
 }
 
-export function createChatTools(session: Session) {
+export function createChatTools(session: ChatSession) {
   return {
     searchStudents: tool({
       description: '이름, 학교, 학년으로 학생을 검색합니다. 최대 10건 반환.',
       inputSchema: z.object({
-        query: z.string().describe('검색어 (학생 이름, 학교명 등)'),
+        query: z.string().min(1).describe('검색어 (학생 이름, 학교명 등)'),
         school: z.string().optional().describe('학교명 필터'),
         grade: z.number().optional().describe('학년 필터'),
       }),
@@ -75,7 +69,7 @@ export function createChatTools(session: Session) {
     searchTeachers: tool({
       description: '이름, 역할로 선생님을 검색합니다.',
       inputSchema: z.object({
-        query: z.string().describe('검색어 (선생님 이름)'),
+        query: z.string().min(1).describe('검색어 (선생님 이름)'),
         role: z.string().optional().describe('역할 필터 (DIRECTOR, TEAM_LEADER, TEACHER 등)'),
       }),
       execute: async ({ query, role }) => {

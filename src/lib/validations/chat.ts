@@ -10,7 +10,7 @@ export const ChatRequestSchema = z.object({
     content: z.string(),
   })).optional(),
   mentions: z.array(z.object({
-    type: z.string(),
+    type: z.enum(['student', 'teacher', 'team']),
     id: z.string(),
     name: z.string().optional(),
   }).passthrough()).optional(),

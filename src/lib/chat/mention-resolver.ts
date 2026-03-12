@@ -2,21 +2,13 @@ import 'server-only'
 import { db } from '@/lib/db/client'
 import { logger } from '@/lib/logger'
 import { logAuditAction } from '@/lib/dal'
-import type { TeacherRole } from '@/lib/db/common/rbac'
 import type {
   MentionItem,
   ResolvedMention,
   MentionedEntity,
   MentionResolutionResult,
+  ChatSession,
 } from './mention-types'
-
-// ─── 타입 헬퍼 ────────────────────────────────────────────────────────────────
-
-interface Session {
-  userId: string
-  role: TeacherRole
-  teamId: string | null
-}
 
 // ─── 텍스트 축약 헬퍼 ─────────────────────────────────────────────────────────
 
@@ -240,7 +232,7 @@ async function handleAccessDenied(params: {
 
 async function resolveStudents(
   studentIds: string[],
-  session: Session
+  session: ChatSession
 ): Promise<{
   resolved: ResolvedMention[]
   metadata: MentionedEntity[]
@@ -412,7 +404,7 @@ async function resolveStudents(
 
 async function resolveTeachers(
   teacherIds: string[],
-  session: Session
+  session: ChatSession
 ): Promise<{
   resolved: ResolvedMention[]
   metadata: MentionedEntity[]
@@ -562,7 +554,7 @@ async function resolveTeachers(
 
 async function resolveTeams(
   teamIds: string[],
-  session: Session
+  session: ChatSession
 ): Promise<{
   resolved: ResolvedMention[]
   metadata: MentionedEntity[]
@@ -671,7 +663,7 @@ async function resolveTeams(
  */
 export async function resolveMentions(
   mentions: MentionItem[],
-  session: Session
+  session: ChatSession
 ): Promise<MentionResolutionResult> {
   if (mentions.length === 0) {
     return { resolved: [], metadata: [], accessDeniedMessages: [] }
