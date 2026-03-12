@@ -9,6 +9,22 @@
 - app → components → features → lib → shared/types/hooks
 - 하위 레이어는 상위 레이어를 import할 수 없음
 
+## 프로젝트 필수 패턴
+
+### Server Action
+- 첫 줄에 `verifySession()` 또는 `getCurrentTeacher()` 호출 필수
+- 반환: `ActionResult<T>` (ok/fail 패턴)
+- Zod: 반드시 `safeParse()` 사용 (`parse()` 금지)
+
+### Prisma
+- 클라이언트: `import { db } from '@/lib/db/client'`
+- 필요한 필드만 `select`로 조회 (전체 select 지양)
+
+### Import 규칙
+- `@/*` 경로 별칭 필수 (상대 경로 지양)
+- FSD 위반: features/ → app/ 또는 components/ import 금지
+- lib/ → features/ import은 허용 (Server Action → feature 서비스)
+
 ## 리뷰 기준 (우선순위 순)
 1. **보안**: 개인정보 노출, SQL injection, XSS, 인증/인가 누락, 환경변수 하드코딩
 2. **버그**: 논리 오류, 타입 안전성, null/undefined 미처리, 에러 핸들링 누락
