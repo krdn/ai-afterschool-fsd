@@ -1,13 +1,6 @@
 import 'server-only'
 import { db } from '@/lib/db/client'
-import type { TeacherRole } from '@/lib/db/common/rbac'
-import type { MentionItem } from './mention-types'
-
-type Session = {
-  userId: string
-  role: TeacherRole
-  teamId: string | null
-}
+import type { MentionItem, ChatSession } from './mention-types'
 
 type EntityCacheEntry = {
   students: Array<{ id: string; name: string; teamId: string | null }>
@@ -17,10 +10,26 @@ type EntityCacheEntry = {
 }
 
 const CACHE_TTL_MS = 5 * 60 * 1000 // 5분
+const CACHE_MAX_SIZE = 100 // 최대 캐시 엔트리 수 (메모리 누수 방지)
+const MAX_AUTO_DETECTED = 5 // 자동 감지 최대 엔티티 수 (false positive 제한)
 // 인메모리 캐시: standalone 단일 프로세스 전제. 학생 추가/삭제는 TTL 만료 후 반영됨.
 const entityCache = new Map<string, EntityCacheEntry>()
 
-async function getEntityNames(session: Session): Promise<Omit<EntityCacheEntry, 'expiry'>> {
+/** 만료된 엔트리를 정리하고, 크기 제한 초과 시 가장 오래된 엔트리부터 제거 */
+function evictStaleEntries() {
+  const now = Date.now()
+  for (const [key, entry] of entityCache) {
+    if (entry.expiry <= now) entityCache.delete(key)
+  }
+  // 크기 초과 시 삽입 순서상 가장 오래된 엔트리 제거 (Map은 삽입 순서 보장)
+  while (entityCache.size >= CACHE_MAX_SIZE) {
+    const oldest = entityCache.keys().next().value
+    if (oldest) entityCache.delete(oldest)
+    else break
+  }
+}
+
+async function getEntityNames(session: ChatSession): Promise<Omit<EntityCacheEntry, 'expiry'>> {
   const cacheKey = `entities:${session.userId}`
   const cached = entityCache.get(cacheKey)
   if (cached && cached.expiry > Date.now()) {
@@ -41,6 +50,7 @@ async function getEntityNames(session: Session): Promise<Omit<EntityCacheEntry, 
     }),
   ])
 
+  evictStaleEntries()
   const entry: EntityCacheEntry = {
     students,
     teachers,
@@ -59,7 +69,7 @@ async function getEntityNames(session: Session): Promise<Omit<EntityCacheEntry, 
  */
 export async function autoDetectEntities(
   message: string,
-  session: Session,
+  session: ChatSession,
   existingMentions: MentionItem[]
 ): Promise<MentionItem[]> {
   const entities = await getEntityNames(session)
@@ -100,5 +110,5 @@ export async function autoDetectEntities(
     detected.push({ type: 'team', id: team.id })
   }
 
-  return detected
+  return detected.slice(0, MAX_AUTO_DETECTED)
 }

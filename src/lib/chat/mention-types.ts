@@ -1,5 +1,14 @@
 // 멘션 시스템 공유 타입 — Phase 36~40에서 사용
 
+import type { TeacherRole } from '@/lib/db/common/rbac'
+
+/** 채팅 시스템 전역 세션 타입 (auto-detect, tools, mention-resolver 공유) */
+export type ChatSession = {
+  userId: string
+  role: TeacherRole
+  teamId: string | null
+}
+
 /**
  * 멘션 가능한 엔티티 타입
  * - student: 학생
