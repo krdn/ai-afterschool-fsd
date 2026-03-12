@@ -46,6 +46,7 @@ packages/db/prisma/*.db-journal
 
 # Playwright CLI
 .playwright-cli/
+login.yaml
 
 # Screenshots
 *.png

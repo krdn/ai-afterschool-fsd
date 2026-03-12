@@ -40,7 +40,16 @@ interface StudentAnalysisData {
     grade: number
     school: string
     teamId: string | null
+    phone: string | null
+    birthDate: Date
+    bloodType: string | null
+    targetUniversity: string | null
+    targetMajor: string | null
+    nationality: string | null
+    attendanceRate: number | null
+    initialGradeLevel: string | null
   }
+  parents: Array<{ name: string; phone: string; relation: string; isPrimary: boolean }>
   saju: { interpretation: string | null } | null
   name: { interpretation: string | null } | null
   mbti: { mbtiType: string; interpretation: string | null } | null
@@ -53,10 +62,31 @@ interface StudentAnalysisData {
 }
 
 function buildStudentContextText(data: StudentAnalysisData): string {
-  const { student, saju, name, mbti, face, palm, vark, zodiac, personalitySummary, counselingSessions } = data
+  const { student, parents, saju, name, mbti, face, palm, vark, zodiac, personalitySummary, counselingSessions } = data
+
+  const birthDateStr = student.birthDate
+    ? student.birthDate.toISOString().slice(0, 10)
+    : '미등록'
 
   const lines: string[] = [
     `이름: ${student.name} | 학년: ${student.grade}학년 | 학교: ${student.school}`,
+    `생년월일: ${birthDateStr} | 전화번호: ${student.phone ?? '미등록'} | 혈액형: ${student.bloodType ?? '미등록'}`,
+    `국적: ${student.nationality ?? '미등록'} | 출석률: ${student.attendanceRate != null ? `${student.attendanceRate}%` : '미등록'} | 초기학력: ${student.initialGradeLevel ?? '미등록'}`,
+    `목표대학: ${student.targetUniversity ?? '미등록'} | 목표학과: ${student.targetMajor ?? '미등록'}`,
+  ]
+
+  // 보호자 정보
+  if (parents.length > 0) {
+    const parentLines = parents.map((p) => {
+      const primary = p.isPrimary ? ' (주보호자)' : ''
+      return `  ${p.relation}: ${p.name} / ${p.phone}${primary}`
+    })
+    lines.push(`[보호자]\n${parentLines.join('\n')}`)
+  } else {
+    lines.push('[보호자] 등록된 보호자 없음')
+  }
+
+  lines.push(
     `[사주분석] ${orNone(truncate(saju?.interpretation))}`,
     `[MBTI] ${mbti ? `${mbti.mbtiType} - ${orNone(truncate(mbti.interpretation))}` : '분석 없음'}`,
     `[성명학] ${orNone(truncate(name?.interpretation))}`,
@@ -65,7 +95,7 @@ function buildStudentContextText(data: StudentAnalysisData): string {
     `[VARK] ${vark ? `${vark.varkType} - ${orNone(truncate(vark.interpretation))}` : '분석 없음'}`,
     `[별자리] ${zodiac ? `${zodiac.zodiacName}(${zodiac.zodiacSign}) - ${orNone(truncate(zodiac.interpretation))}` : '분석 없음'}`,
     `[AI종합] ${orNone(truncate(personalitySummary?.coreTraits))}`,
-  ]
+  )
 
   if (counselingSessions.length > 0) {
     const sessionLines = counselingSessions.map((s) => {
@@ -220,7 +250,7 @@ async function resolveStudents(
     return { resolved: [], metadata: [], accessDeniedMessages: [] }
   }
 
-  // 배치 조회 (기본 정보)
+  // 배치 조회 (기본 정보 + 보호자)
   const students = await db.student.findMany({
     where: { id: { in: studentIds } },
     select: {
@@ -229,6 +259,18 @@ async function resolveStudents(
       grade: true,
       school: true,
       teamId: true,
+      phone: true,
+      birthDate: true,
+      bloodType: true,
+      targetUniversity: true,
+      targetMajor: true,
+      nationality: true,
+      attendanceRate: true,
+      initialGradeLevel: true,
+      parents: {
+        select: { name: true, phone: true, relation: true, isPrimary: true },
+        orderBy: { isPrimary: 'desc' },
+      },
     },
   })
 
@@ -342,6 +384,7 @@ async function resolveStudents(
     // 데이터 수집 및 요약 텍스트 생성
     const contextData = buildStudentContextText({
       student,
+      parents: student.parents,
       saju: sajuMap.get(id) ?? null,
       name: nameMap.get(id) ?? null,
       mbti: mbtiMap.get(id) ?? null,

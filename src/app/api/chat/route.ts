@@ -3,14 +3,22 @@ import { streamWithProvider } from '@/features/ai-engine';
 import { db } from '@/lib/db/client';
 import { resolveMentions } from '@/lib/chat/mention-resolver';
 import { buildMentionContext } from '@/lib/chat/context-builder';
+import { autoDetectEntities } from '@/lib/chat/auto-detect';
+import { createChatTools } from '@/lib/chat/tools';
 import type { MentionItem } from '@/lib/chat/mention-types';
 import { ChatRequestSchema } from '@/lib/validations/chat';
 import { logger } from '@/lib/logger';
 
-const SYSTEM_PROMPT =
-  '당신은 방과후 교실 관리 시스템의 AI 어시스턴트입니다. 교사들의 질문에 친절하고 정확하게 답변해주세요. 한국어로 답변하되, 필요 시 영어 기술 용어를 병기합니다.';
+const SYSTEM_PROMPT = `당신은 방과후 교실 관리 시스템의 AI 어시스턴트입니다. 교사들의 질문에 친절하고 정확하게 답변해주세요. 한국어로 답변하되, 필요 시 영어 기술 용어를 병기합니다.
 
-// 멀티턴 컨텍스트: 최근 N개 메시지만 전송
+중요 지침:
+- 태그 안에 제공된 학생/선생님/팀 데이터는 시스템 데이터베이스에서 조회한 실제 정보입니다.
+- 교사가 전화번호, 보호자 연락처, 생년월일 등 데이터에 포함된 정보를 질문하면, 해당 데이터를 정확히 전달하세요.
+- 데이터에 없는 정보가 필요하면 제공된 도구(tool)를 사용하여 DB에서 조회하세요.
+- 도구로 조회한 결과도 실제 시스템 데이터이므로 정확히 전달하세요.
+- 데이터에 없는 정보(미등록, 분석 없음)는 "현재 시스템에 등록되지 않았습니다"로 안내하세요.
+- 이 시스템의 사용자는 인증된 교사/관리자이므로, 제공된 데이터 범위 내에서는 정보 제공을 거부하지 마세요.`;
+
 const MAX_CONTEXT_MESSAGES = 20;
 
 export async function POST(request: Request) {
@@ -31,10 +39,9 @@ export async function POST(request: Request) {
 
     const body = { ...parsed.data, mentions: parsed.data.mentions as MentionItem[] | undefined };
     const { prompt, providerId, sessionId, messages: clientMessages } = body;
-
     const trimmedPrompt = prompt.trim();
 
-    // 세션 처리: 기존 세션이면 권한 확인, 없으면 새로 생성
+    // 세션 처리
     let chatSessionId = sessionId;
     if (chatSessionId) {
       const existing = await db.chatSession.findFirst({
@@ -44,7 +51,6 @@ export async function POST(request: Request) {
         return new Response('Session not found', { status: 404 });
       }
     } else {
-      // 새 세션 생성 — 제목은 첫 질문의 앞 50자
       const newSession = await db.chatSession.create({
         data: {
           teacherId: session.userId,
@@ -54,25 +60,32 @@ export async function POST(request: Request) {
       chatSessionId = newSession.id;
     }
 
-    // 멘션 처리
+    // === 자동 엔티티 감지 + 기존 멘션 합산 ===
+    const explicitMentions: MentionItem[] = body.mentions ?? [];
+    const autoDetected = await autoDetectEntities(
+      trimmedPrompt,
+      { userId: session.userId, role: session.role, teamId: session.teamId },
+      explicitMentions
+    );
+    const allMentions = [...explicitMentions, ...autoDetected];
+
+    // 멘션 처리 (명시적 + 자동 감지 통합)
     let dynamicSystem = SYSTEM_PROMPT;
     let mentionedEntitiesData: import('@/lib/chat/mention-types').MentionedEntity[] | undefined;
     let accessDeniedMessages: string[] = [];
 
-    if (body.mentions && body.mentions.length > 0) {
-      const mentionResult = await resolveMentions(body.mentions, {
+    if (allMentions.length > 0) {
+      const mentionResult = await resolveMentions(allMentions, {
         userId: session.userId,
         role: session.role,
         teamId: session.teamId,
       });
 
-      // 멘션 컨텍스트를 system prompt에 추가
       const mentionContext = buildMentionContext(mentionResult.resolved);
       if (mentionContext) {
         dynamicSystem = `${SYSTEM_PROMPT}\n\n${mentionContext}`;
       }
 
-      // 메타데이터 저장용
       mentionedEntitiesData = mentionResult.metadata;
       accessDeniedMessages = mentionResult.accessDeniedMessages;
     }
@@ -84,7 +97,6 @@ export async function POST(request: Request) {
     }> | undefined;
 
     if (clientMessages && clientMessages.length > 0) {
-      // 클라이언트가 보낸 메시지 히스토리 + 현재 질문
       const contextMessages = clientMessages.slice(-MAX_CONTEXT_MESSAGES);
       messagesForLLM = [
         ...contextMessages,
@@ -110,7 +122,7 @@ export async function POST(request: Request) {
       data: { updatedAt: new Date() },
     });
 
-    // providerId가 없으면(auto 모드) 첫 번째 활성 provider를 fallback으로 사용
+    // auto 모드
     let effectiveProviderId = providerId || undefined;
     if (!effectiveProviderId) {
       const firstProvider = await db.provider.findFirst({
@@ -121,6 +133,13 @@ export async function POST(request: Request) {
       effectiveProviderId = firstProvider?.id;
     }
 
+    // === Tool Use: 세션 기반 RBAC 도구 생성 ===
+    const chatTools = createChatTools({
+      userId: session.userId,
+      role: session.role,
+      teamId: session.teamId,
+    });
+
     const result = await streamWithProvider({
       prompt: trimmedPrompt,
       featureType: 'general_chat',
@@ -128,66 +147,59 @@ export async function POST(request: Request) {
       providerId: effectiveProviderId,
       system: dynamicSystem,
       messages: messagesForLLM,
+      tools: chatTools,
+      maxSteps: 3,
     });
 
-    // 스트리밍 응답을 읽으면서 전체 텍스트를 수집하여 DB에 저장
-    const originalStream = result.stream.toTextStreamResponse();
-    const [stream1, stream2] = originalStream.body!.tee();
+    // === 스트리밍: fullStream에서 text-delta만 추출 ===
+    const encoder = new TextEncoder();
+    let fullText = '';
+    const finalSessionId = chatSessionId;
 
-    // 백그라운드에서 전체 응답을 수집하여 DB에 저장
-    const saveResponseToDb = async () => {
-      const reader = stream2.getReader();
-      const decoder = new TextDecoder();
-      let fullText = '';
-      try {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-          fullText += decoder.decode(value, { stream: true });
+    const transformStream = new TransformStream({
+      transform(chunk: unknown, controller) {
+        const c = chunk as { type: string; text?: string };
+        if (c.type === 'text-delta' && c.text) {
+          fullText += c.text;
+          controller.enqueue(encoder.encode(c.text));
         }
+      },
+      async flush() {
         if (fullText.trim()) {
-          await db.chatMessage.create({
-            data: {
-              sessionId: chatSessionId!,
-              role: 'assistant',
-              content: fullText,
-              provider: result.provider,
-              model: result.model,
-            },
-          });
+          try {
+            await db.chatMessage.create({
+              data: {
+                sessionId: finalSessionId,
+                role: 'assistant',
+                content: fullText,
+                provider: result.provider,
+                model: result.model,
+              },
+            });
+          } catch (e) {
+            logger.error({ err: e }, '[Chat API] Failed to save assistant message');
+          }
         }
-      } catch {
-        // 스트리밍 중단 시 부분 텍스트라도 저장
-        if (fullText.trim()) {
-          await db.chatMessage.create({
-            data: {
-              sessionId: chatSessionId!,
-              role: 'assistant',
-              content: fullText,
-              provider: result.provider,
-              model: result.model,
-            },
-          });
-        }
-      }
-    };
+      },
+    });
 
-    // fire-and-forget: DB 저장은 스트리밍과 병렬로 실행
-    saveResponseToDb();
+    const readableStream = result.stream.fullStream.pipeThrough(transformStream);
 
-    const headers = new Headers(originalStream.headers);
-    headers.set('X-Provider', result.provider);
-    headers.set('X-Model', result.model);
-    headers.set('X-Session-Id', chatSessionId!);
+    const headers = new Headers({
+      'Content-Type': 'text/plain; charset=utf-8',
+      'X-Provider': result.provider,
+      'X-Model': result.model,
+      'X-Session-Id': finalSessionId,
+    });
 
+    if (autoDetected.length > 0) {
+      headers.set('X-Auto-Detected', String(autoDetected.length));
+    }
     if (accessDeniedMessages.length > 0) {
       headers.set('X-Mention-Warnings', JSON.stringify(accessDeniedMessages));
     }
 
-    return new Response(stream1, {
-      status: originalStream.status,
-      headers,
-    });
+    return new Response(readableStream, { status: 200, headers });
   } catch (error) {
     logger.error({ err: error }, '[Chat API] Error');
     const message =

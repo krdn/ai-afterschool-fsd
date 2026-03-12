@@ -12,7 +12,7 @@ export const ChatRequestSchema = z.object({
   mentions: z.array(z.object({
     type: z.string(),
     id: z.string(),
-    name: z.string(),
+    name: z.string().optional(),
   }).passthrough()).optional(),
 })
 
