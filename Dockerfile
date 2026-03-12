@@ -11,6 +11,7 @@ RUN corepack enable pnpm
 
 # Install dependencies
 COPY package.json pnpm-lock.yaml* .npmrc* ./
+COPY patches ./patches/
 COPY prisma ./prisma/
 # If there is no lockfile, just install based on package.json
 RUN pnpm install --frozen-lockfile || pnpm install
