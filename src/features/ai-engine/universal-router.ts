@@ -5,7 +5,8 @@
  * 기존 router.ts의 인터페이스를 유지하면서 남부 구현을 교체합니다.
  */
 
-import { generateText, streamText } from 'ai';
+import { generateText, streamText, stepCountIs } from 'ai';
+import type { Tool } from 'ai';
 import { db } from '@/lib/db/client';
 import { logger } from '@/lib/logger';
 import { getProviderRegistry } from './provider-registry';
@@ -37,12 +38,18 @@ export interface GenerateOptions {
   modelId?: string;
   /** 멀티턴 대화용 메시지 배열 (지정 시 prompt 대신 사용) */
   messages?: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>;
+  /** Tool Use: AI가 호출할 수 있는 도구 맵 */
+  tools?: Record<string, Tool>;
+  /** Tool Use: 최대 스텝 수 (기본값 없음, tools 사용 시 권장: 3) */
+  maxSteps?: number;
 }
 
 export interface StreamResult {
   stream: ReturnType<typeof streamText>;
   provider: string;
   model: string;
+  /** tools가 전달되었는지 여부 */
+  hasTools: boolean;
 }
 
 // =============================================================================
@@ -181,7 +188,7 @@ export async function generateWithProvider(options: GenerateOptions): Promise<im
  * 텍스트를 스트리밍합니다.
  */
 export async function streamWithProvider(options: GenerateOptions): Promise<StreamResult> {
-  const { prompt, featureType, teacherId, maxOutputTokens, temperature, system, providerId, messages } = options;
+  const { prompt, featureType, teacherId, maxOutputTokens, temperature, system, providerId, messages, tools, maxSteps } = options;
 
   let providerOrder: Array<{ provider: Provider; model: Model }>;
 
@@ -230,6 +237,11 @@ export async function streamWithProvider(options: GenerateOptions): Promise<Stre
         });
       };
 
+      // tools 설정 (tools가 있을 때만 전달)
+      const toolsConfig = tools
+        ? { tools, stopWhen: stepCountIs(maxSteps ?? 3) }
+        : {};
+
       // 멀티턴 메시지가 있으면 messages 사용, 없으면 단일 prompt 사용
       const result = messages && messages.length > 0
         ? streamText({
@@ -240,6 +252,7 @@ export async function streamWithProvider(options: GenerateOptions): Promise<Stre
             temperature,
             maxRetries: 0,
             onFinish: onFinishCallback,
+            ...toolsConfig,
           })
         : streamText({
             model: languageModel,
@@ -249,12 +262,14 @@ export async function streamWithProvider(options: GenerateOptions): Promise<Stre
             temperature,
             maxRetries: 0,
             onFinish: onFinishCallback,
+            ...toolsConfig,
           });
 
       return {
         stream: result,
         provider: provider.providerType,
         model: model.modelId,
+        hasTools: !!tools,
       };
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
