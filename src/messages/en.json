@@ -70,7 +70,13 @@
     "addNew": "Register New Student",
     "name": "Name",
     "birthDate": "Birth Date",
-    "teacher": "Teacher"
+    "teacher": "Teacher",
+    "searchPlaceholder": "Search students by name...",
+    "noStudents": "No students registered.",
+    "noSearchResults": "No results for '{query}'.",
+    "gradeLabel": "Grade {grade}",
+    "paginationInfo": "{start}-{end} of {total}",
+    "totalCount": "{count} students"
   },
   "Language": {
     "switchLanguage": "Change language",

@@ -70,7 +70,13 @@
     "addNew": "신규 학생 등록",
     "name": "이름",
     "birthDate": "생년월일",
-    "teacher": "담당 선생님"
+    "teacher": "담당 선생님",
+    "searchPlaceholder": "학생 이름 검색...",
+    "noStudents": "등록된 학생이 없습니다.",
+    "noSearchResults": "'{query}'에 대한 검색 결과가 없습니다.",
+    "gradeLabel": "{grade}학년",
+    "paginationInfo": "{total}명 중 {start}-{end}",
+    "totalCount": "총 {count}명"
   },
   "Language": {
     "switchLanguage": "언어 변경",
