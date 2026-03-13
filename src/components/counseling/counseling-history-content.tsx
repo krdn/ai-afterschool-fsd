@@ -80,7 +80,7 @@ export function CounselingHistoryContent({
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card data-testid="counseling-stat-card-monthly">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               이번 달 상담 횟수
             </CardTitle>
           </CardHeader>
@@ -91,7 +91,7 @@ export function CounselingHistoryContent({
 
         <Card data-testid="counseling-stat-card-total">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               전체 상담 횟수
             </CardTitle>
           </CardHeader>
@@ -102,7 +102,7 @@ export function CounselingHistoryContent({
 
         <Card data-testid="counseling-stat-card-duration">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               평균 상담 시간
             </CardTitle>
           </CardHeader>
@@ -115,7 +115,7 @@ export function CounselingHistoryContent({
 
         <Card data-testid="counseling-stat-card-followup">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               후속 조치 예정
             </CardTitle>
           </CardHeader>
@@ -154,13 +154,13 @@ export function CounselingHistoryContent({
         <CardContent>
           {sessions.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
-                <MessageSquare className="h-8 w-8 text-gray-400" />
+              <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-muted">
+                <MessageSquare className="h-8 w-8 text-muted-foreground" />
               </div>
-              <h3 className="mb-2 text-lg font-medium text-gray-900">
+              <h3 className="mb-2 text-lg font-medium text-foreground">
                 조건에 맞는 상담 기록이 없어요
               </h3>
-              <p className="mb-4 max-w-sm text-sm text-gray-500">
+              <p className="mb-4 max-w-sm text-sm text-muted-foreground">
                 검색 조건을 변경하거나, 새 상담 기록을 추가해보세요.
               </p>
               <div className="flex gap-3">
@@ -178,7 +178,7 @@ export function CounselingHistoryContent({
                 <button
                   key={session.id}
                   type="button"
-                  className="w-full text-left border rounded-lg p-4 space-y-2 hover:bg-gray-50 transition-colors cursor-pointer"
+                  className="w-full text-left border rounded-lg p-4 space-y-2 hover:bg-muted/50 transition-colors cursor-pointer"
                   data-testid="counseling-session"
                   aria-label={`${session.student.name} ${getTypeLabel(session.type)} 상담 기록 보기`}
                   onClick={() => setSelectedSession(session)}
@@ -189,7 +189,7 @@ export function CounselingHistoryContent({
                         {session.student.name} ({session.student.school}{" "}
                         {session.student.grade}학년)
                       </div>
-                      <div className="text-sm text-gray-600">
+                      <div className="text-sm text-muted-foreground">
                         {session.teacher.name} · {session.duration}분
                       </div>
                     </div>
@@ -201,7 +201,7 @@ export function CounselingHistoryContent({
                       {getTypeLabel(session.type)}
                     </span>
                   </div>
-                  <div className="text-sm text-gray-700">{session.summary}</div>
+                  <div className="text-sm text-foreground">{session.summary}</div>
                   {session.followUpRequired && (
                     <div className="text-sm text-amber-600">
                       후속 조치:{" "}
@@ -258,7 +258,7 @@ export function CounselingHistoryContent({
 
               <div>
                 <span className="text-sm font-medium">상담 내용:</span>
-                <p className="mt-2 text-sm text-gray-700 whitespace-pre-wrap">{selectedSession.summary}</p>
+                <p className="mt-2 text-sm text-foreground whitespace-pre-wrap">{selectedSession.summary}</p>
               </div>
 
               {selectedSession.followUpRequired && (
@@ -279,7 +279,7 @@ export function CounselingHistoryContent({
                     {[...Array(5)].map((_, i) => (
                       <svg
                         key={i}
-                        className={`w-4 h-4 ${i < (selectedSession.satisfactionScore ?? 0) ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+                        className={`w-4 h-4 ${i < (selectedSession.satisfactionScore ?? 0) ? "text-yellow-500 fill-yellow-500" : "text-muted-foreground/50"}`}
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                         fill={i < (selectedSession.satisfactionScore ?? 0) ? "currentColor" : "none"}
@@ -290,7 +290,7 @@ export function CounselingHistoryContent({
                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                       </svg>
                     ))}
-                    <span className="text-sm text-gray-600 ml-1">{selectedSession.satisfactionScore} / 5</span>
+                    <span className="text-sm text-muted-foreground ml-1">{selectedSession.satisfactionScore} / 5</span>
                   </div>
                 </div>
               )}

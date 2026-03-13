@@ -28,7 +28,7 @@ export default async function CounselingPage({
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center py-12">
-          <p className="text-gray-500">로그인이 필요합니다</p>
+          <p className="text-muted-foreground">로그인이 필요합니다</p>
         </div>
       </div>
     )
@@ -196,7 +196,7 @@ export default async function CounselingPage({
           <InlineHelp helpId="counseling-overview">
             <h1 className="text-3xl font-bold">상담 관리</h1>
           </InlineHelp>
-          <p className="text-gray-600">선생님-학생 상담 기록과 예약을 관리합니다</p>
+          <p className="text-muted-foreground">선생님-학생 상담 기록과 예약을 관리합니다</p>
         </div>
       </div>
 

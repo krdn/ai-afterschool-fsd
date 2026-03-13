@@ -81,12 +81,12 @@ export default function GradeDashboard({
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">성적 관리</h1>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             학생별 내신/모의고사 성적을 관리하고 분석합니다
           </p>
         </div>
         <Link href="/grades/ocr">
-          <Button className="bg-blue-600 hover:bg-blue-700">
+          <Button>
             <ScanLine className="w-4 h-4 mr-2" />
             OCR 성적 입력
           </Button>
@@ -97,14 +97,14 @@ export default function GradeDashboard({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               전체 학생 수
             </CardTitle>
             <Users className="w-4 h-4 text-blue-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalStudents}명</div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               {teacherRole === 'DIRECTOR'
                 ? '전체 학원'
                 : teacherRole === 'TEAM_LEADER' || teacherRole === 'MANAGER'
@@ -116,14 +116,14 @@ export default function GradeDashboard({
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               내신 성적 건수
             </CardTitle>
             <BookOpen className="w-4 h-4 text-green-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalGradeHistory}건</div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               등록된 내신 성적 데이터
             </p>
           </CardContent>
@@ -131,14 +131,14 @@ export default function GradeDashboard({
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               모의고사 건수
             </CardTitle>
             <FileText className="w-4 h-4 text-orange-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalMockExams}건</div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               등록된 모의고사 데이터
             </p>
           </CardContent>
@@ -146,14 +146,14 @@ export default function GradeDashboard({
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               데이터 보유율
             </CardTitle>
             <BarChart3 className="w-4 h-4 text-purple-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{dataRate}%</div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               {studentsWithData}/{totalStudents}명 데이터 보유
             </p>
           </CardContent>
@@ -162,7 +162,7 @@ export default function GradeDashboard({
 
       {/* 검색 바 */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input
           placeholder="학생 이름 또는 학교로 검색..."
           value={searchQuery}
@@ -190,7 +190,7 @@ export default function GradeDashboard({
                 <TableRow>
                   <TableCell
                     colSpan={6}
-                    className="text-center py-12 text-gray-500"
+                    className="text-center py-12 text-muted-foreground"
                   >
                     {searchQuery
                       ? '검색 결과가 없습니다.'
