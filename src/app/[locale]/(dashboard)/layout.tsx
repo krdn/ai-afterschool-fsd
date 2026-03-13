@@ -1,5 +1,3 @@
-import Link from "next/link"
-import { getTranslations } from "next-intl/server"
 import { getCurrentTeacher } from "@/lib/dal"
 import { NotificationBell } from "@/components/layout/notification-bell"
 import { UserMenu } from "@/components/layout/user-menu"
@@ -8,6 +6,7 @@ import { IssueReportButton } from "@/components/issues/issue-report-button"
 import { LocaleSwitcher } from "@/components/layout/locale-switcher"
 import { NotificationProvider } from "@/components/common/notification-provider"
 import { LLMQueryBar } from "@/components/layout/llm-query-bar"
+import { AppSidebar } from "@/components/layout/app-sidebar"
 
 const isDev = process.env.NODE_ENV === "development"
 
@@ -17,101 +16,45 @@ export default async function DashboardLayout({
   children: React.ReactNode
 }) {
   const teacher = await getCurrentTeacher()
-  const t = await getTranslations("Navigation")
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-8">
-              <Link href="/students" className="text-xl font-bold">
-                AI AfterSchool
-              </Link>
-              <nav className="hidden md:flex space-x-4">
-                <Link
-                  href="/students"
-                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  {t("students")}
-                </Link>
-                <Link
-                  href="/counseling"
-                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  {t("counseling")}
-                </Link>
-                <Link
-                  href="/grades"
-                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  {t("grades")}
-                </Link>
-                <Link
-                  href="/chat"
-                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  {t("aiChat")}
-                </Link>
-                {(teacher.role === "DIRECTOR" || teacher.role === "TEAM_LEADER") && (
-                  <>
-                    <Link
-                      href="/teachers"
-                      className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-                    >
-                      {t("teachers")}
-                    </Link>
-                    <Link
-                      href="/matching"
-                      className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-                    >
-                      {t("matching")}
-                    </Link>
-                    <Link
-                      href="/analytics"
-                      className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-                    >
-                      {t("analytics")}
-                    </Link>
-                  </>
-                )}
-                {teacher.role === "DIRECTOR" && (
-                  <Link
-                    href="/issues"
-                    className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    {t("issues")}
-                  </Link>
-                )}
-                {(teacher.role === "DIRECTOR" || teacher.role === "TEAM_LEADER") && (
-                  <Link
-                    href="/admin"
-                    className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    {t("admin")}
-                  </Link>
-                )}
-              </nav>
-            </div>
-            <div className="flex items-center space-x-4">
-              {teacher.role === "DIRECTOR" && (
-                <>
-                  <IssueReportButton userRole={teacher.role} />
-                  <NotificationBell />
-                </>
-              )}
-              <LocaleSwitcher />
-              <UserMenu name={teacher.name} role={teacher.role} />
-            </div>
+    <div className="flex h-screen bg-background">
+      {/* 사이드바 */}
+      <AppSidebar role={teacher.role} name={teacher.name} />
+
+      {/* 메인 영역 */}
+      <div className="flex flex-1 flex-col overflow-hidden">
+        {/* 슬림 헤더 */}
+        <header className="flex h-14 items-center justify-between border-b bg-background px-4 lg:px-6">
+          {/* 좌측: 모바일에서 햄버거 메뉴 공간 확보 */}
+          <div className="lg:hidden w-10" />
+
+          {/* 중앙: 빈 공간 (LLMQueryBar가 아래에 별도 배치) */}
+          <div className="flex-1" />
+
+          {/* 우측: 도구 모음 */}
+          <div className="flex items-center gap-2">
+            {teacher.role === "DIRECTOR" && (
+              <>
+                <IssueReportButton userRole={teacher.role} />
+                <NotificationBell />
+              </>
+            )}
+            <LocaleSwitcher />
+            <UserMenu name={teacher.name} role={teacher.role} />
           </div>
-        </div>
-      </header>
+        </header>
 
-      <LLMQueryBar />
+        {/* LLM 쿼리바 */}
+        <LLMQueryBar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children}
-      </main>
+        {/* 메인 콘텐츠 */}
+        <main className="flex-1 overflow-y-auto">
+          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            {children}
+          </div>
+        </main>
+      </div>
 
       {isDev && <DevUserSwitcher currentUserId={teacher.id} />}
       <NotificationProvider />

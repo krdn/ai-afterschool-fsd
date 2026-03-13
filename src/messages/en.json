@@ -28,6 +28,7 @@
     "welcome": "Welcome to AI AfterSchool"
   },
   "Navigation": {
+    "dashboard": "Dashboard",
     "students": "Students",
     "teachers": "Teachers",
     "counseling": "Counseling",
@@ -36,7 +37,14 @@
     "admin": "Admin Tools",
     "issues": "Issues",
     "aiChat": "AI Chat",
-    "grades": "Grades"
+    "grades": "Grades",
+    "teams": "Teams",
+    "groupMain": "Main",
+    "groupManagement": "Management",
+    "groupSystem": "System",
+    "collapseSidebar": "Collapse sidebar",
+    "expandSidebar": "Expand sidebar",
+    "openMenu": "Open menu"
   },
   "Student": {
     "title": "Student Management",

@@ -28,6 +28,7 @@
     "welcome": "AI AfterSchool에 오신 것을 환영합니다"
   },
   "Navigation": {
+    "dashboard": "대시보드",
     "students": "학생 관리",
     "teachers": "선생님",
     "counseling": "상담",
@@ -36,7 +37,14 @@
     "admin": "관리자 도구",
     "issues": "이슈",
     "aiChat": "AI 채팅",
-    "grades": "성적 관리"
+    "grades": "성적 관리",
+    "teams": "팀 관리",
+    "groupMain": "메인",
+    "groupManagement": "관리",
+    "groupSystem": "시스템",
+    "collapseSidebar": "사이드바 접기",
+    "expandSidebar": "사이드바 펼치기",
+    "openMenu": "메뉴 열기"
   },
   "Student": {
     "title": "학생 관리",
