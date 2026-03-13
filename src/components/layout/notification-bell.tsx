@@ -121,7 +121,7 @@ export function NotificationBell({ className }: NotificationBellProps) {
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-card rounded-lg border shadow-lg z-50">
+        <div className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] sm:w-96 max-w-96 bg-card rounded-lg border shadow-lg z-50">
           <div className="p-3 border-b flex items-center justify-between">
             <h3 className="font-semibold">알림</h3>
             <span className="text-sm text-muted-foreground">

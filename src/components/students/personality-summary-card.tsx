@@ -55,13 +55,13 @@ export async function PersonalitySummaryCard({
           <Sparkles className="w-5 h-5 text-blue-600" />
           통합 성향 분석
         </CardTitle>
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-muted-foreground">
           {availableCount}/5 완료
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* 분석 상태 그리드 */}
-        <div className="grid grid-cols-5 gap-2">
+        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
           <AnalysisStatus label="사주" available={sajuAvailable} />
           <AnalysisStatus label="성명" available={nameAvailable} />
           <AnalysisStatus label="MBTI" available={mbtiAvailable} />
@@ -80,17 +80,17 @@ export async function PersonalitySummaryCard({
           </div>
         ) : availableCount >= 3 ? (
           // 생성 가능 상태
-          <div className="rounded-md bg-gray-50 p-4 text-center">
-            <p className="text-sm text-gray-700 mb-3">
+          <div className="rounded-md bg-muted p-4 text-center">
+            <p className="text-sm text-foreground mb-3">
               충분한 데이터가 모였어요. AI 분석을 시작할까요?
             </p>
             <GenerateActionButton studentId={studentId} />
           </div>
         ) : (
           // 데이터 부족 상태
-          <div className="rounded-md bg-gray-50 p-4 flex items-center gap-3">
-            <Circle className="w-5 h-5 text-gray-400 flex-shrink-0" />
-            <p className="text-sm text-gray-600">
+          <div className="rounded-md bg-muted p-4 flex items-center gap-3">
+            <Circle className="w-5 h-5 text-muted-foreground flex-shrink-0" />
+            <p className="text-sm text-muted-foreground">
               최소 3개 이상의 분석이 필요해요.
             </p>
           </div>

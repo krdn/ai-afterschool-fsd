@@ -162,15 +162,15 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                                     </DialogDescription>
                                 </DialogHeader>
                                 <div className="grid gap-4 py-4">
-                                    <div className="grid grid-cols-4 items-center gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
                                         <Label htmlFor="subject" className="text-right">과목</Label>
                                         <Input id="subject" name="subject" placeholder="예: 수학" className="col-span-3" required />
                                     </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
                                         <Label htmlFor="score" className="text-right">점수</Label>
                                         <Input id="score" name="score" type="number" min="0" max="100" className="col-span-3" required />
                                     </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
                                         <Label htmlFor="gradeType" className="text-right">유형</Label>
                                         <Select name="gradeType" defaultValue="MIDTERM">
                                             <SelectTrigger className="col-span-3">
@@ -184,11 +184,11 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                                             </SelectContent>
                                         </Select>
                                     </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
                                         <Label htmlFor="testDate" className="text-right">날짜</Label>
                                         <Input id="testDate" name="testDate" type="date" defaultValue={new Date().toISOString().split('T')[0]} className="col-span-3" required />
                                     </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
                                         <Label htmlFor="semester" className="text-right">학기</Label>
                                         <Select name="semester" defaultValue="1">
                                             <SelectTrigger className="col-span-3">
@@ -209,6 +209,7 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                     </Dialog>
                 </CardHeader>
                 <CardContent>
+                  <div className="overflow-x-auto">
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -260,6 +261,7 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                             )}
                         </TableBody>
                     </Table>
+                  </div>
                 </CardContent>
             </Card>
         </div>
