@@ -13,6 +13,7 @@ import {
   ChevronUp,
   Lock,
 } from "lucide-react"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Textarea } from "@/components/ui/textarea"
@@ -82,6 +83,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<SajuPromptPresetData | null>(null)
 
   const handleSave = () => {
     if (!editing) return
@@ -139,12 +141,9 @@ export function SajuPromptsTab({ initialPresets }: Props) {
     })
   }
 
-  const handleDelete = (preset: SajuPromptPresetData) => {
-    if (preset.isBuiltIn) {
-      if (!confirm(`"${preset.name}"은(는) 내장 프롬프트입니다. 비활성 처리할까요?`)) return
-    } else {
-      if (!confirm(`"${preset.name}" 프롬프트를 삭제할까요?`)) return
-    }
+  const handleDelete = () => {
+    if (!deleteTarget) return
+    const preset = deleteTarget
     startTransition(async () => {
       try {
         await deletePresetAction(preset.id)
@@ -160,6 +159,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
       } catch (err) {
         setError(err instanceof Error ? err.message : "삭제에 실패했습니다.")
       }
+      setDeleteTarget(null)
     })
   }
 
@@ -487,7 +487,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
                         variant="ghost"
                         size="icon"
                         className="h-7 w-7 text-red-500 hover:text-red-700"
-                        onClick={() => handleDelete(preset)}
+                        onClick={() => setDeleteTarget(preset)}
                         disabled={isPending}
                         title={preset.isBuiltIn ? "비활성 처리" : "삭제"}
                       >
@@ -558,6 +558,19 @@ export function SajuPromptsTab({ initialPresets }: Props) {
           </div>
         </ScrollArea>
       )}
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => !open && setDeleteTarget(null)}
+        title="프롬프트 삭제"
+        description={
+          deleteTarget?.isBuiltIn
+            ? `"${deleteTarget.name}"은(는) 내장 프롬프트입니다. 비활성 처리할까요?`
+            : `"${deleteTarget?.name}" 프롬프트를 삭제할까요?`
+        }
+        confirmLabel={deleteTarget?.isBuiltIn ? "비활성화" : "삭제"}
+        onConfirm={handleDelete}
+        loading={isPending}
+      />
     </div>
   )
 }

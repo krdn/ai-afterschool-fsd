@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2, TrendingUp, BookOpen } from "lucide-react";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import {
     Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -36,6 +37,7 @@ interface Grade {
 export default function LearningTab({ studentId }: { studentId: string }) {
     const [grades, setGrades] = useState<Grade[]>([]);
     const [open, setOpen] = useState(false);
+    const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
     // 데이터 로드
     const loadGrades = async () => {
@@ -66,15 +68,16 @@ export default function LearningTab({ studentId }: { studentId: string }) {
     };
 
     // 성적 삭제 핸들러
-    const handleDelete = async (id: string) => {
-        if (!confirm("정말 삭제하시겠습니까?")) return;
-        const result = await deleteGrade(id, studentId);
+    const handleDelete = async () => {
+        if (!deleteTarget) return;
+        const result = await deleteGrade(deleteTarget, studentId);
         if (result.success) {
             toast.success("삭제되었습니다.");
             loadGrades();
         } else {
             toast.error("삭제 실패");
         }
+        setDeleteTarget(null);
     };
 
     // 차트 데이터 가공 (날짜별 과목 점수)
@@ -251,7 +254,7 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                                                 variant="ghost"
                                                 size="icon"
                                                 className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
-                                                onClick={() => handleDelete(grade.id)}
+                                                onClick={() => setDeleteTarget(grade.id)}
                                             >
                                                 <Trash2 className="w-4 h-4" />
                                             </Button>
@@ -264,6 +267,15 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                   </div>
                 </CardContent>
             </Card>
+
+            <ConfirmDialog
+                open={!!deleteTarget}
+                onOpenChange={(open) => !open && setDeleteTarget(null)}
+                title="성적 삭제"
+                description="이 성적 기록을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+                confirmLabel="삭제"
+                onConfirm={handleDelete}
+            />
         </div>
     );
 }

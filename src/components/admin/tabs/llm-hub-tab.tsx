@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Plus, Info, AlertCircle, BarChart3 } from 'lucide-react';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { ProviderList } from '@/components/admin/llm-providers/provider-list';
 import { FeatureMappingList } from '@/components/admin/llm-features/feature-mapping-list';
 import type { ProviderWithModels } from '@/features/ai-engine';
@@ -64,6 +65,7 @@ export function LLMHubTab({
 }: LLMHubTabProps) {
   const [activeSubTab, setActiveSubTab] = useState('providers');
   const [isLoading] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<ProviderWithModels | null>(null);
 
   const activeProviders = providers.filter((p) => p.isEnabled);
 
@@ -72,10 +74,9 @@ export function LLMHubTab({
     window.location.href = `/admin/llm-providers/${provider.id}/edit`;
   };
 
-  const handleDelete = async (provider: ProviderWithModels) => {
-    if (confirm('정말 이 제공자를 삭제하시겠습니까?')) {
-      window.location.href = `/admin/llm-providers/${provider.id}/delete`;
-    }
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    window.location.href = `/admin/llm-providers/${deleteTarget.id}/delete`;
   };
 
   const handleTest = async (): Promise<{ success: boolean; message: string }> => {
@@ -178,7 +179,7 @@ export function LLMHubTab({
             providers={providers}
             isLoading={isLoading}
             onEdit={handleEdit}
-            onDelete={handleDelete}
+            onDelete={(provider) => setDeleteTarget(provider)}
             onTest={handleTest}
             onToggle={handleToggle}
           />
@@ -265,6 +266,15 @@ export function LLMHubTab({
           />
         </TabsContent>
       </Tabs>
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => !open && setDeleteTarget(null)}
+        title="LLM 제공자 삭제"
+        description={`정말 "${deleteTarget?.name}" 제공자를 삭제하시겠습니까?`}
+        confirmLabel="삭제"
+        onConfirm={handleDelete}
+      />
     </div>
   );
 }

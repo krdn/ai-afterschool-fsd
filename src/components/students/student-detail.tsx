@@ -11,6 +11,7 @@ import {
   setStudentImage,
 } from "@/lib/actions/student/images"
 import { Button } from "@/components/ui/button"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   StudentImageUploader,
@@ -66,6 +67,8 @@ export function StudentDetail({ student, analysisStatus }: StudentDetailProps) {
   const createdAt = toDate(student.createdAt)
   const [activeType, setActiveType] = useState<StudentImageType>("profile")
   const [isPending, startTransition] = useTransition()
+  const [deleteStudentOpen, setDeleteStudentOpen] = useState(false)
+  const [deleteImageOpen, setDeleteImageOpen] = useState(false)
   const [imagesByType, setImagesByType] = useState<
     Record<StudentImageType, StudentImageRecord | null>
   >(() => {
@@ -112,18 +115,12 @@ export function StudentDetail({ student, analysisStatus }: StudentDetailProps) {
           <Button asChild variant="outline">
             <Link href={`/students/${student.id}/edit`}>수정</Link>
           </Button>
-          <form
-            action={boundDeleteStudent}
-            onSubmit={(event) => {
-              if (!confirm("정말 삭제하시겠어요?")) {
-                event.preventDefault()
-              }
-            }}
+          <Button
+            variant="destructive"
+            onClick={() => setDeleteStudentOpen(true)}
           >
-            <Button type="submit" variant="destructive">
-              삭제
-            </Button>
-          </form>
+            삭제
+          </Button>
         </div>
       </div>
 
@@ -193,27 +190,7 @@ export function StudentDetail({ student, analysisStatus }: StudentDetailProps) {
               disabled={!currentImage || isPending}
               onClick={() => {
                 if (!currentImage) return
-                if (!confirm("선택한 이미지를 삭제하시겠어요?")) return
-
-                startTransition(async () => {
-                  const result = await deleteStudentImage(student.id, activeType)
-
-                  if (result.success) {
-                    setImagesByType((prev) => ({
-                      ...prev,
-                      [activeType]: null,
-                    }))
-                    toast.success("이미지 삭제 완료", {
-                      description: "이미지가 삭제되었어요",
-                      id: "image-delete-success",
-                    })
-                  } else {
-                    toast.error("이미지 삭제 실패", {
-                      description: result.error,
-                      id: "image-delete-error",
-                    })
-                  }
-                })
+                setDeleteImageOpen(true)
               }}
             >
               {isPending ? "처리 중..." : "삭제하기"}
@@ -294,9 +271,40 @@ export function StudentDetail({ student, analysisStatus }: StudentDetailProps) {
         </CardContent>
       </Card>
 
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-muted-foreground">
         등록일: {format(createdAt, "yyyy년 M월 d일", { locale: ko })}
       </p>
+
+      <ConfirmDialog
+        open={deleteStudentOpen}
+        onOpenChange={setDeleteStudentOpen}
+        title="학생 삭제"
+        description="정말 삭제하시겠어요? 이 학생의 모든 데이터가 삭제되며 되돌릴 수 없습니다."
+        confirmLabel="삭제"
+        onConfirm={async () => {
+          await boundDeleteStudent()
+        }}
+      />
+
+      <ConfirmDialog
+        open={deleteImageOpen}
+        onOpenChange={setDeleteImageOpen}
+        title="이미지 삭제"
+        description={`선택한 ${imageLabels[activeType]} 이미지를 삭제하시겠어요?`}
+        confirmLabel="삭제"
+        onConfirm={async () => {
+          const result = await deleteStudentImage(student.id, activeType)
+          if (result.success) {
+            setImagesByType((prev) => ({
+              ...prev,
+              [activeType]: null,
+            }))
+            toast.success("이미지 삭제 완료")
+          } else {
+            toast.error("이미지 삭제 실패", { description: result.error })
+          }
+        }}
+      />
     </div>
   )
 }

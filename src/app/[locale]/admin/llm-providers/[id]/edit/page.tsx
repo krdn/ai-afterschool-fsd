@@ -48,7 +48,6 @@ export default function EditProviderPage({ params }: EditProviderPageProps) {
           throw new Error(errorData.error || '제공자를 불러오는데 실패했습니다.');
         }
         const data = await response.json();
-        console.log('Provider data loaded:', data);
 
         if (!data.provider) {
           throw new Error('제공자 데이터가 없습니다.');
@@ -61,7 +60,6 @@ export default function EditProviderPage({ params }: EditProviderPageProps) {
         const matchedTemplate = templates.find(
           (t) => t.providerType === data.provider.providerType
         );
-        console.log('Template matched:', matchedTemplate?.name || 'Not found');
         setTemplate(matchedTemplate || null);
       } catch (error) {
         console.error('Load provider error:', error);
