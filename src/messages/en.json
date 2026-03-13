@@ -16,7 +16,10 @@
     "aiInterpret": "Interpret with AI",
     "noInterpretation": "{label} has not been generated yet.",
     "aiAnalyzing": "AI is analyzing...",
-    "aiAnalyzingSubMessage": "This may take 10-20 seconds."
+    "aiAnalyzingSubMessage": "This may take 10-20 seconds.",
+    "paginationInfo": "{start}-{end} of {total}",
+    "paginationPrev": "Previous",
+    "paginationNext": "Next"
   },
   "Auth": {
     "login": "Login",

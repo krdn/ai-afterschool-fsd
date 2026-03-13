@@ -8,8 +8,10 @@ import { ko } from "date-fns/locale"
 import { MessageSquare, Pencil, Sparkles, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Suspense } from "react"
 import { CounselingSearchBar } from "./counseling-search-bar"
 import { CounselingFilters } from "./counseling-filters"
+import { PaginationNav } from "@/components/ui/pagination-nav"
 import {
   Dialog,
   DialogContent,
@@ -52,6 +54,12 @@ interface CounselingHistoryContentProps {
   followUpCount: number
   canViewTeam: boolean
   teachers: Array<{ id: string; name: string }>
+  pagination?: {
+    page: number
+    totalPages: number
+    total: number
+    pageSize: number
+  }
 }
 
 export function CounselingHistoryContent({
@@ -63,6 +71,7 @@ export function CounselingHistoryContent({
   followUpCount,
   canViewTeam,
   teachers,
+  pagination,
 }: CounselingHistoryContentProps) {
   const router = useRouter()
   const [selectedSession, setSelectedSession] = useState<CounselingSessionData | null>(null)
@@ -149,7 +158,7 @@ export function CounselingHistoryContent({
 
       <Card>
         <CardHeader>
-          <CardTitle>상담 기록 ({sessions.length}건)</CardTitle>
+          <CardTitle>상담 기록 ({pagination ? pagination.total : sessions.length}건)</CardTitle>
         </CardHeader>
         <CardContent>
           {sessions.length === 0 ? (
@@ -218,6 +227,18 @@ export function CounselingHistoryContent({
           )}
         </CardContent>
       </Card>
+
+      {/* 페이지네이션 */}
+      {pagination && (
+        <Suspense>
+          <PaginationNav
+            page={pagination.page}
+            totalPages={pagination.totalPages}
+            total={pagination.total}
+            pageSize={pagination.pageSize}
+          />
+        </Suspense>
+      )}
 
       {/* 상담 상세 모달 */}
       {selectedSession && (

@@ -16,7 +16,10 @@
     "aiInterpret": "AI로 해석하기",
     "noInterpretation": "{label}이(가) 아직 생성되지 않았어요.",
     "aiAnalyzing": "AI가 분석 중이에요...",
-    "aiAnalyzingSubMessage": "10~20초 정도 소요됩니다."
+    "aiAnalyzingSubMessage": "10~20초 정도 소요됩니다.",
+    "paginationInfo": "{total}건 중 {start}-{end}",
+    "paginationPrev": "이전",
+    "paginationNext": "다음"
   },
   "Auth": {
     "login": "로그인",
