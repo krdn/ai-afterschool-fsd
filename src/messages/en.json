@@ -46,6 +46,25 @@
     "expandSidebar": "Expand sidebar",
     "openMenu": "Open menu"
   },
+  "Dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome, {name}!",
+    "totalStudents": "Total Students",
+    "totalTeachers": "Total Teachers",
+    "unassignedStudents": "Unassigned Students",
+    "unassignedWarning": "Students without an assigned teacher",
+    "weeklyCounseling": "This Week Counseling",
+    "openIssues": "Open Issues",
+    "issuesWarning": "Issues requiring attention",
+    "quickActions": "Quick Actions",
+    "addStudent": "Add Student",
+    "newCounseling": "New Counseling",
+    "gradeEntry": "Grade Entry",
+    "matching": "Run Matching",
+    "upcomingCounseling": "Upcoming Counseling",
+    "noUpcoming": "No counseling sessions scheduled in the next 7 days.",
+    "statsError": "Failed to load statistics."
+  },
   "Student": {
     "title": "Student Management",
     "addNew": "Register New Student",

@@ -46,6 +46,25 @@
     "expandSidebar": "사이드바 펼치기",
     "openMenu": "메뉴 열기"
   },
+  "Dashboard": {
+    "title": "대시보드",
+    "welcome": "환영합니다, {name}님!",
+    "totalStudents": "전체 학생",
+    "totalTeachers": "전체 교사",
+    "unassignedStudents": "미배정 학생",
+    "unassignedWarning": "담당 교사가 배정되지 않은 학생이 있습니다",
+    "weeklyCounseling": "이번 주 상담",
+    "openIssues": "미해결 이슈",
+    "issuesWarning": "확인이 필요한 이슈가 있습니다",
+    "quickActions": "빠른 실행",
+    "addStudent": "학생 등록",
+    "newCounseling": "상담 예약",
+    "gradeEntry": "성적 입력",
+    "matching": "매칭 실행",
+    "upcomingCounseling": "다가오는 상담",
+    "noUpcoming": "최근 7일 이내 예정된 상담이 없습니다.",
+    "statsError": "통계를 불러오는 데 실패했습니다."
+  },
   "Student": {
     "title": "학생 관리",
     "addNew": "신규 학생 등록",
