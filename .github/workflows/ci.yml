@@ -87,3 +87,35 @@ jobs:
           else
             echo "::notice::No E2E test files found — skipping"
           fi
+
+  # CI 실패 시 이메일 알림
+  notify-failure:
+    needs: validate
+    runs-on: self-hosted
+    if: failure()
+    steps:
+      - name: Send CI failure email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.GMAIL_USERNAME }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: "[CI 실패] ai-afterschool-fsd — PR #${{ github.event.pull_request.number }}"
+          to: ${{ secrets.GMAIL_USERNAME }}
+          from: AI Afterschool CI <${{ secrets.GMAIL_USERNAME }}>
+          body: |
+            ## CI 실패 알림
+
+            | 항목 | 값 |
+            |------|-----|
+            | **PR** | #${{ github.event.pull_request.number }} — ${{ github.event.pull_request.title }} |
+            | **브랜치** | ${{ github.head_ref }} → ${{ github.base_ref }} |
+            | **작성자** | ${{ github.actor }} |
+
+            ### Actions 로그
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            ---
+            _이 메일은 GitHub Actions에서 자동 발송되었습니다._
+          content_type: text/markdown

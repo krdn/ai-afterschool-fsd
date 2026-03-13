@@ -184,3 +184,37 @@ jobs:
         run: |
           echo "::error::롤백 불가 — 이전 이미지가 없습니다. 수동 복구가 필요합니다."
           exit 1
+
+  # 배포 실패 시 이메일 알림
+  notify-failure:
+    needs: deploy
+    runs-on: self-hosted
+    if: failure()
+    steps:
+      - name: Send failure email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.GMAIL_USERNAME }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: "[배포 실패] ai-afterschool-fsd — ${{ github.sha }}"
+          to: ${{ secrets.GMAIL_USERNAME }}
+          from: AI Afterschool CI <${{ secrets.GMAIL_USERNAME }}>
+          body: |
+            ## 배포 실패 알림
+
+            | 항목 | 값 |
+            |------|-----|
+            | **커밋** | ${{ github.sha }} |
+            | **브랜치** | ${{ github.ref_name }} |
+            | **작성자** | ${{ github.actor }} |
+            | **시간** | ${{ github.event.head_commit.timestamp }} |
+            | **커밋 메시지** | ${{ github.event.head_commit.message }} |
+
+            ### Actions 로그
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            ---
+            _이 메일은 GitHub Actions에서 자동 발송되었습니다._
+          content_type: text/markdown
