@@ -20,8 +20,11 @@ import {
   PanelLeft,
   Menu,
   ChevronDown,
+  Sun,
+  Moon,
   type LucideIcon,
 } from "lucide-react"
+import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import {
   Sheet,
@@ -208,6 +211,37 @@ function SidebarContent({
   )
 }
 
+// --- 다크모드 토글 ---
+
+function ThemeToggle({ collapsed }: { collapsed: boolean }) {
+  const { theme, setTheme } = useTheme()
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark")
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      size="sm"
+      onClick={toggleTheme}
+      className={cn(
+        "w-full text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent",
+        collapsed && "px-0 justify-center"
+      )}
+      title={theme === "dark" ? "라이트 모드" : "다크 모드"}
+    >
+      <Sun className="h-4 w-4 rotate-0 scale-100 transition-transform dark:-rotate-90 dark:scale-0" />
+      <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-transform dark:rotate-0 dark:scale-100" />
+      {!collapsed && (
+        <span className="ml-2 text-xs">
+          {theme === "dark" ? "라이트 모드" : "다크 모드"}
+        </span>
+      )}
+    </Button>
+  )
+}
+
 // --- localStorage key ---
 const SIDEBAR_COLLAPSED_KEY = "sidebar-collapsed"
 
@@ -273,8 +307,9 @@ export function AppSidebar({ role, name }: AppSidebarProps) {
           <SidebarContent role={role} collapsed={collapsed} />
         </div>
 
-        {/* 접기/펼치기 버튼 */}
-        <div className="border-t border-sidebar-border p-2">
+        {/* 하단: 다크모드 + 접기/펼치기 */}
+        <div className="border-t border-sidebar-border p-2 space-y-1">
+          <ThemeToggle collapsed={collapsed} />
           <Button
             variant="ghost"
             size="sm"
