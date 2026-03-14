@@ -236,7 +236,7 @@ export default function OcrUploadPage({ teacherId }: OcrUploadPageProps) {
               {/* 액션 버튼 */}
               <div className="flex gap-2">
                 <Button
-                  className="flex-1 bg-blue-600 hover:bg-blue-700"
+                  className="flex-1"
                   onClick={handleStartOcr}
                   disabled={!selectedFile || isProcessing}
                 >

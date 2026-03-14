@@ -136,7 +136,7 @@ export function ProviderCard({
       className={cn(
         'gap-1',
         provider.isEnabled
-          ? 'bg-blue-600 hover:bg-blue-700'
+          ? ''
           : 'text-muted-foreground'
       )}
     >

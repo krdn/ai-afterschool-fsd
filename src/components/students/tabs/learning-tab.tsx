@@ -151,7 +151,7 @@ export default function LearningTab({ studentId }: { studentId: string }) {
 
                     <Dialog open={open} onOpenChange={setOpen}>
                         <DialogTrigger asChild>
-                            <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                            <Button size="sm">
                                 <Plus className="w-4 h-4 mr-1" />
                                 성적 추가
                             </Button>

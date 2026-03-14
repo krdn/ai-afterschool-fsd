@@ -122,7 +122,7 @@ export default function CounselingTab({
         <h3 className="text-lg font-bold">상담 기록</h3>
         <Button
           size="sm"
-          className="bg-blue-600 hover:bg-blue-700"
+         
           onClick={() => setFormOpen(true)}
         >
           <Plus className="w-4 h-4 mr-1" />새 상담 기록
@@ -319,7 +319,7 @@ function EmptyState({ onAddClick }: { onAddClick: () => void }) {
       <p className="text-sm text-muted-foreground mb-6">
         학생과의 상담 내용을 기록하고 관리해보세요
       </p>
-      <Button className="bg-blue-600 hover:bg-blue-700" onClick={onAddClick}>
+      <Button onClick={onAddClick}>
         <Plus className="w-4 h-4 mr-1" />첫 상담 기록 추가
       </Button>
     </div>

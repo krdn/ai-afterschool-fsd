@@ -317,7 +317,7 @@ export function SessionCompleteForm({
           <Button
             onClick={handleGenerateReport}
             disabled={isGeneratingReport || isSaving}
-            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+            className="flex-1 text-white"
           >
             {isGeneratingReport ? (
               <>
