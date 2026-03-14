@@ -100,6 +100,7 @@ model Student {
   learningAnalyses               LearningAnalysis[]
   studyLogs                      StudyLog[]
   parentGradeReports             ParentGradeReport[]
+  neuroscienceCaches             NeuroscienceCache[]
 
   @@index([teacherId])
   @@index([name])
@@ -1155,4 +1156,24 @@ model AgentNodeLog {
   @@unique([executionId, nodeId])
   @@index([executionId])
   @@map("agent_node_logs")
+}
+
+model NeuroscienceCache {
+  id            String   @id @default(cuid())
+  studentId     String?
+  conditionHash String
+  requestType   String
+  condition     Json
+  response      Json
+  provider      String
+  modelId       String
+  tokenUsage    Int      @default(0)
+  createdAt     DateTime @default(now())
+  expiresAt     DateTime
+
+  student       Student? @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([conditionHash, requestType])
+  @@index([expiresAt])
+  @@index([studentId])
 }
