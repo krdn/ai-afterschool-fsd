@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
-import { Brain, Loader2, Sparkles, AlertTriangle } from 'lucide-react';
+import { Brain, Loader2, Sparkles, AlertTriangle, RefreshCw } from 'lucide-react';
 import { runStrategyRecommendation } from '@/lib/actions/neuroscience/strategy';
 import { ProviderSelector } from '@/components/students/provider-selector';
 import type { NeuroscienceStrategy } from '@/features/neuroscience/types';
@@ -54,7 +54,7 @@ export default function StrategyForm({ students, locale, availableProviders }: P
 
   const selectedStudent = students.find(s => s.id === selectedStudentId);
 
-  function handleSubmit() {
+  function handleSubmit(forceRefresh = false) {
     setError(null);
     startTransition(async () => {
       const res = await runStrategyRecommendation({
@@ -73,6 +73,7 @@ export default function StrategyForm({ students, locale, availableProviders }: P
         },
         locale,
         provider: selectedProvider,
+        forceRefresh,
       });
 
       if (res.success) {
@@ -202,7 +203,7 @@ export default function StrategyForm({ students, locale, availableProviders }: P
             </div>
           </div>
 
-          <Button onClick={handleSubmit} disabled={isPending || !selectedStudentId || !subject} className="w-full">
+          <Button onClick={() => handleSubmit(false)} disabled={isPending || !selectedStudentId || !subject} className="w-full">
             {isPending ? (
               <><Loader2 className="mr-2 h-4 w-4 animate-spin" />{t('analyzing')}</>
             ) : (
@@ -221,7 +222,22 @@ export default function StrategyForm({ students, locale, availableProviders }: P
       {result && (
         <Card>
           <CardHeader>
-            <CardTitle>{t('resultTitle')}</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle>{t('resultTitle')}</CardTitle>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleSubmit(true)}
+                disabled={isPending}
+              >
+                {isPending ? (
+                  <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+                ) : (
+                  <RefreshCw className="mr-1 h-3 w-3" />
+                )}
+                다시 분석
+              </Button>
+            </div>
             <div className="flex gap-2 text-sm text-muted-foreground">
               <Badge variant="outline">{t('provider')}: {result.provider}/{result.model}</Badge>
               {result.cached && <Badge variant="secondary">{t('cached')}</Badge>}
