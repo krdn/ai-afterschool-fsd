@@ -319,6 +319,7 @@ export function AppSidebar({ role, name }: AppSidebarProps) {
               collapsed && "px-0 justify-center"
             )}
             title={collapsed ? t("expandSidebar") : t("collapseSidebar")}
+            aria-label={collapsed ? t("expandSidebar") : t("collapseSidebar")}
           >
             {collapsed ? (
               <PanelLeft className="h-4 w-4" />

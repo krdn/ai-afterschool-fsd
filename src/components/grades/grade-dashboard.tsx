@@ -340,6 +340,7 @@ function GradeSearch({ initialQuery }: { initialQuery: string }) {
           type="button"
           onClick={() => setQuery('')}
           className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+          aria-label="검색어 지우기"
         >
           <X className="w-4 h-4" />
         </button>
