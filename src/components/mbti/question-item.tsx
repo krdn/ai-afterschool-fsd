@@ -48,8 +48,8 @@ export function QuestionItem({ questionId, questionText, description, isFocused,
             />
             <div className={cn(
               "w-10 h-10 flex items-center justify-center rounded-full border-2",
-              "peer-checked:border-blue-600 peer-checked:bg-blue-100 peer-checked:font-bold",
-              "hover:border-blue-400 transition-colors"
+              "peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:font-bold",
+              "hover:border-primary/50 transition-colors"
             )}>
               {value}
             </div>

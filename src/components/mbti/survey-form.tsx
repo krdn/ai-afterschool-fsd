@@ -145,7 +145,7 @@ export function MbtiSurveyForm({ studentId, initialDraft }: {
       <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-8">
         <ProgressIndicator responses={methods.watch("responses")} total={60} />
 
-        <div className="text-sm text-muted-foreground bg-blue-50 p-4 rounded-lg">
+        <div className="text-sm text-muted-foreground bg-primary/5 p-4 rounded-lg">
           <p className="font-medium mb-1">키보드 단축키</p>
           <p>문항에 포커스된 상태에서 1~5 키를 눌러 빠르게 응답할 수 있습니다.</p>
         </div>

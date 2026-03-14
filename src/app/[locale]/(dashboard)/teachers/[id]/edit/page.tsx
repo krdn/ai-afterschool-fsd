@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation"
 import { verifySession } from "@/lib/dal"
 import { db } from "@/lib/db/client"
 import { TeacherForm } from "@/components/teachers/teacher-form"
+import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 
 type PageProps = {
   params: Promise<{ id: string }>
@@ -55,6 +56,11 @@ export default async function EditTeacherPage({ params }: PageProps) {
 
   return (
     <div className="max-w-2xl mx-auto">
+      <BreadcrumbNav items={[
+        { label: "선생님 목록", href: "/teachers" },
+        { label: teacher.name, href: `/teachers/${id}` },
+        { label: "수정" },
+      ]} />
       <TeacherForm
         teacher={teacher}
         teams={teams}

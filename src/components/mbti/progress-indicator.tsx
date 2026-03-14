@@ -16,7 +16,7 @@ export function ProgressIndicator({ responses, total }: Props) {
       </div>
       <div className="h-2 bg-muted rounded-full overflow-hidden">
         <div
-          className="h-full bg-blue-600 transition-all duration-300"
+          className="h-full bg-primary transition-all duration-300"
           style={{ width: `${percentage}%` }}
         />
       </div>

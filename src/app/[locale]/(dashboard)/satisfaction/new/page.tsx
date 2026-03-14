@@ -1,5 +1,6 @@
 import { verifySession } from "@/lib/dal"
 import { getRBACPrisma } from "@/lib/db/common/rbac"
+import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Select,
@@ -69,6 +70,10 @@ export default async function NewSatisfactionPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto space-y-6">
+        <BreadcrumbNav items={[
+          { label: "대시보드", href: "/dashboard" },
+          { label: "만족도 조사" },
+        ]} />
         <div>
           <h1 className="text-3xl font-bold">학생 만족도 조사</h1>
           <p className="text-muted-foreground">학생 만족도 조사를 기록합니다</p>
