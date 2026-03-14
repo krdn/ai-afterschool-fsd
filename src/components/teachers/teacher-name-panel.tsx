@@ -132,7 +132,7 @@ export function TeacherNamePanel({ teacherId, teacherName, analysis, teacherName
               초기화
             </Button>
           )}
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-muted-foreground">
             {calculatedAt
               ? `최근 분석: ${format(calculatedAt, "yyyy.MM.dd HH:mm", { locale: ko })}`
               : "아직 분석되지 않았어요."}
@@ -156,20 +156,20 @@ export function TeacherNamePanel({ teacherId, teacherName, analysis, teacherName
 
         {/* 한자 선택 및 성명학 분석 */}
         <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-gray-600">1. 한자 기반 성명학</h3>
-          <div className="rounded-md bg-gray-50 p-4 text-sm text-gray-700">
+          <h3 className="text-sm font-semibold text-muted-foreground">1. 한자 기반 성명학</h3>
+          <div className="rounded-md bg-muted p-4 text-sm text-foreground">
             <p>이름: {teacherName}</p>
             <p>선택 한자: {hanjaName ?? "미선택"}</p>
             <div className="mt-2 grid gap-2 sm:grid-cols-2">
               {selections.map((selection, index) => (
                 <div
                   key={`${selection.syllable}-${index}`}
-                  className="flex items-center justify-between rounded-md bg-white px-3 py-2"
+                  className="flex items-center justify-between rounded-md bg-card px-3 py-2"
                 >
                   <span>
                     {selection.syllable} → {selection.hanja ?? "-"}
                   </span>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-muted-foreground">
                     {selection.hanja
                       ? (() => {
                         const info = getStrokeInfo(selection.hanja)
@@ -211,30 +211,30 @@ export function TeacherNamePanel({ teacherId, teacherName, analysis, teacherName
 
         {/* 수리 격국 */}
         <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-gray-600">2. 수리 격국</h3>
+          <h3 className="text-sm font-semibold text-muted-foreground">2. 수리 격국</h3>
           {grids ? (
-            <div className="grid gap-3 rounded-md border border-gray-200 bg-white p-4 text-sm">
+            <div className="grid gap-3 rounded-md border border bg-card p-4 text-sm">
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                 <div>
-                  <p className="text-xs text-gray-500">원격</p>
+                  <p className="text-xs text-muted-foreground">원격</p>
                   <p className="font-medium">{grids.won}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">형격</p>
+                  <p className="text-xs text-muted-foreground">형격</p>
                   <p className="font-medium">{grids.hyung}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">이격</p>
+                  <p className="text-xs text-muted-foreground">이격</p>
                   <p className="font-medium">{grids.yi}</p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">정격</p>
+                  <p className="text-xs text-muted-foreground">정격</p>
                   <p className="font-medium">{grids.jeong}</p>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="rounded-md bg-gray-50 p-4 text-sm text-gray-500">
+            <div className="rounded-md bg-muted p-4 text-sm text-muted-foreground">
               한자가 선택되지 않아 수리 분석이 없습니다.
             </div>
           )}
@@ -242,8 +242,8 @@ export function TeacherNamePanel({ teacherId, teacherName, analysis, teacherName
 
         {/* AI 해석 설정 */}
         {analysis && (
-          <div className="rounded-md border border-gray-200 p-4">
-            <h3 className="text-sm font-semibold text-gray-600 mb-3">3. AI 해석</h3>
+          <div className="rounded-md border border p-4">
+            <h3 className="text-sm font-semibold text-muted-foreground mb-3">3. AI 해석</h3>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 flex-wrap">
               <ProviderSelector
                 selectedProvider={selectedProvider}
@@ -270,19 +270,19 @@ export function TeacherNamePanel({ teacherId, teacherName, analysis, teacherName
         {/* 해석 결과 */}
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold text-gray-600">{analysis ? "4. 해석 결과" : "3. 해석"}</h3>
+            <h3 className="text-sm font-semibold text-muted-foreground">{analysis ? "4. 해석 결과" : "3. 해석"}</h3>
             {analysis?.interpretation && (
-              <div className="ml-auto flex rounded-md border border-gray-200 text-xs overflow-hidden">
+              <div className="ml-auto flex rounded-md border border text-xs overflow-hidden">
                 <button
                   type="button"
-                  className={`px-2.5 py-1 transition-colors ${viewMode === "rendered" ? "bg-gray-800 text-white" : "bg-white text-gray-500 hover:bg-gray-50"}`}
+                  className={`px-2.5 py-1 transition-colors ${viewMode === "rendered" ? "bg-gray-800 text-white" : "bg-card text-muted-foreground hover:bg-muted"}`}
                   onClick={() => setViewMode("rendered")}
                 >
                   미리보기
                 </button>
                 <button
                   type="button"
-                  className={`px-2.5 py-1 border-l border-gray-200 transition-colors ${viewMode === "markdown" ? "bg-gray-800 text-white" : "bg-white text-gray-500 hover:bg-gray-50"}`}
+                  className={`px-2.5 py-1 border-l border transition-colors ${viewMode === "markdown" ? "bg-gray-800 text-white" : "bg-card text-muted-foreground hover:bg-muted"}`}
                   onClick={() => setViewMode("markdown")}
                 >
                   원문
@@ -292,16 +292,16 @@ export function TeacherNamePanel({ teacherId, teacherName, analysis, teacherName
           </div>
           {analysis?.interpretation ? (
             viewMode === "rendered" ? (
-              <div className="rounded-md border border-gray-200 bg-white p-4 max-h-[500px] overflow-y-auto">
+              <div className="rounded-md border border bg-card p-4 max-h-[500px] overflow-y-auto">
                 <MarkdownRenderer content={analysis.interpretation} />
               </div>
             ) : (
-              <div className="rounded-md border border-gray-200 bg-gray-50 p-4 text-sm leading-6 text-gray-700 whitespace-pre-wrap font-mono">
+              <div className="rounded-md border border bg-muted p-4 text-sm leading-6 text-foreground whitespace-pre-wrap font-mono">
                 {analysis.interpretation}
               </div>
             )
           ) : (
-            <div className="rounded-md bg-gray-50 p-4 text-sm text-gray-500">
+            <div className="rounded-md bg-muted p-4 text-sm text-muted-foreground">
               이름풀이 해석이 아직 생성되지 않았어요.
             </div>
           )}

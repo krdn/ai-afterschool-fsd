@@ -25,8 +25,8 @@ export function TeacherRecommendationList({
 }: TeacherRecommendationListProps) {
   if (recommendations.length === 0) {
     return (
-      <div className="rounded-lg border bg-white p-6 shadow-sm">
-        <p className="text-center text-gray-500">
+      <div className="rounded-lg border bg-card p-6 shadow-sm">
+        <p className="text-center text-muted-foreground">
           추천 가능한 선생님이 없습니다.
         </p>
       </div>
@@ -50,7 +50,7 @@ export function TeacherRecommendationList({
     if (score >= 80) return "text-green-600"
     if (score >= 60) return "text-blue-600"
     if (score >= 40) return "text-yellow-600"
-    return "text-gray-600"
+    return "text-muted-foreground"
   }
 
   return (
@@ -62,7 +62,7 @@ export function TeacherRecommendationList({
           <div
             key={recommendation.teacherId}
             data-testid={`teacher-match-${recommendation.teacherId}`}
-            className={`rounded-lg border bg-white p-6 shadow-sm transition-colors ${
+            className={`rounded-lg border bg-card p-6 shadow-sm transition-colors ${
               isCurrentTeacher ? "border-blue-500 bg-blue-50" : ""
             }`}
           >
@@ -92,7 +92,7 @@ export function TeacherRecommendationList({
                     <span className="text-3xl font-bold">
                       {recommendation.score.overall.toFixed(1)}
                     </span>
-                    <span className="text-sm text-gray-500">/ 100점</span>
+                    <span className="text-sm text-muted-foreground">/ 100점</span>
                     <span
                       className={`text-sm font-medium ${getScoreColor(recommendation.score.overall)}`}
                     >
@@ -110,35 +110,35 @@ export function TeacherRecommendationList({
                 {/* 점수 분해 */}
                 <div className="mt-4 grid grid-cols-2 gap-3 text-sm md:grid-cols-5">
                   <div>
-                    <span className="text-gray-600">MBTI</span>
+                    <span className="text-muted-foreground">MBTI</span>
                     <div className="font-semibold">
                       {recommendation.breakdown.mbti.toFixed(1)}
                     </div>
                   </div>
                   <div>
-                    <span className="text-gray-600">학습 스타일</span>
+                    <span className="text-muted-foreground">학습 스타일</span>
                     <div className="font-semibold">
                       {recommendation.breakdown.learningStyle.toFixed(1)}
                     </div>
                   </div>
                   <div>
-                    <span className="text-gray-600">사주</span>
+                    <span className="text-muted-foreground">사주</span>
                     <div className="font-semibold">
                       {recommendation.breakdown.saju === 0
-                        ? <span className="text-gray-400 text-xs">미분석</span>
+                        ? <span className="text-muted-foreground text-xs">미분석</span>
                         : recommendation.breakdown.saju.toFixed(1)}
                     </div>
                   </div>
                   <div>
-                    <span className="text-gray-600">성명학</span>
+                    <span className="text-muted-foreground">성명학</span>
                     <div className="font-semibold">
                       {recommendation.breakdown.name === 0
-                        ? <span className="text-gray-400 text-xs">미분석</span>
+                        ? <span className="text-muted-foreground text-xs">미분석</span>
                         : recommendation.breakdown.name.toFixed(1)}
                     </div>
                   </div>
                   <div>
-                    <span className="text-gray-600">부하 분산</span>
+                    <span className="text-muted-foreground">부하 분산</span>
                     <div className="font-semibold">
                       {recommendation.breakdown.loadBalance.toFixed(1)}
                     </div>
@@ -149,7 +149,7 @@ export function TeacherRecommendationList({
                 {recommendation.reasons.length > 0 && (
                   <div className="mt-4 space-y-1">
                     <h4 className="text-sm font-medium text-gray-700">추천 이유</h4>
-                    <ul className="list-inside list-disc space-y-1 text-sm text-gray-600">
+                    <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
                       {recommendation.reasons.map((reason, idx) => (
                         <li key={idx}>{reason}</li>
                       ))}

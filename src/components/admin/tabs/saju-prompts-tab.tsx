@@ -206,7 +206,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
         <div className="grid gap-3 sm:grid-cols-2">
           {/* 프롬프트 키 (생성 시만 편집 가능) */}
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600">
+            <label className="text-xs font-medium text-muted-foreground">
               프롬프트 키 (slug)
             </label>
             <input
@@ -221,7 +221,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
             />
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600">
+            <label className="text-xs font-medium text-muted-foreground">
               표시 이름
             </label>
             <input
@@ -236,7 +236,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
             />
           </div>
           <div className="space-y-1 sm:col-span-2">
-            <label className="text-xs font-medium text-gray-600">
+            <label className="text-xs font-medium text-muted-foreground">
               짧은 설명
             </label>
             <input
@@ -250,7 +250,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
             />
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600">
+            <label className="text-xs font-medium text-muted-foreground">
               상담 대상
             </label>
             <input
@@ -264,7 +264,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
             />
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600">
+            <label className="text-xs font-medium text-muted-foreground">
               분석 깊이
             </label>
             <input
@@ -278,7 +278,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
             />
           </div>
           <div className="space-y-1 sm:col-span-2">
-            <label className="text-xs font-medium text-gray-600">
+            <label className="text-xs font-medium text-muted-foreground">
               핵심 목적
             </label>
             <input
@@ -292,7 +292,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
             />
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600">
+            <label className="text-xs font-medium text-muted-foreground">
               추천 시기
             </label>
             <input
@@ -306,7 +306,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
             />
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600">
+            <label className="text-xs font-medium text-muted-foreground">
               태그 (쉼표 구분)
             </label>
             <input
@@ -321,7 +321,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
             />
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-medium text-gray-600">
+            <label className="text-xs font-medium text-muted-foreground">
               정렬 순서
             </label>
             <input
@@ -341,10 +341,10 @@ export function SajuPromptsTab({ initialPresets }: Props) {
 
         {/* TODO(human): 프롬프트 템플릿 편집기 - 변수 치환 가이드 및 미리보기 기능 */}
         <div className="space-y-1">
-          <label className="text-xs font-medium text-gray-600">
+          <label className="text-xs font-medium text-muted-foreground">
             프롬프트 템플릿
           </label>
-          <p className="text-[10px] text-gray-400">
+          <p className="text-[10px] text-muted-foreground">
             사용 가능한 변수: {"{학생정보}"}, {"{사주데이터}"} — 실행 시 자동 치환됩니다.
           </p>
           <Textarea
@@ -383,7 +383,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-semibold">사주 분석 프롬프트 관리</h3>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted-foreground">
             프롬프트를 추가/수정하여 사주 분석의 관점과 깊이를 커스터마이징합니다.
           </p>
         </div>
@@ -404,7 +404,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
       )}
 
       {presets.length === 0 ? (
-        <div className="rounded-md border border-dashed p-8 text-center text-gray-500 text-sm">
+        <div className="rounded-md border border-dashed p-8 text-center text-muted-foreground text-sm">
           등록된 프롬프트가 없습니다. &quot;새 프롬프트&quot;를 눌러 추가해보세요.
         </div>
       ) : (
@@ -418,7 +418,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
                   className={`rounded-lg border ${
                     preset.isActive
                       ? "border-gray-200"
-                      : "border-gray-100 bg-gray-50 opacity-60"
+                      : "border-gray-100 bg-muted opacity-60"
                   }`}
                 >
                   {/* 헤더 */}
@@ -431,15 +431,15 @@ export function SajuPromptsTab({ initialPresets }: Props) {
                       }
                     >
                       {isExpanded ? (
-                        <ChevronUp className="h-4 w-4 text-gray-400" />
+                        <ChevronUp className="h-4 w-4 text-muted-foreground" />
                       ) : (
-                        <ChevronDown className="h-4 w-4 text-gray-400" />
+                        <ChevronDown className="h-4 w-4 text-muted-foreground" />
                       )}
                       <span className="font-medium text-sm">
                         {preset.name}
                       </span>
                       {preset.isBuiltIn && (
-                        <Lock className="h-3 w-3 text-gray-400" />
+                        <Lock className="h-3 w-3 text-muted-foreground" />
                       )}
                       <Badge
                         variant="outline"
@@ -470,7 +470,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
                         {preset.isActive ? (
                           <Eye className="h-3.5 w-3.5 text-green-600" />
                         ) : (
-                          <EyeOff className="h-3.5 w-3.5 text-gray-400" />
+                          <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />
                         )}
                       </Button>
                       <Button
@@ -499,31 +499,31 @@ export function SajuPromptsTab({ initialPresets }: Props) {
                   {/* 상세 */}
                   {isExpanded && (
                     <div className="border-t px-4 py-3 space-y-3">
-                      <p className="text-xs text-gray-600">
+                      <p className="text-xs text-muted-foreground">
                         {preset.shortDescription}
                       </p>
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div>
-                          <span className="text-gray-400">대상:</span>{" "}
-                          <span className="text-gray-600">{preset.target}</span>
+                          <span className="text-muted-foreground">대상:</span>{" "}
+                          <span className="text-muted-foreground">{preset.target}</span>
                         </div>
                         <div>
-                          <span className="text-gray-400">깊이:</span>{" "}
-                          <span className="text-gray-600">{preset.levels}</span>
+                          <span className="text-muted-foreground">깊이:</span>{" "}
+                          <span className="text-muted-foreground">{preset.levels}</span>
                         </div>
                         <div className="col-span-2">
-                          <span className="text-gray-400">목적:</span>{" "}
-                          <span className="text-gray-600">{preset.purpose}</span>
+                          <span className="text-muted-foreground">목적:</span>{" "}
+                          <span className="text-muted-foreground">{preset.purpose}</span>
                         </div>
                         <div>
-                          <span className="text-gray-400">추천시기:</span>{" "}
-                          <span className="text-gray-600">
+                          <span className="text-muted-foreground">추천시기:</span>{" "}
+                          <span className="text-muted-foreground">
                             {preset.recommendedTiming}
                           </span>
                         </div>
                         <div>
-                          <span className="text-gray-400">정렬:</span>{" "}
-                          <span className="text-gray-600">
+                          <span className="text-muted-foreground">정렬:</span>{" "}
+                          <span className="text-muted-foreground">
                             {preset.sortOrder}
                           </span>
                         </div>
@@ -541,11 +541,11 @@ export function SajuPromptsTab({ initialPresets }: Props) {
                           ))}
                         </div>
                       )}
-                      <div className="rounded-md bg-gray-50 border p-3">
-                        <p className="text-[10px] text-gray-400 mb-1">
+                      <div className="rounded-md bg-muted border p-3">
+                        <p className="text-[10px] text-muted-foreground mb-1">
                           프롬프트 템플릿 (미리보기)
                         </p>
-                        <pre className="text-xs text-gray-600 whitespace-pre-wrap max-h-[200px] overflow-y-auto font-mono">
+                        <pre className="text-xs text-muted-foreground whitespace-pre-wrap max-h-[200px] overflow-y-auto font-mono">
                           {preset.promptTemplate.slice(0, 500)}
                           {preset.promptTemplate.length > 500 ? "..." : ""}
                         </pre>
