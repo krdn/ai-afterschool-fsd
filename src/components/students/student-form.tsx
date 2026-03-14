@@ -60,7 +60,7 @@ function SubmitButton({ isEdit }: { isEdit: boolean }) {
     <button
       type="submit"
       disabled={pending}
-      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full font-bold disabled:opacity-50"
+      className="bg-primary text-primary-foreground px-4 py-2 rounded hover:bg-primary/90 w-full font-bold disabled:opacity-50"
       data-testid="submit-student-button"
     >
       {pending ? "저장 중..." : isEdit ? "수정" : "등록"}

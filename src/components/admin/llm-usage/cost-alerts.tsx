@@ -146,7 +146,7 @@ export function CostAlerts({ initialData }: CostAlertsProps) {
             onClick={() => setDateRange("7d")}
             className={`px-3 py-1 text-sm rounded ${
               dateRange === "7d"
-                ? "bg-blue-600 text-white"
+                ? "bg-primary text-primary-foreground"
                 : "bg-muted text-muted-foreground hover:bg-muted"
             }`}
           >
@@ -157,7 +157,7 @@ export function CostAlerts({ initialData }: CostAlertsProps) {
             onClick={() => setDateRange("30d")}
             className={`px-3 py-1 text-sm rounded ${
               dateRange === "30d"
-                ? "bg-blue-600 text-white"
+                ? "bg-primary text-primary-foreground"
                 : "bg-muted text-muted-foreground hover:bg-muted"
             }`}
           >
@@ -168,7 +168,7 @@ export function CostAlerts({ initialData }: CostAlertsProps) {
             onClick={() => setDateRange("90d")}
             className={`px-3 py-1 text-sm rounded ${
               dateRange === "90d"
-                ? "bg-blue-600 text-white"
+                ? "bg-primary text-primary-foreground"
                 : "bg-muted text-muted-foreground hover:bg-muted"
             }`}
           >

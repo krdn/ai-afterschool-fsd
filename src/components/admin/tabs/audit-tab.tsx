@@ -50,7 +50,7 @@ export function AuditTab({ initialAction = 'ALL', initialPage = 1 }: AuditTabPro
       <div className="flex gap-2" data-testid="action-filter">
         <button
           onClick={() => { setAction('ALL'); setPage(1) }}
-          className={`px-3 py-1 rounded ${action === 'ALL' ? 'bg-blue-600 text-white' : 'bg-muted'}`}
+          className={`px-3 py-1 rounded ${action === 'ALL' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}
           data-testid="filter-all"
         >
           전체
@@ -64,7 +64,7 @@ export function AuditTab({ initialAction = 'ALL', initialPage = 1 }: AuditTabPro
         </button>
         <button
           onClick={() => { setAction('UPDATE'); setPage(1) }}
-          className={`px-3 py-1 rounded ${action === 'UPDATE' ? 'bg-blue-600 text-white' : 'bg-muted'}`}
+          className={`px-3 py-1 rounded ${action === 'UPDATE' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}
           data-testid="filter-update"
         >
           수정

@@ -45,7 +45,7 @@ export function LogsTab({ initialLevel = 'ALL', initialPage = 1 }: LogsTabProps)
       <div className="flex gap-2" data-testid="log-level-filter">
         <button
           onClick={() => { setLevel('ALL'); setPage(1) }}
-          className={`px-3 py-1 rounded ${level === 'ALL' ? 'bg-blue-600 text-white' : 'bg-muted'}`}
+          className={`px-3 py-1 rounded ${level === 'ALL' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}
           data-testid="filter-all"
         >
           전체
@@ -66,7 +66,7 @@ export function LogsTab({ initialLevel = 'ALL', initialPage = 1 }: LogsTabProps)
         </button>
         <button
           onClick={() => { setLevel('INFO'); setPage(1) }}
-          className={`px-3 py-1 rounded ${level === 'INFO' ? 'bg-blue-600 text-white' : 'bg-muted'}`}
+          className={`px-3 py-1 rounded ${level === 'INFO' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}
           data-testid="filter-info"
         >
           INFO
