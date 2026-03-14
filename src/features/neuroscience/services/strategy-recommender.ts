@@ -14,9 +14,9 @@ type StrategyResult = {
 
 export async function getStrategyRecommendation(
   condition: NeuroscienceCondition,
-  options: { teacherId: string; locale?: string; forceRefresh?: boolean }
+  options: { teacherId: string; locale?: string; forceRefresh?: boolean; providerId?: string }
 ): Promise<StrategyResult> {
-  const { teacherId, locale = 'ko', forceRefresh = false } = options;
+  const { teacherId, locale = 'ko', forceRefresh = false, providerId } = options;
   const built = buildCondition(condition);
 
   // 캐시 확인
@@ -41,6 +41,7 @@ export async function getStrategyRecommendation(
     system: getStrategySystemPrompt(locale),
     teacherId,
     maxOutputTokens: 4096,
+    ...(providerId && providerId !== 'auto' ? { providerId } : {}),
   });
 
   // 응답 파싱

@@ -73,6 +73,7 @@ export const strategyInputSchema = z.object({
     specificTopic: z.string().optional(),
   }),
   locale: z.enum(['ko', 'en']).default('ko'),
+  provider: z.string().default('auto'),
 });
 
 export type StrategyInput = z.infer<typeof strategyInputSchema>;

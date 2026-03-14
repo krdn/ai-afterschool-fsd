@@ -11,7 +11,9 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Badge } from '@/components/ui/badge';
 import { Brain, Loader2, Sparkles, AlertTriangle } from 'lucide-react';
 import { runStrategyRecommendation } from '@/lib/actions/neuroscience/strategy';
+import { ProviderSelector } from '@/components/students/provider-selector';
 import type { NeuroscienceStrategy } from '@/features/neuroscience/types';
+import type { ProviderName } from '@/features/ai-engine/providers/types';
 
 type Student = {
   id: string;
@@ -25,9 +27,10 @@ type Student = {
 type Props = {
   students: Student[];
   locale: string;
+  availableProviders: ProviderName[];
 };
 
-export default function StrategyForm({ students, locale }: Props) {
+export default function StrategyForm({ students, locale, availableProviders }: Props) {
   const t = useTranslations('Neuroscience');
   const [isPending, startTransition] = useTransition();
   const [selectedStudentId, setSelectedStudentId] = useState('');
@@ -47,6 +50,7 @@ export default function StrategyForm({ students, locale }: Props) {
   const [studyDuration, setStudyDuration] = useState('');
   const [goalType, setGoalType] = useState<'memorization' | 'comprehension' | 'problem_solving' | 'creativity' | 'review'>('comprehension');
   const [specificTopic, setSpecificTopic] = useState('');
+  const [selectedProvider, setSelectedProvider] = useState('auto');
 
   const selectedStudent = students.find(s => s.id === selectedStudentId);
 
@@ -68,6 +72,7 @@ export default function StrategyForm({ students, locale }: Props) {
           ...(specificTopic && { specificTopic }),
         },
         locale,
+        provider: selectedProvider,
       });
 
       if (res.success) {
@@ -114,6 +119,13 @@ export default function StrategyForm({ students, locale }: Props) {
               </div>
             )}
           </div>
+
+          <ProviderSelector
+            selectedProvider={selectedProvider}
+            onProviderChange={setSelectedProvider}
+            availableProviders={availableProviders}
+            disabled={isPending}
+          />
 
           <div className="grid grid-cols-2 gap-4">
             <div>
