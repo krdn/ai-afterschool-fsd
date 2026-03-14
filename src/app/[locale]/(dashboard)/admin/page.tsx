@@ -22,12 +22,7 @@ import { pool } from '@/lib/db/client'
 // 에이전트 관리
 import { getAgentConfigs } from '@/lib/actions/agents/config'
 import { getRecentExecutions } from '@/lib/actions/agents/execution'
-import dynamic from 'next/dynamic'
-
-const AgentDashboard = dynamic(() => import('@/components/agents/agent-dashboard').then(m => ({ default: m.AgentDashboard })), {
-  ssr: false,
-  loading: () => <div className="animate-pulse space-y-4"><div className="h-8 w-48 rounded bg-muted" /><div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{Array.from({ length: 3 }).map((_, i) => <div key={i} className="h-40 rounded-lg bg-muted" />)}</div></div>,
-})
+import { AgentDashboard } from '@/components/agents/agent-dashboard'
 
 // LLM Hub
 import { LLMHubTab } from '@/components/admin/tabs/llm-hub-tab'
