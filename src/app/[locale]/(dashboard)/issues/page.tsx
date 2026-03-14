@@ -1,8 +1,10 @@
+import { Suspense } from 'react'
 import { redirect } from 'next/navigation'
 import { verifySession } from '@/lib/dal'
 import { getIssues } from '@/lib/actions/common/issues'
 import { IssueTable } from '@/components/issues/issue-table'
 import { IssueFilters } from '@/components/issues/issue-filters'
+import { PaginationNav } from '@/components/ui/pagination-nav'
 import type { IssueStatus, IssueCategory } from '@/lib/db'
 
 export const metadata = {
@@ -26,9 +28,10 @@ export default async function IssuesPage(props: {
   const status = searchParams?.status as IssueStatus | undefined
   const category = searchParams?.category as IssueCategory | undefined
   const page = parseInt(searchParams?.page || '1', 10)
+  const pageSize = 20
 
-  const { issues, total } = await getIssues({ status, category, page, pageSize: 20 })
-  const totalPages = Math.ceil(total / 20)
+  const { issues, total } = await getIssues({ status, category, page, pageSize })
+  const totalPages = Math.ceil(total / pageSize)
 
   return (
     <div className="space-y-6">
@@ -43,37 +46,14 @@ export default async function IssuesPage(props: {
         <IssueTable issues={issues} />
       </div>
 
-      {totalPages > 1 && (
-        <div className="flex justify-center gap-2">
-          {page > 1 && (
-            <a
-              href={`/issues?${new URLSearchParams({
-                ...(status && { status }),
-                ...(category && { category }),
-                page: String(page - 1),
-              }).toString()}`}
-              className="px-4 py-2 border rounded hover:bg-muted"
-            >
-              이전
-            </a>
-          )}
-          <span className="px-4 py-2 text-muted-foreground">
-            {page} / {totalPages}
-          </span>
-          {page < totalPages && (
-            <a
-              href={`/issues?${new URLSearchParams({
-                ...(status && { status }),
-                ...(category && { category }),
-                page: String(page + 1),
-              }).toString()}`}
-              className="px-4 py-2 border rounded hover:bg-muted"
-            >
-              다음
-            </a>
-          )}
-        </div>
-      )}
+      <Suspense>
+        <PaginationNav
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          pageSize={pageSize}
+        />
+      </Suspense>
     </div>
   )
 }

@@ -65,7 +65,7 @@ export function IssueTable({ issues }: { issues: IssueRow[] }) {
             <TableCell>
               <Link
                 href={`/issues/${issue.id}`}
-                className="text-blue-600 hover:underline font-medium"
+                className="text-primary hover:underline font-medium"
               >
                 {issue.githubIssueNumber && (
                   <span className="text-muted-foreground mr-1">#{issue.githubIssueNumber}</span>
