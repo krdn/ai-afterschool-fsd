@@ -124,7 +124,7 @@ export default async function AutoAssignPage() {
                 <div className="border rounded-lg p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <h5 className="font-medium text-sm">MBTI 호환도</h5>
-                    <span className="text-xs font-semibold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">25%</span>
+                    <span className="text-xs font-semibold bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded-full">25%</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     E/I, S/N, T/F, J/P 4가지 차원의 유사도를 계산합니다.
@@ -134,7 +134,7 @@ export default async function AutoAssignPage() {
                 <div className="border rounded-lg p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <h5 className="font-medium text-sm">학습 스타일 호환도</h5>
-                    <span className="text-xs font-semibold bg-green-100 text-green-700 px-2 py-0.5 rounded-full">25%</span>
+                    <span className="text-xs font-semibold bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full">25%</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     MBTI에서 VARK 학습 스타일(시각/청각/읽기쓰기/체험)을 유도하여 코사인 유사도를 계산합니다.
@@ -144,7 +144,7 @@ export default async function AutoAssignPage() {
                 <div className="border rounded-lg p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <h5 className="font-medium text-sm">사주 호환도</h5>
-                    <span className="text-xs font-semibold bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">20%</span>
+                    <span className="text-xs font-semibold bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-400 px-2 py-0.5 rounded-full">20%</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     오행(목, 화, 토, 금, 수) 에너지 분포를 벡터로 변환하여 코사인 유사도를 측정합니다.

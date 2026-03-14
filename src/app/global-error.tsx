@@ -30,7 +30,7 @@ export default function GlobalError({
         <div className="flex min-h-screen flex-col items-center justify-center bg-muted px-4" data-testid="server-error-page">
           <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
             <div className="mb-4 flex justify-center">
-              <div className="rounded-full bg-red-100 p-3">
+              <div className="rounded-full bg-red-100 dark:bg-red-900/40 p-3">
                 <svg
                   className="h-8 w-8 text-red-600"
                   fill="none"

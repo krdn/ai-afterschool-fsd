@@ -11,7 +11,7 @@ import { StudentPagination } from "@/components/students/student-pagination"
 const PAGE_SIZE = 12
 
 const avatarColors = [
-  "bg-blue-500", "bg-green-500", "bg-purple-500", "bg-orange-500",
+  "bg-blue-50 dark:bg-blue-950/30", "bg-green-50 dark:bg-green-950/30", "bg-purple-500", "bg-orange-500",
   "bg-pink-500", "bg-teal-500", "bg-indigo-500", "bg-rose-500",
 ]
 

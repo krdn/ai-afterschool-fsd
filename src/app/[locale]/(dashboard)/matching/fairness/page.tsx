@@ -159,8 +159,8 @@ export default async function FairnessMetricsPage() {
 function StatusBadge({ status }: { status: string }) {
   const styles = {
     pending: "bg-yellow-100 text-yellow-700",
-    approved: "bg-green-100 text-green-700",
-    rejected: "bg-red-100 text-red-700",
+    approved: "bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400",
+    rejected: "bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400",
   }
 
   const labels = {

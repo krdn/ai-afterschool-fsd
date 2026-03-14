@@ -67,8 +67,8 @@ export default async function StudentMatchingPage({
 
       {/* 현재 배정 정보 */}
       {student.teacherId && (
-        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-          <p className="text-sm text-blue-900">
+        <div className="rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30 p-4">
+          <p className="text-sm text-blue-900 dark:text-blue-200">
             <strong>현재 배정된 선생님:</strong>{" "}
             {
               recommendations.recommendations.find(

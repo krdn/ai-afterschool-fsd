@@ -201,10 +201,10 @@ export default async function TeacherStudentsPage({ params }: PageProps) {
                 <div
                   className={`h-2 rounded-full transition-all ${
                     metrics.averageCompatibilityScore >= 80
-                      ? 'bg-green-500'
+                      ? 'bg-green-50 dark:bg-green-950/30'
                       : metrics.averageCompatibilityScore >= 60
                         ? 'bg-yellow-500'
-                        : 'bg-red-500'
+                        : 'bg-red-50 dark:bg-red-950/30'
                   }`}
                   style={{ width: `${metrics.averageCompatibilityScore}%` }}
                 />
