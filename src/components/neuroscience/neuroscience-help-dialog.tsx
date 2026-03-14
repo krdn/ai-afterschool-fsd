@@ -56,7 +56,7 @@ export function NeuroscienceHelpDialog() {
           <span className="hidden sm:inline">도움말</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Brain className="h-5 w-5" />
@@ -77,7 +77,7 @@ export function NeuroscienceHelpDialog() {
 
           {/* 개요 탭 */}
           <TabsContent value="overview">
-            <ScrollArea className="max-h-[450px]">
+            <ScrollArea className="max-h-[calc(85vh-200px)]">
               <div className="space-y-4 pr-2">
                 <SectionCard icon={Brain} title="이 기능은 무엇인가요?">
                   <p>
@@ -121,7 +121,7 @@ export function NeuroscienceHelpDialog() {
 
           {/* 입력 조건 탭 */}
           <TabsContent value="conditions">
-            <ScrollArea className="max-h-[450px]">
+            <ScrollArea className="max-h-[calc(85vh-200px)]">
               <div className="space-y-4 pr-2">
                 <SectionCard icon={BookOpen} title="과목 & 난이도">
                   <p>학습할 과목명을 자유롭게 입력합니다 (예: 수학, 영어, 물리, 코딩).</p>
@@ -188,7 +188,7 @@ export function NeuroscienceHelpDialog() {
 
           {/* 뇌과학 도메인 탭 */}
           <TabsContent value="brain">
-            <ScrollArea className="max-h-[450px]">
+            <ScrollArea className="max-h-[calc(85vh-200px)]">
               <div className="space-y-3 pr-2">
                 <p className="text-sm text-muted-foreground">
                   AI는 아래 6개 뇌과학 도메인에 기반하여 전략을 추천합니다.
@@ -227,7 +227,7 @@ export function NeuroscienceHelpDialog() {
 
           {/* 활용 가이드 탭 */}
           <TabsContent value="tips">
-            <ScrollArea className="max-h-[450px]">
+            <ScrollArea className="max-h-[calc(85vh-200px)]">
               <div className="space-y-4 pr-2">
                 <SectionCard icon={Target} title="이런 상황에서 활용하세요">
                   <ul className="list-disc list-inside space-y-1">
