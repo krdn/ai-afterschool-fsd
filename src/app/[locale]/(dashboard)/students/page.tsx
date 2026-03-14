@@ -106,9 +106,12 @@ export default async function StudentsPage(props: {
                     </p>
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  {t("birthDate")}: {new Date(student.birthDate).toLocaleDateString("ko-KR")}
-                </p>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span>{new Date(student.birthDate).toLocaleDateString("ko-KR")}</span>
+                  {student.teacher && (
+                    <span className="truncate ml-2">{student.teacher.name}</span>
+                  )}
+                </div>
               </div>
             </Link>
           ))}
