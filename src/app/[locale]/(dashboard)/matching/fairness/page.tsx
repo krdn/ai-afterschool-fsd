@@ -52,17 +52,17 @@ export default async function FairnessMetricsPage() {
     <div className="space-y-6">
       {/* 헤더 */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900" data-testid="fairness-heading">공정성 메트릭</h1>
-        <p className="mt-2 text-gray-600">
+        <h1 className="text-3xl font-bold text-foreground" data-testid="fairness-heading">공정성 메트릭</h1>
+        <p className="mt-2 text-muted-foreground">
           알고리즘적 편향을 검증하기 위한 공정성 지표를 확인합니다.
         </p>
       </div>
 
       {/* 제안 없음 메시지 */}
       {proposals.length === 0 && (
-        <div className="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
-          <p className="text-gray-600">아직 배정 제안이 없습니다.</p>
-          <p className="mt-2 text-sm text-gray-500">
+        <div className="rounded-lg border border-gray-200 bg-muted p-8 text-center">
+          <p className="text-muted-foreground">아직 배정 제안이 없습니다.</p>
+          <p className="mt-2 text-sm text-muted-foreground">
             자동 배정을 실행하여 제안을 생성하면 공정성 메트릭을 확인할 수
             있습니다.
           </p>
@@ -82,35 +82,35 @@ export default async function FairnessMetricsPage() {
           </div>
           <div className="overflow-x-auto" data-testid="teacher-fairness-table">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-muted">
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="px-6 py-3 text-left text-sm font-medium text-foreground">
                     제안명
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="px-6 py-3 text-left text-sm font-medium text-foreground">
                     생성일
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="px-6 py-3 text-left text-sm font-medium text-foreground">
                     상태
                   </th>
-                  <th className="px-6 py-3 text-right text-sm font-medium text-gray-700">
+                  <th className="px-6 py-3 text-right text-sm font-medium text-foreground">
                     Disparity Index
                   </th>
-                  <th className="px-6 py-3 text-right text-sm font-medium text-gray-700">
+                  <th className="px-6 py-3 text-right text-sm font-medium text-foreground">
                     ABROCA
                   </th>
-                  <th className="px-6 py-3 text-right text-sm font-medium text-gray-700">
+                  <th className="px-6 py-3 text-right text-sm font-medium text-foreground">
                     Distribution Balance
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y">
                 {proposalsWithMetrics.map((proposal) => (
-                  <tr key={proposal.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                  <tr key={proposal.id} className="hover:bg-muted">
+                    <td className="px-6 py-4 text-sm font-medium text-foreground">
                       {proposal.name}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-muted-foreground">
                       {new Date(proposal.createdAt).toLocaleDateString("ko-KR")}
                     </td>
                     <td className="px-6 py-4">
@@ -166,7 +166,7 @@ function StatusBadge({ status }: { status: string }) {
 
   return (
     <span
-      className={`rounded-full px-2 py-1 text-xs font-medium ${styles[status as keyof typeof styles] || "bg-gray-100 text-gray-700"}`}
+      className={`rounded-full px-2 py-1 text-xs font-medium ${styles[status as keyof typeof styles] || "bg-muted text-foreground"}`}
     >
       {labels[status as keyof typeof labels] || status}
     </span>
@@ -190,7 +190,7 @@ function MetricValue({
     ? value < threshold * 1.5
     : value > threshold * 0.7
 
-  let colorClass = "text-gray-600"
+  let colorClass = "text-muted-foreground"
   if (isGood) {
     colorClass = "text-green-600 font-medium"
   } else if (isWarning) {

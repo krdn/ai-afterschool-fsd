@@ -25,7 +25,7 @@ export default async function TeamsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">팀 관리</h1>
-          <p className="text-gray-500">
+          <p className="text-muted-foreground">
             {teams.length > 0
               ? `총 ${teams.length}개의 팀이 있어요`
               : '팀을 생성해보세요'}
@@ -60,7 +60,7 @@ export default async function TeamsPage() {
                 <h3 className="text-lg font-semibold mb-2" data-testid="team-name">
                   {team.name}
                 </h3>
-                <div className="text-sm text-gray-500 space-y-1">
+                <div className="text-sm text-muted-foreground space-y-1">
                   <p data-testid="team-teachers-count">
                     선생님 {team._count.teachers}명
                   </p>
@@ -79,7 +79,7 @@ export default async function TeamsPage() {
       )}
 
       {/* 페이지 푸터 정보 */}
-      <div className="text-center text-sm text-gray-400 pt-4">
+      <div className="text-center text-sm text-muted-foreground pt-4">
         팀 카드를 클릭하면 상세 정보를 확인할 수 있어요
       </div>
     </div>

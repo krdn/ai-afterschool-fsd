@@ -36,7 +36,7 @@ export default async function GradeStudentDetailPage(props: {
     <div className="container mx-auto px-4 py-8 space-y-6">
       <div>
         <h1 className="text-3xl font-bold">{student.name}</h1>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           {student.school} {student.grade}학년 - 성적 상세
         </p>
       </div>

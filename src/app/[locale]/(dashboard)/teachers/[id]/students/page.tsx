@@ -48,7 +48,7 @@ export default async function TeacherStudentsPage({ params }: PageProps) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center py-12">
-          <p className="text-gray-500">로그인이 필요합니다</p>
+          <p className="text-muted-foreground">로그인이 필요합니다</p>
         </div>
       </div>
     )
@@ -62,7 +62,7 @@ export default async function TeacherStudentsPage({ params }: PageProps) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center py-12">
-          <p className="text-gray-500">접근 권한이 없습니다</p>
+          <p className="text-muted-foreground">접근 권한이 없습니다</p>
         </div>
       </div>
     )
@@ -128,7 +128,7 @@ export default async function TeacherStudentsPage({ params }: PageProps) {
         </Button>
         <div>
           <h1 className="text-3xl font-bold">{teacher.name} 선생님 담당 학생</h1>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             {teacher.email}
             {teacher.team && ` · ${teacher.team.name}`}
           </p>
@@ -139,7 +139,7 @@ export default async function TeacherStudentsPage({ params }: PageProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Users className="h-4 w-4" />
               총 담당 학생
             </CardTitle>
@@ -151,7 +151,7 @@ export default async function TeacherStudentsPage({ params }: PageProps) {
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <TrendingUp className="h-4 w-4" />
               평균 성적 변화
             </CardTitle>
@@ -175,7 +175,7 @@ export default async function TeacherStudentsPage({ params }: PageProps) {
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <MessageSquare className="h-4 w-4" />
               총 상담 횟수
             </CardTitle>
@@ -187,7 +187,7 @@ export default async function TeacherStudentsPage({ params }: PageProps) {
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Heart className="h-4 w-4" />
               평균 궁합 점수
             </CardTitle>
@@ -197,7 +197,7 @@ export default async function TeacherStudentsPage({ params }: PageProps) {
               <div className="text-3xl font-bold">
                 {metrics.averageCompatibilityScore.toFixed(0)}점
               </div>
-              <div className="h-2 w-full rounded-full bg-gray-100">
+              <div className="h-2 w-full rounded-full bg-muted">
                 <div
                   className={`h-2 rounded-full transition-all ${
                     metrics.averageCompatibilityScore >= 80

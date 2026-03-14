@@ -7,12 +7,12 @@ export default function GradeAnalyticsPage() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="w-5 h-5 text-gray-400" />
+            <BarChart3 className="w-5 h-5 text-muted-foreground" />
             성적 통계
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+          <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
             <BarChart3 className="w-12 h-12 mb-4" />
             <p className="text-lg font-medium">Phase 2에서 구현 예정</p>
             <p className="text-sm mt-2">

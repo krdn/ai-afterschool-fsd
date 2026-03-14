@@ -31,7 +31,7 @@ export default async function AutoAssignPage() {
         <h1 className="text-2xl font-bold">AI 자동 배정 제안</h1>
         <Card>
           <CardContent className="pt-6">
-            <p className="text-gray-500">
+            <p className="text-muted-foreground">
               이 기능은 원장님과 팀장님만 사용할 수 있습니다.
             </p>
           </CardContent>
@@ -80,7 +80,7 @@ export default async function AutoAssignPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">AI 자동 배정 제안</h1>
-        <p className="text-gray-500">
+        <p className="text-muted-foreground">
           AI가 궁합 점수를 분석하여 최적의 학생-선생님 배정을 제안합니다.
         </p>
       </div>
@@ -159,7 +159,7 @@ export default async function AutoAssignPage() {
                 <div className="border rounded-lg p-4 space-y-2 md:col-span-2">
                   <div className="flex items-center justify-between">
                     <h5 className="font-medium text-sm">부하 분산</h5>
-                    <span className="text-xs font-semibold bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full">15%</span>
+                    <span className="text-xs font-semibold bg-muted text-foreground px-2 py-0.5 rounded-full">15%</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     선생님별 담당 학생 수의 균형을 고려합니다.
@@ -238,15 +238,15 @@ export default async function AutoAssignPage() {
                 return (
                   <div
                     key={proposal.id}
-                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
+                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted"
                   >
                     <div>
                       <p className="font-medium">{proposal.name}</p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-muted-foreground">
                         생성: {formatDate(proposal.createdAt)} | 제안자:{" "}
                         {proposal.proposer.name}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-muted-foreground">
                         학생 {summary?.assignedStudents || 0}명 | 평균 점수:{" "}
                         {Math.round(summary?.averageScore || 0)}점
                       </p>

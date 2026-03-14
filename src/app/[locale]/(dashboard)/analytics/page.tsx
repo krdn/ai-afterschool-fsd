@@ -113,7 +113,7 @@ export default function AnalyticsPage() {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">성과 분석</h1>
         <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-muted-foreground">
             기간: 최근 3개월
           </span>
         </div>
@@ -130,8 +130,8 @@ export default function AnalyticsPage() {
         <Card>
           <CardContent className="flex items-center justify-center py-12">
             <div className="flex flex-col items-center gap-4">
-              <Loader2 className="w-8 h-8 animate-spin text-gray-500" />
-              <span className="text-gray-500">데이터를 불러오는 중입니다...</span>
+              <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+              <span className="text-muted-foreground">데이터를 불러오는 중입니다...</span>
             </div>
           </CardContent>
         </Card>

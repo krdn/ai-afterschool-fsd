@@ -88,7 +88,7 @@ export default async function MatchingPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">배정 관리</h1>
-          <p className="text-gray-500">학생-선생님 배정 현황 및 관리</p>
+          <p className="text-muted-foreground">학생-선생님 배정 현황 및 관리</p>
         </div>
         <AssignmentHelpDialog />
       </div>

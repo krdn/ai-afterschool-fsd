@@ -41,11 +41,11 @@ export default async function TeamDetailPage({
         <CardContent>
           <div className="grid gap-4">
             <div>
-              <span className="text-gray-500">팀 ID:</span>{' '}
+              <span className="text-muted-foreground">팀 ID:</span>{' '}
               <span className="font-mono text-sm" data-testid="team-id">{team.id}</span>
             </div>
             <div>
-              <span className="text-gray-500">팀 이름:</span>{' '}
+              <span className="text-muted-foreground">팀 이름:</span>{' '}
               <span data-testid="team-name">{team.name}</span>
             </div>
           </div>
@@ -62,7 +62,7 @@ export default async function TeamDetailPage({
         </CardHeader>
         <CardContent>
           {team.teachers.length === 0 ? (
-            <p className="text-gray-500" data-testid="no-teachers">소속 선생님이 없어요</p>
+            <p className="text-muted-foreground" data-testid="no-teachers">소속 선생님이 없어요</p>
           ) : (
             <ul className="space-y-2">
               {team.teachers.map((teacher) => (
@@ -91,7 +91,7 @@ export default async function TeamDetailPage({
         </CardHeader>
         <CardContent>
           {team.students.length === 0 ? (
-            <p className="text-gray-500" data-testid="no-students">소속 학생이 없어요</p>
+            <p className="text-muted-foreground" data-testid="no-students">소속 학생이 없어요</p>
           ) : (
             <ul className="space-y-2">
               {team.students.map((student) => (

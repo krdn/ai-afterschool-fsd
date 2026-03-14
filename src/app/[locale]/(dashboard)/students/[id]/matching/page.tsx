@@ -45,10 +45,10 @@ export default async function StudentMatchingPage({
     <div className="space-y-6">
       {/* 헤더 */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-3xl font-bold text-foreground">
           {student.name}님의 적합 선생님
         </h1>
-        <p className="mt-2 text-gray-600">
+        <p className="mt-2 text-muted-foreground">
           학생의 성향 분석 데이터를 기반으로 가장 적합한 선생님을 추천합니다.
         </p>
       </div>

@@ -50,13 +50,13 @@ export default async function StudentDetailPage(props: {
                             data-testid="profile-image"
                         />
                     ) : (
-                        <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
-                            <span className="text-gray-400 text-sm">No Image</span>
+                        <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center">
+                            <span className="text-muted-foreground text-sm">No Image</span>
                         </div>
                     )}
                     <div>
                         <h1 className="text-3xl font-bold mb-2">{student.name}</h1>
-                        <p className="text-xl text-gray-600">{student.school} {student.grade}학년</p>
+                        <p className="text-xl text-muted-foreground">{student.school} {student.grade}학년</p>
                     </div>
                 </div>
                 <StudentDetailActions id={student.id} />
@@ -66,13 +66,13 @@ export default async function StudentDetailPage(props: {
                 <h2 className="text-xl font-semibold mb-4">기본 정보</h2>
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <span className="text-gray-500">생년월일:</span> {new Date(student.birthDate).toLocaleDateString()}
+                        <span className="text-muted-foreground">생년월일:</span> {new Date(student.birthDate).toLocaleDateString()}
                     </div>
                     <div>
-                        <span className="text-gray-500">국적:</span> {student.nationality || "한국"}
+                        <span className="text-muted-foreground">국적:</span> {student.nationality || "한국"}
                     </div>
                     <div>
-                        <span className="text-gray-500">담당 선생님:</span> {student.teacher?.name}
+                        <span className="text-muted-foreground">담당 선생님:</span> {student.teacher?.name}
                     </div>
                 </div>
             </div>

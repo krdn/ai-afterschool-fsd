@@ -26,10 +26,10 @@ export default async function TeamCompositionPage({ params }: PageProps) {
             <h1 className="text-4xl font-bold text-blue-600 mb-2">
               {analysis.diversityScore.overall}
             </h1>
-            <p className="text-xl text-gray-600 mb-4">
+            <p className="text-xl text-muted-foreground mb-4">
               팀 다양성 점수
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-muted-foreground">
               총 선생님: {analysis.composition.teacherCount}명
             </p>
           </div>

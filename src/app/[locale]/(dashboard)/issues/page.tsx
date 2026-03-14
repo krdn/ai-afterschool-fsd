@@ -34,7 +34,7 @@ export default async function IssuesPage(props: {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">이슈 관리</h1>
-        <p className="text-gray-500 mt-1">총 {total}건의 이슈</p>
+        <p className="text-muted-foreground mt-1">총 {total}건의 이슈</p>
       </div>
 
       <IssueFilters />
@@ -52,12 +52,12 @@ export default async function IssuesPage(props: {
                 ...(category && { category }),
                 page: String(page - 1),
               }).toString()}`}
-              className="px-4 py-2 border rounded hover:bg-gray-50"
+              className="px-4 py-2 border rounded hover:bg-muted"
             >
               이전
             </a>
           )}
-          <span className="px-4 py-2 text-gray-600">
+          <span className="px-4 py-2 text-muted-foreground">
             {page} / {totalPages}
           </span>
           {page < totalPages && (
@@ -67,7 +67,7 @@ export default async function IssuesPage(props: {
                 ...(category && { category }),
                 page: String(page + 1),
               }).toString()}`}
-              className="px-4 py-2 border rounded hover:bg-gray-50"
+              className="px-4 py-2 border rounded hover:bg-muted"
             >
               다음
             </a>

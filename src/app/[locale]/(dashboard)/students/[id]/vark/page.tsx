@@ -48,7 +48,7 @@ export default async function VarkSurveyPage({
       <div className="mb-6">
         <Link
           href={`/students/${student.id}`}
-          className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900"
+          className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
         >
           <ChevronLeft className="w-4 h-4 mr-1" />
           {student.name} 프로필로 돌아가기
@@ -57,10 +57,10 @@ export default async function VarkSurveyPage({
 
       <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
         <h1 className="text-2xl font-bold mb-2">VARK 학습유형 검사</h1>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           {student.name} 학생의 학습 유형을 검사합니다. 28개 문항에 답변해 주세요.
         </p>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-muted-foreground mt-1">
           각 문항에 대해 자신에게 얼마나 해당되는지 1(전혀 아님)~5(매우 그러함)로 답해주세요.
         </p>
         {existingAnalysis && (
