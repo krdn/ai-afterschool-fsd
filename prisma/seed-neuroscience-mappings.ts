@@ -16,7 +16,7 @@ const NEUROSCIENCE_MAPPINGS = [
   {
     featureType: 'neuroscience_strategy',
     matchMode: 'auto_tag',
-    requiredTags: ['text'],
+    requiredTags: [],
     excludedTags: [],
     priority: 1,
     fallbackMode: 'any_available',
@@ -24,7 +24,7 @@ const NEUROSCIENCE_MAPPINGS = [
   {
     featureType: 'neuroscience_knowledge',
     matchMode: 'auto_tag',
-    requiredTags: ['text'],
+    requiredTags: [],
     excludedTags: [],
     priority: 1,
     fallbackMode: 'any_available',
@@ -32,7 +32,7 @@ const NEUROSCIENCE_MAPPINGS = [
   {
     featureType: 'neuroscience_coaching',
     matchMode: 'auto_tag',
-    requiredTags: ['text'],
+    requiredTags: [],
     excludedTags: [],
     priority: 1,
     fallbackMode: 'any_available',
