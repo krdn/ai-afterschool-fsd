@@ -12,10 +12,10 @@ type VarkAnalysisData = {
 }
 
 const typeColors: Record<string, { bg: string; text: string; bar: string; badge: string }> = {
-  V: { bg: "bg-blue-50", text: "text-blue-800", bar: "bg-blue-500", badge: "bg-blue-100 text-blue-800" },
-  A: { bg: "bg-green-50", text: "text-green-800", bar: "bg-green-500", badge: "bg-green-100 text-green-800" },
-  R: { bg: "bg-amber-50", text: "text-amber-800", bar: "bg-amber-500", badge: "bg-amber-100 text-amber-800" },
-  K: { bg: "bg-rose-50", text: "text-rose-800", bar: "bg-rose-500", badge: "bg-rose-100 text-rose-800" },
+  V: { bg: "bg-blue-50 dark:bg-blue-950/30", text: "text-blue-800 dark:text-blue-300", bar: "bg-blue-500", badge: "bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300" },
+  A: { bg: "bg-green-50 dark:bg-green-950/30", text: "text-green-800 dark:text-green-300", bar: "bg-green-500", badge: "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300" },
+  R: { bg: "bg-amber-50 dark:bg-amber-950/30", text: "text-amber-800 dark:text-amber-300", bar: "bg-amber-500", badge: "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300" },
+  K: { bg: "bg-rose-50 dark:bg-rose-950/30", text: "text-rose-800 dark:text-rose-300", bar: "bg-rose-500", badge: "bg-rose-100 dark:bg-rose-900/40 text-rose-800 dark:text-rose-300" },
 }
 
 export function VarkResultsDisplay({ analysis }: { analysis: VarkAnalysisData }) {

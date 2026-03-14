@@ -97,13 +97,13 @@ export function MbtiResultsDisplay({ analysis }: { analysis: MbtiAnalysisData })
         </div>
       </div>
 
-      <div data-testid="learning-style" className="bg-blue-50 rounded-lg p-4">
-        <h3 className="font-semibold text-blue-800 mb-2">추천 학습 방식</h3>
-        <p className="text-blue-700">{typeInfo.learningStyle}</p>
+      <div data-testid="learning-style" className="bg-blue-50 dark:bg-blue-950/30 rounded-lg p-4">
+        <h3 className="font-semibold text-blue-800 dark:text-blue-300 mb-2">추천 학습 방식</h3>
+        <p className="text-blue-700 dark:text-blue-400">{typeInfo.learningStyle}</p>
       </div>
 
-      <div className="bg-purple-50 rounded-lg p-4">
-        <h3 className="font-semibold text-purple-800 mb-3">추천 직업/학과</h3>
+      <div className="bg-purple-50 dark:bg-purple-950/30 rounded-lg p-4">
+        <h3 className="font-semibold text-purple-800 dark:text-purple-300 mb-3">추천 직업/학과</h3>
         <div className="flex flex-wrap gap-2">
           {typeInfo.careers.map((career, i) => (
             <span

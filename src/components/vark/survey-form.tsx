@@ -12,10 +12,10 @@ type FormData = {
 }
 
 const typeLabels: Record<string, { label: string; color: string }> = {
-  V: { label: "시각형 (Visual)", color: "bg-blue-100 text-blue-800" },
-  A: { label: "청각형 (Auditory)", color: "bg-green-100 text-green-800" },
-  R: { label: "읽기쓰기형 (Read/Write)", color: "bg-amber-100 text-amber-800" },
-  K: { label: "체험형 (Kinesthetic)", color: "bg-rose-100 text-rose-800" },
+  V: { label: "시각형 (Visual)", color: "bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300" },
+  A: { label: "청각형 (Auditory)", color: "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300" },
+  R: { label: "읽기쓰기형 (Read/Write)", color: "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300" },
+  K: { label: "체험형 (Kinesthetic)", color: "bg-rose-100 dark:bg-rose-900/40 text-rose-800 dark:text-rose-300" },
 }
 
 const scaleLabels = ["전혀 아님", "약간", "보통", "그런 편", "매우 그러함"]

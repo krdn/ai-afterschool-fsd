@@ -22,10 +22,10 @@ export function DimensionBar({
   return (
     <div className="space-y-1">
       <div className="flex justify-between text-sm">
-        <span className={dominant === "left" ? "font-bold text-blue-600" : "text-muted-foreground"}>
+        <span className={dominant === "left" ? "font-bold text-primary" : "text-muted-foreground"}>
           {leftCode} {leftLabel}
         </span>
-        <span className={dominant === "right" ? "font-bold text-blue-600" : "text-muted-foreground"}>
+        <span className={dominant === "right" ? "font-bold text-primary" : "text-muted-foreground"}>
           {rightLabel} {rightCode}
         </span>
       </div>
