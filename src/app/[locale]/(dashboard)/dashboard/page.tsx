@@ -63,24 +63,25 @@ export default async function DashboardPage() {
         </Link>
       )}
 
-      {/* 다가오는 상담 */}
-      {upcomingReservations.length > 0 && (
+      {/* 하단 2컬럼: 다가오는 상담 + 최근 활동 */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* 다가오는 상담 */}
         <div className="space-y-3">
           <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
             {t("upcomingCounseling")}
           </h2>
-          <UpcomingCounselingWidget reservations={upcomingReservations} />
+          {upcomingReservations.length > 0 ? (
+            <UpcomingCounselingWidget reservations={upcomingReservations} />
+          ) : (
+            <div className="rounded-lg border bg-card p-8 text-center text-muted-foreground text-sm">
+              <p>{t("noUpcoming")}</p>
+            </div>
+          )}
         </div>
-      )}
 
-      {upcomingReservations.length === 0 && (
-        <div className="text-center py-8 text-muted-foreground text-sm">
-          <p>{t("noUpcoming")}</p>
-        </div>
-      )}
-
-      {/* 최근 활동 타임라인 */}
-      <RecentActivity activities={recentActivities} />
+        {/* 최근 활동 타임라인 */}
+        <RecentActivity activities={recentActivities} />
+      </div>
     </div>
   )
 }
