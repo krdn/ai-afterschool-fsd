@@ -17,6 +17,7 @@ import {
   Users2,
   AlertCircle,
   Settings,
+  Brain,
   PanelLeftClose,
   PanelLeft,
   ChevronDown,
@@ -62,6 +63,7 @@ const mainMenuItems: MenuItem[] = [
   { key: "counseling", href: "/counseling", icon: MessageSquare },
   { key: "grades", href: "/grades", icon: BookOpen },
   { key: "aiChat", href: "/chat", icon: MessageCircle },
+  { key: "neuroscience", href: "/neuroscience", icon: Brain },
 ]
 
 const managementMenuItems: MenuItem[] = [
