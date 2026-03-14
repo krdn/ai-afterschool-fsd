@@ -5,6 +5,7 @@ import { getRBACPrisma } from '@/lib/db/common/rbac'
 import type { TeacherRole } from '@/lib/db/common/rbac'
 import { TeacherDetailActions } from '@/components/teachers/teacher-detail-actions'
 import { TeacherProfileImage } from '@/components/teachers/teacher-profile-image'
+import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav'
 
 type LayoutProps = {
   children: React.ReactNode
@@ -108,6 +109,10 @@ export default async function TeacherLayout({ children, params }: LayoutProps) {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <BreadcrumbNav items={[
+        { label: "선생님 목록", href: "/teachers" },
+        { label: teacher.name },
+      ]} />
       {/* 상단 헤더: 프로필 + 이름 + 액션 버튼 */}
       <div className="flex justify-between items-start mb-6">
         <div className="flex gap-6 items-center">

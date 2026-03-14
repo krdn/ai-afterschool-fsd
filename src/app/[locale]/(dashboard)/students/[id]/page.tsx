@@ -8,6 +8,7 @@ import { notFound } from "next/navigation";
 import StudentDetailActions from "@/components/students/student-detail-actions";
 import Link from "next/link";
 import { StudentImageType } from '@/lib/db';
+import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav";
 
 export default async function StudentDetailPage(props: {
     params: Promise<{ id: string }>,
@@ -35,6 +36,10 @@ export default async function StudentDetailPage(props: {
 
     return (
         <div className="container mx-auto py-8">
+            <BreadcrumbNav items={[
+                { label: "학생 목록", href: "/students" },
+                { label: student.name },
+            ]} />
             {isCreated && (
                 <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
                     학생 등록이 완료되었습니다.

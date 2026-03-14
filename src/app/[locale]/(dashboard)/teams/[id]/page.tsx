@@ -3,6 +3,7 @@ import { getTeamById } from '@/lib/actions/common/teams'
 import { notFound } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Users, GraduationCap } from 'lucide-react'
+import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav'
 
 /**
  * 팀 상세 페이지
@@ -33,6 +34,10 @@ export default async function TeamDetailPage({
 
   return (
     <div className="space-y-6">
+      <BreadcrumbNav items={[
+        { label: "팀 관리", href: "/teams" },
+        { label: team.name },
+      ]} />
       {/* 팀 기본 정보 */}
       <Card data-testid="team-info-card">
         <CardHeader>

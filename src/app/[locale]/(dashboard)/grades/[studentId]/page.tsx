@@ -2,6 +2,7 @@ import { getCurrentTeacher } from '@/lib/dal';
 import { db } from '@/lib/db/client';
 import { notFound } from 'next/navigation';
 import GradeDetailTabs from '@/components/grades/grade-detail-tabs';
+import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav';
 
 export default async function GradeStudentDetailPage(props: {
   params: Promise<{ studentId: string }>;
@@ -34,6 +35,10 @@ export default async function GradeStudentDetailPage(props: {
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-6">
+      <BreadcrumbNav items={[
+        { label: "성적 관리", href: "/grades" },
+        { label: student.name },
+      ]} />
       <div>
         <h1 className="text-3xl font-bold">{student.name}</h1>
         <p className="text-muted-foreground">
