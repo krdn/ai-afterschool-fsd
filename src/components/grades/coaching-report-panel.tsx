@@ -92,15 +92,15 @@ function CoachingReportView({ report }: { report: CoachingReport }) {
   return (
     <div className="space-y-6">
       {/* 동기부여 메시지 카드 */}
-      <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+      <Card className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/20 dark:to-blue-950/20 border-purple-200 dark:border-purple-800">
         <CardContent className="pt-4">
           <div className="flex items-start gap-3">
             <Heart className="w-5 h-5 text-purple-600 mt-0.5 flex-shrink-0" />
             <div>
-              <h3 className="text-sm font-semibold text-purple-800 mb-1">
+              <h3 className="text-sm font-semibold text-purple-800 dark:text-purple-300 mb-1">
                 동기부여 메시지
               </h3>
-              <p className="text-sm text-purple-700 whitespace-pre-wrap">
+              <p className="text-sm text-purple-700 dark:text-purple-400 whitespace-pre-wrap">
                 {report.motivationMessage}
               </p>
             </div>
@@ -213,10 +213,24 @@ function EmptyState({ loading }: { loading: boolean }) {
     <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
       {loading ? (
         <>
-          <Loader2 className="w-10 h-10 animate-spin mb-4" />
-          <p className="text-sm">AI가 종합 코칭 리포트를 생성하고 있습니다...</p>
-          <p className="text-xs mt-1">
-            강점/약점, 목표 격차, 학습 플랜을 종합 분석합니다 (1~2분 소요)
+          <Loader2 className="w-10 h-10 animate-spin mb-4 text-primary" />
+          <p className="text-sm font-medium">AI가 종합 코칭 리포트를 생성하고 있습니다...</p>
+          <div className="mt-4 space-y-2 text-xs">
+            <div className="flex items-center gap-2">
+              <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+              <span>성적 데이터 분석 중</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/30" />
+              <span className="text-muted-foreground/50">강점/약점 계산</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-1.5 w-1.5 rounded-full bg-muted-foreground/30" />
+              <span className="text-muted-foreground/50">맞춤 학습 플랜 작성</span>
+            </div>
+          </div>
+          <p className="text-xs mt-3 text-muted-foreground/70">
+            약 1~2분 소요됩니다
           </p>
         </>
       ) : (
