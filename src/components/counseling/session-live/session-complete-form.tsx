@@ -230,7 +230,7 @@ export function SessionCompleteForm({
       <div className="space-y-2">
         <Label>상담 내용 *</Label>
         {voiceSummary && (
-          <div className="flex items-center gap-1.5 text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
+          <div className="flex items-center gap-1.5 text-xs text-blue-600 bg-blue-50 dark:bg-blue-950/30 px-2 py-1 rounded">
             <Mic className="h-3 w-3" />
             AI 음성 요약이 적용되었습니다 (편집 가능)
           </div>
@@ -286,7 +286,7 @@ export function SessionCompleteForm({
               <button
                 key={score}
                 type="button"
-                className={`text-2xl transition-transform hover:scale-110 ${active ? "text-amber-400 drop-shadow-sm" : "text-gray-300"}`}
+                className={`text-2xl transition-transform hover:scale-110 ${active ? "text-amber-400 drop-shadow-sm" : "text-muted-foreground"}`}
                 onMouseEnter={() => setHoveredScore(score)}
                 onClick={() =>
                   setSatisfactionScore(satisfactionScore === String(score) ? "" : String(score))
@@ -317,7 +317,7 @@ export function SessionCompleteForm({
           <Button
             onClick={handleGenerateReport}
             disabled={isGeneratingReport || isSaving}
-            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+            className="flex-1 text-white"
           >
             {isGeneratingReport ? (
               <>

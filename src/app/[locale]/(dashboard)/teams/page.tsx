@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import { getTeams } from '@/lib/actions/common/teams'
 import { EmptyState } from '@/components/students/empty-state'
-import { Users } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Users, GraduationCap, UserCheck } from 'lucide-react'
 
 /**
  * 팀 목록 페이지
@@ -25,13 +26,50 @@ export default async function TeamsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">팀 관리</h1>
-          <p className="text-gray-500">
+          <p className="text-muted-foreground">
             {teams.length > 0
               ? `총 ${teams.length}개의 팀이 있어요`
               : '팀을 생성해보세요'}
           </p>
         </div>
       </div>
+
+      {/* 요약 통계 */}
+      {teams.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">전체 팀</CardTitle>
+              <Users className="h-4 w-4 text-blue-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{teams.length}개</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">전체 선생님</CardTitle>
+              <UserCheck className="h-4 w-4 text-green-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {teams.reduce((sum, t) => sum + t._count.teachers, 0)}명
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">전체 학생</CardTitle>
+              <GraduationCap className="h-4 w-4 text-purple-600" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {teams.reduce((sum, t) => sum + t._count.students, 0)}명
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* 팀 목록 또는 빈 상태 */}
       {teams.length === 0 ? (
@@ -56,11 +94,11 @@ export default async function TeamsPage() {
               data-testid="team-card"
               className="group"
             >
-              <div className="bg-white border rounded-lg p-6 hover:shadow-lg transition-all cursor-pointer group-hover:border-blue-300">
+              <div className="bg-card border rounded-lg p-6 hover:shadow-lg transition-all cursor-pointer group-hover:border-primary/50">
                 <h3 className="text-lg font-semibold mb-2" data-testid="team-name">
                   {team.name}
                 </h3>
-                <div className="text-sm text-gray-500 space-y-1">
+                <div className="text-sm text-muted-foreground space-y-1">
                   <p data-testid="team-teachers-count">
                     선생님 {team._count.teachers}명
                   </p>
@@ -69,7 +107,7 @@ export default async function TeamsPage() {
                   </p>
                 </div>
                 {/* 팀 카드 바로가기 힌트 */}
-                <div className="mt-4 text-xs text-blue-600 opacity-0 group-hover:opacity-100 transition">
+                <div className="mt-4 text-xs text-primary opacity-0 group-hover:opacity-100 transition">
                   상세보기 →
                 </div>
               </div>
@@ -79,7 +117,7 @@ export default async function TeamsPage() {
       )}
 
       {/* 페이지 푸터 정보 */}
-      <div className="text-center text-sm text-gray-400 pt-4">
+      <div className="text-center text-sm text-muted-foreground pt-4">
         팀 카드를 클릭하면 상세 정보를 확인할 수 있어요
       </div>
     </div>

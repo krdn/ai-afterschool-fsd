@@ -174,7 +174,7 @@ export function SmartMatchingSection({
           {unassignedStudents.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-8 text-center">
               <CheckCircle2 className="h-10 w-10 text-green-500 mb-3" />
-              <p className="text-sm font-medium text-green-700">모든 학생이 배정 완료되었습니다</p>
+              <p className="text-sm font-medium text-green-700 dark:text-green-400">모든 학생이 배정 완료되었습니다</p>
               <p className="text-xs text-muted-foreground mt-1">미배정 학생이 없어 스마트 배정이 필요하지 않습니다.</p>
             </div>
           ) : (

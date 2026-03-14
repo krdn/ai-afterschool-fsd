@@ -18,10 +18,10 @@ export function CounselingSection({ sessions, upcomingReservation }: CounselingS
 
       {/* Upcoming reservation alert */}
       {upcomingReservation ? (
-        <Alert className="mb-4 bg-blue-50 border-blue-200">
+        <Alert className="mb-4 bg-blue-50 dark:bg-blue-950/30 border-blue-200">
           <Calendar className="h-4 w-4 text-blue-600" />
           <AlertTitle className="text-blue-900">다음 상담 예약</AlertTitle>
-          <AlertDescription className="text-blue-800">
+          <AlertDescription className="text-blue-800 dark:text-blue-300">
             {format(new Date(upcomingReservation.scheduledAt), "M월 d일 E요일 HH:mm", { locale: ko })}에{" "}
             {upcomingReservation.parent.name} ({upcomingReservation.parent.relation})와{" "}
             &quot;{upcomingReservation.topic}&quot; 주제로 상담이 예정되어 있습니다.

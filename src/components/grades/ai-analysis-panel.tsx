@@ -245,7 +245,7 @@ function StrengthWeaknessView({ data }: { data: StrengthWeaknessResult }) {
       {data.strengths.length > 0 && (
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base text-green-700">
+            <CardTitle className="text-base text-green-700 dark:text-green-400">
               강점 과목
             </CardTitle>
           </CardHeader>
@@ -254,13 +254,13 @@ function StrengthWeaknessView({ data }: { data: StrengthWeaknessResult }) {
               {data.strengths.map((s) => (
                 <div
                   key={s.subject}
-                  className="flex items-center justify-between p-2 rounded-lg bg-green-50"
+                  className="flex items-center justify-between p-2 rounded-lg bg-green-50 dark:bg-green-950/30"
                 >
                   <div>
                     <span className="font-medium">{s.subject}</span>
-                    <p className="text-sm text-gray-600">{s.reason}</p>
+                    <p className="text-sm text-muted-foreground">{s.reason}</p>
                   </div>
-                  <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+                  <Badge className="bg-green-100 text-green-800 dark:text-green-300 hover:bg-green-100">
                     {s.score}점
                   </Badge>
                 </div>
@@ -274,7 +274,7 @@ function StrengthWeaknessView({ data }: { data: StrengthWeaknessResult }) {
       {data.weaknesses.length > 0 && (
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base text-red-700">
+            <CardTitle className="text-base text-red-700 dark:text-red-400">
               약점 과목 및 개선 방안
             </CardTitle>
           </CardHeader>
@@ -283,15 +283,15 @@ function StrengthWeaknessView({ data }: { data: StrengthWeaknessResult }) {
               {data.weaknesses.map((w) => (
                 <div
                   key={w.subject}
-                  className="p-2 rounded-lg bg-red-50"
+                  className="p-2 rounded-lg bg-red-50 dark:bg-red-950/30"
                 >
                   <div className="flex items-center justify-between">
                     <span className="font-medium">{w.subject}</span>
-                    <Badge className="bg-red-100 text-red-800 hover:bg-red-100">
+                    <Badge className="bg-red-100 text-red-800 dark:text-red-300 hover:bg-red-100">
                       {w.score}점
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">{w.reason}</p>
+                  <p className="text-sm text-muted-foreground mt-1">{w.reason}</p>
                   <p className="text-sm text-blue-600 mt-1">
                     Tip: {w.improvementTip}
                   </p>
@@ -308,7 +308,7 @@ function StrengthWeaknessView({ data }: { data: StrengthWeaknessResult }) {
           <CardTitle className="text-base">종합 분석</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-700 whitespace-pre-wrap">
+          <p className="text-sm text-foreground whitespace-pre-wrap">
             {data.summary}
           </p>
         </CardContent>
@@ -326,7 +326,7 @@ function EmptyState({
   loading: boolean;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+    <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
       {loading ? (
         <>
           <Loader2 className="w-8 h-8 animate-spin mb-3" />

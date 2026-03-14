@@ -119,9 +119,9 @@ export function IssueReportModal({ isOpen, onClose, userRole }: IssueReportModal
         <div className="mt-6 space-y-6">
           {/* 성공 메시지 */}
           {submitResult?.success && (
-            <Alert className="bg-green-50 border-green-200">
+            <Alert className="bg-green-50 dark:bg-green-950/30 border-green-200">
               <CheckCircle2 className="h-4 w-4 text-green-600" />
-              <AlertDescription className="text-green-800">
+              <AlertDescription className="text-green-800 dark:text-green-300">
                 {submitResult.message}
               </AlertDescription>
             </Alert>

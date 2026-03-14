@@ -1,18 +1,23 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart3 } from 'lucide-react';
+import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav';
 
 export default function GradeAnalyticsPage() {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 space-y-2">
+      <BreadcrumbNav items={[
+        { label: "성적 관리", href: "/grades" },
+        { label: "성적 통계" },
+      ]} />
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="w-5 h-5 text-gray-400" />
+            <BarChart3 className="w-5 h-5 text-muted-foreground" />
             성적 통계
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+          <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
             <BarChart3 className="w-12 h-12 mb-4" />
             <p className="text-lg font-medium">Phase 2에서 구현 예정</p>
             <p className="text-sm mt-2">

@@ -5,6 +5,7 @@ import { getRBACPrisma } from '@/lib/db/common/rbac'
 import type { TeacherRole } from '@/lib/db/common/rbac'
 import { TeacherDetailActions } from '@/components/teachers/teacher-detail-actions'
 import { TeacherProfileImage } from '@/components/teachers/teacher-profile-image'
+import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav'
 
 type LayoutProps = {
   children: React.ReactNode
@@ -46,7 +47,7 @@ export default async function TeacherLayout({ children, params }: LayoutProps) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center py-12">
-          <p className="text-gray-500">로그인이 필요합니다</p>
+          <p className="text-muted-foreground">로그인이 필요합니다</p>
         </div>
       </div>
     )
@@ -60,7 +61,7 @@ export default async function TeacherLayout({ children, params }: LayoutProps) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center py-12">
-          <p className="text-gray-500">접근 권한이 없습니다</p>
+          <p className="text-muted-foreground">접근 권한이 없습니다</p>
         </div>
       </div>
     )
@@ -108,6 +109,10 @@ export default async function TeacherLayout({ children, params }: LayoutProps) {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <BreadcrumbNav items={[
+        { label: "선생님 목록", href: "/teachers" },
+        { label: teacher.name },
+      ]} />
       {/* 상단 헤더: 프로필 + 이름 + 액션 버튼 */}
       <div className="flex justify-between items-start mb-6">
         <div className="flex gap-6 items-center">
@@ -117,15 +122,15 @@ export default async function TeacherLayout({ children, params }: LayoutProps) {
           />
           <div>
             <h1 className="text-3xl font-bold mb-1">{teacher.name}</h1>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-muted-foreground">
               {teacher.email}
             </p>
             <div className="flex gap-2 mt-1">
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300">
                 {roleLabels[teacher.role] || teacher.role}
               </span>
               {teacher.team && (
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-muted text-foreground">
                   {teacher.team.name}
                 </span>
               )}
@@ -149,7 +154,7 @@ export default async function TeacherLayout({ children, params }: LayoutProps) {
             <Link
               key={tab.href}
               href={tab.href}
-              className="pb-4 text-sm font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-300 data-[active=true]:border-blue-600 data-[active=true]:text-blue-600"
+              className="pb-4 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent hover:border-border data-[active=true]:border-primary data-[active=true]:text-primary"
             >
               {tab.label}
             </Link>

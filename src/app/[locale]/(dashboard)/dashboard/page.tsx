@@ -1,29 +1,87 @@
-import { getUpcomingCounseling } from '@/lib/actions/counseling/upcoming'
-import { UpcomingCounselingWidget } from '@/components/counseling/upcoming-counseling-widget'
+import { getTranslations } from "next-intl/server"
+import { getCurrentTeacher } from "@/lib/dal"
+import { getUpcomingCounseling } from "@/lib/actions/counseling/upcoming"
+import { getDashboardStatsAction } from "@/lib/actions/dashboard/stats"
+import { getRecentActivityAction } from "@/lib/actions/dashboard/recent-activity"
+import { UpcomingCounselingWidget } from "@/components/counseling/upcoming-counseling-widget"
+import { DashboardStatCards } from "@/components/dashboard/stat-cards"
+import { QuickActions } from "@/components/dashboard/quick-actions"
+import { RecentActivity } from "@/components/dashboard/recent-activity"
+import { AlertTriangle } from "lucide-react"
+import { Link } from "@/i18n/navigation"
 
 export default async function DashboardPage() {
-  const result = await getUpcomingCounseling()
-  const upcomingReservations = result.success ? result.data || [] : []
+  const [teacher, statsResult, counselingResult, activityResult, t] = await Promise.all([
+    getCurrentTeacher(),
+    getDashboardStatsAction(),
+    getUpcomingCounseling(),
+    getRecentActivityAction(),
+    getTranslations("Dashboard"),
+  ])
+
+  const stats = statsResult.success ? statsResult.data : null
+  const upcomingReservations = counselingResult.success ? counselingResult.data || [] : []
+  const recentActivities = activityResult.success ? activityResult.data : []
 
   return (
-    <div className="container mx-auto py-8 space-y-6">
-      {/* 페이지 타이틀 */}
-      <div>
-        <h1 className="text-2xl font-bold">대시보드</h1>
-        <p className="text-muted-foreground">환영합니다!</p>
+    <div className="space-y-6">
+      {/* 인사 + 빠른 액션 */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p className="text-muted-foreground">
+            {t("welcome", { name: teacher.name })}
+          </p>
+        </div>
       </div>
 
-      {/* 다가오는 상담 알림 위젯 */}
-      {upcomingReservations.length > 0 && (
-        <UpcomingCounselingWidget reservations={upcomingReservations} />
+      {/* 빠른 실행 버튼 */}
+      <QuickActions role={teacher.role} />
+
+      {/* KPI 통계 카드 */}
+      {stats ? (
+        <DashboardStatCards stats={stats} />
+      ) : (
+        <p className="text-sm text-destructive">{t("statsError")}</p>
       )}
 
-      {/* 빈 상태 메시지 */}
-      {upcomingReservations.length === 0 && (
-        <div className="text-center py-12 text-muted-foreground">
-          <p>최근 7일 이내 예정된 상담이 없습니다.</p>
-        </div>
+      {/* 주의 배너: 미배정 학생 */}
+      {stats && stats.unassignedStudents > 0 && (
+        <Link
+          href="/matching"
+          className="flex items-center gap-3 rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30 p-4 transition-colors hover:bg-amber-100 dark:hover:bg-amber-950/50"
+        >
+          <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+          <div>
+            <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
+              미배정 학생 {stats.unassignedStudents}명
+            </p>
+            <p className="text-xs text-amber-600 dark:text-amber-400">
+              배정 관리 페이지에서 선생님을 배정해주세요
+            </p>
+          </div>
+        </Link>
       )}
+
+      {/* 하단 2컬럼: 다가오는 상담 + 최근 활동 */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* 다가오는 상담 */}
+        <div className="space-y-3">
+          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+            {t("upcomingCounseling")}
+          </h2>
+          {upcomingReservations.length > 0 ? (
+            <UpcomingCounselingWidget reservations={upcomingReservations} />
+          ) : (
+            <div className="rounded-lg border bg-card p-8 text-center text-muted-foreground text-sm">
+              <p>{t("noUpcoming")}</p>
+            </div>
+          )}
+        </div>
+
+        {/* 최근 활동 타임라인 */}
+        <RecentActivity activities={recentActivities} />
+      </div>
     </div>
   )
 }

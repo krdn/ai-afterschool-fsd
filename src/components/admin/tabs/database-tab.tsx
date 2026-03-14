@@ -132,14 +132,14 @@ export function DatabaseTab({ userRole }: DatabaseTabProps) {
     <div className="space-y-6" data-testid="database-tab">
       {/* 데모 데이터 관리 (DIRECTOR만) */}
       {isDirector && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+        <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 rounded-lg p-4">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-semibold text-amber-900 flex items-center gap-2">
                 <Database className="w-4 h-4" />
                 데모 데이터 관리
               </h3>
-              <p className="text-sm text-amber-700 mt-1">
+              <p className="text-sm text-amber-700 dark:text-amber-400 mt-1">
                 데모/개발용 시드 데이터를 선택적으로 로드하거나 리셋합니다.
               </p>
             </div>
@@ -147,7 +147,7 @@ export function DatabaseTab({ userRole }: DatabaseTabProps) {
               variant="outline"
               onClick={() => setSeedDialogOpen(true)}
               disabled={isPending}
-              className="border-amber-300 text-amber-900 hover:bg-amber-100"
+              className="border-amber-300 text-amber-900 hover:bg-amber-100 dark:bg-amber-900/40"
             >
               {isPending ? (
                 <>
@@ -185,7 +185,7 @@ export function DatabaseTab({ userRole }: DatabaseTabProps) {
               return (
                 <div
                   key={group}
-                  className={`flex items-center gap-3 p-2.5 rounded-lg border transition-colors ${isSelected ? 'bg-white border-gray-300' : 'bg-gray-50 border-gray-200'
+                  className={`flex items-center gap-3 p-2.5 rounded-lg border transition-colors ${isSelected ? 'bg-card border' : 'bg-muted border'
                     }`}
                 >
                   <Checkbox
@@ -205,8 +205,8 @@ export function DatabaseTab({ userRole }: DatabaseTabProps) {
                         onClick={() => toggleMode(group, 'merge')}
                         disabled={isForced}
                         className={`px-2 py-0.5 text-xs rounded transition-colors ${currentMode === 'merge'
-                          ? 'bg-green-100 text-green-800 font-medium'
-                          : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                          ? 'bg-green-100 text-green-800 dark:text-green-300 font-medium'
+                          : 'bg-muted text-muted-foreground hover:bg-muted'
                           } ${isForced ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                       >
                         추가/갱신
@@ -215,8 +215,8 @@ export function DatabaseTab({ userRole }: DatabaseTabProps) {
                         type="button"
                         onClick={() => toggleMode(group, 'reset')}
                         className={`px-2 py-0.5 text-xs rounded transition-colors cursor-pointer ${currentMode === 'reset'
-                          ? 'bg-red-100 text-red-800 font-medium'
-                          : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                          ? 'bg-red-100 text-red-800 dark:text-red-300 font-medium'
+                          : 'bg-muted text-muted-foreground hover:bg-muted'
                           }`}
                       >
                         리셋
@@ -230,9 +230,9 @@ export function DatabaseTab({ userRole }: DatabaseTabProps) {
 
           {/* 리셋 경고 */}
           {hasReset && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex gap-2">
+            <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 rounded-lg p-3 flex gap-2">
               <AlertTriangle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
-              <p className="text-sm text-red-700">
+              <p className="text-sm text-red-700 dark:text-red-400">
                 리셋 선택된 그룹의 <strong>모든 기존 데이터가 삭제</strong>됩니다.
                 관련 분석 결과, 상담 기록 등도 함께 삭제됩니다.
               </p>
@@ -258,7 +258,7 @@ export function DatabaseTab({ userRole }: DatabaseTabProps) {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-muted-foreground"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>

@@ -44,20 +44,20 @@ interface OcrReviewPanelProps {
 function getConfidenceBadge(confidence: number) {
   if (confidence >= 80) {
     return (
-      <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
+      <Badge className="bg-green-100 text-green-700 dark:text-green-400 hover:bg-green-100">
         {confidence}%
       </Badge>
     );
   }
   if (confidence >= 50) {
     return (
-      <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100">
+      <Badge className="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 hover:bg-yellow-100 dark:bg-yellow-900/40">
         {confidence}%
       </Badge>
     );
   }
   return (
-    <Badge className="bg-red-100 text-red-700 hover:bg-red-100">
+    <Badge className="bg-red-100 text-red-700 dark:text-red-400 hover:bg-red-100">
       {confidence}%
     </Badge>
   );
@@ -117,7 +117,7 @@ export default function OcrReviewPanel({
           <CardTitle className="text-lg">분석 결과</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+          <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
             <FileSearch className="w-12 h-12 mb-4" />
             <p className="text-lg font-medium">이미지를 업로드하세요</p>
             <p className="text-sm mt-2">
@@ -139,9 +139,9 @@ export default function OcrReviewPanel({
           <CardTitle className="text-lg">분석 결과</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+          <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
             <Loader2 className="w-12 h-12 mb-4 animate-spin text-blue-600" />
-            <p className="text-lg font-medium text-gray-600">
+            <p className="text-lg font-medium text-muted-foreground">
               AI가 성적을 분석하고 있습니다...
             </p>
             <p className="text-sm mt-2">잠시만 기다려주세요.</p>
@@ -205,7 +205,7 @@ export default function OcrReviewPanel({
         {/* 낮은 신뢰도 경고 */}
         {ocrResult &&
           ocrResult.subjects.some((s) => s.confidence < 50) && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 flex items-start gap-2">
+            <div className="bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 rounded-lg p-3 flex items-start gap-2">
               <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5 shrink-0" />
               <p className="text-sm text-yellow-700">
                 일부 과목의 인식 신뢰도가 낮습니다. 저장 전에 수동으로 확인해주세요.
@@ -222,7 +222,7 @@ export default function OcrReviewPanel({
             value={studentId}
             onChange={(e) => setStudentId(e.target.value)}
           />
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-muted-foreground">
             추후 학생 검색 기능으로 개선 예정
           </p>
         </div>

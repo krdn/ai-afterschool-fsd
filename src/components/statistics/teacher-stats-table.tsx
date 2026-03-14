@@ -73,7 +73,7 @@ export function TeacherStatsTable({
         <CardContent>
           <div className="space-y-3">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-10 bg-gray-100 animate-pulse rounded" />
+              <div key={i} className="h-10 bg-muted animate-pulse rounded" />
             ))}
           </div>
         </CardContent>
@@ -88,7 +88,7 @@ export function TeacherStatsTable({
           <CardTitle>선생님별 상담 통계</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 text-gray-500">
+          <div className="text-center py-8 text-muted-foreground">
             데이터가 없습니다
           </div>
         </CardContent>
@@ -118,7 +118,7 @@ export function TeacherStatsTable({
 
               return (
                 <TableRow key={teacher.teacherId}>
-                  <TableCell className="font-medium text-gray-500">
+                  <TableCell className="font-medium text-muted-foreground">
                     #{rank}
                   </TableCell>
                   <TableCell className="font-medium">
@@ -129,13 +129,13 @@ export function TeacherStatsTable({
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden">
+                      <div className="flex-1 bg-muted rounded-full h-2 overflow-hidden">
                         <div
-                          className="bg-blue-500 h-full rounded-full transition-all"
+                          className="bg-blue-50 dark:bg-blue-950/30 h-full rounded-full transition-all"
                           style={{ width: `${barWidth}%` }}
                         />
                       </div>
-                      <span className="text-xs text-gray-500 whitespace-nowrap">
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
                         {Math.round((teacher.totalSessions / maxCount) * 100)}%
                       </span>
                     </div>

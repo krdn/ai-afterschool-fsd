@@ -29,15 +29,15 @@ export function ResetPasswordForm() {
         </CardHeader>
         <CardContent className="text-center space-y-4">
           <div className="text-6xl">📧</div>
-          <p className="text-gray-600">{state.message}</p>
-          <p className="text-sm text-gray-500">
+          <p className="text-muted-foreground">{state.message}</p>
+          <p className="text-sm text-muted-foreground">
             이메일이 도착하지 않았다면 스팸 폴더를 확인해주세요.
           </p>
         </CardContent>
         <CardFooter className="justify-center">
           <Link
             href="/login"
-            className="text-sm text-gray-600 hover:text-gray-900 hover:underline"
+            className="text-sm text-muted-foreground hover:text-foreground hover:underline"
           >
             로그인으로 돌아가기
           </Link>
@@ -59,7 +59,7 @@ export function ResetPasswordForm() {
       <CardContent>
         <form action={formAction} className="space-y-4">
           {state?.errors?._form && (
-            <div className="p-3 rounded-md bg-red-50 text-red-600 text-sm">
+            <div className="p-3 rounded-md bg-red-50 dark:bg-red-950/30 text-red-600 text-sm">
               {state.errors._form[0]}
             </div>
           )}
@@ -86,7 +86,7 @@ export function ResetPasswordForm() {
       <CardFooter className="justify-center">
         <Link
           href="/login"
-          className="text-sm text-gray-600 hover:text-gray-900 hover:underline"
+          className="text-sm text-muted-foreground hover:text-foreground hover:underline"
         >
           로그인으로 돌아가기
         </Link>

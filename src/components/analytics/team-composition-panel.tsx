@@ -15,7 +15,7 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
   if (!team) {
     return (
       <div className="flex items-center justify-center h-96">
-        <p className="text-gray-500">팀을 찾을 수 없습니다</p>
+        <p className="text-muted-foreground">팀을 찾을 수 없습니다</p>
       </div>
     )
   }
@@ -31,10 +31,10 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
   }
 
   const getDiversityColor = (score: number): string => {
-    if (score >= 70) return "bg-green-100 text-green-800"
-    if (score >= 50) return "bg-blue-100 text-blue-800"
-    if (score >= 30) return "bg-yellow-100 text-yellow-800"
-    return "bg-red-100 text-red-800"
+    if (score >= 70) return "bg-green-100 text-green-800 dark:text-green-300"
+    if (score >= 50) return "bg-blue-100 text-blue-800 dark:text-blue-300"
+    if (score >= 30) return "bg-yellow-100 text-yellow-800 dark:text-yellow-300"
+    return "bg-red-100 text-red-800 dark:text-red-300"
   }
 
   const diversityLabel = getDiversityLabel(diversityScore.overall)
@@ -45,7 +45,7 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">{team.name}</h1>
-          <p className="text-gray-600">구성 분석</p>
+          <p className="text-muted-foreground">구성 분석</p>
         </div>
         <div className={`px-6 py-4 rounded-lg border-2 ${diversityColor}`}>
           <p className="text-sm font-medium">종합 다양성 점수</p>
@@ -97,7 +97,7 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
                     <span>Kinesthetic</span>
                     <span className="font-semibold">{composition.learningStyleDistribution.kinesthetic}%</span>
                   </div>
-                  <p className="text-xs text-gray-600 mt-2">
+                  <p className="text-xs text-muted-foreground mt-2">
                     우세 스타일: {composition.learningStyleDistribution.dominant}
                   </p>
                 </div>
@@ -126,7 +126,7 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
                     <span>수(水)</span>
                     <span className="font-semibold">{composition.sajuElementsDistribution.water}%</span>
                   </div>
-                  <p className="text-xs text-gray-600 mt-2">
+                  <p className="text-xs text-muted-foreground mt-2">
                     우세 오행: {composition.sajuElementsDistribution.dominant}
                   </p>
                 </div>
@@ -141,57 +141,57 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-3">
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+              <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
                 <span className="text-sm">MBTI 다양성</span>
                 <span className={`font-bold ${
-                  diversityScore.mbtiDiversity >= 70 ? 'text-green-700' :
-                  diversityScore.mbtiDiversity >= 50 ? 'text-blue-700' :
+                  diversityScore.mbtiDiversity >= 70 ? 'text-green-700 dark:text-green-400' :
+                  diversityScore.mbtiDiversity >= 50 ? 'text-blue-700 dark:text-blue-400' :
                   diversityScore.mbtiDiversity >= 30 ? 'text-yellow-700' :
-                  'text-red-700'
+                  'text-red-700 dark:text-red-400'
                 }`}>
                   {diversityScore.mbtiDiversity}
                 </span>
               </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+              <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
                 <span className="text-sm">학습 스타일</span>
                 <span className={`font-bold ${
-                  diversityScore.learningStyleDiversity >= 70 ? 'text-green-700' :
-                  diversityScore.learningStyleDiversity >= 50 ? 'text-blue-700' :
+                  diversityScore.learningStyleDiversity >= 70 ? 'text-green-700 dark:text-green-400' :
+                  diversityScore.learningStyleDiversity >= 50 ? 'text-blue-700 dark:text-blue-400' :
                   diversityScore.learningStyleDiversity >= 30 ? 'text-yellow-700' :
-                  'text-red-700'
+                  'text-red-700 dark:text-red-400'
                 }`}>
                   {diversityScore.learningStyleDiversity}
                 </span>
               </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+              <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
                 <span className="text-sm">오행 균형</span>
                 <span className={`font-bold ${
-                  diversityScore.sajuElementsDiversity >= 70 ? 'text-green-700' :
-                  diversityScore.sajuElementsDiversity >= 50 ? 'text-blue-700' :
+                  diversityScore.sajuElementsDiversity >= 70 ? 'text-green-700 dark:text-green-400' :
+                  diversityScore.sajuElementsDiversity >= 50 ? 'text-blue-700 dark:text-blue-400' :
                   diversityScore.sajuElementsDiversity >= 30 ? 'text-yellow-700' :
-                  'text-red-700'
+                  'text-red-700 dark:text-red-400'
                 }`}>
                   {diversityScore.sajuElementsDiversity}
                 </span>
               </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+              <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
                 <span className="text-sm">과목 커버리지</span>
                 <span className={`font-bold ${
-                  diversityScore.subjectDiversity >= 70 ? 'text-green-700' :
-                  diversityScore.subjectDiversity >= 50 ? 'text-blue-700' :
+                  diversityScore.subjectDiversity >= 70 ? 'text-green-700 dark:text-green-400' :
+                  diversityScore.subjectDiversity >= 50 ? 'text-blue-700 dark:text-blue-400' :
                   diversityScore.subjectDiversity >= 30 ? 'text-yellow-700' :
-                  'text-red-700'
+                  'text-red-700 dark:text-red-400'
                 }`}>
                   {diversityScore.subjectDiversity}
                 </span>
               </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+              <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
                 <span className="text-sm">학년 커버리지</span>
                 <span className={`font-bold ${
-                  diversityScore.gradeDiversity >= 70 ? 'text-green-700' :
-                  diversityScore.gradeDiversity >= 50 ? 'text-blue-700' :
+                  diversityScore.gradeDiversity >= 70 ? 'text-green-700 dark:text-green-400' :
+                  diversityScore.gradeDiversity >= 50 ? 'text-blue-700 dark:text-blue-400' :
                   diversityScore.gradeDiversity >= 30 ? 'text-yellow-700' :
-                  'text-red-700'
+                  'text-red-700 dark:text-red-400'
                 }`}>
                   {diversityScore.gradeDiversity}
                 </span>

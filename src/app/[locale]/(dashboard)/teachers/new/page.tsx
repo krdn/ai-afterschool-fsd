@@ -2,6 +2,7 @@ import { verifySession } from "@/lib/dal"
 import { db } from "@/lib/db/client"
 import { redirect } from "next/navigation"
 import { TeacherForm } from "@/components/teachers/teacher-form"
+import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 
 export default async function NewTeacherPage() {
   const session = await verifySession()
@@ -24,6 +25,10 @@ export default async function NewTeacherPage() {
 
   return (
     <div className="max-w-2xl mx-auto">
+      <BreadcrumbNav items={[
+        { label: "선생님 목록", href: "/teachers" },
+        { label: "선생님 등록" },
+      ]} />
       <TeacherForm teams={teams} currentRole={session.role} />
     </div>
   )

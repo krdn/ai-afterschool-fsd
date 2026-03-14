@@ -31,29 +31,29 @@ interface TeacherStudentListProps {
 }
 
 function getGradeColor(score: number): string {
-  if (score < 60) return 'text-red-600 bg-red-50'
-  if (score < 80) return 'text-yellow-600 bg-yellow-50'
-  return 'text-green-600 bg-green-50'
+  if (score < 60) return 'text-red-600 bg-red-50 dark:bg-red-950/30'
+  if (score < 80) return 'text-yellow-600 bg-yellow-50 dark:bg-yellow-950/30'
+  return 'text-green-600 bg-green-50 dark:bg-green-950/30'
 }
 
 function CompatibilityProgressBar({ score }: { score: number | null }) {
   if (score === null) {
-    return <span className="text-gray-400 text-sm">-</span>
+    return <span className="text-muted-foreground text-sm">-</span>
   }
 
   const percentage = score
-  let color = 'bg-gray-200'
-  if (score >= 80) color = 'bg-green-500'
-  else if (score >= 60) color = 'bg-yellow-500'
-  else color = 'bg-red-500'
+  let color = 'bg-muted'
+  if (score >= 80) color = 'bg-green-50 dark:bg-green-950/30'
+  else if (score >= 60) color = 'bg-yellow-50 dark:bg-yellow-950/30'
+  else color = 'bg-red-50 dark:bg-red-950/30'
 
   return (
     <div className="w-full max-w-[120px]">
       <div className="flex items-center justify-between text-xs mb-1">
         <span className="font-medium">{score.toFixed(0)}</span>
-        <span className="text-gray-500">/100</span>
+        <span className="text-muted-foreground">/100</span>
       </div>
-      <div className="h-2 w-full rounded-full bg-gray-100">
+      <div className="h-2 w-full rounded-full bg-muted">
         <div
           className={`h-2 rounded-full transition-all ${color}`}
           style={{ width: `${percentage}%` }}
@@ -65,7 +65,7 @@ function CompatibilityProgressBar({ score }: { score: number | null }) {
 
 function LatestGradesCell({ grades }: { grades: StudentWithMetrics['latestGrades'] }) {
   if (grades.length === 0) {
-    return <span className="text-gray-400 text-sm">성적 없음</span>
+    return <span className="text-muted-foreground text-sm">성적 없음</span>
   }
 
   return (
@@ -81,7 +81,7 @@ function LatestGradesCell({ grades }: { grades: StudentWithMetrics['latestGrades
         </span>
       ))}
       {grades.length > 3 && (
-        <span className="text-xs text-gray-500">+{grades.length - 3}</span>
+        <span className="text-xs text-muted-foreground">+{grades.length - 3}</span>
       )}
     </div>
   )
@@ -107,10 +107,10 @@ export function TeacherStudentList({ students, metrics }: TeacherStudentListProp
         ),
         cell: ({ row }) => (
           <div className="flex items-center gap-2">
-            <User className="h-4 w-4 text-gray-400" />
+            <User className="h-4 w-4 text-muted-foreground" />
             <Link
               href={`/students/${row.original.id}`}
-              className="font-medium hover:underline text-blue-600"
+              className="font-medium hover:underline text-primary"
             >
               {row.getValue('name')}
             </Link>
@@ -158,12 +158,12 @@ export function TeacherStudentList({ students, metrics }: TeacherStudentListProp
         cell: ({ row }) => {
           const count = row.getValue('counselingCount') as number
           return count > 0 ? (
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-700">
+            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-muted text-foreground">
               <MessageSquare className="h-3 w-3" />
               {count}회
             </span>
           ) : (
-            <span className="text-gray-400 text-sm">-</span>
+            <span className="text-muted-foreground text-sm">-</span>
           )
         },
       },
@@ -241,8 +241,8 @@ export function TeacherStudentList({ students, metrics }: TeacherStudentListProp
   if (students.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 space-y-4">
-        <User className="h-12 w-12 text-gray-300" />
-        <p className="text-gray-500">아직 배정된 학생이 없습니다</p>
+        <User className="h-12 w-12 text-muted-foreground" />
+        <p className="text-muted-foreground">아직 배정된 학생이 없습니다</p>
         <Button asChild>
           <Link href="/matching">학생 배정하기</Link>
         </Button>
@@ -254,7 +254,7 @@ export function TeacherStudentList({ students, metrics }: TeacherStudentListProp
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-4">
         <div className="relative max-w-sm flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="학생 이름, 학교로 검색..."
             value={globalFilter ?? ''}
@@ -262,12 +262,12 @@ export function TeacherStudentList({ students, metrics }: TeacherStudentListProp
             className="pl-10"
           />
         </div>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted-foreground">
           총 {totalCount}명의 학생 (전체 {metrics.totalStudents}명)
         </p>
       </div>
 
-      <div className="rounded-md border bg-white">
+      <div className="rounded-md border bg-card">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

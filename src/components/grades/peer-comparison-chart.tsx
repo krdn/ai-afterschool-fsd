@@ -32,7 +32,7 @@ interface PeerComparisonChartProps {
 
 const TREND_CONFIG = {
   UP: { icon: TrendingUp, label: '상승', color: 'text-green-600' },
-  STABLE: { icon: Minus, label: '유지', color: 'text-gray-600' },
+  STABLE: { icon: Minus, label: '유지', color: 'text-muted-foreground' },
   DOWN: { icon: TrendingDown, label: '하락', color: 'text-red-600' },
 };
 
@@ -87,13 +87,13 @@ export default function PeerComparisonChart({
             )}
           </Button>
         </div>
-        <p className="text-xs text-gray-500 mt-1">
+        <p className="text-xs text-muted-foreground mt-1">
           같은 학교, 같은 학년 학생들과의 상대적 위치를 파악합니다. (최소 5명 필요)
         </p>
       </CardHeader>
       <CardContent>
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+          <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
             <Loader2 className="w-8 h-8 animate-spin mb-3" />
             <p className="text-sm">동료 비교 분석 중...</p>
           </div>
@@ -130,7 +130,7 @@ export default function PeerComparisonChart({
                 <span className="text-3xl font-bold">
                   {result.overallPercentile}%
                 </span>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   상위 {100 - result.overallPercentile}%
                 </p>
               </div>
@@ -190,10 +190,10 @@ export default function PeerComparisonChart({
                           <div>
                             <span className="font-medium">{s.name}</span>
                             <div className="flex items-center gap-2 mt-1">
-                              <span className="text-sm text-gray-600">
+                              <span className="text-sm text-muted-foreground">
                                 {s.studentScore}점
                               </span>
-                              <span className="text-xs text-gray-400">
+                              <span className="text-xs text-muted-foreground">
                                 (반평균 {s.classAverage})
                               </span>
                               <span
@@ -212,10 +212,10 @@ export default function PeerComparisonChart({
                             variant="outline"
                             className={
                               s.percentile >= 70
-                                ? 'text-green-700 border-green-300'
+                                ? 'text-green-700 dark:text-green-400 border-green-300'
                                 : s.percentile >= 30
-                                  ? 'text-gray-700 border-gray-300'
-                                  : 'text-red-700 border-red-300'
+                                  ? 'text-foreground border'
+                                  : 'text-red-700 dark:text-red-400 border-red-300'
                             }
                           >
                             상위 {100 - s.percentile}%
@@ -233,7 +233,7 @@ export default function PeerComparisonChart({
             )}
 
             {/* 분석 코멘트 */}
-            <Card className="bg-blue-50 border-blue-200">
+            <Card className="bg-blue-50 dark:bg-blue-950/30 border-blue-200">
               <CardContent className="pt-4">
                 <p className="text-sm text-blue-900 whitespace-pre-wrap">
                   {result.comment}
@@ -242,7 +242,7 @@ export default function PeerComparisonChart({
             </Card>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+          <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
             <Users className="w-8 h-8 mb-3" />
             <p className="text-sm text-center max-w-sm">
               동료 비교 분석을 실행하면 같은 학년, 같은 학교 학생들과의 상대적 위치를 확인할 수 있습니다.

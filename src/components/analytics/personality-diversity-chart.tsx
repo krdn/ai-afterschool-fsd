@@ -51,7 +51,7 @@ export function PersonalityDiversityChart({
           <CardTitle>{title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-[400px] flex items-center justify-center text-gray-500">
+          <div className="h-[400px] flex items-center justify-center text-muted-foreground">
             데이터가 충분하지 않습니다
           </div>
         </CardContent>

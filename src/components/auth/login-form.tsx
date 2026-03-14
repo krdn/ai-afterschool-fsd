@@ -63,7 +63,7 @@ export function LoginForm() {
             <input type="hidden" name="callbackUrl" value={callbackUrl} />
           )}
           {state?.errors?._form && (
-            <div className="p-3 rounded-md bg-red-50 text-red-600 text-sm" data-testid="form-error">
+            <div className="p-3 rounded-md bg-red-50 dark:bg-red-950/30 text-red-600 text-sm" data-testid="form-error">
               {state.errors._form[0]}
             </div>
           )}
@@ -112,7 +112,7 @@ export function LoginForm() {
       <CardFooter className="flex flex-col space-y-2">
         <Link
           href="/reset-password"
-          className="text-sm text-gray-600 hover:text-gray-900 hover:underline"
+          className="text-sm text-muted-foreground hover:text-foreground hover:underline"
           data-testid="reset-password-link"
         >
           {t("forgotPassword")}

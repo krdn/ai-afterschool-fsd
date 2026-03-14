@@ -170,13 +170,13 @@ export function TeacherForm({ teams = [], teacher, currentRole }: TeacherFormPro
       <CardContent>
         <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
           {state?.errors?._form && (
-            <div className="p-3 rounded-md bg-red-50 text-red-600 text-sm">
+            <div className="p-3 rounded-md bg-red-50 dark:bg-red-950/30 text-red-600 text-sm">
               {state.errors._form[0]}
             </div>
           )}
 
           {!isEdit && (
-            <div className="p-3 rounded-md bg-blue-50 text-blue-700 text-sm">
+            <div className="p-3 rounded-md bg-blue-50 dark:bg-blue-950/30 text-blue-700 text-sm">
               기본 비밀번호(afterschool2026!)가 자동 설정됩니다. 첫 로그인 후 변경해주세요.
             </div>
           )}

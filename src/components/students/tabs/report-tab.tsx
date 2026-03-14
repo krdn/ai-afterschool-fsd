@@ -51,7 +51,7 @@ export default function ReportTab({ studentId, studentName }: ReportTabProps) {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-gray-600" data-testid="report-description">
+          <p className="text-muted-foreground" data-testid="report-description">
             학생의 모든 분석 결과가 포함된 종합 리포트를 다운로드할 수 있습니다.
           </p>
 
@@ -81,7 +81,7 @@ export default function ReportTab({ studentId, studentName }: ReportTabProps) {
             <h3 className="font-semibold mb-4" data-testid="report-contents-title">
               포함될 내용
             </h3>
-            <ul className="list-disc list-inside text-gray-600 space-y-1" data-testid="report-contents-list">
+            <ul className="list-disc list-inside text-muted-foreground space-y-1" data-testid="report-contents-list">
               <li>기본 정보 (이름, 학교, 학년)</li>
               <li>사주 분석</li>
               <li>이름 분석</li>

@@ -133,7 +133,7 @@ export default function AnalysisTab({ studentId }: { studentId: string }) {
 
   if (!data.student) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-muted-foreground">
         학생 정보를 불러올 수 없습니다.
       </div>
     )
@@ -154,43 +154,43 @@ export default function AnalysisTab({ studentId }: { studentId: string }) {
             <TabsTrigger value="saju" data-testid="saju-tab" className="flex-shrink-0">
               사주
               {data.student?.sajuAnalysis && (
-                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-500" />
+                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-50 dark:bg-green-950/30" />
               )}
             </TabsTrigger>
             <TabsTrigger value="face" data-testid="face-tab" className="flex-shrink-0">
               관상
               {data.faceAnalysis?.status === "complete" && (
-                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-500" />
+                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-50 dark:bg-green-950/30" />
               )}
             </TabsTrigger>
             <TabsTrigger value="palm" data-testid="palm-tab" className="flex-shrink-0">
               손금
               {data.palmAnalysis?.status === "complete" && (
-                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-500" />
+                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-50 dark:bg-green-950/30" />
               )}
             </TabsTrigger>
             <TabsTrigger value="mbti" data-testid="mbti-tab" className="flex-shrink-0">
               MBTI
               {data.mbtiAnalysis && (
-                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-500" />
+                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-50 dark:bg-green-950/30" />
               )}
             </TabsTrigger>
             <TabsTrigger value="vark" data-testid="vark-tab" className="flex-shrink-0">
               학습유형
               {data.varkAnalysis && (
-                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-500" />
+                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-50 dark:bg-green-950/30" />
               )}
             </TabsTrigger>
             <TabsTrigger value="name" data-testid="name-tab" className="flex-shrink-0">
               이름
               {data.nameAnalysis && (
-                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-500" />
+                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-50 dark:bg-green-950/30" />
               )}
             </TabsTrigger>
             <TabsTrigger value="zodiac" data-testid="zodiac-tab" className="flex-shrink-0">
               별자리
               {data.zodiacAnalysis && (
-                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-500" />
+                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-50 dark:bg-green-950/30" />
               )}
             </TabsTrigger>
           </TabsList>

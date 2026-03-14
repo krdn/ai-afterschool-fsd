@@ -82,10 +82,10 @@ export function TeacherMbtiPanel({ teacherId, teacherName, analysis, enabledProv
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-card rounded-lg shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-purple-100 rounded-lg">
+          <div className="p-2 bg-purple-100 dark:bg-purple-900/40 rounded-lg">
             <Brain className="w-5 h-5 text-purple-600" />
           </div>
           <h2 className="text-lg font-semibold">MBTI 성향 분석</h2>
@@ -95,7 +95,7 @@ export function TeacherMbtiPanel({ teacherId, teacherName, analysis, enabledProv
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowDirectInput(true)}
-              className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 px-2 py-1 hover:bg-gray-100 rounded-lg transition-colors"
+              className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground px-2 py-1 hover:bg-muted rounded-lg transition-colors"
               title="MBTI 유형 직접 입력"
             >
               <Edit3 className="w-4 h-4" />
@@ -118,11 +118,11 @@ export function TeacherMbtiPanel({ teacherId, teacherName, analysis, enabledProv
 
       <div className="p-6 space-y-6">
         {errorMessage && (
-          <div className="bg-red-50 border-l-4 border-red-400 p-4">
+          <div className="bg-red-50 dark:bg-red-950/30 border-l-4 border-red-400 p-4">
             <div className="flex">
               <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0" />
               <div className="ml-3">
-                <p className="text-sm text-red-800">{errorMessage}</p>
+                <p className="text-sm text-red-800 dark:text-red-300">{errorMessage}</p>
                 <Button onClick={() => setErrorMessage(null)} variant="outline" size="sm" className="mt-2">
                   닫기
                 </Button>
@@ -133,7 +133,7 @@ export function TeacherMbtiPanel({ teacherId, teacherName, analysis, enabledProv
 
         {/* AI 해석 설정 영역 */}
         {analysis && (
-          <div className="rounded-md border border-gray-200 p-4">
+          <div className="rounded-md border border p-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 flex-wrap">
               <ProviderSelector
                 selectedProvider={selectedProvider}
@@ -188,14 +188,14 @@ export function TeacherMbtiPanel({ teacherId, teacherName, analysis, enabledProv
           />
         ) : (
           <div className="text-center py-8">
-            <Brain className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-            <p className="text-gray-500 mb-4">
+            <Brain className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+            <p className="text-muted-foreground mb-4">
               아직 MBTI 분석이 없습니다.
             </p>
             <div className="flex gap-3 justify-center">
               <button
                 onClick={() => setShowDirectInput(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 border border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 border border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 dark:bg-purple-950/30 transition-colors"
               >
                 <Edit3 className="w-4 h-4" />
                 직접 입력

@@ -3,6 +3,7 @@ import { verifySession } from "@/lib/dal"
 import { db } from "@/lib/db/client"
 import { getTeacherRecommendations } from "@/lib/actions/matching/assignment"
 import { TeacherRecommendationList } from "@/components/matching/teacher-recommendation-list"
+import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 
 export default async function StudentMatchingPage({
   params,
@@ -43,12 +44,17 @@ export default async function StudentMatchingPage({
 
   return (
     <div className="space-y-6">
+      <BreadcrumbNav items={[
+        { label: "학생 목록", href: "/students" },
+        { label: student.name, href: `/students/${student.id}` },
+        { label: "매칭 추천" },
+      ]} />
       {/* 헤더 */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-3xl font-bold text-foreground">
           {student.name}님의 적합 선생님
         </h1>
-        <p className="mt-2 text-gray-600">
+        <p className="mt-2 text-muted-foreground">
           학생의 성향 분석 데이터를 기반으로 가장 적합한 선생님을 추천합니다.
         </p>
       </div>
@@ -61,8 +67,8 @@ export default async function StudentMatchingPage({
 
       {/* 현재 배정 정보 */}
       {student.teacherId && (
-        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-          <p className="text-sm text-blue-900">
+        <div className="rounded-lg border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30 p-4">
+          <p className="text-sm text-blue-900 dark:text-blue-200">
             <strong>현재 배정된 선생님:</strong>{" "}
             {
               recommendations.recommendations.find(

@@ -178,7 +178,7 @@ export function PerformanceDashboard({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                   <Users className="w-4 h-4" />
                   총 학생 수
                 </CardTitle>
@@ -191,7 +191,7 @@ export function PerformanceDashboard({
             </Card>
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                   <BarChart3 className="w-4 h-4" />
                   평균 성적 향상
                 </CardTitle>
@@ -206,7 +206,7 @@ export function PerformanceDashboard({
             </Card>
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                   <TrendingUp className="w-4 h-4" />
                   총 상담 횟수
                 </CardTitle>
@@ -226,24 +226,24 @@ export function PerformanceDashboard({
               {counselingStats ? (
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">총 상담 횟수</span>
+                    <span className="text-sm text-muted-foreground">총 상담 횟수</span>
                     <span className="font-semibold">{counselingStats.totalSessions}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">평균 만족도</span>
+                    <span className="text-sm text-muted-foreground">평균 만족도</span>
                     <span className="font-semibold">{counselingStats.satisfactionAverage}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-sm text-gray-600">평균 상담 시간</span>
+                    <span className="text-sm text-muted-foreground">평균 상담 시간</span>
                     <span className="font-semibold">{counselingStats.averageDuration}분</span>
                   </div>
                   {Object.keys(counselingStats.typeDistribution || {}).length > 0 && (
                     <div>
-                      <div className="text-sm font-medium text-gray-700 mb-2">상담 유형별 현황</div>
+                      <div className="text-sm font-medium text-foreground mb-2">상담 유형별 현황</div>
                       <div className="space-y-1">
                         {Object.entries(counselingStats.typeDistribution).map(([type, count]) => (
                           <div key={type} className="flex justify-between text-sm">
-                            <span className="text-gray-600">{type}</span>
+                            <span className="text-muted-foreground">{type}</span>
                             <span className="font-medium">{count}회</span>
                           </div>
                         ))}
@@ -252,7 +252,7 @@ export function PerformanceDashboard({
                   )}
                 </div>
               ) : (
-                <div className="text-gray-500 py-8 text-center">
+                <div className="text-muted-foreground py-8 text-center">
                   데이터를 불러오는 중입니다...
                 </div>
               )}

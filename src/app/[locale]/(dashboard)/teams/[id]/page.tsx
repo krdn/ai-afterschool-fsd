@@ -3,6 +3,7 @@ import { getTeamById } from '@/lib/actions/common/teams'
 import { notFound } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Users, GraduationCap } from 'lucide-react'
+import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav'
 
 /**
  * 팀 상세 페이지
@@ -33,6 +34,10 @@ export default async function TeamDetailPage({
 
   return (
     <div className="space-y-6">
+      <BreadcrumbNav items={[
+        { label: "팀 관리", href: "/teams" },
+        { label: team.name },
+      ]} />
       {/* 팀 기본 정보 */}
       <Card data-testid="team-info-card">
         <CardHeader>
@@ -41,11 +46,11 @@ export default async function TeamDetailPage({
         <CardContent>
           <div className="grid gap-4">
             <div>
-              <span className="text-gray-500">팀 ID:</span>{' '}
+              <span className="text-muted-foreground">팀 ID:</span>{' '}
               <span className="font-mono text-sm" data-testid="team-id">{team.id}</span>
             </div>
             <div>
-              <span className="text-gray-500">팀 이름:</span>{' '}
+              <span className="text-muted-foreground">팀 이름:</span>{' '}
               <span data-testid="team-name">{team.name}</span>
             </div>
           </div>
@@ -62,14 +67,14 @@ export default async function TeamDetailPage({
         </CardHeader>
         <CardContent>
           {team.teachers.length === 0 ? (
-            <p className="text-gray-500" data-testid="no-teachers">소속 선생님이 없어요</p>
+            <p className="text-muted-foreground" data-testid="no-teachers">소속 선생님이 없어요</p>
           ) : (
             <ul className="space-y-2">
               {team.teachers.map((teacher) => (
                 <li key={teacher.id}>
                   <Link
                     href={`/teachers/${teacher.id}`}
-                    className="text-blue-600 hover:underline"
+                    className="text-primary hover:underline"
                     data-testid="teacher-link"
                   >
                     {teacher.name} ({teacher.role})
@@ -91,14 +96,14 @@ export default async function TeamDetailPage({
         </CardHeader>
         <CardContent>
           {team.students.length === 0 ? (
-            <p className="text-gray-500" data-testid="no-students">소속 학생이 없어요</p>
+            <p className="text-muted-foreground" data-testid="no-students">소속 학생이 없어요</p>
           ) : (
             <ul className="space-y-2">
               {team.students.map((student) => (
                 <li key={student.id}>
                   <Link
                     href={`/students/${student.id}`}
-                    className="text-blue-600 hover:underline"
+                    className="text-primary hover:underline"
                     data-testid="student-link"
                   >
                     {student.name} ({student.grade}학년)

@@ -13,7 +13,7 @@ export function CounselingHistoryList({ sessions }: CounselingHistoryListProps) 
   if (sessions.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">아직 상담 기록이 없습니다</p>
+        <p className="text-muted-foreground">아직 상담 기록이 없습니다</p>
       </div>
     )
   }
@@ -24,7 +24,7 @@ export function CounselingHistoryList({ sessions }: CounselingHistoryListProps) 
     <div className="space-y-6">
       {Object.entries(groupedByMonth).map(([month, monthSessions]) => (
         <div key={month}>
-          <h3 className="text-lg font-semibold mb-3 text-gray-800">{month}</h3>
+          <h3 className="text-lg font-semibold mb-3 text-foreground">{month}</h3>
           <div className="space-y-3">
             {monthSessions.map((session) => (
               <CounselingSessionCard

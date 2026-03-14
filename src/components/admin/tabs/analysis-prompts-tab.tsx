@@ -13,6 +13,7 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -96,6 +97,7 @@ export function AnalysisPromptsTab({ initialPresets }: Props) {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null)
 
   const currentPresets = presets[activeType]
 
@@ -159,19 +161,19 @@ export function AnalysisPromptsTab({ initialPresets }: Props) {
     })
   }
 
-  const handleDelete = (id: string) => {
-    if (!confirm("정말 삭제하시겠습니까? (내장 프롬프트는 비활성화됩니다)")) return
-
+  const handleDelete = () => {
+    if (!deleteTargetId) return
     startTransition(async () => {
       try {
-        await deletePresetAction(id)
+        await deletePresetAction(deleteTargetId)
         setPresets((prev) => ({
           ...prev,
-          [activeType]: prev[activeType].filter((p) => p.id !== id),
+          [activeType]: prev[activeType].filter((p) => p.id !== deleteTargetId),
         }))
       } catch (err) {
         setError(err instanceof Error ? err.message : "삭제 실패")
       }
+      setDeleteTargetId(null)
     })
   }
 
@@ -464,7 +466,7 @@ export function AnalysisPromptsTab({ initialPresets }: Props) {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handleDelete(preset.id)}
+                          onClick={() => setDeleteTargetId(preset.id)}
                           disabled={isPending}
                         >
                           <Trash2 className="h-4 w-4" />
@@ -508,6 +510,16 @@ export function AnalysisPromptsTab({ initialPresets }: Props) {
           </TabsContent>
         ))}
       </Tabs>
+
+      <ConfirmDialog
+        open={!!deleteTargetId}
+        onOpenChange={(open) => !open && setDeleteTargetId(null)}
+        title="프롬프트 삭제"
+        description="정말 삭제하시겠습니까? 내장 프롬프트는 비활성화됩니다."
+        confirmLabel="삭제"
+        onConfirm={handleDelete}
+        loading={isPending}
+      />
     </div>
   )
 }

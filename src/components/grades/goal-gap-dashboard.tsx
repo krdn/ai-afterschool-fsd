@@ -22,19 +22,19 @@ function getAchievabilityBadge(achievability: 'HIGH' | 'MEDIUM' | 'LOW') {
   switch (achievability) {
     case 'HIGH':
       return (
-        <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+        <Badge className="bg-green-100 text-green-800 dark:text-green-300 hover:bg-green-100">
           달성 가능성 높음
         </Badge>
       );
     case 'MEDIUM':
       return (
-        <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">
+        <Badge className="bg-yellow-100 text-yellow-800 dark:text-yellow-300 hover:bg-yellow-100">
           달성 가능성 보통
         </Badge>
       );
     case 'LOW':
       return (
-        <Badge className="bg-red-100 text-red-800 hover:bg-red-100">
+        <Badge className="bg-red-100 text-red-800 dark:text-red-300 hover:bg-red-100">
           달성 가능성 낮음
         </Badge>
       );
@@ -67,7 +67,7 @@ export default function GoalGapDashboard({ data }: GoalGapDashboardProps) {
         <CardContent>
           <div className="flex items-center gap-4">
             <div className="flex-1">
-              <div className="relative h-4 w-full rounded-full bg-gray-200">
+              <div className="relative h-4 w-full rounded-full bg-muted">
                 <div
                   className="h-full rounded-full transition-all duration-500"
                   style={{
@@ -86,7 +86,7 @@ export default function GoalGapDashboard({ data }: GoalGapDashboardProps) {
               {data.overallAchievability}%
             </span>
           </div>
-          <p className="mt-3 text-sm text-gray-600">{data.advice}</p>
+          <p className="mt-3 text-sm text-muted-foreground">{data.advice}</p>
         </CardContent>
       </Card>
 
@@ -122,7 +122,7 @@ export default function GoalGapDashboard({ data }: GoalGapDashboardProps) {
                 <span className="font-semibold text-base">{gap.subject}</span>
                 {getAchievabilityBadge(gap.achievability)}
               </div>
-              <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
+              <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
                 <span>
                   현재:{' '}
                   <span className="font-medium text-blue-600">
@@ -144,7 +144,7 @@ export default function GoalGapDashboard({ data }: GoalGapDashboardProps) {
                 </span>
               </div>
               {/* 격차 시각 바 */}
-              <div className="relative h-2 w-full rounded-full bg-gray-200 mb-2">
+              <div className="relative h-2 w-full rounded-full bg-muted mb-2">
                 <div
                   className="absolute h-full rounded-full bg-blue-400"
                   style={{ width: `${gap.currentScore}%` }}
@@ -155,7 +155,7 @@ export default function GoalGapDashboard({ data }: GoalGapDashboardProps) {
                   title={`목표: ${gap.targetScore}점`}
                 />
               </div>
-              <p className="text-sm text-gray-500">{gap.strategy}</p>
+              <p className="text-sm text-muted-foreground">{gap.strategy}</p>
             </CardContent>
           </Card>
         ))}

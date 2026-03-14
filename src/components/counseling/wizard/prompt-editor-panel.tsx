@@ -181,14 +181,14 @@ export function PromptEditorPanel({
 
           {/* 가이드 영역 */}
           {showGuide && guide && (
-            <div className="rounded-md border border-amber-200 bg-amber-50/50 p-3 space-y-2">
+            <div className="rounded-md border border-amber-200 bg-amber-50 dark:bg-amber-950/30/50 p-3 space-y-2">
               <p className="text-xs text-amber-900">{guide.description}</p>
               <div className="space-y-1">
-                <p className="text-[10px] font-medium text-amber-800">
+                <p className="text-[10px] font-medium text-amber-800 dark:text-amber-300">
                   작성 팁:
                 </p>
                 {guide.tips.map((tip, i) => (
-                  <p key={i} className="text-[10px] text-amber-700 pl-2">
+                  <p key={i} className="text-[10px] text-amber-700 dark:text-amber-400 pl-2">
                     • {tip}
                   </p>
                 ))}
@@ -196,8 +196,8 @@ export function PromptEditorPanel({
 
               {/* 템플릿 변수 */}
               {variables.length > 0 && (
-                <div className="pt-1 border-t border-amber-200">
-                  <p className="text-[10px] font-medium text-amber-800 flex items-center gap-1 mb-1.5">
+                <div className="pt-1 border-t border-amber-200 dark:border-amber-800">
+                  <p className="text-[10px] font-medium text-amber-800 dark:text-amber-300 flex items-center gap-1 mb-1.5">
                     <Variable className="h-3 w-3" />
                     사용 가능한 변수 {'('}
                     {'{{'}변수명{'}}'}으로 사용{')'}
@@ -206,7 +206,7 @@ export function PromptEditorPanel({
                     {variables.map((v) => (
                       <span
                         key={v}
-                        className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-mono"
+                        className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 dark:text-amber-300 font-mono"
                         title={VARIABLE_DESCRIPTIONS[v] ?? v}
                       >
                         {`{{${v}}}`}

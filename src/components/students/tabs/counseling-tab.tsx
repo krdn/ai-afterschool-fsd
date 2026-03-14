@@ -37,10 +37,10 @@ import { toast } from 'sonner'
 
 // 타임라인 도트 색상 매핑
 const typeTimelineColor: Record<string, string> = {
-  ACADEMIC: 'bg-blue-500',
-  CAREER: 'bg-green-500',
-  PSYCHOLOGICAL: 'bg-purple-500',
-  BEHAVIORAL: 'bg-orange-500',
+  ACADEMIC: 'bg-blue-50 dark:bg-blue-950/30',
+  CAREER: 'bg-green-50 dark:bg-green-950/30',
+  PSYCHOLOGICAL: 'bg-purple-50 dark:bg-purple-950/30',
+  BEHAVIORAL: 'bg-orange-50 dark:bg-orange-950/30',
 }
 
 interface CounselingTabProps {
@@ -122,7 +122,7 @@ export default function CounselingTab({
         <h3 className="text-lg font-bold">상담 기록</h3>
         <Button
           size="sm"
-          className="bg-blue-600 hover:bg-blue-700"
+         
           onClick={() => setFormOpen(true)}
         >
           <Plus className="w-4 h-4 mr-1" />새 상담 기록
@@ -191,7 +191,7 @@ export default function CounselingTab({
 
               <div>
                 <span className="text-sm font-medium">상담 내용:</span>
-                <p className="mt-2 text-sm text-gray-700 whitespace-pre-wrap">
+                <p className="mt-2 text-sm text-foreground whitespace-pre-wrap">
                   {selectedSession.summary}
                 </p>
               </div>
@@ -222,7 +222,7 @@ export default function CounselingTab({
                     {[...Array(5)].map((_, i) => (
                       <svg
                         key={i}
-                        className={`w-4 h-4 ${i < (selectedSession.satisfactionScore ?? 0) ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'}`}
+                        className={`w-4 h-4 ${i < (selectedSession.satisfactionScore ?? 0) ? 'text-yellow-500 fill-yellow-500' : 'text-muted-foreground'}`}
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 24 24"
                         fill={
@@ -237,7 +237,7 @@ export default function CounselingTab({
                         <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                       </svg>
                     ))}
-                    <span className="text-sm text-gray-600 ml-1">
+                    <span className="text-sm text-muted-foreground ml-1">
                       {selectedSession.satisfactionScore} / 5
                     </span>
                   </div>
@@ -311,15 +311,15 @@ export default function CounselingTab({
 // ---------------------------------------------------------------------------
 function EmptyState({ onAddClick }: { onAddClick: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+    <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
       <MessageCircle className="w-16 h-16 mb-4 stroke-[1.5]" />
-      <p className="text-lg font-medium text-gray-600 mb-1">
+      <p className="text-lg font-medium text-muted-foreground mb-1">
         아직 상담 기록이 없습니다
       </p>
-      <p className="text-sm text-gray-400 mb-6">
+      <p className="text-sm text-muted-foreground mb-6">
         학생과의 상담 내용을 기록하고 관리해보세요
       </p>
-      <Button className="bg-blue-600 hover:bg-blue-700" onClick={onAddClick}>
+      <Button onClick={onAddClick}>
         <Plus className="w-4 h-4 mr-1" />첫 상담 기록 추가
       </Button>
     </div>
@@ -372,11 +372,11 @@ function TimelineList({
   return (
     <div className="relative">
       {/* 세로선 */}
-      <div className="absolute left-[17px] top-2 bottom-2 w-0.5 bg-gray-200" />
+      <div className="absolute left-[17px] top-2 bottom-2 w-0.5 bg-muted" />
 
       <div className="space-y-6">
         {sessions.map((session) => {
-          const dotColor = typeTimelineColor[session.type] || 'bg-gray-400'
+          const dotColor = typeTimelineColor[session.type] || 'bg-muted-foreground'
           const badgeColor = getTypeColor(session.type)
           const typeLabel = getTypeLabel(session.type)
 
@@ -394,7 +394,7 @@ function TimelineList({
               <div
                 role="button"
                 tabIndex={0}
-                className="flex-1 border rounded-lg p-4 hover:bg-gray-50 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                className="flex-1 border rounded-lg p-4 hover:bg-muted transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 onClick={() => onCardClick(session)}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
@@ -405,7 +405,7 @@ function TimelineList({
               >
                 {/* 카드 상단: 날짜 + 유형 뱃지 */}
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-muted-foreground">
                     {format(
                       new Date(session.sessionDate),
                       'yyyy년 M월 d일 (E)',
@@ -420,12 +420,12 @@ function TimelineList({
                 </div>
 
                 {/* 요약 텍스트 (2줄 말줄임) */}
-                <p className="text-sm text-gray-700 line-clamp-2 mb-3">
+                <p className="text-sm text-foreground line-clamp-2 mb-3">
                   {session.summary}
                 </p>
 
                 {/* 카드 하단: 메타 정보 */}
-                <div className="flex items-center justify-between text-xs text-gray-500">
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
                   <div className="flex items-center gap-3">
                     <span className="font-medium">
                       {session.teacher.name}

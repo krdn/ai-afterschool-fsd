@@ -93,8 +93,8 @@ export function PerformanceTrendChart({
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <div className="flex flex-col items-center gap-4">
-              <Loader2 className="w-8 h-8 animate-spin text-gray-500" />
-              <span className="text-gray-500">데이터를 불러오는 중입니다...</span>
+              <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+              <span className="text-muted-foreground">데이터를 불러오는 중입니다...</span>
             </div>
           </div>
         ) : error ? (
@@ -103,7 +103,7 @@ export function PerformanceTrendChart({
           </div>
         ) : chartData.length === 0 ? (
           <div className="flex items-center justify-center py-12">
-            <p className="text-gray-500">표시할 데이터가 없습니다.</p>
+            <p className="text-muted-foreground">표시할 데이터가 없습니다.</p>
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={300}>

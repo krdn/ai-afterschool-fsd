@@ -35,22 +35,22 @@ export function HanjaPicker({ name, value, onChange }: HanjaPickerProps) {
   }, 0)
 
   return (
-    <div className="space-y-3 rounded-md border border-dashed border-gray-200 p-4">
+    <div className="space-y-3 rounded-md border border-dashed border p-4">
       <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-semibold text-gray-700">한자 선택</p>
-          <p className="text-xs text-gray-500">
+          <p className="text-sm font-semibold text-foreground">한자 선택</p>
+          <p className="text-xs text-muted-foreground">
             성명학 계산을 위해 이름 한자를 선택하세요.
           </p>
         </div>
-        <div className="text-xs text-gray-500">
+        <div className="text-xs text-muted-foreground">
           {hanjaName ? `선택 한자: ${hanjaName}` : "아직 선택되지 않았어요."}
           {hanjaName ? ` · 총 ${totalStrokes}획` : ""}
         </div>
       </div>
 
       {syllables.length === 0 ? (
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted-foreground">
           이름을 입력하면 한자 후보가 표시됩니다.
         </p>
       ) : (
@@ -68,7 +68,7 @@ export function HanjaPicker({ name, value, onChange }: HanjaPickerProps) {
                 key={`${syllable}-${index}`}
                 className="grid gap-2 sm:grid-cols-[60px_1fr_120px] sm:items-center"
               >
-                <Label className="text-sm font-medium text-gray-600">
+                <Label className="text-sm font-medium text-muted-foreground">
                   {syllable}
                 </Label>
                 <Select
@@ -96,7 +96,7 @@ export function HanjaPicker({ name, value, onChange }: HanjaPickerProps) {
                     ))}
                   </SelectContent>
                 </Select>
-                <div className="text-xs text-gray-500">
+                <div className="text-xs text-muted-foreground">
                   {selectedInfo
                     ? selectedInfo.estimated
                       ? `~${selectedInfo.strokes}획`

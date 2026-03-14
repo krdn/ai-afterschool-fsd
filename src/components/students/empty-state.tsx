@@ -21,24 +21,24 @@ export function EmptyState({
 }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-12 text-center">
-      <div className="mb-6 flex h-32 w-32 items-center justify-center rounded-full bg-gray-100">
-        <Icon className="h-16 w-16 text-gray-400" />
+      <div className="mb-6 flex h-32 w-32 items-center justify-center rounded-full bg-muted">
+        <Icon className="h-16 w-16 text-muted-foreground" />
       </div>
 
-      <h2 className="mb-2 text-xl font-semibold text-gray-900">
+      <h2 className="mb-2 text-xl font-semibold text-foreground">
         {title}
       </h2>
-      <p className="mb-4 max-w-sm text-gray-500">
+      <p className="mb-4 max-w-sm text-muted-foreground">
         {description}
       </p>
 
       {tips && tips.length > 0 && (
-        <div className="mb-6 p-4 rounded-lg bg-blue-50 text-left max-w-sm">
-          <p className="text-sm font-medium text-blue-800 mb-2">시작하기 팁:</p>
-          <ul className="text-sm text-blue-700 space-y-1">
+        <div className="mb-6 p-4 rounded-lg bg-blue-50 dark:bg-blue-950/30 text-left max-w-sm">
+          <p className="text-sm font-medium text-blue-800 dark:text-blue-300 mb-2">시작하기 팁:</p>
+          <ul className="text-sm text-blue-700 dark:text-blue-400 space-y-1">
             {tips.map((tip, index) => (
               <li key={index} className="flex items-start gap-2">
-                <span className="text-blue-400">•</span>
+                <span className="text-blue-400 dark:text-blue-500">•</span>
                 <span>{tip}</span>
               </li>
             ))}

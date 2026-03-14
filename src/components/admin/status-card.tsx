@@ -33,11 +33,11 @@ export function StatusCard({ title, status, testId }: StatusCardProps) {
   const getStatusColor = () => {
     switch (status.status) {
       case 'healthy':
-        return 'bg-green-50 border-green-200'
+        return 'bg-green-50 dark:bg-green-950/30 border-green-200'
       case 'unhealthy':
-        return 'bg-red-50 border-red-200'
+        return 'bg-red-50 dark:bg-red-950/30 border-red-200'
       case 'unknown':
-        return 'bg-yellow-50 border-yellow-200'
+        return 'bg-yellow-50 dark:bg-yellow-950/30 border-yellow-200'
     }
   }
 
@@ -53,16 +53,16 @@ export function StatusCard({ title, status, testId }: StatusCardProps) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-gray-700 mb-2" data-testid={`${testId}-message`}>
+        <p className="text-sm text-foreground mb-2" data-testid={`${testId}-message`}>
           {status.message || '상태 확인 중...'}
         </p>
         {status.responseTime !== undefined && (
-          <p className="text-xs text-gray-500" data-testid={`${testId}-response-time`}>
+          <p className="text-xs text-muted-foreground" data-testid={`${testId}-response-time`}>
             응답 시간: {status.responseTime}ms
           </p>
         )}
         {status.connectionPool && (
-          <div className="mt-2 text-xs text-gray-500" data-testid={`${testId}-connection-pool`}>
+          <div className="mt-2 text-xs text-muted-foreground" data-testid={`${testId}-connection-pool`}>
             <span>연결 풀: {status.connectionPool.total}개</span>
             <span className="ml-2">유휴: {status.connectionPool.idle}개</span>
             {status.connectionPool.waiting > 0 && (

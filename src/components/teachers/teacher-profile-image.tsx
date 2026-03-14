@@ -18,7 +18,7 @@ export function TeacherProfileImage({ profileImagePublicId, name }: TeacherProfi
         src={profileImagePublicId}
         sizes="96px"
         alt={`${name} 프로필 사진`}
-        className="w-24 h-24 rounded-full object-cover border-2 border-gray-100"
+        className="w-24 h-24 rounded-full object-cover border-2 border"
         crop="fill"
         gravity="face"
         quality="auto"
@@ -28,8 +28,8 @@ export function TeacherProfileImage({ profileImagePublicId, name }: TeacherProfi
   }
 
   return (
-    <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center">
-      <span className="text-gray-400 text-sm">No Image</span>
+    <div className="w-24 h-24 rounded-full bg-muted flex items-center justify-center">
+      <span className="text-muted-foreground text-sm">No Image</span>
     </div>
   )
 }

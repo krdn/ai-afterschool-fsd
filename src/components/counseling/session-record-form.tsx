@@ -164,7 +164,7 @@ export function SessionRecordForm({ reservation, onSave, onCancel }: SessionReco
               <button
                 key={score}
                 type="button"
-                className={`text-2xl transition-transform hover:scale-110 ${active ? 'text-amber-400 drop-shadow-sm' : 'text-gray-300'}`}
+                className={`text-2xl transition-transform hover:scale-110 ${active ? 'text-amber-400 drop-shadow-sm' : 'text-muted-foreground'}`}
                 onMouseEnter={() => setHoveredScore(score)}
                 onClick={() => setSatisfactionScore(satisfactionScore === String(score) ? '' : String(score))}
                 aria-label={`만족도 ${score}점${satisfactionScore === String(score) ? ' (선택 해제)' : ''}`}

@@ -120,7 +120,7 @@ export function RegisterForm() {
             <CardFooter className="justify-center">
                 <Link
                     href="/auth/login"
-                    className="text-sm text-gray-600 hover:text-gray-900 hover:underline"
+                    className="text-sm text-muted-foreground hover:text-foreground hover:underline"
                 >
                     이미 계정이 있으신가요? 로그인
                 </Link>

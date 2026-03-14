@@ -1,91 +1,138 @@
-import { getStudents } from "@/lib/actions/student/detail";
-import Link from "next/link";
-import Image from "next/image";
+import { Suspense } from "react"
+import { getTranslations } from "next-intl/server"
+import Link from "next/link"
+import Image from "next/image"
+import { UserPlus, Users } from "lucide-react"
+import { getStudents } from "@/lib/actions/student/detail"
+import { Button } from "@/components/ui/button"
+import { StudentSearch } from "@/components/students/student-search"
+import { StudentPagination } from "@/components/students/student-pagination"
+
+const PAGE_SIZE = 12
 
 const avatarColors = [
-    "bg-blue-500", "bg-green-500", "bg-purple-500", "bg-orange-500",
-    "bg-pink-500", "bg-teal-500", "bg-indigo-500", "bg-rose-500",
-];
+  "bg-blue-100 dark:bg-blue-950/30",
+  "bg-green-100 dark:bg-green-950/30",
+  "bg-purple-100 dark:bg-purple-950/30",
+  "bg-orange-100 dark:bg-orange-950/30",
+  "bg-pink-100 dark:bg-pink-950/30",
+  "bg-teal-100 dark:bg-teal-950/30",
+  "bg-indigo-100 dark:bg-indigo-950/30",
+  "bg-rose-100 dark:bg-rose-950/30",
+]
 
-function StudentAvatar({ student }: { student: { name: string; images?: Array<{ type: string; resizedUrl: string }> } }) {
-    const profileImage = student.images?.find((img) => img.type === "profile");
+function StudentAvatar({ student }: {
+  student: { name: string; images?: Array<{ type: string; resizedUrl: string }> }
+}) {
+  const profileImage = student.images?.find((img) => img.type === "profile")
 
-    if (profileImage) {
-        return (
-            <Image
-                src={profileImage.resizedUrl}
-                alt={`${student.name} 프로필`}
-                width={40}
-                height={40}
-                className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-            />
-        );
-    }
-
-    const initial = student.name.charAt(0);
-    const colorIndex = student.name.charCodeAt(0) % avatarColors.length;
-
+  if (profileImage) {
     return (
-        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0 ${avatarColors[colorIndex]}`}>
-            {initial}
-        </div>
-    );
+      <Image
+        src={profileImage.resizedUrl}
+        alt={`${student.name} 프로필`}
+        width={40}
+        height={40}
+        className="h-10 w-10 rounded-full object-cover flex-shrink-0"
+      />
+    )
+  }
+
+  const initial = student.name.charAt(0)
+  const colorIndex = student.name.charCodeAt(0) % avatarColors.length
+
+  return (
+    <div className={`h-10 w-10 rounded-full flex items-center justify-center text-foreground font-semibold flex-shrink-0 ${avatarColors[colorIndex]}`}>
+      {initial}
+    </div>
+  )
 }
 
 export default async function StudentsPage(props: {
-    searchParams?: Promise<{ query?: string }>;
+  searchParams?: Promise<{ query?: string; page?: string }>
 }) {
-    const searchParams = await props.searchParams;
-    const query = searchParams?.query || "";
-    const students = await getStudents(query);
+  const searchParams = await props.searchParams
+  const query = searchParams?.query || ""
+  const page = Math.max(1, Number(searchParams?.page) || 1)
+  const t = await getTranslations("Student")
 
-    return (
-        <div className="container mx-auto py-8">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">학생 목록</h1>
-                <Link href="/students/new" className="bg-blue-600 text-white px-4 py-2 rounded" data-testid="add-student-button">
-                    학생 등록
-                </Link>
-            </div>
+  const result = await getStudents(query || undefined, { page, pageSize: PAGE_SIZE })
 
-            <div className="mb-6">
-                <form className="flex gap-2">
-                    <input
-                        type="text"
-                        name="query"
-                        defaultValue={query}
-                        placeholder="학생 이름 검색..."
-                        className="border p-2 rounded w-full max-w-sm"
-                        data-testid="student-search-input"
-                    />
-                    <button type="submit" className="bg-gray-200 px-4 py-2 rounded" data-testid="student-search-button">검색</button>
-                </form>
-            </div>
-
-            {students.length === 0 ? (
-                <p className="text-gray-500" data-testid="no-students-message">등록된 학생이 없습니다.</p>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {students.map((student) => (
-                        <Link key={student.id} href={`/students/${student.id}`} className="block">
-                            <div data-testid="student-card" className="border p-4 rounded hover:shadow-lg transition bg-white">
-                                <div className="flex items-center gap-3 mb-2">
-                                    <StudentAvatar student={student} />
-                                    <h3 data-testid="student-name" className="text-xl font-semibold">{student.name}</h3>
-                                </div>
-                                <div className="text-gray-600 space-y-1">
-                                    <span data-testid="student-school">{student.school}</span>
-                                    <span> </span>
-                                    <span data-testid="student-grade">{student.grade}학년</span>
-                                    <p className="text-sm text-gray-500">
-                                        생년월일: {new Date(student.birthDate).toLocaleDateString()}
-                                    </p>
-                                </div>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
-            )}
+  return (
+    <div className="space-y-6">
+      {/* 헤더 */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground">
+            {t("totalCount", { count: result.total })}
+          </p>
         </div>
-    );
+        <Button asChild>
+          <Link href="/students/new" data-testid="add-student-button">
+            <UserPlus className="mr-2 h-4 w-4" />
+            {t("addNew")}
+          </Link>
+        </Button>
+      </div>
+
+      {/* 검색 */}
+      <Suspense>
+        <StudentSearch defaultQuery={query} />
+      </Suspense>
+
+      {/* 학생 카드 그리드 */}
+      {result.data.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <Users className="h-12 w-12 text-muted-foreground/40 mb-4" />
+          <p className="text-muted-foreground" data-testid="no-students-message">
+            {query
+              ? t("noSearchResults", { query })
+              : t("noStudents")}
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {result.data.map((student) => (
+            <Link key={student.id} href={`/students/${student.id}`} className="block group">
+              <div
+                data-testid="student-card"
+                className="rounded-xl border bg-card p-4 shadow-sm transition-all hover:shadow-md hover:border-primary/30"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <StudentAvatar student={student} />
+                  <div className="min-w-0">
+                    <h3 data-testid="student-name" className="font-semibold truncate group-hover:text-primary transition-colors">
+                      {student.name}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      <span data-testid="student-school">{student.school}</span>
+                      {" · "}
+                      <span data-testid="student-grade">{t("gradeLabel", { grade: student.grade })}</span>
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span>{new Date(student.birthDate).toLocaleDateString("ko-KR")}</span>
+                  {student.teacher && (
+                    <span className="truncate ml-2">{student.teacher.name}</span>
+                  )}
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+
+      {/* 페이지네이션 */}
+      <Suspense>
+        <StudentPagination
+          page={result.page}
+          totalPages={result.totalPages}
+          total={result.total}
+          pageSize={result.pageSize}
+        />
+      </Suspense>
+    </div>
+  )
 }

@@ -11,6 +11,7 @@ import {
   setStudentImage,
 } from "@/lib/actions/student/images"
 import { Button } from "@/components/ui/button"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   StudentImageUploader,
@@ -66,6 +67,8 @@ export function StudentDetail({ student, analysisStatus }: StudentDetailProps) {
   const createdAt = toDate(student.createdAt)
   const [activeType, setActiveType] = useState<StudentImageType>("profile")
   const [isPending, startTransition] = useTransition()
+  const [deleteStudentOpen, setDeleteStudentOpen] = useState(false)
+  const [deleteImageOpen, setDeleteImageOpen] = useState(false)
   const [imagesByType, setImagesByType] = useState<
     Record<StudentImageType, StudentImageRecord | null>
   >(() => {
@@ -112,22 +115,16 @@ export function StudentDetail({ student, analysisStatus }: StudentDetailProps) {
           <Button asChild variant="outline">
             <Link href={`/students/${student.id}/edit`}>수정</Link>
           </Button>
-          <form
-            action={boundDeleteStudent}
-            onSubmit={(event) => {
-              if (!confirm("정말 삭제하시겠어요?")) {
-                event.preventDefault()
-              }
-            }}
+          <Button
+            variant="destructive"
+            onClick={() => setDeleteStudentOpen(true)}
           >
-            <Button type="submit" variant="destructive">
-              삭제
-            </Button>
-          </form>
+            삭제
+          </Button>
         </div>
       </div>
 
-      <div className="rounded-lg border border-gray-200 bg-white p-4">
+      <div className="rounded-lg border bg-card p-4">
         <div className="flex flex-col gap-6 lg:flex-row">
           <div className="flex-1">
             <StudentImageTabs
@@ -193,27 +190,7 @@ export function StudentDetail({ student, analysisStatus }: StudentDetailProps) {
               disabled={!currentImage || isPending}
               onClick={() => {
                 if (!currentImage) return
-                if (!confirm("선택한 이미지를 삭제하시겠어요?")) return
-
-                startTransition(async () => {
-                  const result = await deleteStudentImage(student.id, activeType)
-
-                  if (result.success) {
-                    setImagesByType((prev) => ({
-                      ...prev,
-                      [activeType]: null,
-                    }))
-                    toast.success("이미지 삭제 완료", {
-                      description: "이미지가 삭제되었어요",
-                      id: "image-delete-success",
-                    })
-                  } else {
-                    toast.error("이미지 삭제 실패", {
-                      description: result.error,
-                      id: "image-delete-error",
-                    })
-                  }
-                })
+                setDeleteImageOpen(true)
               }}
             >
               {isPending ? "처리 중..." : "삭제하기"}
@@ -229,27 +206,27 @@ export function StudentDetail({ student, analysisStatus }: StudentDetailProps) {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <dt className="text-sm text-gray-500">이름</dt>
+              <dt className="text-sm text-muted-foreground">이름</dt>
               <dd className="mt-1 font-medium">{student.name}</dd>
             </div>
             <div>
-              <dt className="text-sm text-gray-500">생년월일</dt>
+              <dt className="text-sm text-muted-foreground">생년월일</dt>
               <dd className="mt-1 font-medium">
                 {format(birthDate, "yyyy년 M월 d일", { locale: ko })}
               </dd>
             </div>
             <div>
-              <dt className="text-sm text-gray-500">국적</dt>
+              <dt className="text-sm text-muted-foreground">국적</dt>
               <dd className="mt-1 font-medium">
                 {student.nationality || "한국"}
               </dd>
             </div>
             <div>
-              <dt className="text-sm text-gray-500">연락처</dt>
+              <dt className="text-sm text-muted-foreground">연락처</dt>
               <dd className="mt-1 font-medium">{student.phone || "-"}</dd>
             </div>
             <div>
-              <dt className="text-sm text-gray-500">혈액형</dt>
+              <dt className="text-sm text-muted-foreground">혈액형</dt>
               <dd className="mt-1 font-medium">
                 {student.bloodType ? `${student.bloodType}형` : "-"}
               </dd>
@@ -263,21 +240,21 @@ export function StudentDetail({ student, analysisStatus }: StudentDetailProps) {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <dt className="text-sm text-gray-500">학교</dt>
+              <dt className="text-sm text-muted-foreground">학교</dt>
               <dd className="mt-1 font-medium">{student.school}</dd>
             </div>
             <div>
-              <dt className="text-sm text-gray-500">학년</dt>
+              <dt className="text-sm text-muted-foreground">학년</dt>
               <dd className="mt-1 font-medium">{student.grade}학년</dd>
             </div>
             <div>
-              <dt className="text-sm text-gray-500">목표 대학</dt>
+              <dt className="text-sm text-muted-foreground">목표 대학</dt>
               <dd className="mt-1 font-medium">
                 {student.targetUniversity || "-"}
               </dd>
             </div>
             <div>
-              <dt className="text-sm text-gray-500">목표 학과</dt>
+              <dt className="text-sm text-muted-foreground">목표 학과</dt>
               <dd className="mt-1 font-medium">{student.targetMajor || "-"}</dd>
             </div>
           </CardContent>
@@ -289,14 +266,45 @@ export function StudentDetail({ student, analysisStatus }: StudentDetailProps) {
           <CardTitle>분석 상태</CardTitle>
           <StudentAnalysisStatus status={analysisStatus ?? null} />
         </CardHeader>
-        <CardContent className="text-sm text-gray-500">
+        <CardContent className="text-sm text-muted-foreground">
           사주/성명학 분석이 최신인지 확인합니다.
         </CardContent>
       </Card>
 
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-muted-foreground">
         등록일: {format(createdAt, "yyyy년 M월 d일", { locale: ko })}
       </p>
+
+      <ConfirmDialog
+        open={deleteStudentOpen}
+        onOpenChange={setDeleteStudentOpen}
+        title="학생 삭제"
+        description="정말 삭제하시겠어요? 이 학생의 모든 데이터가 삭제되며 되돌릴 수 없습니다."
+        confirmLabel="삭제"
+        onConfirm={async () => {
+          await boundDeleteStudent()
+        }}
+      />
+
+      <ConfirmDialog
+        open={deleteImageOpen}
+        onOpenChange={setDeleteImageOpen}
+        title="이미지 삭제"
+        description={`선택한 ${imageLabels[activeType]} 이미지를 삭제하시겠어요?`}
+        confirmLabel="삭제"
+        onConfirm={async () => {
+          const result = await deleteStudentImage(student.id, activeType)
+          if (result.success) {
+            setImagesByType((prev) => ({
+              ...prev,
+              [activeType]: null,
+            }))
+            toast.success("이미지 삭제 완료")
+          } else {
+            toast.error("이미지 삭제 실패", { description: result.error })
+          }
+        }}
+      />
     </div>
   )
 }

@@ -40,13 +40,6 @@ export async function middleware(req: NextRequest) {
   const localeMatch = pathname.match(new RegExp(`^/(${routing.locales.join('|')})`))
   const localePrefix = localeMatch ? `/${localeMatch[1]}` : ''
 
-  // Redirect /dashboard to /students
-  if (pathnameWithoutLocale === '/dashboard') {
-    const response = NextResponse.redirect(new URL(`${localePrefix}/students`, req.nextUrl))
-    if (isInvalidSession) response.cookies.delete('session')
-    return response
-  }
-
   // Check admin access
   if (isAdminRoute && session?.role !== 'DIRECTOR') {
     const response = NextResponse.redirect(new URL(`${localePrefix}/students`, req.nextUrl))
@@ -63,7 +56,7 @@ export async function middleware(req: NextRequest) {
   }
 
   if (isAuthRoute && session?.userId) {
-    return NextResponse.redirect(new URL(`${localePrefix}/students`, req.nextUrl))
+    return NextResponse.redirect(new URL(`${localePrefix}/dashboard`, req.nextUrl))
   }
 
   // Attach request ID to response headers for distributed tracing

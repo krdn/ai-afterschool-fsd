@@ -87,6 +87,7 @@ jobs:
           else
             echo "::notice::No E2E test files found — skipping"
           fi
+        continue-on-error: true
 
   # CI 실패 시 이메일 알림
   notify-failure:

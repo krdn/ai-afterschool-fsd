@@ -22,20 +22,20 @@ export function QuestionItem({ questionId, questionText, description, isFocused,
       id={`question-${questionId}`}
       className={cn(
         "p-4 rounded-lg border transition-colors",
-        showError && "border-red-500 bg-red-50",
+        showError && "border-red-500 bg-red-50 dark:bg-red-950/30",
         isFocused && "ring-2 ring-blue-500",
-        !showError && !isFocused && "border-gray-200"
+        !showError && !isFocused && "border"
       )}
     >
       <p className="mb-1 font-medium">{questionId}. {questionText}</p>
       {description && (
-        <p className="text-sm text-gray-500 mb-3">{description}</p>
+        <p className="text-sm text-muted-foreground mb-3">{description}</p>
       )}
       {showError && (
         <p className="text-sm text-red-600 mb-2">이 문항에 답해주세요.</p>
       )}
       <div className="flex gap-3 items-center">
-        <span className="text-sm text-gray-500">매우 아니다</span>
+        <span className="text-sm text-muted-foreground">매우 아니다</span>
         {[1, 2, 3, 4, 5].map(value => (
           <label key={value} className="cursor-pointer">
             <input
@@ -48,14 +48,14 @@ export function QuestionItem({ questionId, questionText, description, isFocused,
             />
             <div className={cn(
               "w-10 h-10 flex items-center justify-center rounded-full border-2",
-              "peer-checked:border-blue-600 peer-checked:bg-blue-100 peer-checked:font-bold",
-              "hover:border-blue-400 transition-colors"
+              "peer-checked:border-primary peer-checked:bg-primary/10 peer-checked:font-bold",
+              "hover:border-primary/50 transition-colors"
             )}>
               {value}
             </div>
           </label>
         ))}
-        <span className="text-sm text-gray-500">매우 그렇다</span>
+        <span className="text-sm text-muted-foreground">매우 그렇다</span>
       </div>
     </div>
   )

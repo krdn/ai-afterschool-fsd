@@ -4,6 +4,7 @@ import { useState, useTransition } from "react"
 import {
   Plus, Pencil, Trash2, Save, X, Eye, EyeOff, Lock, Info,
 } from "lucide-react"
+import { ConfirmDialog } from "@/components/ui/confirm-dialog"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
@@ -70,6 +71,7 @@ export function CounselingPromptsTab({ initialPresets }: Props) {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null)
 
   const currentPresets = presets[activeType]
 
@@ -121,19 +123,20 @@ export function CounselingPromptsTab({ initialPresets }: Props) {
     })
   }
 
-  const handleDelete = (id: string) => {
-    if (!confirm("정말 삭제하시겠습니까? (내장 프롬프트는 비활성화됩니다)")) return
+  const handleDelete = () => {
+    if (!deleteTargetId) return
     startTransition(async () => {
       try {
-        const result = await deleteCounselingPresetAction(id)
+        const result = await deleteCounselingPresetAction(deleteTargetId)
         if (!result.success) { setError(result.error || "삭제 실패"); return }
         setPresets((prev) => ({
           ...prev,
-          [activeType]: prev[activeType].filter((p) => p.id !== id),
+          [activeType]: prev[activeType].filter((p) => p.id !== deleteTargetId),
         }))
       } catch (err) {
         setError(err instanceof Error ? err.message : "삭제 실패")
       }
+      setDeleteTargetId(null)
     })
   }
 
@@ -343,7 +346,7 @@ export function CounselingPromptsTab({ initialPresets }: Props) {
                         <Pencil className="h-4 w-4" />
                       </Button>
                       {!preset.isBuiltIn && (
-                        <Button variant="outline" size="sm" onClick={() => handleDelete(preset.id)} disabled={isPending}>
+                        <Button variant="outline" size="sm" onClick={() => setDeleteTargetId(preset.id)} disabled={isPending}>
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       )}
@@ -378,6 +381,16 @@ export function CounselingPromptsTab({ initialPresets }: Props) {
           </TabsContent>
         ))}
       </Tabs>
+
+      <ConfirmDialog
+        open={!!deleteTargetId}
+        onOpenChange={(open) => !open && setDeleteTargetId(null)}
+        title="프롬프트 삭제"
+        description="정말 삭제하시겠습니까? 내장 프롬프트는 비활성화됩니다."
+        confirmLabel="삭제"
+        onConfirm={handleDelete}
+        loading={isPending}
+      />
     </div>
   )
 }

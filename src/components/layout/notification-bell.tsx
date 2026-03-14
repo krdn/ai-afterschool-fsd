@@ -114,14 +114,14 @@ export function NotificationBell({ className }: NotificationBellProps) {
       >
         <Bell className="h-5 w-5" />
         {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 text-white text-xs flex items-center justify-center font-medium">
+          <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-50 dark:bg-red-950/30 text-white text-xs flex items-center justify-center font-medium">
             {unreadCount > 9 ? "9+" : unreadCount}
           </span>
         )}
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-80 sm:w-96 bg-card rounded-lg border shadow-lg z-50">
+        <div className="absolute right-0 top-full mt-2 w-[calc(100vw-2rem)] sm:w-96 max-w-96 bg-card rounded-lg border shadow-lg z-50">
           <div className="p-3 border-b flex items-center justify-between">
             <h3 className="font-semibold">알림</h3>
             <span className="text-sm text-muted-foreground">
@@ -209,8 +209,8 @@ export function NotificationBell({ className }: NotificationBellProps) {
                                 <div
                                   className={`h-1.5 rounded-full ${
                                     notification.severity === "error"
-                                      ? "bg-red-500"
-                                      : "bg-amber-500"
+                                      ? "bg-red-50 dark:bg-red-950/30"
+                                      : "bg-amber-50 dark:bg-amber-950/30"
                                   }`}
                                   style={{
                                     width: `${Math.min(

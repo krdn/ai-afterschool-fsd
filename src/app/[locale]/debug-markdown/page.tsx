@@ -65,8 +65,8 @@ export default function DebugMarkdownPage() {
       <h1 className="text-3xl font-bold mb-8">세밀한 Markdown 디버깅</h1>
       
       {/* 섹션 1: 원본 데이터 분석 */}
-      <section className="border-2 border-red-500 rounded p-6 bg-red-50">
-        <h2 className="text-xl font-bold mb-4 text-red-700">1. 원본 데이터 분석</h2>
+      <section className="border-2 border-red-500 rounded p-6 bg-red-50 dark:bg-red-950/30">
+        <h2 className="text-xl font-bold mb-4 text-red-700 dark:text-red-400">1. 원본 데이터 분석</h2>
         <div className="space-y-4">
           <div>
             <h3 className="font-semibold mb-2">원본 텍스트 (JSON):</h3>
@@ -88,7 +88,7 @@ export default function DebugMarkdownPage() {
               </thead>
               <tbody>
                 {originalAnalysis.map((line) => (
-                  <tr key={line.lineNum} className={line.startsWithHash ? "bg-yellow-100" : ""}>
+                  <tr key={line.lineNum} className={line.startsWithHash ? "bg-yellow-100 dark:bg-yellow-900/40" : ""}>
                     <td className="p-2 border text-center">{line.lineNum}</td>
                     <td className="p-2 border font-mono text-xs">{line.content || "(빈 줄)"}</td>
                     <td className="p-2 border text-center">{line.startsWithHash ? "✅" : "❌"}</td>
@@ -103,8 +103,8 @@ export default function DebugMarkdownPage() {
 
       {/* 섹션 2: 디코딩 후 분석 */}
       {mounted && (
-        <section className="border-2 border-blue-500 rounded p-6 bg-blue-50">
-          <h2 className="text-xl font-bold mb-4 text-blue-700">2. 디코딩 후 분석</h2>
+        <section className="border-2 border-blue-500 rounded p-6 bg-blue-50 dark:bg-blue-950/30">
+          <h2 className="text-xl font-bold mb-4 text-blue-700 dark:text-blue-400">2. 디코딩 후 분석</h2>
           <div className="space-y-4">
             <div>
               <h3 className="font-semibold mb-2">디코딩된 텍스트 (JSON):</h3>
@@ -126,7 +126,7 @@ export default function DebugMarkdownPage() {
                 </thead>
                 <tbody>
                   {decodedAnalysis.map((line) => (
-                    <tr key={line.lineNum} className={line.startsWithHash ? "bg-green-100" : ""}>
+                    <tr key={line.lineNum} className={line.startsWithHash ? "bg-green-100 dark:bg-green-900/40" : ""}>
                       <td className="p-2 border text-center">{line.lineNum}</td>
                       <td className="p-2 border font-mono text-xs">{line.content || "(빈 줄)"}</td>
                       <td className="p-2 border text-center">{line.startsWithHash ? "✅" : "❌"}</td>
@@ -141,8 +141,8 @@ export default function DebugMarkdownPage() {
       )}
 
       {/* 섹션 3: 렌더링 결과 비교 */}
-      <section className="border-2 border-green-500 rounded p-6 bg-green-50">
-        <h2 className="text-xl font-bold mb-4 text-green-700">3. 렌더링 결과 비교</h2>
+      <section className="border-2 border-green-500 rounded p-6 bg-green-50 dark:bg-green-950/30">
+        <h2 className="text-xl font-bold mb-4 text-green-700 dark:text-green-400">3. 렌더링 결과 비교</h2>
         
         <div className="grid grid-cols-2 gap-6">
           {/* 왼쪽: 원본으로 렌더링 */}
@@ -177,7 +177,7 @@ export default function DebugMarkdownPage() {
 
       {/* 섹션 4: 실제 DOM 확인 */}
       <section className="border-2 border-purple-500 rounded p-6 bg-purple-50">
-        <h2 className="text-xl font-bold mb-4 text-purple-700">4. HTML 출력 비교</h2>
+        <h2 className="text-xl font-bold mb-4 text-purple-700 dark:text-purple-400">4. HTML 출력 비교</h2>
         
         <div className="grid grid-cols-2 gap-6">
           <div>

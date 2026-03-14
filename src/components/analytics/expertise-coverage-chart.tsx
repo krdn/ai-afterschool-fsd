@@ -11,7 +11,7 @@ const SUBJECTS = ["수학", "영어", "국어", "과학", "사회"] as const
 const GRADES = ["중1", "중2", "중3", "고1", "고2", "고3"] as const
 
 function getCoverageColor(count: number, maxCount: number): string {
-  if (count === 0) return "bg-red-100 text-red-800"
+  if (count === 0) return "bg-red-100 text-red-800 dark:text-red-300"
   if (count < maxCount * 0.5) return "bg-red-200 text-red-900"
   if (count < maxCount) return "bg-yellow-200 text-yellow-900"
   return "bg-green-200 text-green-900"
@@ -41,11 +41,11 @@ export function ExpertiseCoverageChart({ coverage }: ExpertiseCoverageChartProps
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  <th className="border border-gray-300 p-2 text-sm font-medium text-gray-700 bg-gray-50 text-left">
+                  <th className="border border p-2 text-sm font-medium text-foreground bg-muted text-left">
                     과목
                   </th>
                   {GRADES.map(grade => (
-                    <th key={grade} className="border border-gray-300 p-2 text-sm font-medium text-gray-700 bg-gray-50">
+                    <th key={grade} className="border border p-2 text-sm font-medium text-foreground bg-muted">
                       {grade}
                     </th>
                   ))}
@@ -55,8 +55,8 @@ export function ExpertiseCoverageChart({ coverage }: ExpertiseCoverageChartProps
                 {SUBJECTS.map(subject => {
                   const isWeak = coverage.weakSubjects.includes(subject)
                   return (
-                    <tr key={subject} className={isWeak ? "bg-red-50" : ""}>
-                      <td className={`border border-gray-300 p-2 text-sm font-medium ${isWeak ? "text-red-700" : ""}`}>
+                    <tr key={subject} className={isWeak ? "bg-red-50 dark:bg-red-950/30" : ""}>
+                      <td className={`border border p-2 text-sm font-medium ${isWeak ? "text-red-700 dark:text-red-400" : ""}`}>
                         {subject}
                       </td>
                       {GRADES.map(grade => {
@@ -64,7 +64,7 @@ export function ExpertiseCoverageChart({ coverage }: ExpertiseCoverageChartProps
                         return (
                           <td
                             key={`${subject}-${grade}`}
-                            className={`border border-gray-300 p-2 text-sm text-center ${getCoverageColor(count, maxSubjectTeachers)}`}
+                            className={`border border p-2 text-sm text-center ${getCoverageColor(count, maxSubjectTeachers)}`}
                           >
                             <div className="font-bold">{count}</div>
                             <div className="text-xs opacity-75">{getCoverageLabel(count, maxSubjectTeachers)}</div>
@@ -79,15 +79,15 @@ export function ExpertiseCoverageChart({ coverage }: ExpertiseCoverageChartProps
           </div>
 
           {hasWeakSubjects && (
-            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="font-medium text-red-800">취약 과목:</p>
-              <p className="text-sm text-red-700">{coverage.weakSubjects.join(", ")}</p>
+            <div className="mt-4 p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 rounded-lg">
+              <p className="font-medium text-red-800 dark:text-red-300">취약 과목:</p>
+              <p className="text-sm text-red-700 dark:text-red-400">{coverage.weakSubjects.join(", ")}</p>
             </div>
           )}
 
           {hasWeakGrades && (
-            <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
-              <p className="font-medium text-orange-800">취약 학년:</p>
+            <div className="mt-4 p-3 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 rounded-lg">
+              <p className="font-medium text-orange-800 dark:text-orange-300">취약 학년:</p>
               <p className="text-sm text-orange-700">{coverage.weakGrades.join(", ")}</p>
             </div>
           )}
@@ -119,16 +119,16 @@ export function ExpertiseCoverageChart({ coverage }: ExpertiseCoverageChartProps
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-3 gap-4">
-            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-700">신입 (&lt;1년)</p>
+            <div className="p-4 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-700 dark:text-blue-400">신입 (&lt;1년)</p>
               <p className="text-2xl font-bold text-blue-900">{coverage.experienceLevels.junior}명</p>
             </div>
-            <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
-              <p className="text-sm text-purple-700">중급 (1-3년)</p>
+            <div className="p-4 bg-purple-50 dark:bg-purple-950/30 border border-purple-200 rounded-lg">
+              <p className="text-sm text-purple-700 dark:text-purple-400">중급 (1-3년)</p>
               <p className="text-2xl font-bold text-purple-900">{coverage.experienceLevels.mid}명</p>
             </div>
-            <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-              <p className="text-sm text-green-700">고급 (3+년)</p>
+            <div className="p-4 bg-green-50 dark:bg-green-950/30 border border-green-200 rounded-lg">
+              <p className="text-sm text-green-700 dark:text-green-400">고급 (3+년)</p>
               <p className="text-2xl font-bold text-green-900">{coverage.experienceLevels.senior}명</p>
             </div>
           </div>

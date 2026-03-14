@@ -22,17 +22,17 @@ export function DimensionBar({
   return (
     <div className="space-y-1">
       <div className="flex justify-between text-sm">
-        <span className={dominant === "left" ? "font-bold text-blue-600" : "text-gray-600"}>
+        <span className={dominant === "left" ? "font-bold text-primary" : "text-muted-foreground"}>
           {leftCode} {leftLabel}
         </span>
-        <span className={dominant === "right" ? "font-bold text-blue-600" : "text-gray-600"}>
+        <span className={dominant === "right" ? "font-bold text-primary" : "text-muted-foreground"}>
           {rightLabel} {rightCode}
         </span>
       </div>
-      <div className="flex h-6 rounded-full overflow-hidden bg-gray-100">
+      <div className="flex h-6 rounded-full overflow-hidden bg-muted">
         <div
           className={`flex items-center justify-end pr-2 text-xs font-medium transition-all ${
-            dominant === "left" ? "bg-blue-500 text-white" : "bg-gray-300 text-gray-700"
+            dominant === "left" ? "bg-blue-50 dark:bg-blue-950/30 text-white" : "bg-muted text-foreground"
           }`}
           style={{ width: `${leftPercent}%` }}
         >
@@ -40,7 +40,7 @@ export function DimensionBar({
         </div>
         <div
           className={`flex items-center justify-start pl-2 text-xs font-medium transition-all ${
-            dominant === "right" ? "bg-blue-500 text-white" : "bg-gray-300 text-gray-700"
+            dominant === "right" ? "bg-blue-50 dark:bg-blue-950/30 text-white" : "bg-muted text-foreground"
           }`}
           style={{ width: `${rightPercent}%` }}
         >

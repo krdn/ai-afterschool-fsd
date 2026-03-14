@@ -100,16 +100,16 @@ export default function ParentReportSend({
               type="button"
               className={`flex items-center w-full rounded-lg border p-4 cursor-pointer transition-colors text-left ${
                 method === m.value
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 hover:bg-gray-50'
+                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/30'
+                  : 'border hover:bg-muted'
               }`}
               onClick={() => setMethod(m.value)}
             >
               <div className="flex items-center gap-3 flex-1">
-                <div className="text-gray-500">{m.icon}</div>
+                <div className="text-muted-foreground">{m.icon}</div>
                 <div>
                   <p className="font-medium text-sm">{m.label}</p>
-                  <p className="text-xs text-gray-500 mt-0.5">
+                  <p className="text-xs text-muted-foreground mt-0.5">
                     {m.description}
                   </p>
                 </div>
@@ -120,7 +120,7 @@ export default function ParentReportSend({
             </button>
           ))}
 
-          <p className="text-xs text-amber-600 mt-3 bg-amber-50 p-2 rounded">
+          <p className="text-xs text-amber-600 mt-3 bg-amber-50 dark:bg-amber-950/30 p-2 rounded">
             * 현재 발송 기능은 준비 중입니다. 발송 기록만 저장됩니다.
           </p>
         </div>

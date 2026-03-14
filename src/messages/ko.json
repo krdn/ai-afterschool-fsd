@@ -16,7 +16,10 @@
     "aiInterpret": "AI로 해석하기",
     "noInterpretation": "{label}이(가) 아직 생성되지 않았어요.",
     "aiAnalyzing": "AI가 분석 중이에요...",
-    "aiAnalyzingSubMessage": "10~20초 정도 소요됩니다."
+    "aiAnalyzingSubMessage": "10~20초 정도 소요됩니다.",
+    "paginationInfo": "{total}건 중 {start}-{end}",
+    "paginationPrev": "이전",
+    "paginationNext": "다음"
   },
   "Auth": {
     "login": "로그인",
@@ -28,6 +31,7 @@
     "welcome": "AI AfterSchool에 오신 것을 환영합니다"
   },
   "Navigation": {
+    "dashboard": "대시보드",
     "students": "학생 관리",
     "teachers": "선생님",
     "counseling": "상담",
@@ -36,14 +40,46 @@
     "admin": "관리자 도구",
     "issues": "이슈",
     "aiChat": "AI 채팅",
-    "grades": "성적 관리"
+    "grades": "성적 관리",
+    "teams": "팀 관리",
+    "groupMain": "메인",
+    "groupManagement": "관리",
+    "groupSystem": "시스템",
+    "collapseSidebar": "사이드바 접기",
+    "expandSidebar": "사이드바 펼치기",
+    "openMenu": "메뉴 열기"
+  },
+  "Dashboard": {
+    "title": "대시보드",
+    "welcome": "환영합니다, {name}님!",
+    "totalStudents": "전체 학생",
+    "totalTeachers": "전체 교사",
+    "unassignedStudents": "미배정 학생",
+    "unassignedWarning": "담당 교사가 배정되지 않은 학생이 있습니다",
+    "weeklyCounseling": "이번 주 상담",
+    "openIssues": "미해결 이슈",
+    "issuesWarning": "확인이 필요한 이슈가 있습니다",
+    "quickActions": "빠른 실행",
+    "addStudent": "학생 등록",
+    "newCounseling": "상담 예약",
+    "gradeEntry": "성적 입력",
+    "matching": "매칭 실행",
+    "upcomingCounseling": "다가오는 상담",
+    "noUpcoming": "최근 7일 이내 예정된 상담이 없습니다.",
+    "statsError": "통계를 불러오는 데 실패했습니다."
   },
   "Student": {
     "title": "학생 관리",
     "addNew": "신규 학생 등록",
     "name": "이름",
     "birthDate": "생년월일",
-    "teacher": "담당 선생님"
+    "teacher": "담당 선생님",
+    "searchPlaceholder": "학생 이름 검색...",
+    "noStudents": "등록된 학생이 없습니다.",
+    "noSearchResults": "'{query}'에 대한 검색 결과가 없습니다.",
+    "gradeLabel": "{grade}학년",
+    "paginationInfo": "{total}명 중 {start}-{end}",
+    "totalCount": "총 {count}명"
   },
   "Language": {
     "switchLanguage": "언어 변경",

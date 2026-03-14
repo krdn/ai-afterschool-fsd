@@ -12,10 +12,10 @@ type FormData = {
 }
 
 const typeLabels: Record<string, { label: string; color: string }> = {
-  V: { label: "시각형 (Visual)", color: "bg-blue-100 text-blue-800" },
-  A: { label: "청각형 (Auditory)", color: "bg-green-100 text-green-800" },
-  R: { label: "읽기쓰기형 (Read/Write)", color: "bg-amber-100 text-amber-800" },
-  K: { label: "체험형 (Kinesthetic)", color: "bg-rose-100 text-rose-800" },
+  V: { label: "시각형 (Visual)", color: "bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300" },
+  A: { label: "청각형 (Auditory)", color: "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300" },
+  R: { label: "읽기쓰기형 (Read/Write)", color: "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300" },
+  K: { label: "체험형 (Kinesthetic)", color: "bg-rose-100 dark:bg-rose-900/40 text-rose-800 dark:text-rose-300" },
 }
 
 const scaleLabels = ["전혀 아님", "약간", "보통", "그런 편", "매우 그러함"]
@@ -93,12 +93,12 @@ export function VarkSurveyForm({ studentId, initialDraft }: {
     <FormProvider {...methods}>
       <form onSubmit={(e) => { e.preventDefault(); handleSubmit() }}>
         {/* 진행률 바 */}
-        <div className="sticky top-0 z-10 bg-white border-b pb-3 mb-6">
-          <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
+        <div className="sticky top-0 z-10 bg-card border-b pb-3 mb-6">
+          <div className="flex items-center justify-between text-sm text-muted-foreground mb-2">
             <span>응답 진행률</span>
             <span>{answeredCount}/28 ({progress}%)</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-muted rounded-full h-2">
             <div
               className="bg-teal-500 h-2 rounded-full transition-all duration-300"
               style={{ width: `${progress}%` }}
@@ -113,7 +113,7 @@ export function VarkSurveyForm({ studentId, initialDraft }: {
               <span className={`px-3 py-1 rounded-full text-sm font-medium ${typeLabels[type].color}`}>
                 {typeLabels[type].label}
               </span>
-              <span className="text-xs text-gray-500">{groupedQuestions[type]?.length ?? 0}문항</span>
+              <span className="text-xs text-muted-foreground">{groupedQuestions[type]?.length ?? 0}문항</span>
             </div>
             <div className="space-y-4">
               {(groupedQuestions[type] ?? []).map((question) => {
@@ -125,11 +125,11 @@ export function VarkSurveyForm({ studentId, initialDraft }: {
                     key={question.id}
                     id={`question-${question.id}`}
                     className={`p-4 rounded-lg border transition-colors ${
-                      isUnanswered ? "border-red-300 bg-red-50" : value !== undefined ? "border-green-200 bg-green-50/30" : "border-gray-200"
+                      isUnanswered ? "border-red-300 bg-red-50 dark:bg-red-950/30" : value !== undefined ? "border-green-200 bg-green-50 dark:bg-green-950/30/30" : "border"
                     }`}
                   >
-                    <p className="text-sm font-medium text-gray-800 mb-3">
-                      <span className="text-gray-400 mr-2">{question.id}.</span>
+                    <p className="text-sm font-medium text-foreground mb-3">
+                      <span className="text-muted-foreground mr-2">{question.id}.</span>
                       {question.text}
                     </p>
                     <div className="flex items-center gap-2 flex-wrap">
@@ -148,13 +148,13 @@ export function VarkSurveyForm({ studentId, initialDraft }: {
                           className={`px-3 py-1.5 rounded-md text-sm border transition-colors ${
                             value === score
                               ? "bg-teal-600 text-white border-teal-600"
-                              : "bg-white text-gray-600 border-gray-300 hover:border-teal-400"
+                              : "bg-card text-muted-foreground border hover:border-teal-400"
                           }`}
                         >
                           {score}
                         </button>
                       ))}
-                      <span className="text-xs text-gray-400 ml-2">
+                      <span className="text-xs text-muted-foreground ml-2">
                         {value !== undefined ? scaleLabels[value - 1] : ""}
                       </span>
                     </div>
@@ -166,7 +166,7 @@ export function VarkSurveyForm({ studentId, initialDraft }: {
         ))}
 
         {/* 제출 버튼 */}
-        <div className="sticky bottom-0 bg-white border-t pt-4 pb-2">
+        <div className="sticky bottom-0 bg-card border-t pt-4 pb-2">
           {unansweredIds.size > 0 && (
             <p className="text-sm text-red-600 mb-2">
               {unansweredIds.size}개 문항이 미응답입니다.

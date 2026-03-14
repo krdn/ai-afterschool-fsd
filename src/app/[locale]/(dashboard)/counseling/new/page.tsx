@@ -1,6 +1,7 @@
 import { verifySession } from "@/lib/dal"
 import { getRBACPrisma } from "@/lib/db/common/rbac"
 import { NewCounselingClient } from "@/components/counseling/new-counseling-client"
+import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 
 type PageProps = {
   searchParams: Promise<{
@@ -14,7 +15,7 @@ export default async function NewCounselingPage({ searchParams }: PageProps) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center py-12">
-          <p className="text-gray-500">로그인이 필요합니다</p>
+          <p className="text-muted-foreground">로그인이 필요합니다</p>
         </div>
       </div>
     )
@@ -75,10 +76,16 @@ export default async function NewCounselingPage({ searchParams }: PageProps) {
   }
 
   return (
-    <NewCounselingClient
-      students={students}
-      teacherId={session.userId}
-      editSession={editSession}
-    />
+    <div className="space-y-2">
+      <BreadcrumbNav items={[
+        { label: "상담 관리", href: "/counseling" },
+        { label: editSession ? "상담 수정" : "새 상담 기록" },
+      ]} />
+      <NewCounselingClient
+        students={students}
+        teacherId={session.userId}
+        editSession={editSession}
+      />
+    </div>
   )
 }

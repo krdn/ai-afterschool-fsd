@@ -131,12 +131,12 @@ export function ReservationList({ reservations, onRefresh, dateFilter }: Reserva
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="text-gray-400 mb-4"
+              className="text-muted-foreground mb-4"
             >
               <circle cx="11" cy="11" r="8" />
               <path d="m21 21-4.3-4.3" />
             </svg>
-            <p className="text-gray-600 text-center">검색 결과가 없습니다.</p>
+            <p className="text-muted-foreground text-center">검색 결과가 없습니다.</p>
             <Button
               variant="outline"
               size="sm"
@@ -158,14 +158,14 @@ export function ReservationList({ reservations, onRefresh, dateFilter }: Reserva
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="text-gray-400 mb-4"
+              className="text-muted-foreground mb-4"
             >
               <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
               <line x1="16" x2="16" y1="2" y2="6" />
               <line x1="8" x2="8" y1="2" y2="6" />
               <line x1="3" x2="21" y1="10" y2="10" />
             </svg>
-            <p className="text-gray-600 text-center mb-4">
+            <p className="text-muted-foreground text-center mb-4">
               예약된 상담이 없습니다.
               <br />
               새 예약을 등록해주세요.
@@ -214,7 +214,7 @@ export function ReservationList({ reservations, onRefresh, dateFilter }: Reserva
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
           >
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.3-4.3" />
@@ -237,7 +237,7 @@ export function ReservationList({ reservations, onRefresh, dateFilter }: Reserva
       </div>
 
       {/* 필터링 결과 수 */}
-      <p className="text-sm text-gray-600">
+      <p className="text-sm text-muted-foreground">
         총 {filteredReservations.length}건의 예약
       </p>
 

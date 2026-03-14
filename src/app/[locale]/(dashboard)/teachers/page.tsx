@@ -22,7 +22,7 @@ export default async function TeachersPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">선생님 관리</h1>
-          <p className="text-gray-500">
+          <p className="text-muted-foreground">
             {teachers.length > 0
               ? `총 ${teachers.length}명의 선생님이 등록되어 있어요`
               : '선생님을 등록해보세요'}

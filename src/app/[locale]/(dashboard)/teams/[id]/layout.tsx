@@ -30,7 +30,7 @@ export default async function TeamLayout({ children, params }: LayoutProps) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center py-12">
-          <p className="text-gray-500">로그인이 필요합니다</p>
+          <p className="text-muted-foreground">로그인이 필요합니다</p>
         </div>
       </div>
     )
@@ -53,7 +53,7 @@ export default async function TeamLayout({ children, params }: LayoutProps) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center py-12">
-          <p className="text-gray-500">접근 권한이 없습니다</p>
+          <p className="text-muted-foreground">접근 권한이 없습니다</p>
         </div>
       </div>
     )
@@ -77,7 +77,7 @@ export default async function TeamLayout({ children, params }: LayoutProps) {
             <Link
               key={tab.href}
               href={tab.href}
-              className="pb-4 text-sm font-medium text-gray-600 hover:text-gray-900 border-b-2 border-transparent hover:border-gray-300 data-[active=true]:border-blue-600 data-[active=true]:text-blue-600"
+              className="pb-4 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent hover:border-border data-[active=true]:border-primary data-[active=true]:text-primary"
             >
               {tab.label}
             </Link>

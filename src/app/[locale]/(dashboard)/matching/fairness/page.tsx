@@ -3,6 +3,7 @@ import { verifySession } from "@/lib/dal"
 import { listAssignmentProposals } from '@/features/matching'
 import { calculateFairnessMetrics } from "@/features/matching"
 import { FairnessMetricsPanel } from "@/components/compatibility/fairness-metrics-panel"
+import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 
 /**
  * 공정성 메트릭 대시보드 페이지
@@ -50,19 +51,23 @@ export default async function FairnessMetricsPage() {
 
   return (
     <div className="space-y-6">
+      <BreadcrumbNav items={[
+        { label: "배정 관리", href: "/matching" },
+        { label: "공정성 메트릭" },
+      ]} />
       {/* 헤더 */}
       <div>
-        <h1 className="text-3xl font-bold text-gray-900" data-testid="fairness-heading">공정성 메트릭</h1>
-        <p className="mt-2 text-gray-600">
+        <h1 className="text-3xl font-bold text-foreground" data-testid="fairness-heading">공정성 메트릭</h1>
+        <p className="mt-2 text-muted-foreground">
           알고리즘적 편향을 검증하기 위한 공정성 지표를 확인합니다.
         </p>
       </div>
 
       {/* 제안 없음 메시지 */}
       {proposals.length === 0 && (
-        <div className="rounded-lg border border-gray-200 bg-gray-50 p-8 text-center">
-          <p className="text-gray-600">아직 배정 제안이 없습니다.</p>
-          <p className="mt-2 text-sm text-gray-500">
+        <div className="rounded-lg border bg-muted p-8 text-center">
+          <p className="text-muted-foreground">아직 배정 제안이 없습니다.</p>
+          <p className="mt-2 text-sm text-muted-foreground">
             자동 배정을 실행하여 제안을 생성하면 공정성 메트릭을 확인할 수
             있습니다.
           </p>
@@ -76,41 +81,41 @@ export default async function FairnessMetricsPage() {
 
       {/* 과거 제안별 메트릭 테이블 */}
       {proposalsWithMetrics.length > 0 && (
-        <div className="rounded-lg border bg-white shadow-sm">
+        <div className="rounded-lg border bg-card shadow-sm">
           <div className="border-b px-6 py-4">
             <h2 className="text-lg font-semibold">제안별 공정성 메트릭</h2>
           </div>
           <div className="overflow-x-auto" data-testid="teacher-fairness-table">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-muted">
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="px-6 py-3 text-left text-sm font-medium text-foreground">
                     제안명
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="px-6 py-3 text-left text-sm font-medium text-foreground">
                     생성일
                   </th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">
+                  <th className="px-6 py-3 text-left text-sm font-medium text-foreground">
                     상태
                   </th>
-                  <th className="px-6 py-3 text-right text-sm font-medium text-gray-700">
+                  <th className="px-6 py-3 text-right text-sm font-medium text-foreground">
                     Disparity Index
                   </th>
-                  <th className="px-6 py-3 text-right text-sm font-medium text-gray-700">
+                  <th className="px-6 py-3 text-right text-sm font-medium text-foreground">
                     ABROCA
                   </th>
-                  <th className="px-6 py-3 text-right text-sm font-medium text-gray-700">
+                  <th className="px-6 py-3 text-right text-sm font-medium text-foreground">
                     Distribution Balance
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y">
                 {proposalsWithMetrics.map((proposal) => (
-                  <tr key={proposal.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                  <tr key={proposal.id} className="hover:bg-muted">
+                    <td className="px-6 py-4 text-sm font-medium text-foreground">
                       {proposal.name}
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">
+                    <td className="px-6 py-4 text-sm text-muted-foreground">
                       {new Date(proposal.createdAt).toLocaleDateString("ko-KR")}
                     </td>
                     <td className="px-6 py-4">
@@ -153,9 +158,9 @@ export default async function FairnessMetricsPage() {
  */
 function StatusBadge({ status }: { status: string }) {
   const styles = {
-    pending: "bg-yellow-100 text-yellow-700",
-    approved: "bg-green-100 text-green-700",
-    rejected: "bg-red-100 text-red-700",
+    pending: "bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700",
+    approved: "bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400",
+    rejected: "bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400",
   }
 
   const labels = {
@@ -166,7 +171,7 @@ function StatusBadge({ status }: { status: string }) {
 
   return (
     <span
-      className={`rounded-full px-2 py-1 text-xs font-medium ${styles[status as keyof typeof styles] || "bg-gray-100 text-gray-700"}`}
+      className={`rounded-full px-2 py-1 text-xs font-medium ${styles[status as keyof typeof styles] || "bg-muted text-foreground"}`}
     >
       {labels[status as keyof typeof labels] || status}
     </span>
@@ -190,7 +195,7 @@ function MetricValue({
     ? value < threshold * 1.5
     : value > threshold * 0.7
 
-  let colorClass = "text-gray-600"
+  let colorClass = "text-muted-foreground"
   if (isGood) {
     colorClass = "text-green-600 font-medium"
   } else if (isWarning) {

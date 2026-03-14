@@ -142,7 +142,7 @@ export function ReservationDetailDialog({
                   size="sm"
                   onClick={handleStartSession}
                   disabled={isStarting}
-                  className="bg-blue-600 text-white hover:bg-blue-700"
+                 
                 >
                   <Play className="h-4 w-4 mr-1" />
                   {isStarting ? '시작 중...' : '상담 시작'}

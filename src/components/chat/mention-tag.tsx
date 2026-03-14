@@ -56,7 +56,7 @@ export function MentionTag({ entity }: MentionTagProps) {
     }
   };
 
-  const chipColor = CHIP_COLORS[entity.type] ?? 'bg-gray-100 text-gray-800';
+  const chipColor = CHIP_COLORS[entity.type] ?? 'bg-muted text-foreground';
   const isAccessDenied = entity.accessDenied === true;
 
   const chipElement = (

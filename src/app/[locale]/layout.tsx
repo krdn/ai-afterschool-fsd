@@ -3,6 +3,7 @@ import { Geist_Mono, Noto_Sans_KR } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { Toaster } from "sonner";
+import { ThemeProvider } from "@/components/common/theme-provider";
 import "../globals.css";
 
 const notoSansKr = Noto_Sans_KR({
@@ -31,15 +32,21 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <body
         className={`${notoSansKr.variable} ${geistMono.variable} antialiased`}
-        suppressHydrationWarning
       >
-        <NextIntlClientProvider messages={messages}>
-          {children}
-          <Toaster position="top-center" richColors />
-        </NextIntlClientProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NextIntlClientProvider messages={messages}>
+            {children}
+            <Toaster position="top-center" richColors />
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

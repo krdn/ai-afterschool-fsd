@@ -94,20 +94,20 @@ export function ManualAssignmentForm({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+      <div className="bg-card rounded-lg shadow-xl max-w-md w-full">
         {/* Header */}
         <div className="border-b px-6 py-4 flex items-center justify-between">
           <div>
             <h3 className="text-lg font-semibold">학생 수동 배정</h3>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-muted-foreground">
               학생을 특정 선생님에게 직접 배정합니다.
             </p>
           </div>
           <button
             onClick={handleClose}
-            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-1 hover:bg-muted rounded-lg transition-colors"
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="w-5 h-5 text-muted-foreground" />
           </button>
         </div>
 

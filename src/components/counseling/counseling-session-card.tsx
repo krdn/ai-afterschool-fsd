@@ -22,14 +22,14 @@ export function CounselingSessionCard({ session, onClick }: CounselingSessionCar
       role="button"
       tabIndex={0}
       aria-label={`${session.student.name} 학생 ${typeLabel} 상담 기록 보기`}
-      className="border rounded-lg p-4 space-y-3 hover:bg-gray-50 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      className="border rounded-lg p-4 space-y-3 hover:bg-muted transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       onClick={onClick}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onClick?.() } }}
       data-testid="counseling-session-card"
     >
       {/* Header: Date and Type */}
       <div className="flex items-center justify-between">
-        <span className="text-sm text-gray-500">{relativeTime}</span>
+        <span className="text-sm text-muted-foreground">{relativeTime}</span>
         <span
           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${typeColor}`}
         >
@@ -41,11 +41,11 @@ export function CounselingSessionCard({ session, onClick }: CounselingSessionCar
       <div className="space-y-2">
         <div className="flex items-center gap-2 text-sm">
           <span className="font-medium">{session.teacher.name}</span>
-          <span className="text-gray-400">·</span>
-          <span className="text-gray-600">{session.duration}분</span>
+          <span className="text-muted-foreground">·</span>
+          <span className="text-muted-foreground">{session.duration}분</span>
         </div>
 
-        <div className="text-sm text-gray-700">
+        <div className="text-sm text-foreground">
           {session.summary.length > 100
             ? `${session.summary.substring(0, 100)}...`
             : session.summary}

@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation"
-import Link from "next/link"
-import { ChevronLeft } from "lucide-react"
 import { verifySession } from "@/lib/dal"
+import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { db } from "@/lib/db/client"
 import { VarkSurveyForm } from "@/components/vark/survey-form"
 
@@ -45,22 +44,18 @@ export default async function VarkSurveyPage({
 
   return (
     <div className="max-w-3xl mx-auto">
-      <div className="mb-6">
-        <Link
-          href={`/students/${student.id}`}
-          className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900"
-        >
-          <ChevronLeft className="w-4 h-4 mr-1" />
-          {student.name} 프로필로 돌아가기
-        </Link>
-      </div>
+      <BreadcrumbNav items={[
+        { label: "학생 목록", href: "/students" },
+        { label: student.name, href: `/students/${student.id}` },
+        { label: "VARK 검사" },
+      ]} />
 
-      <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+      <div className="bg-card rounded-lg shadow-sm p-6 mb-6">
         <h1 className="text-2xl font-bold mb-2">VARK 학습유형 검사</h1>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           {student.name} 학생의 학습 유형을 검사합니다. 28개 문항에 답변해 주세요.
         </p>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-muted-foreground mt-1">
           각 문항에 대해 자신에게 얼마나 해당되는지 1(전혀 아님)~5(매우 그러함)로 답해주세요.
         </p>
         {existingAnalysis && (
@@ -70,7 +65,7 @@ export default async function VarkSurveyPage({
         )}
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="bg-card rounded-lg shadow-sm p-6">
         <VarkSurveyForm studentId={student.id} initialDraft={initialResponses} />
       </div>
     </div>

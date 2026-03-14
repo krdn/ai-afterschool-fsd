@@ -39,7 +39,7 @@ export function ProviderSelector({
 
   return (
     <div className="flex items-center gap-2">
-      <label className="text-sm text-gray-600 whitespace-nowrap">분석 엔진:</label>
+      <label className="text-sm text-muted-foreground whitespace-nowrap">분석 엔진:</label>
       <Select value={selectedProvider} onValueChange={onProviderChange} disabled={disabled}>
         <SelectTrigger className="w-[200px] h-9">
           <SelectValue />

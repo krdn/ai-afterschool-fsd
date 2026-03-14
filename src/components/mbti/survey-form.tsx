@@ -145,7 +145,7 @@ export function MbtiSurveyForm({ studentId, initialDraft }: {
       <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-8">
         <ProgressIndicator responses={methods.watch("responses")} total={60} />
 
-        <div className="text-sm text-gray-600 bg-blue-50 p-4 rounded-lg">
+        <div className="text-sm text-muted-foreground bg-primary/5 p-4 rounded-lg">
           <p className="font-medium mb-1">키보드 단축키</p>
           <p>문항에 포커스된 상태에서 1~5 키를 눌러 빠르게 응답할 수 있습니다.</p>
         </div>
@@ -160,15 +160,15 @@ export function MbtiSurveyForm({ studentId, initialDraft }: {
           />
         ))}
 
-        <div className="sticky bottom-0 bg-white border-t py-4">
+        <div className="sticky bottom-0 bg-card border-t py-4">
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-3 bg-primary text-primary-foreground rounded-lg font-medium hover:bg-primary/90 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? "제출 중..." : "설문 제출"}
           </button>
-          <p className="text-sm text-gray-500 text-center mt-2">
+          <p className="text-sm text-muted-foreground text-center mt-2">
             응답은 자동으로 저장됩니다.
           </p>
         </div>

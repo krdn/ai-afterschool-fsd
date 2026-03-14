@@ -1,31 +1,88 @@
-import { getCurrentTeacher } from '@/lib/dal';
-import { db } from '@/lib/db/client';
+import { verifySession } from '@/lib/dal';
+import { getRBACPrisma } from '@/lib/db/common/rbac';
 import GradeDashboard from '@/components/grades/grade-dashboard';
+import { normalizePaginationParams, getPrismaSkipTake } from '@/shared/utils/pagination';
+import type { Prisma } from '@/lib/db';
 
-export default async function GradesPage() {
-  const teacher = await getCurrentTeacher();
+type PageProps = {
+  searchParams: Promise<{
+    query?: string;
+    page?: string;
+  }>;
+};
 
-  const students = await db.student.findMany({
-    where:
-      teacher.role === 'DIRECTOR'
-        ? {}
-        : teacher.role === 'TEAM_LEADER' || teacher.role === 'MANAGER'
-          ? { teamId: teacher.teamId }
-          : { teacherId: teacher.id },
-    select: {
-      id: true,
-      name: true,
-      school: true,
-      grade: true,
-      _count: {
-        select: {
-          gradeHistory: true,
-          mockExamResults: true,
-        },
-      },
-    },
-    orderBy: { name: 'asc' },
+export default async function GradesPage({ searchParams }: PageProps) {
+  const session = await verifySession();
+  const rbacDb = getRBACPrisma(session);
+  const params = await searchParams;
+
+  // 검색 조건
+  const where: Prisma.StudentWhereInput = {};
+  if (params.query && params.query.trim()) {
+    const query = params.query.trim();
+    where.OR = [
+      { name: { contains: query, mode: 'insensitive' } },
+      { school: { contains: query, mode: 'insensitive' } },
+    ];
+  }
+
+  // 페이지네이션
+  const paginationParams = normalizePaginationParams({
+    page: params.page ? parseInt(params.page, 10) : 1,
+    pageSize: 20,
   });
+  const { skip, take } = getPrismaSkipTake(paginationParams);
 
-  return <GradeDashboard students={students} teacherRole={teacher.role} />;
+  // 병렬 조회: 학생 목록 + 전체 카운트 + 통계 (RBAC 자동 적용)
+  const [students, totalCount, totalGradeHistory, totalMockExams] =
+    await Promise.all([
+      rbacDb.student.findMany({
+        where,
+        select: {
+          id: true,
+          name: true,
+          school: true,
+          grade: true,
+          _count: {
+            select: {
+              gradeHistory: true,
+              mockExamResults: true,
+            },
+          },
+        },
+        orderBy: { name: 'asc' },
+        skip,
+        take,
+      }),
+      rbacDb.student.count({ where }),
+      rbacDb.gradeHistory.count(),
+      rbacDb.mockExamResult.count(),
+    ]);
+
+  // 전체 학생 수 (통계용 - 필터 무관)
+  const totalStudents =
+    params.query && params.query.trim()
+      ? await rbacDb.student.count()
+      : totalCount;
+
+  const totalPages = Math.ceil(totalCount / paginationParams.pageSize);
+
+  return (
+    <GradeDashboard
+      students={students}
+      teacherRole={session.role || 'TEACHER'}
+      searchQuery={params.query || ''}
+      stats={{
+        totalStudents,
+        totalGradeHistory,
+        totalMockExams,
+      }}
+      pagination={{
+        page: paginationParams.page,
+        totalPages,
+        total: totalCount,
+        pageSize: paginationParams.pageSize,
+      }}
+    />
+  );
 }

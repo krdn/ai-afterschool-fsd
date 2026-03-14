@@ -47,7 +47,7 @@ export function PromptSelector({
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2">
-        <label className="text-sm text-gray-600 whitespace-nowrap">프롬프트:</label>
+        <label className="text-sm text-muted-foreground whitespace-nowrap">프롬프트:</label>
         <Select
           value={selectedPromptId}
           onValueChange={onPromptChange}
@@ -73,7 +73,7 @@ export function PromptSelector({
             onClick={() => setPreviewOpen(true)}
             disabled={disabled}
           >
-            <Info className="h-4 w-4 text-gray-500" />
+            <Info className="h-4 w-4 text-muted-foreground" />
           </Button>
         )}
         <PromptPreviewDialog
@@ -84,19 +84,19 @@ export function PromptSelector({
       </div>
 
       {showInfoCard && selectedMeta && selectedMeta.id !== "default" && (
-        <div className="rounded-md border border-purple-100 bg-purple-50/50 px-3 py-2 text-xs space-y-1">
+        <div className="rounded-md border border-purple-100 bg-purple-50 dark:bg-purple-950/30/50 px-3 py-2 text-xs space-y-1">
           <div className="flex items-center gap-2">
-            <span className="font-medium text-purple-700">{selectedMeta.name}</span>
+            <span className="font-medium text-purple-700 dark:text-purple-400">{selectedMeta.name}</span>
             <div className="flex gap-1">
               {selectedMeta.tags.slice(0, 3).map((tag) => (
-                <Badge key={tag} variant="outline" className="text-[10px] px-1 py-0 border-purple-200 text-purple-600">
+                <Badge key={tag} variant="outline" className="text-[10px] px-1 py-0 border-purple-200 dark:border-purple-800 text-purple-600">
                   {tag}
                 </Badge>
               ))}
             </div>
           </div>
-          <p className="text-gray-600">{selectedMeta.shortDescription}</p>
-          <div className="flex gap-4 text-gray-500">
+          <p className="text-muted-foreground">{selectedMeta.shortDescription}</p>
+          <div className="flex gap-4 text-muted-foreground">
             <span>대상: {selectedMeta.target}</span>
             <span>추천: {selectedMeta.recommendedTiming}</span>
           </div>

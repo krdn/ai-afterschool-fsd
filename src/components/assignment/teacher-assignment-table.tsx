@@ -72,11 +72,11 @@ const getRoleLabel = (role: string): string => {
 const getRoleBadgeClass = (role: string): string => {
   switch (role) {
     case 'TEAM_LEADER':
-      return 'bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium'
+      return 'bg-blue-100 text-blue-800 dark:text-blue-300 px-2 py-1 rounded-full text-xs font-medium'
     case 'MANAGER':
-      return 'bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium'
+      return 'bg-purple-100 text-purple-800 dark:text-purple-300 px-2 py-1 rounded-full text-xs font-medium'
     default:
-      return 'bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs font-medium'
+      return 'bg-muted text-foreground px-2 py-1 rounded-full text-xs font-medium'
   }
 }
 
@@ -187,7 +187,7 @@ export function TeacherAssignmentTable({ teachers }: TeacherAssignmentTableProps
       }),
       columnHelper.accessor('email', {
         header: '이메일',
-        cell: (info) => <span className="text-gray-500">{info.getValue()}</span>,
+        cell: (info) => <span className="text-muted-foreground">{info.getValue()}</span>,
       }),
     ],
     [expandedRows]
@@ -231,7 +231,7 @@ export function TeacherAssignmentTable({ teachers }: TeacherAssignmentTableProps
         />
       </div>
 
-      <div className="rounded-md border bg-white">
+      <div className="rounded-md border bg-card">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -265,14 +265,14 @@ export function TeacherAssignmentTable({ teachers }: TeacherAssignmentTableProps
                   </TableRow>
                   {expandedRows.has(row.original.id) && row.original.students.length > 0 && (
                     <TableRow>
-                      <TableCell colSpan={columns.length} className="bg-gray-50">
+                      <TableCell colSpan={columns.length} className="bg-muted">
                         <div className="py-2">
                           <p className="text-sm font-medium mb-2">담당 학생 목록:</p>
                           <div className="space-y-1">
                             {row.original.students.map((student) => (
                               <div
                                 key={student.id}
-                                className="flex items-center justify-between py-1 px-2 rounded hover:bg-gray-100"
+                                className="flex items-center justify-between py-1 px-2 rounded hover:bg-muted"
                               >
                                 <Link
                                   href={`/students/${student.id}`}
@@ -281,13 +281,13 @@ export function TeacherAssignmentTable({ teachers }: TeacherAssignmentTableProps
                                   {student.name}
                                 </Link>
                                 <div className="flex items-center gap-3">
-                                  <span className="text-sm text-gray-500">
+                                  <span className="text-sm text-muted-foreground">
                                     {student.school} {student.grade}학년
                                   </span>
                                   <button
                                     onClick={() => handleUnassignClick(student.id, student.name)}
                                     disabled={unassigningId === student.id}
-                                    className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 disabled:opacity-50"
+                                    className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 dark:text-red-400 disabled:opacity-50"
                                     title="배정 해제"
                                   >
                                     <UserMinus className="h-3.5 w-3.5" />
@@ -303,8 +303,8 @@ export function TeacherAssignmentTable({ teachers }: TeacherAssignmentTableProps
                   )}
                   {expandedRows.has(row.original.id) && row.original.students.length === 0 && (
                     <TableRow>
-                      <TableCell colSpan={columns.length} className="bg-gray-50">
-                        <p className="text-sm text-gray-500 py-2">담당 학생이 없습니다.</p>
+                      <TableCell colSpan={columns.length} className="bg-muted">
+                        <p className="text-sm text-muted-foreground py-2">담당 학생이 없습니다.</p>
                       </TableCell>
                     </TableRow>
                   )}
@@ -322,7 +322,7 @@ export function TeacherAssignmentTable({ teachers }: TeacherAssignmentTableProps
       </div>
 
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted-foreground">
           총 {totalCount}명 중 {start}-{end}명 표시
         </p>
         <div className="flex items-center space-x-2">

@@ -12,15 +12,15 @@ interface LogsTabProps {
 function getLevelColor(level: string): string {
   switch (level) {
     case 'ERROR':
-      return 'bg-red-100 text-red-800'
+      return 'bg-red-100 text-red-800 dark:text-red-300'
     case 'WARN':
-      return 'bg-yellow-100 text-yellow-800'
+      return 'bg-yellow-100 text-yellow-800 dark:text-yellow-300'
     case 'INFO':
-      return 'bg-blue-100 text-blue-800'
+      return 'bg-blue-100 text-blue-800 dark:text-blue-300'
     case 'DEBUG':
-      return 'bg-gray-100 text-gray-800'
+      return 'bg-muted text-foreground'
     default:
-      return 'bg-gray-100 text-gray-800'
+      return 'bg-muted text-foreground'
   }
 }
 
@@ -45,28 +45,28 @@ export function LogsTab({ initialLevel = 'ALL', initialPage = 1 }: LogsTabProps)
       <div className="flex gap-2" data-testid="log-level-filter">
         <button
           onClick={() => { setLevel('ALL'); setPage(1) }}
-          className={`px-3 py-1 rounded ${level === 'ALL' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+          className={`px-3 py-1 rounded ${level === 'ALL' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}
           data-testid="filter-all"
         >
           전체
         </button>
         <button
           onClick={() => { setLevel('ERROR'); setPage(1) }}
-          className={`px-3 py-1 rounded ${level === 'ERROR' ? 'bg-red-600 text-white' : 'bg-gray-200'}`}
+          className={`px-3 py-1 rounded ${level === 'ERROR' ? 'bg-red-600 text-white' : 'bg-muted'}`}
           data-testid="filter-error"
         >
           ERROR
         </button>
         <button
           onClick={() => { setLevel('WARN'); setPage(1) }}
-          className={`px-3 py-1 rounded ${level === 'WARN' ? 'bg-yellow-600 text-white' : 'bg-gray-200'}`}
+          className={`px-3 py-1 rounded ${level === 'WARN' ? 'bg-yellow-600 text-white' : 'bg-muted'}`}
           data-testid="filter-warn"
         >
           WARN
         </button>
         <button
           onClick={() => { setLevel('INFO'); setPage(1) }}
-          className={`px-3 py-1 rounded ${level === 'INFO' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+          className={`px-3 py-1 rounded ${level === 'INFO' ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}
           data-testid="filter-info"
         >
           INFO
@@ -75,7 +75,7 @@ export function LogsTab({ initialLevel = 'ALL', initialPage = 1 }: LogsTabProps)
 
       {/* 로그 테이블 */}
       {logs.length === 0 ? (
-        <div className="text-center py-12 text-gray-500" data-testid="no-logs">
+        <div className="text-center py-12 text-muted-foreground" data-testid="no-logs">
           로그가 없습니다.
         </div>
       ) : (
@@ -106,7 +106,7 @@ export function LogsTab({ initialLevel = 'ALL', initialPage = 1 }: LogsTabProps)
                     <TableCell data-testid="log-message">
                       {log.message}
                       {log.context && (
-                        <pre className="mt-1 text-xs text-gray-500 overflow-auto">
+                        <pre className="mt-1 text-xs text-muted-foreground overflow-auto">
                           {JSON.stringify(log.context, null, 2)}
                         </pre>
                       )}

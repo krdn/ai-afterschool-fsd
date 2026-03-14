@@ -16,7 +16,7 @@ const getScoreColor = (score: number) => {
   if (score >= 80) return "text-green-600"
   if (score >= 60) return "text-blue-600"
   if (score >= 40) return "text-yellow-600"
-  return "text-gray-600"
+  return "text-muted-foreground"
 }
 
 const getScoreLabel = (score: number) => {
@@ -27,10 +27,10 @@ const getScoreLabel = (score: number) => {
 }
 
 const getScoreBgColor = (score: number) => {
-  if (score >= 80) return "bg-green-50 border-green-200"
-  if (score >= 60) return "bg-blue-50 border-blue-200"
-  if (score >= 40) return "bg-yellow-50 border-yellow-200"
-  return "bg-gray-50 border-gray-200"
+  if (score >= 80) return "bg-green-50 dark:bg-green-950/30 border-green-200"
+  if (score >= 60) return "bg-blue-50 dark:bg-blue-950/30 border-blue-200"
+  if (score >= 40) return "bg-yellow-50 dark:bg-yellow-950/30 border-yellow-200"
+  return "bg-muted border"
 }
 
 const getRoleLabel = (role: string) => {
@@ -80,7 +80,7 @@ export default function MatchingTab({ studentId, studentName, currentTeacherId }
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-gray-500">
+      <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
         <Loader2 className="h-8 w-8 animate-spin mb-3" />
         <p className="text-sm">매칭 궁합 데이터를 불러오고 있습니다...</p>
       </div>
@@ -105,18 +105,18 @@ export default function MatchingTab({ studentId, studentName, currentTeacherId }
     return (
       <div data-testid="matching-tab-content" className="space-y-6">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-100 rounded-lg">
+          <div className="p-2 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
             <Users className="w-5 h-5 text-blue-600" />
           </div>
           <div>
             <h3 className="text-lg font-bold">선생님 매칭 궁합</h3>
-            <p className="text-sm text-gray-500">담당 선생님과의 매칭 점수 및 상세 분석을 표시합니다.</p>
+            <p className="text-sm text-muted-foreground">담당 선생님과의 매칭 점수 및 상세 분석을 표시합니다.</p>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center py-12 rounded-lg border border-dashed border-gray-300 bg-gray-50">
-          <Users className="h-10 w-10 text-gray-300 mb-3" />
-          <p className="text-sm text-gray-500 mb-1">아직 배정된 선생님이 없습니다.</p>
-          <p className="text-xs text-gray-400 mb-4">
+        <div className="flex flex-col items-center justify-center py-12 rounded-lg border border-dashed border bg-muted">
+          <Users className="h-10 w-10 text-muted-foreground mb-3" />
+          <p className="text-sm text-muted-foreground mb-1">아직 배정된 선생님이 없습니다.</p>
+          <p className="text-xs text-muted-foreground mb-4">
             배정 관리에서 스마트 배정을 통해 선생님을 배정하면 궁합 분석 결과가 여기에 표시됩니다.
           </p>
           <Link href="/matching">
@@ -134,12 +134,12 @@ export default function MatchingTab({ studentId, studentName, currentTeacherId }
       {/* 헤더 */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-100 rounded-lg">
+          <div className="p-2 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
             <Users className="w-5 h-5 text-blue-600" />
           </div>
           <div>
             <h3 className="text-lg font-bold">선생님 매칭 궁합</h3>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-muted-foreground">
               {studentName} 학생과 {data.teacherName} 선생님의 궁합 분석 결과입니다.
             </p>
           </div>
@@ -154,17 +154,17 @@ export default function MatchingTab({ studentId, studentName, currentTeacherId }
       <div className={`rounded-lg border p-6 ${getScoreBgColor(data.overallScore)}`}>
         <div className="flex items-center gap-3 mb-4">
           <h4 className="text-lg font-semibold">{data.teacherName}</h4>
-          <span className="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700">
+          <span className="rounded-full bg-muted px-2 py-1 text-xs font-medium text-foreground">
             {getRoleLabel(data.teacherRole)}
           </span>
-          <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700">
+          <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700 dark:text-blue-400">
             현재 배정
           </span>
         </div>
 
         <div className="flex items-baseline gap-2 mb-6">
           <span className="text-4xl font-bold">{data.overallScore.toFixed(1)}</span>
-          <span className="text-sm text-gray-500">/ 100점</span>
+          <span className="text-sm text-muted-foreground">/ 100점</span>
           <span className={`text-sm font-medium ${getScoreColor(data.overallScore)}`}>
             {getScoreLabel(data.overallScore)}
           </span>
@@ -172,7 +172,7 @@ export default function MatchingTab({ studentId, studentName, currentTeacherId }
 
         {/* 세부 점수 - 프로그레스 바 */}
         <div className="space-y-3">
-          <h5 className="text-sm font-semibold text-gray-700">세부 점수</h5>
+          <h5 className="text-sm font-semibold text-foreground">세부 점수</h5>
           <div className="grid gap-3">
             {breakdownItems.map((item) => {
               const score = data.breakdown[item.key]
@@ -181,21 +181,21 @@ export default function MatchingTab({ studentId, studentName, currentTeacherId }
 
               return (
                 <div key={item.key} className="flex items-center gap-3">
-                  <span className="text-sm text-gray-600 w-20 shrink-0">{item.label}</span>
-                  <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <span className="text-sm text-muted-foreground w-20 shrink-0">{item.label}</span>
+                  <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all ${
-                        percent >= 80 ? "bg-green-500"
-                          : percent >= 60 ? "bg-blue-500"
-                          : percent >= 40 ? "bg-yellow-500"
-                          : "bg-gray-400"
+                        percent >= 80 ? "bg-green-50 dark:bg-green-950/30"
+                          : percent >= 60 ? "bg-blue-50 dark:bg-blue-950/30"
+                          : percent >= 40 ? "bg-yellow-50 dark:bg-yellow-950/30"
+                          : "bg-muted-foreground"
                       }`}
                       style={{ width: `${percent}%` }}
                     />
                   </div>
                   <span className="text-sm font-semibold w-16 text-right shrink-0">
                     {isZero ? (
-                      <span className="text-gray-400 text-xs font-normal">미분석</span>
+                      <span className="text-muted-foreground text-xs font-normal">미분석</span>
                     ) : (
                       `${score.toFixed(1)} / ${item.max}`
                     )}
@@ -209,11 +209,11 @@ export default function MatchingTab({ studentId, studentName, currentTeacherId }
 
       {/* 추천 이유 */}
       {data.reasons.length > 0 && (
-        <div className="rounded-lg border border-gray-200 bg-white p-5">
-          <h4 className="text-sm font-semibold text-gray-700 mb-3">매칭 분석 요약</h4>
+        <div className="rounded-lg border border bg-card p-5">
+          <h4 className="text-sm font-semibold text-foreground mb-3">매칭 분석 요약</h4>
           <ul className="space-y-2">
             {data.reasons.map((reason, idx) => (
-              <li key={idx} className="flex items-start gap-2 text-sm text-gray-600">
+              <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
                 <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-blue-400 shrink-0" />
                 {reason}
               </li>
@@ -223,11 +223,11 @@ export default function MatchingTab({ studentId, studentName, currentTeacherId }
       )}
 
       {/* 분석 시점 + 다른 선생님 추천 링크 */}
-      <div className="flex items-center justify-between text-xs text-gray-400">
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
         <span>분석 시점: {new Date(data.calculatedAt).toLocaleString("ko-KR")}</span>
         <Link
           href={`/students/${studentId}/matching`}
-          className="text-blue-500 hover:text-blue-600 hover:underline"
+          className="text-primary hover:text-primary/80 hover:underline"
         >
           다른 선생님 추천 보기
         </Link>

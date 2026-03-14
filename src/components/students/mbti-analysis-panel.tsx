@@ -97,10 +97,10 @@ export function MbtiAnalysisPanel({ studentId, studentName, analysis, enabledPro
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-card rounded-lg shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-purple-100 rounded-lg">
+          <div className="p-2 bg-purple-100 dark:bg-purple-900/40 rounded-lg">
             <Brain className="w-5 h-5 text-purple-600" />
           </div>
           <h2 data-testid="mbti-tab" className="text-lg font-semibold">MBTI 성향 분석</h2>
@@ -110,7 +110,7 @@ export function MbtiAnalysisPanel({ studentId, studentName, analysis, enabledPro
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowDirectInput(true)}
-              className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 px-2 py-1 hover:bg-gray-100 rounded-lg transition-colors"
+              className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground px-2 py-1 hover:bg-muted rounded-lg transition-colors"
               title="MBTI 유형 직접 입력"
             >
               <Edit3 className="w-4 h-4" />
@@ -118,7 +118,7 @@ export function MbtiAnalysisPanel({ studentId, studentName, analysis, enabledPro
             </button>
             <Link
               href={`/students/${studentId}/mbti`}
-              className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 px-2 py-1 hover:bg-gray-100 rounded-lg transition-colors"
+              className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground px-2 py-1 hover:bg-muted rounded-lg transition-colors"
               title="설문 재검사"
             >
               <Pencil className="w-4 h-4" />
@@ -180,7 +180,7 @@ export function MbtiAnalysisPanel({ studentId, studentName, analysis, enabledPro
             <div className="flex gap-3 justify-center">
               <button
                 onClick={() => setShowDirectInput(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 border border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 border border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 dark:bg-purple-950/30 transition-colors"
               >
                 <Edit3 className="w-4 h-4" />
                 직접 입력

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Trash2, TrendingUp, BookOpen } from "lucide-react";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import {
     Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
@@ -36,6 +37,7 @@ interface Grade {
 export default function LearningTab({ studentId }: { studentId: string }) {
     const [grades, setGrades] = useState<Grade[]>([]);
     const [open, setOpen] = useState(false);
+    const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
 
     // 데이터 로드
     const loadGrades = async () => {
@@ -66,15 +68,16 @@ export default function LearningTab({ studentId }: { studentId: string }) {
     };
 
     // 성적 삭제 핸들러
-    const handleDelete = async (id: string) => {
-        if (!confirm("정말 삭제하시겠습니까?")) return;
-        const result = await deleteGrade(id, studentId);
+    const handleDelete = async () => {
+        if (!deleteTarget) return;
+        const result = await deleteGrade(deleteTarget, studentId);
         if (result.success) {
             toast.success("삭제되었습니다.");
             loadGrades();
         } else {
             toast.error("삭제 실패");
         }
+        setDeleteTarget(null);
     };
 
     // 차트 데이터 가공 (날짜별 과목 점수)
@@ -128,7 +131,7 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                             </LineChart>
                         </ResponsiveContainer>
                     ) : (
-                        <div className="flex flex-col items-center justify-center h-full text-gray-400">
+                        <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
                             <p>입력된 성적 데이터가 없습니다.</p>
                         </div>
                     )}
@@ -148,7 +151,7 @@ export default function LearningTab({ studentId }: { studentId: string }) {
 
                     <Dialog open={open} onOpenChange={setOpen}>
                         <DialogTrigger asChild>
-                            <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                            <Button size="sm">
                                 <Plus className="w-4 h-4 mr-1" />
                                 성적 추가
                             </Button>
@@ -162,15 +165,15 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                                     </DialogDescription>
                                 </DialogHeader>
                                 <div className="grid gap-4 py-4">
-                                    <div className="grid grid-cols-4 items-center gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
                                         <Label htmlFor="subject" className="text-right">과목</Label>
                                         <Input id="subject" name="subject" placeholder="예: 수학" className="col-span-3" required />
                                     </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
                                         <Label htmlFor="score" className="text-right">점수</Label>
                                         <Input id="score" name="score" type="number" min="0" max="100" className="col-span-3" required />
                                     </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
                                         <Label htmlFor="gradeType" className="text-right">유형</Label>
                                         <Select name="gradeType" defaultValue="MIDTERM">
                                             <SelectTrigger className="col-span-3">
@@ -184,11 +187,11 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                                             </SelectContent>
                                         </Select>
                                     </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
                                         <Label htmlFor="testDate" className="text-right">날짜</Label>
                                         <Input id="testDate" name="testDate" type="date" defaultValue={new Date().toISOString().split('T')[0]} className="col-span-3" required />
                                     </div>
-                                    <div className="grid grid-cols-4 items-center gap-4">
+                                    <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
                                         <Label htmlFor="semester" className="text-right">학기</Label>
                                         <Select name="semester" defaultValue="1">
                                             <SelectTrigger className="col-span-3">
@@ -209,6 +212,7 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                     </Dialog>
                 </CardHeader>
                 <CardContent>
+                  <div className="overflow-x-auto">
                     <Table>
                         <TableHeader>
                             <TableRow>
@@ -222,7 +226,7 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                         <TableBody>
                             {grades.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="text-center py-8 text-gray-500">
+                                    <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                                         데이터가 없습니다.
                                     </TableCell>
                                 </TableRow>
@@ -237,10 +241,10 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                                         </TableCell>
                                         <TableCell className="font-medium">{grade.subject}</TableCell>
                                         <TableCell>
-                                            <span className={`inline-flex items-center px-2 py-1 rounded-md text-sm font-bold ${grade.score >= 90 ? 'bg-green-100 text-green-700' :
-                                                    grade.score >= 80 ? 'bg-blue-100 text-blue-700' :
-                                                        grade.score >= 70 ? 'bg-yellow-100 text-yellow-700' :
-                                                            'bg-red-100 text-red-700'
+                                            <span className={`inline-flex items-center px-2 py-1 rounded-md text-sm font-bold ${grade.score >= 90 ? 'bg-green-100 text-green-700 dark:text-green-400' :
+                                                    grade.score >= 80 ? 'bg-blue-100 text-blue-700 dark:text-blue-400' :
+                                                        grade.score >= 70 ? 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700' :
+                                                            'bg-red-100 text-red-700 dark:text-red-400'
                                                 }`}>
                                                 {grade.score}점
                                             </span>
@@ -249,8 +253,8 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
-                                                onClick={() => handleDelete(grade.id)}
+                                                className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50 dark:bg-red-950/30"
+                                                onClick={() => setDeleteTarget(grade.id)}
                                             >
                                                 <Trash2 className="w-4 h-4" />
                                             </Button>
@@ -260,8 +264,18 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                             )}
                         </TableBody>
                     </Table>
+                  </div>
                 </CardContent>
             </Card>
+
+            <ConfirmDialog
+                open={!!deleteTarget}
+                onOpenChange={(open) => !open && setDeleteTarget(null)}
+                title="성적 삭제"
+                description="이 성적 기록을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다."
+                confirmLabel="삭제"
+                onConfirm={handleDelete}
+            />
         </div>
     );
 }

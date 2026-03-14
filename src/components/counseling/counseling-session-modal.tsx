@@ -56,7 +56,7 @@ export function CounselingSessionModal({ session, open, onOpenChange }: Counseli
           {/* Summary */}
           <div>
             <span className="text-sm font-medium">상담 내용:</span>
-            <p className="mt-2 text-sm text-gray-700 whitespace-pre-wrap">{session.summary}</p>
+            <p className="mt-2 text-sm text-foreground whitespace-pre-wrap">{session.summary}</p>
           </div>
 
           {/* Follow-up */}
@@ -79,7 +79,7 @@ export function CounselingSessionModal({ session, open, onOpenChange }: Counseli
                 {[...Array(5)].map((_, i) => (
                   <svg
                     key={i}
-                    className={`w-4 h-4 ${i < (session.satisfactionScore ?? 0) ? "text-yellow-500 fill-yellow-500" : "text-gray-300"}`}
+                    className={`w-4 h-4 ${i < (session.satisfactionScore ?? 0) ? "text-yellow-500 fill-yellow-500" : "text-muted-foreground"}`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill={i < (session.satisfactionScore ?? 0) ? "currentColor" : "none"}
@@ -90,7 +90,7 @@ export function CounselingSessionModal({ session, open, onOpenChange }: Counseli
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                   </svg>
                 ))}
-                <span className="text-sm text-gray-600 ml-1">{session.satisfactionScore} / 5</span>
+                <span className="text-sm text-muted-foreground ml-1">{session.satisfactionScore} / 5</span>
               </div>
             </div>
           )}

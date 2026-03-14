@@ -108,7 +108,7 @@ export function ReservationCard({
         <CardContent className="p-4">
           {/* Header: Date/Time + Status Badge */}
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-muted-foreground">
               {format(new Date(reservation.scheduledAt), "M월 d일 E요일 HH:mm", { locale: ko })}
             </span>
             <Badge variant={statusVariant}>{statusLabel}</Badge>
@@ -118,10 +118,10 @@ export function ReservationCard({
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm">
               <span className="font-medium">{reservation.student.name}</span>
-              <span className="text-gray-400">·</span>
-              <span className="text-gray-600">{getParentRelationLabel(reservation.parent.relation)}</span>
+              <span className="text-muted-foreground">·</span>
+              <span className="text-muted-foreground">{getParentRelationLabel(reservation.parent.relation)}</span>
             </div>
-            <div className="text-sm text-gray-700">{reservation.topic}</div>
+            <div className="text-sm text-foreground">{reservation.topic}</div>
           </div>
 
           {/* Footer: Action Buttons (SCHEDULED only) */}
@@ -133,7 +133,7 @@ export function ReservationCard({
                 size="sm"
                 onClick={() => onEditClick?.(reservation.id)}
                 disabled={isProcessing}
-                className="flex-1 bg-blue-50 text-blue-700 hover:bg-blue-100 border-blue-200"
+                className="flex-1 bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-950/50 border-blue-200 dark:border-blue-800"
               >
                 수정
               </Button>
@@ -143,7 +143,7 @@ export function ReservationCard({
                 size="sm"
                 onClick={() => onRecordClick?.(reservation.id)}
                 disabled={isProcessing}
-                className="flex-1 bg-green-50 text-green-700 hover:bg-green-100 border-green-200"
+                className="flex-1 bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-950/50 border-green-200 dark:border-green-800"
               >
                 완료
               </Button>
@@ -153,7 +153,7 @@ export function ReservationCard({
                 size="sm"
                 onClick={() => openDialog("cancel")}
                 disabled={isProcessing}
-                className="flex-1 bg-gray-50 text-gray-700 hover:bg-gray-100 border-gray-200"
+                className="flex-1 bg-muted text-foreground hover:bg-muted border"
               >
                 취소
               </Button>
@@ -163,7 +163,7 @@ export function ReservationCard({
                 size="sm"
                 onClick={() => openDialog("noShow")}
                 disabled={isProcessing}
-                className="flex-1 bg-orange-50 text-orange-700 hover:bg-orange-100 border-orange-200"
+                className="flex-1 bg-orange-50 dark:bg-orange-950/30 text-orange-700 hover:bg-orange-100 border-orange-200"
               >
                 노쇼
               </Button>
@@ -187,7 +187,7 @@ export function ReservationCard({
                 size="sm"
                 onClick={() => openDialog("delete")}
                 disabled={isProcessing}
-                className="bg-red-50 text-red-700 hover:bg-red-100 border-red-200"
+                className="bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-950/50 border-red-200 dark:border-red-800"
               >
                 제거
               </Button>
@@ -203,7 +203,7 @@ export function ReservationCard({
                 size="sm"
                 onClick={() => openDialog("delete")}
                 disabled={isProcessing}
-                className="bg-red-50 text-red-700 hover:bg-red-100 border-red-200"
+                className="bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-950/50 border-red-200 dark:border-red-800"
               >
                 제거
               </Button>

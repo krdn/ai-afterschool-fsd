@@ -27,7 +27,7 @@ export function LearningStrategyRetryButton({ studentId }: Props) {
     <button
       onClick={handleClick}
       disabled={isPending}
-      className="inline-flex items-center gap-2 px-4 py-2 border border-red-600 text-red-600 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+      className="inline-flex items-center gap-2 px-4 py-2 border border-red-600 text-red-600 rounded-lg hover:bg-red-50 dark:bg-red-950/30 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
     >
       {isPending ? "처리 중..." : "다시 시도"}
     </button>

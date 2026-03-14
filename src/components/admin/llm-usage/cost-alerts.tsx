@@ -146,8 +146,8 @@ export function CostAlerts({ initialData }: CostAlertsProps) {
             onClick={() => setDateRange("7d")}
             className={`px-3 py-1 text-sm rounded ${
               dateRange === "7d"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-muted"
             }`}
           >
             7일
@@ -157,8 +157,8 @@ export function CostAlerts({ initialData }: CostAlertsProps) {
             onClick={() => setDateRange("30d")}
             className={`px-3 py-1 text-sm rounded ${
               dateRange === "30d"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-muted"
             }`}
           >
             30일
@@ -168,8 +168,8 @@ export function CostAlerts({ initialData }: CostAlertsProps) {
             onClick={() => setDateRange("90d")}
             className={`px-3 py-1 text-sm rounded ${
               dateRange === "90d"
-                ? "bg-blue-600 text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted text-muted-foreground hover:bg-muted"
             }`}
           >
             90일
@@ -199,9 +199,9 @@ function BudgetCard({ status }: { status: BudgetStatus }) {
   };
 
   const getProgressColor = () => {
-    if (isOverBudget) return "bg-red-500";
-    if (percentUsed >= 80) return "bg-amber-500";
-    return "bg-green-500";
+    if (isOverBudget) return "bg-red-50 dark:bg-red-950/30";
+    if (percentUsed >= 80) return "bg-amber-50 dark:bg-amber-950/30";
+    return "bg-green-50 dark:bg-green-950/30";
   };
 
   const getStatusIcon = () => {

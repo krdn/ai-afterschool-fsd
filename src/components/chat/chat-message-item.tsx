@@ -53,8 +53,8 @@ export function ChatMessageItem({
   return (
     <div className={cn("flex gap-3 py-4", isUser && "justify-end")}>
       {!isUser && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-          <Bot className="h-4 w-4 text-purple-600" />
+        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-950/40 flex items-center justify-center">
+          <Bot className="h-4 w-4 text-purple-600 dark:text-purple-400" />
         </div>
       )}
 
@@ -62,8 +62,8 @@ export function ChatMessageItem({
         className={cn(
           "max-w-[80%] rounded-lg px-4 py-3",
           isUser
-            ? "bg-blue-600 text-white"
-            : "bg-gray-100 text-gray-900"
+            ? "bg-primary text-primary-foreground"
+            : "bg-muted text-foreground border border-border/50"
         )}
       >
         {isUser ? (
@@ -74,16 +74,16 @@ export function ChatMessageItem({
           <>
             <MarkdownRenderer content={content} className="text-sm" />
             {isStreaming && (
-              <span className="inline-block w-2 h-4 bg-purple-500 animate-pulse ml-0.5" />
+              <span className="inline-block w-2 h-4 bg-purple-50 dark:bg-purple-950/30 animate-pulse ml-0.5" />
             )}
           </>
         )}
 
         {/* assistant 메시지 하단 메타/액션 */}
         {!isUser && content && !isStreaming && (
-          <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-200/50">
+          <div className="flex items-center gap-2 mt-2 pt-2 border-t border/50">
             {provider && (
-              <span className="text-xs text-gray-400">
+              <span className="text-xs text-muted-foreground">
                 {provider} / {model}
               </span>
             )}
@@ -96,7 +96,7 @@ export function ChatMessageItem({
               {copied ? (
                 <Check className="h-3 w-3 text-green-500" />
               ) : (
-                <Copy className="h-3 w-3 text-gray-400" />
+                <Copy className="h-3 w-3 text-muted-foreground" />
               )}
             </Button>
           </div>
@@ -104,7 +104,7 @@ export function ChatMessageItem({
       </div>
 
       {isUser && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
           <User className="h-4 w-4 text-blue-600" />
         </div>
       )}

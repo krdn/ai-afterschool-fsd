@@ -113,7 +113,7 @@ export default function GradeDetailTabs({
 
         <TabsContent value="study-habit" className="mt-6">
           <Card>
-            <CardContent className="flex flex-col items-center justify-center py-16 text-gray-400">
+            <CardContent className="flex flex-col items-center justify-center py-16 text-muted-foreground">
               <Clock className="w-12 h-12 mb-4" />
               <p className="text-lg font-medium">
                 학습 습관 분석 - 추후 구현 예정
@@ -128,7 +128,7 @@ export default function GradeDetailTabs({
 
         <TabsContent value="peer-compare" className="mt-6">
           <Card>
-            <CardContent className="flex flex-col items-center justify-center py-16 text-gray-400">
+            <CardContent className="flex flex-col items-center justify-center py-16 text-muted-foreground">
               <Users className="w-12 h-12 mb-4" />
               <p className="text-lg font-medium">
                 동료 비교 분석 - 추후 구현 예정
@@ -161,17 +161,17 @@ function TeacherAlertBanner({ alerts }: { alerts: TeacherAlert[] }) {
                 <Badge variant="outline" className={`text-xs ${config.badgeColor}`}>
                   {config.label}
                 </Badge>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-muted-foreground">
                   심각도 {alert.severity}/5
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-muted-foreground">
                   {alert.subjects.join(', ')}
                 </span>
               </div>
               <p className={`text-sm mt-1 ${config.textColor}`}>
                 {alert.message}
               </p>
-              <p className="text-xs text-gray-600 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 {alert.suggestedAction}
               </p>
             </div>
@@ -189,51 +189,51 @@ function getAlertConfig(alert: TeacherAlert) {
       return {
         icon: AlertTriangle,
         label: '위험',
-        bgColor: 'bg-red-50',
-        borderColor: 'border-red-200',
+        bgColor: 'bg-red-50 dark:bg-red-950/30',
+        borderColor: 'border-red-200 dark:border-red-800',
         iconColor: 'text-red-600',
-        textColor: 'text-red-800',
-        badgeColor: 'border-red-300 text-red-700',
+        textColor: 'text-red-800 dark:text-red-300',
+        badgeColor: 'border-red-300 text-red-700 dark:text-red-400',
       };
     case 'SCORE_DROP':
       return {
         icon: TrendingDown,
         label: '급락',
-        bgColor: 'bg-orange-50',
-        borderColor: 'border-orange-200',
+        bgColor: 'bg-orange-50 dark:bg-orange-950/30',
+        borderColor: 'border-orange-200 dark:border-orange-800',
         iconColor: 'text-orange-600',
-        textColor: 'text-orange-800',
+        textColor: 'text-orange-800 dark:text-orange-300',
         badgeColor: 'border-orange-300 text-orange-700',
       };
     case 'BELOW_AVERAGE':
       return {
         icon: Info,
         label: '평균 미달',
-        bgColor: 'bg-yellow-50',
-        borderColor: 'border-yellow-200',
+        bgColor: 'bg-yellow-50 dark:bg-yellow-950/30',
+        borderColor: 'border-yellow-200 dark:border-yellow-800',
         iconColor: 'text-yellow-600',
-        textColor: 'text-yellow-800',
+        textColor: 'text-yellow-800 dark:text-yellow-300',
         badgeColor: 'border-yellow-300 text-yellow-700',
       };
     case 'IMPROVEMENT':
       return {
         icon: TrendingUp,
         label: '개선',
-        bgColor: 'bg-green-50',
-        borderColor: 'border-green-200',
+        bgColor: 'bg-green-50 dark:bg-green-950/30',
+        borderColor: 'border-green-200 dark:border-green-800',
         iconColor: 'text-green-600',
-        textColor: 'text-green-800',
-        badgeColor: 'border-green-300 text-green-700',
+        textColor: 'text-green-800 dark:text-green-300',
+        badgeColor: 'border-green-300 text-green-700 dark:text-green-400',
       };
     default:
       return {
         icon: Info,
         label: '알림',
-        bgColor: 'bg-gray-50',
-        borderColor: 'border-gray-200',
-        iconColor: 'text-gray-600',
-        textColor: 'text-gray-800',
-        badgeColor: 'border-gray-300 text-gray-700',
+        bgColor: 'bg-muted',
+        borderColor: 'border',
+        iconColor: 'text-muted-foreground',
+        textColor: 'text-foreground',
+        badgeColor: 'border text-foreground',
       };
   }
 }

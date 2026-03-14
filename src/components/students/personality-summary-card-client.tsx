@@ -31,7 +31,7 @@ export function GenerateActionButton({ studentId }: { studentId: string }) {
     <Button
       onClick={handleClick}
       disabled={isPending}
-      className="bg-blue-600 hover:bg-blue-700"
+     
     >
       {isPending ? "생성 중..." : "AI 통합 분석 생성"}
     </Button>

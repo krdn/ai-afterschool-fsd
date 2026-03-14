@@ -85,7 +85,7 @@ export function ZodiacAnalysisPanel({ studentId, analysis, enabledProviders = []
   const traits = analysis?.traits as { symbol?: string; elementName?: string; rulingPlanet?: string; dateRange?: string } | undefined
 
   return (
-    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-card rounded-lg shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-indigo-100 rounded-lg">

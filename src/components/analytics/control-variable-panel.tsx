@@ -31,7 +31,7 @@ export function ControlVariablePanel({
             <Label htmlFor="initial-grade-filter" className="text-sm font-medium">
               초기 성적 필터링
             </Label>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               HIGH/MID/LOW 초기 성적 수준 조정 적용
             </p>
           </div>
@@ -47,7 +47,7 @@ export function ControlVariablePanel({
             <Label htmlFor="attendance-filter" className="text-sm font-medium">
               출석률 필터링
             </Label>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               출석률 80% 이상 학생만 포함
             </p>
           </div>
@@ -58,8 +58,8 @@ export function ControlVariablePanel({
           />
         </div>
 
-        <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
-          <p className="text-sm text-blue-800">
+        <div className="bg-blue-50 dark:bg-blue-950/30 p-3 rounded-lg border border-blue-200">
+          <p className="text-sm text-blue-800 dark:text-blue-300">
             공정한 비교를 위해 통제 변수를 적용했습니다.
           </p>
         </div>

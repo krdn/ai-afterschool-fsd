@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { HelpCircle } from "lucide-react"
+import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 
 function formatDate(date: Date): string {
   return new Intl.DateTimeFormat("ko-KR", {
@@ -31,7 +32,7 @@ export default async function AutoAssignPage() {
         <h1 className="text-2xl font-bold">AI 자동 배정 제안</h1>
         <Card>
           <CardContent className="pt-6">
-            <p className="text-gray-500">
+            <p className="text-muted-foreground">
               이 기능은 원장님과 팀장님만 사용할 수 있습니다.
             </p>
           </CardContent>
@@ -78,9 +79,13 @@ export default async function AutoAssignPage() {
 
   return (
     <div className="space-y-6">
+      <BreadcrumbNav items={[
+        { label: "배정 관리", href: "/matching" },
+        { label: "AI 자동 배정" },
+      ]} />
       <div>
         <h1 className="text-2xl font-bold">AI 자동 배정 제안</h1>
-        <p className="text-gray-500">
+        <p className="text-muted-foreground">
           AI가 궁합 점수를 분석하여 최적의 학생-선생님 배정을 제안합니다.
         </p>
       </div>
@@ -119,7 +124,7 @@ export default async function AutoAssignPage() {
                 <div className="border rounded-lg p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <h5 className="font-medium text-sm">MBTI 호환도</h5>
-                    <span className="text-xs font-semibold bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">25%</span>
+                    <span className="text-xs font-semibold bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded-full">25%</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     E/I, S/N, T/F, J/P 4가지 차원의 유사도를 계산합니다.
@@ -129,7 +134,7 @@ export default async function AutoAssignPage() {
                 <div className="border rounded-lg p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <h5 className="font-medium text-sm">학습 스타일 호환도</h5>
-                    <span className="text-xs font-semibold bg-green-100 text-green-700 px-2 py-0.5 rounded-full">25%</span>
+                    <span className="text-xs font-semibold bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full">25%</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     MBTI에서 VARK 학습 스타일(시각/청각/읽기쓰기/체험)을 유도하여 코사인 유사도를 계산합니다.
@@ -139,7 +144,7 @@ export default async function AutoAssignPage() {
                 <div className="border rounded-lg p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <h5 className="font-medium text-sm">사주 호환도</h5>
-                    <span className="text-xs font-semibold bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full">20%</span>
+                    <span className="text-xs font-semibold bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-400 px-2 py-0.5 rounded-full">20%</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     오행(목, 화, 토, 금, 수) 에너지 분포를 벡터로 변환하여 코사인 유사도를 측정합니다.
@@ -149,7 +154,7 @@ export default async function AutoAssignPage() {
                 <div className="border rounded-lg p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <h5 className="font-medium text-sm">성명학 호환도</h5>
-                    <span className="text-xs font-semibold bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full">15%</span>
+                    <span className="text-xs font-semibold bg-orange-100 dark:bg-orange-900/40 text-orange-700 px-2 py-0.5 rounded-full">15%</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     4격(원형, 형격, 이격, 정격)의 획수 차이를 비교합니다.
@@ -159,7 +164,7 @@ export default async function AutoAssignPage() {
                 <div className="border rounded-lg p-4 space-y-2 md:col-span-2">
                   <div className="flex items-center justify-between">
                     <h5 className="font-medium text-sm">부하 분산</h5>
-                    <span className="text-xs font-semibold bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full">15%</span>
+                    <span className="text-xs font-semibold bg-muted text-foreground px-2 py-0.5 rounded-full">15%</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     선생님별 담당 학생 수의 균형을 고려합니다.
@@ -238,15 +243,15 @@ export default async function AutoAssignPage() {
                 return (
                   <div
                     key={proposal.id}
-                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
+                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted"
                   >
                     <div>
                       <p className="font-medium">{proposal.name}</p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-muted-foreground">
                         생성: {formatDate(proposal.createdAt)} | 제안자:{" "}
                         {proposal.proposer.name}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-muted-foreground">
                         학생 {summary?.assignedStudents || 0}명 | 평균 점수:{" "}
                         {Math.round(summary?.averageScore || 0)}점
                       </p>
@@ -254,7 +259,7 @@ export default async function AutoAssignPage() {
                     <div className="flex gap-2">
                       <a
                         href={`/matching/proposals/${proposal.id}`}
-                        className="text-blue-600 hover:underline text-sm"
+                        className="text-primary hover:underline text-sm"
                       >
                         상세 보기
                       </a>

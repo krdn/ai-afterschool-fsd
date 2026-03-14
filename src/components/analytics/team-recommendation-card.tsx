@@ -6,9 +6,9 @@ interface TeamRecommendationCardProps {
 }
 
 const PRIORITY_COLORS: Record<string, string> = {
-  high: "bg-red-50 border-red-200 text-red-800",
-  medium: "bg-yellow-50 border-yellow-200 text-yellow-800",
-  low: "bg-green-50 border-green-200 text-green-800",
+  high: "bg-red-50 dark:bg-red-950/30 border-red-200 text-red-800",
+  medium: "bg-yellow-50 dark:bg-yellow-950/30 border-yellow-200 text-yellow-800",
+  low: "bg-green-50 dark:bg-green-950/30 border-green-200 text-green-800",
 }
 
 const PRIORITY_LABELS: Record<string, string> = {

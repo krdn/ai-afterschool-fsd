@@ -91,11 +91,11 @@ export function TeacherPalmPanel({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-card rounded-lg shadow-sm overflow-hidden">
       {/* Header */}
       <div className="px-6 py-4 border-b flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-purple-100 rounded-lg">
+          <div className="p-2 bg-purple-100 dark:bg-purple-900/40 rounded-lg">
             <Hand className="w-5 h-5 text-purple-600" />
           </div>
           <h2 className="text-lg font-semibold">AI 손금 분석</h2>
@@ -208,13 +208,13 @@ function AnalysisResult({ result, imageUrl, hand }: { result: unknown; imageUrl:
           height={192}
           className="w-48 h-48 object-cover rounded-lg shadow-md"
         />
-        <span className="mt-2 text-sm text-gray-500">
+        <span className="mt-2 text-sm text-muted-foreground">
           {hand === 'left' ? '왼손 (감성/본성)' : '오른손 (현실/능력)'}
         </span>
       </div>
 
-      <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
-        <p className="text-sm text-yellow-800">
+      <div className="bg-yellow-50 dark:bg-yellow-950/30 border-l-4 border-yellow-400 p-4">
+        <p className="text-sm text-yellow-800 dark:text-yellow-300">
           {DISCLAIMER_TEXT.palm}
         </p>
       </div>
@@ -243,7 +243,7 @@ function AnalysisResult({ result, imageUrl, hand }: { result: unknown; imageUrl:
         <h3 className="font-semibold mb-2">성격 특성</h3>
         <ul className="list-disc list-inside space-y-1">
           {analysisResult.personalityTraits.map((trait: string, i: number) => (
-            <li key={i} className="text-gray-700">{trait}</li>
+            <li key={i} className="text-foreground">{trait}</li>
           ))}
         </ul>
       </div>
@@ -260,7 +260,7 @@ function AnalysisResult({ result, imageUrl, hand }: { result: unknown; imageUrl:
       {analysisResult.overallInterpretation && (
         <div>
           <h3 className="font-semibold mb-2">종합 해석</h3>
-          <p className="text-gray-700 text-sm leading-relaxed">
+          <p className="text-foreground text-sm leading-relaxed">
             {analysisResult.overallInterpretation}
           </p>
         </div>
@@ -271,9 +271,9 @@ function AnalysisResult({ result, imageUrl, hand }: { result: unknown; imageUrl:
 
 function ClarityBadge({ clarity }: { clarity: 'clear' | 'unclear' | 'partial' }) {
   const styles = {
-    clear: 'bg-green-100 text-green-800',
-    partial: 'bg-yellow-100 text-yellow-800',
-    unclear: 'bg-red-100 text-red-800'
+    clear: 'bg-green-100 text-green-800 dark:text-green-300',
+    partial: 'bg-yellow-100 text-yellow-800 dark:text-yellow-300',
+    unclear: 'bg-red-100 text-red-800 dark:text-red-300'
   }
   const labels = { clear: '선명함', partial: '일부만 보임', unclear: '흐릿함' }
   return (
@@ -286,8 +286,8 @@ function ClarityBadge({ clarity }: { clarity: 'clear' | 'unclear' | 'partial' })
 function LineItem({ label, description }: { label: string; description: string }) {
   return (
     <div>
-      <dt className="text-sm font-medium text-gray-700">{label}</dt>
-      <dd className="text-sm text-gray-600 mt-1">{description}</dd>
+      <dt className="text-sm font-medium text-foreground">{label}</dt>
+      <dd className="text-sm text-muted-foreground mt-1">{description}</dd>
     </div>
   )
 }
@@ -296,8 +296,8 @@ function LoadingState() {
   return (
     <div className="text-center py-8">
       <div className="animate-spin w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full mx-auto mb-4" />
-      <p className="text-gray-600">AI가 손바닥 사진을 분석 중이에요...</p>
-      <p className="text-sm text-gray-500 mt-2">10~20초 정도 소요됩니다.</p>
+      <p className="text-muted-foreground">AI가 손바닥 사진을 분석 중이에요...</p>
+      <p className="text-sm text-muted-foreground mt-2">10~20초 정도 소요됩니다.</p>
     </div>
   )
 }
@@ -305,11 +305,11 @@ function LoadingState() {
 function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
     <div className="text-center py-8">
-      <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-4 text-left">
+      <div className="bg-red-50 dark:bg-red-950/30 border-l-4 border-red-400 p-4 mb-4 text-left">
         <div className="flex">
           <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0" />
           <div className="ml-3">
-            <p className="text-sm text-red-800">{message}</p>
+            <p className="text-sm text-red-800 dark:text-red-300">{message}</p>
           </div>
         </div>
       </div>
@@ -330,8 +330,8 @@ function EmptyState({
 }) {
   return (
     <div className="text-center py-8">
-      <Hand className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-      <p className="text-gray-500 mb-4">
+      <Hand className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+      <p className="text-muted-foreground mb-4">
         {hasImage
           ? "손바닥 사진이 준비되었어요. 분석을 시작할까요?"
           : "아직 손바닥 사진이 없어요. 선생님 정보에서 손바닥 사진을 업로드해주세요."
@@ -340,7 +340,7 @@ function EmptyState({
       {hasImage && (
         <div className="space-y-4">
           <div className="flex items-center justify-center gap-4">
-            <span className="text-sm text-gray-600">손 선택:</span>
+            <span className="text-sm text-muted-foreground">손 선택:</span>
             <div className="flex gap-2">
               <Button
                 variant={selectedHand === 'left' ? 'default' : 'outline'}

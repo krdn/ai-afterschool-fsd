@@ -12,10 +12,10 @@ type VarkAnalysisData = {
 }
 
 const typeColors: Record<string, { bg: string; text: string; bar: string; badge: string }> = {
-  V: { bg: "bg-blue-50", text: "text-blue-800", bar: "bg-blue-500", badge: "bg-blue-100 text-blue-800" },
-  A: { bg: "bg-green-50", text: "text-green-800", bar: "bg-green-500", badge: "bg-green-100 text-green-800" },
-  R: { bg: "bg-amber-50", text: "text-amber-800", bar: "bg-amber-500", badge: "bg-amber-100 text-amber-800" },
-  K: { bg: "bg-rose-50", text: "text-rose-800", bar: "bg-rose-500", badge: "bg-rose-100 text-rose-800" },
+  V: { bg: "bg-blue-50 dark:bg-blue-950/30", text: "text-blue-800 dark:text-blue-300", bar: "bg-blue-500", badge: "bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300" },
+  A: { bg: "bg-green-50 dark:bg-green-950/30", text: "text-green-800 dark:text-green-300", bar: "bg-green-500", badge: "bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300" },
+  R: { bg: "bg-amber-50 dark:bg-amber-950/30", text: "text-amber-800 dark:text-amber-300", bar: "bg-amber-500", badge: "bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300" },
+  K: { bg: "bg-rose-50 dark:bg-rose-950/30", text: "text-rose-800 dark:text-rose-300", bar: "bg-rose-500", badge: "bg-rose-100 dark:bg-rose-900/40 text-rose-800 dark:text-rose-300" },
 }
 
 export function VarkResultsDisplay({ analysis }: { analysis: VarkAnalysisData }) {
@@ -32,7 +32,7 @@ export function VarkResultsDisplay({ analysis }: { analysis: VarkAnalysisData })
             {primaryTypes.map(t => descriptions[t]?.name.split(" ")[0]).join(" + ")}
           </span>
         </div>
-        <p className="text-gray-600 mt-3 max-w-lg mx-auto">
+        <p className="text-muted-foreground mt-3 max-w-lg mx-auto">
           {primaryTypes.length === 1
             ? descriptions[primaryTypes[0]]?.summary
             : `${primaryTypes.map(t => descriptions[t]?.name).join("과 ")} 특성을 고루 갖춘 복합 학습 유형입니다.`}
@@ -40,8 +40,8 @@ export function VarkResultsDisplay({ analysis }: { analysis: VarkAnalysisData })
       </div>
 
       {/* 4축 백분율 그래프 */}
-      <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-        <h3 className="font-semibold text-gray-700 mb-3">유형별 비율</h3>
+      <div className="bg-muted rounded-lg p-4 space-y-3">
+        <h3 className="font-semibold text-foreground mb-3">유형별 비율</h3>
         {(["V", "A", "R", "K"] as const).map((type) => {
           const pct = percentages[type] ?? 0
           const colors = typeColors[type]
@@ -51,13 +51,13 @@ export function VarkResultsDisplay({ analysis }: { analysis: VarkAnalysisData })
               <span className={`w-20 text-sm font-medium ${colors.text}`}>
                 {descriptions[type].name.split(" ")[0]}
               </span>
-              <div className="flex-1 bg-gray-200 rounded-full h-5 relative">
+              <div className="flex-1 bg-muted rounded-full h-5 relative">
                 <div
                   className={`${colors.bar} h-5 rounded-full transition-all duration-500 ${isDominant ? "opacity-100" : "opacity-60"}`}
                   style={{ width: `${pct}%` }}
                 />
               </div>
-              <span className={`w-12 text-right text-sm font-semibold ${isDominant ? colors.text : "text-gray-500"}`}>
+              <span className={`w-12 text-right text-sm font-semibold ${isDominant ? colors.text : "text-muted-foreground"}`}>
                 {pct}%
               </span>
             </div>
@@ -140,10 +140,10 @@ export function VarkResultsDisplay({ analysis }: { analysis: VarkAnalysisData })
         </div>
       )}
 
-      <p className="text-xs text-gray-400 text-center">
+      <p className="text-xs text-muted-foreground text-center">
         VARK는 교육학적 학습 선호도 검사입니다. 참고용으로 활용해주세요.
       </p>
-      <p className="text-xs text-gray-400 text-center">
+      <p className="text-xs text-muted-foreground text-center">
         검사일: {new Date(analysis.calculatedAt).toLocaleDateString("ko-KR")}
       </p>
     </div>

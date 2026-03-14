@@ -121,13 +121,13 @@ function SidebarContent({
       <div className="flex-1 overflow-y-auto overflow-x-hidden">
         <div className="p-2">
           {groups.length === 0 && (
-            <p className="text-xs text-gray-400 text-center py-4">
+            <p className="text-xs text-muted-foreground text-center py-4">
               {t("noHistory")}
             </p>
           )}
           {groups.map((group) => (
             <div key={group.label} className="mb-3">
-              <p className="text-xs font-medium text-gray-400 px-2 py-1">
+              <p className="text-xs font-medium text-muted-foreground px-2 py-1">
                 {group.label}
               </p>
               {group.sessions.map((s) => (
@@ -143,17 +143,17 @@ function SidebarContent({
                     }
                   }}
                   className={cn(
-                    "w-full min-w-0 flex items-center gap-2 px-2 py-2 rounded-md text-sm text-left hover:bg-gray-100 group transition-colors cursor-pointer",
-                    currentSessionId === s.id && "bg-gray-100 font-medium"
+                    "w-full min-w-0 flex items-center gap-2 px-2 py-2 rounded-md text-sm text-left hover:bg-muted group transition-colors cursor-pointer",
+                    currentSessionId === s.id && "bg-muted font-medium"
                   )}
                 >
-                  <MessageSquare className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                  <MessageSquare className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                   <span className="truncate flex-1 min-w-0">
                     {s.title || t("emptyChatTitle")}
                   </span>
                   <button
                     onClick={(e) => handleDeleteClick(e, s.id, s.title || t("emptyChatTitle"))}
-                    className="flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-white hover:bg-red-500 transition-colors"
+                    className="flex-shrink-0 p-1 rounded-full text-muted-foreground hover:text-white hover:bg-red-50 dark:bg-red-950/30 transition-colors"
                     title={t("deleteChat")}
                   >
                     <X className="h-4 w-4" />
@@ -200,7 +200,7 @@ export function ChatSidebar(props: ChatSidebarProps) {
       {/* 데스크탑 사이드바 */}
       <div className="hidden md:flex">
         {!collapsed ? (
-          <div className="w-[260px] border-r bg-gray-50/50 flex flex-col h-full relative">
+          <div className="w-[260px] border-r bg-muted/50 flex flex-col h-full relative">
             <Button
               variant="ghost"
               size="sm"
@@ -212,7 +212,7 @@ export function ChatSidebar(props: ChatSidebarProps) {
             <SidebarContent {...props} />
           </div>
         ) : (
-          <div className="w-12 border-r bg-gray-50/50 flex flex-col items-center py-3 gap-2">
+          <div className="w-12 border-r bg-muted/50 flex flex-col items-center py-3 gap-2">
             <Button
               variant="ghost"
               size="sm"
@@ -232,7 +232,7 @@ export function ChatSidebar(props: ChatSidebarProps) {
             <Button
               variant="ghost"
               size="sm"
-              className="fixed top-20 left-2 z-40 h-9 w-9 p-0 bg-white shadow-md border"
+              className="fixed top-20 left-2 z-40 h-9 w-9 p-0 bg-card shadow-md border"
             >
               <MessageSquare className="h-4 w-4" />
             </Button>

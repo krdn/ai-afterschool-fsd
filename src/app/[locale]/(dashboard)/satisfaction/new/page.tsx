@@ -1,5 +1,6 @@
 import { verifySession } from "@/lib/dal"
 import { getRBACPrisma } from "@/lib/db/common/rbac"
+import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Select,
@@ -16,7 +17,7 @@ export default async function NewSatisfactionPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center py-12">
-          <p className="text-gray-500">로그인이 필요합니다</p>
+          <p className="text-muted-foreground">로그인이 필요합니다</p>
         </div>
       </div>
     )
@@ -69,9 +70,13 @@ export default async function NewSatisfactionPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto space-y-6">
+        <BreadcrumbNav items={[
+          { label: "대시보드", href: "/dashboard" },
+          { label: "만족도 조사" },
+        ]} />
         <div>
           <h1 className="text-3xl font-bold">학생 만족도 조사</h1>
-          <p className="text-gray-600">학생 만족도 조사를 기록합니다</p>
+          <p className="text-muted-foreground">학생 만족도 조사를 기록합니다</p>
         </div>
 
         <Card>
@@ -111,15 +116,15 @@ export default async function NewSatisfactionPage() {
               </Select>
             </div>
 
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               학생과 선생님을 선택하면 만족도 조사 폼이 나타납니다
             </p>
           </CardContent>
         </Card>
 
         <div id="satisfaction-form-container">
-          <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed">
-            <p className="text-gray-500">
+          <div className="text-center py-12 bg-muted rounded-lg border-2 border-dashed">
+            <p className="text-muted-foreground">
               상단에서 학생과 선생님을 선택하면 만족도 조사 폼이 나타납니다
             </p>
           </div>

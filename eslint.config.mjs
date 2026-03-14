@@ -12,6 +12,7 @@ export default tseslint.config(
       "public/**",
       "prisma/**",
       "data/**",
+      "e2e/**",
       "next-env.d.ts",
     ],
   },

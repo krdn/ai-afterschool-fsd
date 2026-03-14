@@ -226,7 +226,7 @@ export function SajuPanel({
               초기화
             </Button>
           )}
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-muted-foreground">
             {calculatedAt
               ? `최근 계산: ${format(calculatedAt, "yyyy.MM.dd HH:mm", { locale: ko })}`
               : "아직 분석되지 않았어요."}
@@ -238,8 +238,8 @@ export function SajuPanel({
         {showHistory && historyPanel}
 
         <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-gray-600">1. 기본 정보</h3>
-          <div className="rounded-md bg-gray-50 p-4 text-sm text-gray-700">
+          <h3 className="text-sm font-semibold text-muted-foreground">1. 기본 정보</h3>
+          <div className="rounded-md bg-muted p-4 text-sm text-foreground">
             <p>{subjectLabel}</p>
             {birthDate ? (
               <>
@@ -257,7 +257,7 @@ export function SajuPanel({
           </div>
 
           {/* 분석 설정 영역 */}
-          <div className="rounded-md border border-gray-200 p-4 space-y-3">
+          <div className="rounded-md border border p-4 space-y-3">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 flex-wrap">
               <ProviderSelector
                 selectedProvider={selectedProvider}
@@ -279,7 +279,7 @@ export function SajuPanel({
 
             {isLLM && (
               <div className="space-y-1">
-                <label className="text-xs text-gray-500">
+                <label className="text-xs text-muted-foreground">
                   추가 요청 / 특이사항 (선택)
                 </label>
                 <Textarea
@@ -291,7 +291,7 @@ export function SajuPanel({
                   className="text-sm resize-none"
                   maxLength={500}
                 />
-                <p className="text-[10px] text-gray-400 text-right">
+                <p className="text-[10px] text-muted-foreground text-right">
                   {additionalRequest.length}/500
                 </p>
               </div>
@@ -322,8 +322,8 @@ export function SajuPanel({
           )}
 
           {errorMessage && (
-            <div className="flex items-center justify-between gap-4 mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-700">{errorMessage}</p>
+            <div className="flex items-center justify-between gap-4 mt-2 p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-700 dark:text-red-400">{errorMessage}</p>
               <Button
                 onClick={() => handleRunAnalysis(false)}
                 disabled={isPending}
@@ -349,30 +349,30 @@ export function SajuPanel({
 
         {/* 사주 구조 */}
         <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-gray-600">2. 사주 구조</h3>
+          <h3 className="text-sm font-semibold text-muted-foreground">2. 사주 구조</h3>
           {result ? (
-            <div data-testid={dataTestId ? "saju-result" : undefined} className="grid gap-3 rounded-md border border-gray-200 bg-white p-4 text-sm">
+            <div data-testid={dataTestId ? "saju-result" : undefined} className="grid gap-3 rounded-md border border bg-card p-4 text-sm">
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                 <div>
-                  <p className="text-xs text-gray-500">연주</p>
+                  <p className="text-xs text-muted-foreground">연주</p>
                   <p data-testid={dataTestId ? "year-pillar" : undefined} className="font-medium">
                     {hanjaLabel(result.pillars.year.stem, result.pillars.year.branch)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">월주</p>
+                  <p className="text-xs text-muted-foreground">월주</p>
                   <p data-testid={dataTestId ? "month-pillar" : undefined} className="font-medium">
                     {hanjaLabel(result.pillars.month.stem, result.pillars.month.branch)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">일주</p>
+                  <p className="text-xs text-muted-foreground">일주</p>
                   <p data-testid={dataTestId ? "day-pillar" : undefined} className="font-medium">
                     {hanjaLabel(result.pillars.day.stem, result.pillars.day.branch)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">시주</p>
+                  <p className="text-xs text-muted-foreground">시주</p>
                   <p data-testid={dataTestId ? "hour-pillar" : undefined} className="font-medium">
                     {result.pillars.hour
                       ? hanjaLabel(result.pillars.hour.stem, result.pillars.hour.branch)
@@ -380,12 +380,12 @@ export function SajuPanel({
                   </p>
                 </div>
               </div>
-              <div className="text-xs text-gray-500">
+              <div className="text-xs text-muted-foreground">
                 절기: {result.meta.solarTerm} · <span data-testid={dataTestId ? "ohang-analysis" : undefined}>오행 균형: 목 {result.elements.목} / 화 {result.elements.화} / 토 {result.elements.토} / 금 {result.elements.금} / 수 {result.elements.수}</span>
               </div>
             </div>
           ) : (
-            <div className="rounded-md bg-gray-50 p-4 text-sm text-gray-500">
+            <div className="rounded-md bg-muted p-4 text-sm text-muted-foreground">
               아직 계산된 사주 구조가 없습니다.
             </div>
           )}
@@ -394,19 +394,19 @@ export function SajuPanel({
         {/* 해석 */}
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            <h3 className="text-sm font-semibold text-gray-600">3. 해석</h3>
+            <h3 className="text-sm font-semibold text-muted-foreground">3. 해석</h3>
             {providerLabel && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/30 text-blue-600 border border-blue-200">
                 {providerLabel}
               </span>
             )}
             {promptLabel && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-purple-50 text-purple-600 border border-purple-200">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-purple-50 dark:bg-purple-950/30 text-purple-600 border border-purple-200">
                 {promptLabel}
               </span>
             )}
             {isCached && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-50 text-yellow-700 border border-yellow-200">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-50 dark:bg-yellow-950/30 text-yellow-700 border border-yellow-200">
                 ⚡ 캐시됨
               </span>
             )}
@@ -417,8 +417,8 @@ export function SajuPanel({
                 onClick={handleSimplify}
                 className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs rounded-full border transition-colors ${
                   showSimplified
-                    ? 'bg-amber-100 text-amber-700 border-amber-300'
-                    : 'bg-white text-gray-500 border-gray-200 hover:bg-amber-50 hover:text-amber-600 hover:border-amber-200'
+                    ? 'bg-amber-100 text-amber-700 dark:text-amber-400 border-amber-300'
+                    : 'bg-card text-muted-foreground border hover:bg-amber-50 dark:bg-amber-950/30 hover:text-amber-600 hover:border-amber-200'
                 }`}
               >
                 {isSimplifying ? (
@@ -430,17 +430,17 @@ export function SajuPanel({
               </button>
             )}
             {analysis?.interpretation && (
-              <div className="ml-auto flex rounded-md border border-gray-200 text-xs overflow-hidden">
+              <div className="ml-auto flex rounded-md border border text-xs overflow-hidden">
                 <button
                   type="button"
-                  className={`px-2.5 py-1 transition-colors ${viewMode === "rendered" ? "bg-gray-800 text-white" : "bg-white text-gray-500 hover:bg-gray-50"}`}
+                  className={`px-2.5 py-1 transition-colors ${viewMode === "rendered" ? "bg-foreground text-background" : "bg-card text-muted-foreground hover:bg-muted"}`}
                   onClick={() => setViewMode("rendered")}
                 >
                   미리보기
                 </button>
                 <button
                   type="button"
-                  className={`px-2.5 py-1 border-l border-gray-200 transition-colors ${viewMode === "markdown" ? "bg-gray-800 text-white" : "bg-white text-gray-500 hover:bg-gray-50"}`}
+                  className={`px-2.5 py-1 border-l border transition-colors ${viewMode === "markdown" ? "bg-foreground text-background" : "bg-card text-muted-foreground hover:bg-muted"}`}
                   onClick={() => setViewMode("markdown")}
                 >
                   원문
@@ -452,18 +452,18 @@ export function SajuPanel({
             <>
               {showSimplified && simplifiedText && (
                 <div className="flex items-center gap-1 mb-2">
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-200">
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/30 text-amber-600 border border-amber-200">
                     <Sparkles className="inline h-3 w-3 mr-0.5" />
                     쉽게 풀이 보기 중
                   </span>
                 </div>
               )}
               {viewMode === "rendered" ? (
-                <div className="rounded-md border border-gray-200 bg-white p-4 max-h-[500px] overflow-y-auto">
+                <div className="rounded-md border border bg-card p-4 max-h-[500px] overflow-y-auto">
                   <MarkdownRenderer content={showSimplified && simplifiedText ? simplifiedText : analysis.interpretation} />
                 </div>
               ) : (
-                <div className="rounded-md border border-gray-200 bg-gray-50 p-4 text-sm leading-6 text-gray-700 whitespace-pre-wrap font-mono">
+                <div className="rounded-md border border bg-muted p-4 text-sm leading-6 text-foreground whitespace-pre-wrap font-mono">
                   {showSimplified && simplifiedText ? simplifiedText : analysis.interpretation}
                 </div>
               )}
@@ -472,7 +472,7 @@ export function SajuPanel({
               )}
             </>
           ) : (
-            <div className="rounded-md bg-gray-50 p-4 text-sm text-gray-500">
+            <div className="rounded-md bg-muted p-4 text-sm text-muted-foreground">
               사주 해석이 아직 생성되지 않았어요.
             </div>
           )}
