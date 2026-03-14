@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import {
   Select,
   SelectContent,
@@ -34,6 +34,7 @@ const CATEGORY_OPTIONS = [
 
 export function IssueFilters() {
   const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
   const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -47,8 +48,8 @@ export function IssueFilters() {
     } else {
       params.set(key, value)
     }
-    params.delete('page') // 필터 변경 시 첫 페이지로
-    router.push(`/issues?${params.toString()}`)
+    params.delete('page')
+    router.replace(`${pathname}?${params.toString()}`)
   }
 
   return (

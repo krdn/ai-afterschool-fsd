@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, usePathname, useSearchParams } from 'next/navigation'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -36,6 +36,7 @@ export function CounselingFilters({
   teachers = [],
 }: CounselingFiltersProps) {
   const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
 
   const updateFilter = (key: string, value: string) => {
@@ -46,12 +47,13 @@ export function CounselingFilters({
     } else {
       params.delete(key)
     }
+    params.delete('page')
 
-    router.push(`/counseling?${params.toString()}`)
+    router.replace(`${pathname}?${params.toString()}`)
   }
 
   const handleReset = () => {
-    router.push('/counseling')
+    router.replace(pathname)
   }
 
   // 초기값 추출
