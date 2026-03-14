@@ -76,7 +76,7 @@ export default async function FairnessMetricsPage() {
 
       {/* 과거 제안별 메트릭 테이블 */}
       {proposalsWithMetrics.length > 0 && (
-        <div className="rounded-lg border bg-white shadow-sm">
+        <div className="rounded-lg border bg-card shadow-sm">
           <div className="border-b px-6 py-4">
             <h2 className="text-lg font-semibold">제안별 공정성 메트릭</h2>
           </div>

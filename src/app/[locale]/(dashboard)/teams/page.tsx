@@ -56,7 +56,7 @@ export default async function TeamsPage() {
               data-testid="team-card"
               className="group"
             >
-              <div className="bg-white border rounded-lg p-6 hover:shadow-lg transition-all cursor-pointer group-hover:border-blue-300">
+              <div className="bg-card border rounded-lg p-6 hover:shadow-lg transition-all cursor-pointer group-hover:border-blue-300">
                 <h3 className="text-lg font-semibold mb-2" data-testid="team-name">
                   {team.name}
                 </h3>

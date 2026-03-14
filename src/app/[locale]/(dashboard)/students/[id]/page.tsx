@@ -41,7 +41,7 @@ export default async function StudentDetailPage(props: {
                 { label: student.name },
             ]} />
             {isCreated && (
-                <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                <div className="bg-green-100 dark:bg-green-950/30 border border-green-400 dark:border-green-800 text-green-700 dark:text-green-300 px-4 py-3 rounded mb-4">
                     학생 등록이 완료되었습니다.
                 </div>
             )}
@@ -67,7 +67,7 @@ export default async function StudentDetailPage(props: {
                 <StudentDetailActions id={student.id} />
             </div>
 
-            <div className="bg-white border rounded-lg p-6 mb-6" data-testid="student-info">
+            <div className="bg-card border rounded-lg p-6 mb-6" data-testid="student-info">
                 <h2 className="text-xl font-semibold mb-4">기본 정보</h2>
                 <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -83,7 +83,7 @@ export default async function StudentDetailPage(props: {
             </div>
 
             {student.parents && student.parents.length > 0 && (
-                <div className="bg-white border rounded-lg p-6 mb-6" data-testid="parent-info">
+                <div className="bg-card border rounded-lg p-6 mb-6" data-testid="parent-info">
                     <h2 className="text-xl font-semibold mb-4">보호자 정보</h2>
                     {student.parents.map(parent => (
                         <div key={parent.id} className="mb-2">
@@ -110,7 +110,7 @@ export default async function StudentDetailPage(props: {
                 </div>
             </div>
 
-            <div className="bg-white border rounded-lg p-6 min-h-[300px]">
+            <div className="bg-card border rounded-lg p-6 min-h-[300px]">
                 {currentTab === 'learning' && (
                     <LearningTab studentId={student.id} />
                 )}

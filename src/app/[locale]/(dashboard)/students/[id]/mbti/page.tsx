@@ -55,7 +55,7 @@ export default async function MbtiSurveyPage({
         </Link>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+      <div className="bg-card rounded-lg shadow-sm p-6 mb-6">
         <h1 className="text-2xl font-bold mb-2">MBTI 성향 검사</h1>
         <p className="text-muted-foreground">
           {student.name} 학생의 MBTI 성향을 검사합니다. 60개 문항에 답변해 주세요.
@@ -67,7 +67,7 @@ export default async function MbtiSurveyPage({
         )}
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="bg-card rounded-lg shadow-sm p-6">
         <MbtiSurveyForm studentId={student.id} initialDraft={initialResponses} />
       </div>
     </div>

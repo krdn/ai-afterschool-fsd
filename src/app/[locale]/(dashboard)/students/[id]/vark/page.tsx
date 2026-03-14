@@ -55,7 +55,7 @@ export default async function VarkSurveyPage({
         </Link>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+      <div className="bg-card rounded-lg shadow-sm p-6 mb-6">
         <h1 className="text-2xl font-bold mb-2">VARK 학습유형 검사</h1>
         <p className="text-muted-foreground">
           {student.name} 학생의 학습 유형을 검사합니다. 28개 문항에 답변해 주세요.
@@ -70,7 +70,7 @@ export default async function VarkSurveyPage({
         )}
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm p-6">
+      <div className="bg-card rounded-lg shadow-sm p-6">
         <VarkSurveyForm studentId={student.id} initialDraft={initialResponses} />
       </div>
     </div>

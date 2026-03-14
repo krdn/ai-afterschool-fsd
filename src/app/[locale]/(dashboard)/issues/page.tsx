@@ -39,7 +39,7 @@ export default async function IssuesPage(props: {
 
       <IssueFilters />
 
-      <div className="bg-white rounded-lg border">
+      <div className="bg-card rounded-lg border">
         <IssueTable issues={issues} />
       </div>
 
