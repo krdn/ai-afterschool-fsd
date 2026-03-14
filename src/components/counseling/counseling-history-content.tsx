@@ -199,7 +199,8 @@ export function CounselingHistoryContent({
                         {session.student.grade}학년)
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        {session.teacher.name} · {session.duration}분
+                        {format(new Date(session.sessionDate), "M월 d일", { locale: ko })}
+                        {" · "}{session.teacher.name} · {session.duration}분
                       </div>
                     </div>
                     <span
