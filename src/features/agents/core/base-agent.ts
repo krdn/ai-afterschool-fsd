@@ -98,7 +98,7 @@ export abstract class BaseAgent {
       const durationMs = Date.now() - startTime;
       await db.agentExecution.update({
         where: { id: execution.id },
-        data: { status: 'COMPLETED', completedAt: new Date(), result: Object.fromEntries(context.nodeResults) },
+        data: { status: 'COMPLETED', completedAt: new Date(), result: JSON.parse(JSON.stringify(Object.fromEntries(context.nodeResults))) },
       });
 
       return {
@@ -126,7 +126,7 @@ export abstract class BaseAgent {
 
     await db.agentNodeLog.upsert({
       where: { executionId_nodeId: { executionId: context.executionId, nodeId: node.id } },
-      create: { executionId: context.executionId, nodeId: node.id, nodeName: node.data.label, status: 'RUNNING', startedAt: new Date(), input: node.data.config },
+      create: { executionId: context.executionId, nodeId: node.id, nodeName: node.data.label, status: 'RUNNING', startedAt: new Date(), input: JSON.parse(JSON.stringify(node.data.config)) },
       update: { status: 'RUNNING', startedAt: new Date() },
     });
 
