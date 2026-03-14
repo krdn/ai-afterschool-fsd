@@ -11,8 +11,14 @@ import { StudentPagination } from "@/components/students/student-pagination"
 const PAGE_SIZE = 12
 
 const avatarColors = [
-  "bg-blue-50 dark:bg-blue-950/30", "bg-green-50 dark:bg-green-950/30", "bg-purple-500", "bg-orange-500",
-  "bg-pink-500", "bg-teal-500", "bg-indigo-500", "bg-rose-500",
+  "bg-blue-100 dark:bg-blue-950/30",
+  "bg-green-100 dark:bg-green-950/30",
+  "bg-purple-100 dark:bg-purple-950/30",
+  "bg-orange-100 dark:bg-orange-950/30",
+  "bg-pink-100 dark:bg-pink-950/30",
+  "bg-teal-100 dark:bg-teal-950/30",
+  "bg-indigo-100 dark:bg-indigo-950/30",
+  "bg-rose-100 dark:bg-rose-950/30",
 ]
 
 function StudentAvatar({ student }: {
@@ -36,7 +42,7 @@ function StudentAvatar({ student }: {
   const colorIndex = student.name.charCodeAt(0) % avatarColors.length
 
   return (
-    <div className={`h-10 w-10 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0 ${avatarColors[colorIndex]}`}>
+    <div className={`h-10 w-10 rounded-full flex items-center justify-center text-foreground font-semibold flex-shrink-0 ${avatarColors[colorIndex]}`}>
       {initial}
     </div>
   )

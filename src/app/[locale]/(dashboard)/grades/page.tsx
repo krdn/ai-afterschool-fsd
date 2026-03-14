@@ -1,5 +1,5 @@
-import { getCurrentTeacher } from '@/lib/dal';
-import { db } from '@/lib/db/client';
+import { verifySession } from '@/lib/dal';
+import { getRBACPrisma } from '@/lib/db/common/rbac';
 import GradeDashboard from '@/components/grades/grade-dashboard';
 import { normalizePaginationParams, getPrismaSkipTake } from '@/shared/utils/pagination';
 import type { Prisma } from '@/lib/db';
@@ -12,19 +12,12 @@ type PageProps = {
 };
 
 export default async function GradesPage({ searchParams }: PageProps) {
-  const teacher = await getCurrentTeacher();
+  const session = await verifySession();
+  const rbacDb = getRBACPrisma(session);
   const params = await searchParams;
 
-  // RBAC 기반 where 조건
-  const baseWhere: Prisma.StudentWhereInput =
-    teacher.role === 'DIRECTOR'
-      ? {}
-      : teacher.role === 'TEAM_LEADER' || teacher.role === 'MANAGER'
-        ? { teamId: teacher.teamId }
-        : { teacherId: teacher.id };
-
-  // 검색 조건 추가
-  const where: Prisma.StudentWhereInput = { ...baseWhere };
+  // 검색 조건
+  const where: Prisma.StudentWhereInput = {};
   if (params.query && params.query.trim()) {
     const query = params.query.trim();
     where.OR = [
@@ -40,10 +33,10 @@ export default async function GradesPage({ searchParams }: PageProps) {
   });
   const { skip, take } = getPrismaSkipTake(paginationParams);
 
-  // 병렬 조회: 학생 목록 + 전체 카운트 + 통계
+  // 병렬 조회: 학생 목록 + 전체 카운트 + 통계 (RBAC 자동 적용)
   const [students, totalCount, totalGradeHistory, totalMockExams] =
     await Promise.all([
-      db.student.findMany({
+      rbacDb.student.findMany({
         where,
         select: {
           id: true,
@@ -61,20 +54,15 @@ export default async function GradesPage({ searchParams }: PageProps) {
         skip,
         take,
       }),
-      db.student.count({ where }),
-      // 통계는 전체 기준 (필터 무관)
-      db.gradeHistory.count({
-        where: { student: baseWhere },
-      }),
-      db.mockExamResult.count({
-        where: { student: baseWhere },
-      }),
+      rbacDb.student.count({ where }),
+      rbacDb.gradeHistory.count(),
+      rbacDb.mockExamResult.count(),
     ]);
 
   // 전체 학생 수 (통계용 - 필터 무관)
   const totalStudents =
     params.query && params.query.trim()
-      ? await db.student.count({ where: baseWhere })
+      ? await rbacDb.student.count()
       : totalCount;
 
   const totalPages = Math.ceil(totalCount / paginationParams.pageSize);
@@ -82,7 +70,7 @@ export default async function GradesPage({ searchParams }: PageProps) {
   return (
     <GradeDashboard
       students={students}
-      teacherRole={teacher.role}
+      teacherRole={session.role || 'TEACHER'}
       searchQuery={params.query || ''}
       stats={{
         totalStudents,

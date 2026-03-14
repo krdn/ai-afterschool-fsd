@@ -1,9 +1,17 @@
 "use server"
 
+import { z } from "zod"
 import { verifySession } from "@/lib/dal"
 import { getRBACPrisma } from "@/lib/db/common/rbac"
 import { ok, fail, type ActionResult } from "@/lib/errors/action-result"
 import { logger } from "@/lib/logger"
+
+const gradeTrendSchema = z.object({
+  startDate: z.string().datetime({ message: "유효한 ISO 날짜 형식이 아닙니다" }),
+  endDate: z.string().datetime({ message: "유효한 ISO 날짜 형식이 아닙니다" }),
+}).refine((data) => new Date(data.startDate) <= new Date(data.endDate), {
+  message: "시작일이 종료일보다 늦을 수 없습니다",
+})
 
 export type GradeTrendPoint = {
   date: string
@@ -20,14 +28,19 @@ export async function getGradeTrendAction(
   endDate: string
 ): Promise<ActionResult<GradeTrendPoint[]>> {
   try {
+    const parsed = gradeTrendSchema.safeParse({ startDate, endDate })
+    if (!parsed.success) {
+      return fail(parsed.error.issues[0].message)
+    }
+
     const session = await verifySession()
     const rbacDb = getRBACPrisma(session)
 
     const grades = await rbacDb.gradeHistory.findMany({
       where: {
         testDate: {
-          gte: new Date(startDate),
-          lte: new Date(endDate),
+          gte: new Date(parsed.data.startDate),
+          lte: new Date(parsed.data.endDate),
         },
       },
       select: {

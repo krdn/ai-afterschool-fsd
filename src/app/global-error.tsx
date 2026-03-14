@@ -28,7 +28,7 @@ export default function GlobalError({
     <html>
       <body>
         <div className="flex min-h-screen flex-col items-center justify-center bg-muted px-4" data-testid="server-error-page">
-          <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
+          <div className="w-full max-w-md rounded-lg bg-card p-8 shadow-lg">
             <div className="mb-4 flex justify-center">
               <div className="rounded-full bg-red-100 dark:bg-red-900/40 p-3">
                 <svg
@@ -71,7 +71,7 @@ export default function GlobalError({
             <div className="space-y-3">
               <button
                 onClick={reset}
-                className="w-full rounded-lg bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                className="w-full rounded-lg bg-primary px-4 py-2 text-primary-foreground font-medium hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors"
               >
                 다시 시도
               </button>

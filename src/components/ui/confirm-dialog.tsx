@@ -49,7 +49,7 @@ export function ConfirmDialog({
             disabled={loading}
             className={
               variant === "destructive"
-                ? "bg-red-600 hover:bg-red-700 text-white"
+                ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 : ""
             }
             onClick={async (e) => {

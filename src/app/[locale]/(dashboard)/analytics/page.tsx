@@ -35,43 +35,45 @@ export default function AnalyticsPage() {
       try {
         const teachersList = await getTeachers()
 
-        const teachersWithMetrics: TeacherWithMetrics[] = []
-        for (const teacher of teachersList) {
-          const metricsResult = await getTeacherStudentMetrics(teacher.id)
-          if (metricsResult.success) {
-            teachersWithMetrics.push({
-              id: teacher.id,
-              name: teacher.name,
-              totalStudents: metricsResult.data.totalStudents,
-              averageGradeChange: metricsResult.data.averageGradeChange,
-              totalCounselingSessions: metricsResult.data.totalCounselingSessions,
-              averageCompatibilityScore: metricsResult.data.averageCompatibilityScore,
-              averageSatisfactionScore: 0,
-              subjectDistribution: metricsResult.data.subjectDistribution,
-            })
-          }
-        }
+        const metricsResults = await Promise.allSettled(
+          teachersList.map((teacher) => getTeacherStudentMetrics(teacher.id))
+        )
+        const teachersWithMetrics = teachersList.reduce<TeacherWithMetrics[]>(
+          (acc, teacher, i) => {
+            const result = metricsResults[i]
+            if (result.status === "fulfilled" && result.value.success) {
+              const data = result.value.data
+              acc.push({
+                id: teacher.id,
+                name: teacher.name,
+                totalStudents: data.totalStudents,
+                averageGradeChange: data.averageGradeChange,
+                totalCounselingSessions: data.totalCounselingSessions,
+                averageCompatibilityScore: data.averageCompatibilityScore,
+                averageSatisfactionScore: 0,
+                subjectDistribution: data.subjectDistribution,
+              })
+            }
+            return acc
+          },
+          []
+        )
 
         setTeachers(teachersWithMetrics)
 
         const comparisonResult = await compareTeachersByGradeImprovement()
         if (comparisonResult.success) {
           setComparisonData(comparisonResult.data)
-        } else {
-        console.error("Comparison error:", comparisonResult.error)
         }
 
         const counselingResult = await getCounselingStats()
         if (counselingResult.success) {
           setCounselingStats(counselingResult.data)
-        } else {
-        console.error("Counseling error:", counselingResult.error)
         }
 
         const trendData: TrendDataPoint[] = []
         setGradeTrendData(trendData)
-      } catch (err) {
-        console.error("Failed to fetch analytics data:", err)
+      } catch {
         setError("데이터를 불러오는데 실패했습니다")
       } finally {
         setLoading(false)
