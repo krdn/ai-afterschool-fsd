@@ -9,6 +9,7 @@ import StudentDetailActions from "@/components/students/student-detail-actions";
 import Link from "next/link";
 import { StudentImageType } from '@/lib/db';
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default async function StudentDetailPage(props: {
     params: Promise<{ id: string }>,
@@ -67,30 +68,44 @@ export default async function StudentDetailPage(props: {
                 <StudentDetailActions id={student.id} />
             </div>
 
-            <div className="bg-card border rounded-lg p-6 mb-6" data-testid="student-info">
-                <h2 className="text-xl font-semibold mb-4">기본 정보</h2>
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <span className="text-muted-foreground">생년월일:</span> {new Date(student.birthDate).toLocaleDateString()}
+            <Card className="mb-6" data-testid="student-info">
+                <CardHeader>
+                    <CardTitle>기본 정보</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                        <div>
+                            <dt className="text-muted-foreground">생년월일</dt>
+                            <dd className="font-medium mt-1">{new Date(student.birthDate).toLocaleDateString()}</dd>
+                        </div>
+                        <div>
+                            <dt className="text-muted-foreground">국적</dt>
+                            <dd className="font-medium mt-1">{student.nationality || "한국"}</dd>
+                        </div>
+                        <div>
+                            <dt className="text-muted-foreground">담당 선생님</dt>
+                            <dd className="font-medium mt-1">{student.teacher?.name || "미배정"}</dd>
+                        </div>
                     </div>
-                    <div>
-                        <span className="text-muted-foreground">국적:</span> {student.nationality || "한국"}
-                    </div>
-                    <div>
-                        <span className="text-muted-foreground">담당 선생님:</span> {student.teacher?.name}
-                    </div>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
 
             {student.parents && student.parents.length > 0 && (
-                <div className="bg-card border rounded-lg p-6 mb-6" data-testid="parent-info">
-                    <h2 className="text-xl font-semibold mb-4">보호자 정보</h2>
-                    {student.parents.map(parent => (
-                        <div key={parent.id} className="mb-2">
-                            <p>{parent.name} ({parent.relation}) - {parent.phone}</p>
-                        </div>
-                    ))}
-                </div>
+                <Card className="mb-6" data-testid="parent-info">
+                    <CardHeader>
+                        <CardTitle>보호자 정보</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                        {student.parents.map(parent => (
+                            <div key={parent.id} className="flex items-center gap-2 text-sm">
+                                <span className="font-medium">{parent.name}</span>
+                                <span className="text-muted-foreground">({parent.relation})</span>
+                                <span className="text-muted-foreground">·</span>
+                                <span>{parent.phone}</span>
+                            </div>
+                        ))}
+                    </CardContent>
+                </Card>
             )}
 
             <div className="border-b mb-6" data-testid="student-detail-tabs">
@@ -110,7 +125,8 @@ export default async function StudentDetailPage(props: {
                 </div>
             </div>
 
-            <div className="bg-card border rounded-lg p-6 min-h-[300px]">
+            <Card>
+              <CardContent className="p-6 min-h-[300px]">
                 {currentTab === 'learning' && (
                     <LearningTab studentId={student.id} />
                 )}
@@ -134,7 +150,8 @@ export default async function StudentDetailPage(props: {
                 {currentTab === 'report' && (
                     <ReportTab studentId={student.id} studentName={student.name} />
                 )}
-            </div>
+              </CardContent>
+            </Card>
         </div>
     );
 }
