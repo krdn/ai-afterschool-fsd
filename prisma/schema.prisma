@@ -41,6 +41,9 @@ model Teacher {
   ocrScans                   GradeOcrScan[]
   learningAnalyses           LearningAnalysis[]
   studyLogs                  StudyLog[]
+  preferences                Json?                         @default("{}")
+  createdUniversities        University[]                  @relation("UniversityCreator")
+  admissionSyncs             AdmissionDataSync[]           @relation("AdmissionSyncTeacher")
 }
 
 model Team {
@@ -101,6 +104,7 @@ model Student {
   studyLogs                      StudyLog[]
   parentGradeReports             ParentGradeReport[]
   neuroscienceCaches             NeuroscienceCache[]
+  targets                        StudentTarget[]
 
   @@index([teacherId])
   @@index([name])
@@ -1158,6 +1162,107 @@ model AgentNodeLog {
   @@map("agent_node_logs")
 }
 
+// ============================================================================
+// 입시 정보 관리 모델
+// ============================================================================
+
+model University {
+  id         String         @id @default(cuid())
+  name       String
+  nameShort  String?
+  type       UniversityType
+  region     String
+  ranking    Int?
+  website    String?
+  isActive   Boolean        @default(true)
+  dataSource String?
+  majors     UniversityMajor[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  createdBy        String
+  createdByTeacher Teacher @relation("UniversityCreator", fields: [createdBy], references: [id])
+  @@unique([name])
+  @@map("universities")
+}
+
+model UniversityMajor {
+  id               String   @id @default(cuid())
+  universityId     String
+  university       University @relation(fields: [universityId], references: [id], onDelete: Cascade)
+  majorName        String
+  department       String?
+  requiredSubjects String[]
+  preparationGuide String?
+  notes            String?
+  cutoffs        AdmissionCutoff[]
+  studentTargets StudentTarget[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  @@unique([universityId, majorName])
+  @@index([universityId])
+  @@map("university_majors")
+}
+
+model AdmissionCutoff {
+  id                String   @id @default(cuid())
+  universityMajorId String
+  universityMajor   UniversityMajor @relation(fields: [universityMajorId], references: [id], onDelete: Cascade)
+  academicYear     Int
+  admissionType    String
+  cutoffGrade      Float?
+  cutoffScore      Float?
+  cutoffPercentile Float?
+  competitionRate  Float?
+  enrollmentCount  Int?
+  applicantCount   Int?
+  additionalInfo   String?
+  dataSource String?
+  isVerified Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([universityMajorId, academicYear, admissionType])
+  @@index([universityMajorId])
+  @@map("admission_cutoffs")
+}
+
+model StudentTarget {
+  id                String   @id @default(cuid())
+  studentId         String
+  student           Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  universityMajorId String
+  universityMajor   UniversityMajor @relation(fields: [universityMajorId], references: [id], onDelete: Cascade)
+  priority             Int
+  admissionType        String?
+  motivation           String?
+  status               TargetStatus @default(INTERESTED)
+  gapAnalysis          Json?
+  admissionProbability Float?
+  analysisUpdatedAt    DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@unique([studentId, universityMajorId])
+  @@index([studentId])
+  @@index([universityMajorId])
+  @@map("student_targets")
+}
+
+model AdmissionDataSync {
+  id           String     @id @default(cuid())
+  syncType     SyncType
+  targetQuery  String
+  source       String?
+  recordsFound Int        @default(0)
+  recordsSaved Int        @default(0)
+  status       SyncStatus @default(PENDING)
+  resultData   Json?
+  errorLog     String?
+  teacherId String
+  teacher   Teacher @relation("AdmissionSyncTeacher", fields: [teacherId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@map("admission_data_syncs")
+}
+
 model NeuroscienceCache {
   id            String   @id @default(cuid())
   studentId     String?
@@ -1176,4 +1281,37 @@ model NeuroscienceCache {
   @@unique([conditionHash, requestType])
   @@index([expiresAt])
   @@index([studentId])
+}
+
+// ============================================================================
+// 입시 관련 Enums
+// ============================================================================
+
+enum UniversityType {
+  FOUR_YEAR
+  COLLEGE
+  CYBER
+  EDUCATION
+}
+
+enum TargetStatus {
+  INTERESTED
+  TARGET
+  APPLIED
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+}
+
+enum SyncType {
+  AI_RESEARCH
+  MANUAL
+}
+
+enum SyncStatus {
+  PENDING
+  REVIEW
+  APPROVED
+  REJECTED
+  FAILED
 }
