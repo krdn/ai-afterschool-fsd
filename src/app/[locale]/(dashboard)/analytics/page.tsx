@@ -11,6 +11,8 @@ import { compareTeachersByGradeImprovement, getCounselingStats, CounselingStats 
 import { TeacherWithMetrics } from "@/components/analytics/teacher-performance-card"
 import { getTeacherStudentMetrics } from "@/lib/actions/teacher/performance"
 import { DateRange } from "@/types/statistics"
+import { getGradeTrendAction } from "@/lib/actions/analytics/grade-trend"
+import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 
 interface TeacherGradeComparison {
   teacherId: string
@@ -56,6 +58,7 @@ export default function AnalyticsPage() {
         if (comparisonResult.success) {
           setComparisonData(comparisonResult.data)
         } else {
+          // eslint-disable-next-line no-console -- 에러 로깅
           console.error("Comparison error:", comparisonResult.error)
         }
 
@@ -63,13 +66,15 @@ export default function AnalyticsPage() {
         if (counselingResult.success) {
           setCounselingStats(counselingResult.data)
         } else {
+          // eslint-disable-next-line no-console -- 에러 로깅
           console.error("Counseling error:", counselingResult.error)
         }
 
         const trendData: TrendDataPoint[] = []
         setGradeTrendData(trendData)
       } catch (err) {
-        console.error("Failed to fetch analytics data:", err)
+        // eslint-disable-next-line no-console -- 에러 로깅
+          console.error("Failed to fetch analytics data:", err)
         setError("데이터를 불러오는데 실패했습니다")
       } finally {
         setLoading(false)
@@ -79,37 +84,34 @@ export default function AnalyticsPage() {
     fetchAnalyticsData()
   }, [])
 
-  // 성과 향상률 데이터 페칭 핸들러
+  // 성과 향상률 데이터 페칭 핸들러 — 실제 GradeHistory 집계
   const fetchTrendData = async (range: DateRange): Promise<TrendDataPoint[]> => {
     try {
-      // GradeHistory에서 기간별 데이터 집계
-      // 여기서는 비어있는 배열을 반환하며, 실제 데이터는 추후 구현
-      // TODO: 실제 GradeHistory 데이터 집계 로직 구현
-      const trendData: TrendDataPoint[] = []
+      const result = await getGradeTrendAction(
+        range.start.toISOString(),
+        range.end.toISOString()
+      )
 
-      // 임시 데이터 (데모용)
-      const now = new Date()
-      const dayMs = 24 * 60 * 60 * 1000
-      const daysDiff = Math.floor((now.getTime() - range.start.getTime()) / dayMs)
-
-      for (let i = 0; i <= Math.min(daysDiff, 30); i++) {
-        const date = new Date(range.start.getTime() + i * dayMs)
-        trendData.push({
-          date: date.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' }),
-          improvement: Math.random() * 20 - 5, // -5% ~ 15% 랜덤
-          score: Math.round(Math.random() * 30 + 60) // 60~90 랜덤 점수
-        })
+      if (!result.success || result.data.length === 0) {
+        return []
       }
 
-      return trendData.slice(0, 10) // 최대 10개 데이터 포인트
-    } catch (error) {
-      console.error('Failed to fetch trend data:', error)
+      return result.data.map((point) => ({
+        date: point.date,
+        improvement: 0,
+        score: point.avgScore,
+      }))
+    } catch {
       return []
     }
   }
 
   return (
     <div className="space-y-6">
+      <BreadcrumbNav items={[
+        { label: "대시보드", href: "/dashboard" },
+        { label: "성과 분석" },
+      ]} />
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">성과 분석</h1>
         <div className="flex items-center gap-4">
