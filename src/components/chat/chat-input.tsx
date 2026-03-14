@@ -185,7 +185,7 @@ export function ChatInput({
           onValueChange={setSelectedModel}
           disabled={isStreaming}
         >
-          <SelectTrigger className="w-[160px] h-[44px] text-xs flex-shrink-0 hidden md:flex">
+          <SelectTrigger className="w-[100px] md:w-[160px] h-[44px] text-xs flex-shrink-0">
             <SelectValue placeholder={t("selectModel")} />
           </SelectTrigger>
           <SelectContent>

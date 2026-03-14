@@ -53,8 +53,8 @@ export function ChatMessageItem({
   return (
     <div className={cn("flex gap-3 py-4", isUser && "justify-end")}>
       {!isUser && (
-        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-          <Bot className="h-4 w-4 text-purple-600" />
+        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 dark:bg-purple-950/40 flex items-center justify-center">
+          <Bot className="h-4 w-4 text-purple-600 dark:text-purple-400" />
         </div>
       )}
 
@@ -63,7 +63,7 @@ export function ChatMessageItem({
           "max-w-[80%] rounded-lg px-4 py-3",
           isUser
             ? "bg-primary text-primary-foreground"
-            : "bg-muted text-foreground"
+            : "bg-muted text-foreground border border-border/50"
         )}
       >
         {isUser ? (
