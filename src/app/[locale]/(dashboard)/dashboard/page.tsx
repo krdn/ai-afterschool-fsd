@@ -5,6 +5,8 @@ import { getDashboardStatsAction } from "@/lib/actions/dashboard/stats"
 import { UpcomingCounselingWidget } from "@/components/counseling/upcoming-counseling-widget"
 import { DashboardStatCards } from "@/components/dashboard/stat-cards"
 import { QuickActions } from "@/components/dashboard/quick-actions"
+import { AlertTriangle } from "lucide-react"
+import { Link } from "@/i18n/navigation"
 
 export default async function DashboardPage() {
   const [teacher, statsResult, counselingResult, t] = await Promise.all([
@@ -37,6 +39,24 @@ export default async function DashboardPage() {
         <DashboardStatCards stats={stats} />
       ) : (
         <p className="text-sm text-destructive">{t("statsError")}</p>
+      )}
+
+      {/* 주의 배너: 미배정 학생 */}
+      {stats && stats.unassignedStudents > 0 && (
+        <Link
+          href="/matching"
+          className="flex items-center gap-3 rounded-lg border border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950/30 p-4 transition-colors hover:bg-amber-100 dark:hover:bg-amber-950/50"
+        >
+          <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+          <div>
+            <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
+              미배정 학생 {stats.unassignedStudents}명
+            </p>
+            <p className="text-xs text-amber-600 dark:text-amber-400">
+              배정 관리 페이지에서 선생님을 배정해주세요
+            </p>
+          </div>
+        </Link>
       )}
 
       {/* 다가오는 상담 */}
