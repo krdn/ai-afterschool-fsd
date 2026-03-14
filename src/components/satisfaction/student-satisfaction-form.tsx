@@ -112,12 +112,12 @@ export function StudentSatisfactionForm({
             </span>
           </div>
           {description && (
-            <p className="text-sm text-gray-600 mb-3">{description}</p>
+            <p className="text-sm text-muted-foreground mb-3">{description}</p>
           )}
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-600 w-12">1</span>
+          <span className="text-sm text-muted-foreground w-12">1</span>
           <input
             type="range"
             id={name}
@@ -125,13 +125,13 @@ export function StudentSatisfactionForm({
             max={10}
             step={1}
             {...form.register(name, { valueAsNumber: true })}
-            className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+            className="flex-1 h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-blue-600"
           />
-          <span className="text-sm text-gray-600 w-12 text-right">10</span>
+          <span className="text-sm text-muted-foreground w-12 text-right">10</span>
           <span className="text-lg font-bold w-12 text-center">{value}</span>
         </div>
 
-        <div className="flex justify-between text-xs text-gray-500 px-0">
+        <div className="flex justify-between text-xs text-muted-foreground px-0">
           <span>불만족</span>
           <span>매우 만족</span>
         </div>
@@ -205,7 +205,7 @@ export function StudentSatisfactionForm({
               placeholder="추가 피드백이 있다면 자유롭게 작성해주세요 (선택사항)"
               {...form.register("feedback")}
             />
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               {form.watch("feedback")?.length || 0} / 500자
             </p>
             {form.formState.errors.feedback && (

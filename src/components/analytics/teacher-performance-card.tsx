@@ -61,9 +61,9 @@ export function TeacherPerformanceCard({
             )}
           </div>
           <div className="text-right">
-            <div className="text-sm text-gray-500">총 담당 학생</div>
-            <div className="text-2xl font-bold text-gray-900 flex items-center justify-end gap-2">
-              <Users className="w-5 h-5 text-gray-600" />
+            <div className="text-sm text-muted-foreground">총 담당 학생</div>
+            <div className="text-2xl font-bold text-foreground flex items-center justify-end gap-2">
+              <Users className="w-5 h-5 text-muted-foreground" />
               {teacher.totalStudents}
             </div>
           </div>
@@ -71,7 +71,7 @@ export function TeacherPerformanceCard({
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-600">평균 성적 향상률</span>
+          <span className="text-sm font-medium text-muted-foreground">평균 성적 향상률</span>
           <div
             className={`flex items-center gap-1 font-semibold ${
               isPositiveChange ? "text-green-600" : "text-red-600"
@@ -87,8 +87,8 @@ export function TeacherPerformanceCard({
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-600 flex items-center gap-2">
-            <MessageSquare className="w-4 h-4 text-gray-500" />
+          <span className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+            <MessageSquare className="w-4 h-4 text-muted-foreground" />
             총 상담 횟수
           </span>
           <span className="font-semibold">{teacher.totalCounselingSessions}회</span>
@@ -96,21 +96,21 @@ export function TeacherPerformanceCard({
 
         {teacher.averageSatisfactionScore !== undefined && (
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-600 flex items-center gap-2">
-              <Star className="w-4 h-4 text-gray-500" />
+            <span className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <Star className="w-4 h-4 text-muted-foreground" />
               평균 학생 만족도
             </span>
             <span className="font-semibold flex items-center gap-1">
               {teacher.averageSatisfactionScore.toFixed(1)}
-              <span className="text-sm text-gray-500">/ 10</span>
+              <span className="text-sm text-muted-foreground">/ 10</span>
             </span>
           </div>
         )}
 
         <div>
           <div className="flex justify-between mb-2">
-            <span className="text-sm font-medium text-gray-600 flex items-center gap-2">
-              <Heart className="w-4 h-4 text-gray-500" />
+            <span className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <Heart className="w-4 h-4 text-muted-foreground" />
               평균 궁합 점수
             </span>
             <span className="font-semibold">
@@ -124,7 +124,7 @@ export function TeacherPerformanceCard({
         </div>
 
         <div>
-          <span className="text-sm font-medium text-gray-600 mb-2 block">
+          <span className="text-sm font-medium text-muted-foreground mb-2 block">
             과목별 학생 분포
           </span>
           <div className="flex flex-wrap gap-2">

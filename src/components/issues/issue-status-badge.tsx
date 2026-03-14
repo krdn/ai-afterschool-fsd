@@ -5,8 +5,8 @@ const STATUS_CONFIG: Record<IssueStatus, { label: string; className: string }> =
   OPEN: { label: '열림', className: 'bg-blue-100 text-blue-800' },
   IN_PROGRESS: { label: '진행 중', className: 'bg-yellow-100 text-yellow-800' },
   IN_REVIEW: { label: '검토 중', className: 'bg-purple-100 text-purple-800' },
-  CLOSED: { label: '종료', className: 'bg-gray-100 text-gray-800' },
-  ARCHIVED: { label: '보관', className: 'bg-gray-50 text-gray-500' },
+  CLOSED: { label: '종료', className: 'bg-muted text-foreground' },
+  ARCHIVED: { label: '보관', className: 'bg-muted text-muted-foreground' },
 }
 
 const CATEGORY_CONFIG: Record<IssueCategory, { label: string; className: string }> = {
@@ -20,7 +20,7 @@ const CATEGORY_CONFIG: Record<IssueCategory, { label: string; className: string 
 }
 
 const PRIORITY_CONFIG: Record<IssuePriority, { label: string; className: string }> = {
-  LOW: { label: '낮음', className: 'bg-gray-100 text-gray-600' },
+  LOW: { label: '낮음', className: 'bg-muted text-muted-foreground' },
   MEDIUM: { label: '보통', className: 'bg-yellow-100 text-yellow-700' },
   HIGH: { label: '높음', className: 'bg-orange-100 text-orange-800' },
   URGENT: { label: '긴급', className: 'bg-red-100 text-red-800' },

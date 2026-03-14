@@ -133,7 +133,7 @@ export default function AnalysisTab({ studentId }: { studentId: string }) {
 
   if (!data.student) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-muted-foreground">
         학생 정보를 불러올 수 없습니다.
       </div>
     )

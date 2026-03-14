@@ -129,7 +129,7 @@ export default function OcrUploadPage({ teacherId }: OcrUploadPageProps) {
           <ScanLine className="w-8 h-8 text-blue-600" />
           OCR 성적 입력
         </h1>
-        <p className="text-gray-600 mt-1">
+        <p className="text-muted-foreground mt-1">
           성적표 사진을 업로드하면 AI가 자동으로 과목별 성적을 추출합니다
         </p>
       </div>
@@ -144,7 +144,7 @@ export default function OcrUploadPage({ teacherId }: OcrUploadPageProps) {
             <CardContent className="space-y-4">
               {/* 파일 업로드 영역 */}
               <div
-                className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/50 transition-colors"
+                className="border-2 border-dashed border rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/50 transition-colors"
                 onClick={() => fileInputRef.current?.click()}
               >
                 {previewUrl ? (
@@ -154,19 +154,19 @@ export default function OcrUploadPage({ teacherId }: OcrUploadPageProps) {
                       alt="업로드된 이미지 미리보기"
                       className="max-h-64 mx-auto rounded-lg shadow-sm"
                     />
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted-foreground">
                       {selectedFile?.name} (
                       {((selectedFile?.size || 0) / 1024).toFixed(1)}KB)
                     </p>
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    <ImageIcon className="w-12 h-12 mx-auto text-gray-400" />
+                    <ImageIcon className="w-12 h-12 mx-auto text-muted-foreground" />
                     <div>
-                      <p className="text-gray-600 font-medium">
+                      <p className="text-muted-foreground font-medium">
                         클릭하여 이미지를 선택하세요
                       </p>
-                      <p className="text-sm text-gray-400 mt-1">
+                      <p className="text-sm text-muted-foreground mt-1">
                         PNG, JPG, JPEG (최대 10MB)
                       </p>
                     </div>

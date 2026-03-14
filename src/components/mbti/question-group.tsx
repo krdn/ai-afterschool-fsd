@@ -18,7 +18,7 @@ type Props = {
 export function QuestionGroup({ dimensionLabel, questions, focusedQuestionId, unansweredIds }: Props) {
   return (
     <section className="space-y-4">
-      <h3 className="text-lg font-semibold sticky top-24 bg-white/95 backdrop-blur py-2 border-b z-0">
+      <h3 className="text-lg font-semibold sticky top-24 bg-card/95 backdrop-blur py-2 border-b z-0">
         {dimensionLabel}
       </h3>
       {questions.map(q => (

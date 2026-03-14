@@ -20,7 +20,7 @@ export function PalmHelpDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-1 text-gray-500">
+        <Button variant="ghost" size="sm" className="gap-1 text-muted-foreground">
           <HelpCircle className="h-4 w-4" />
           <span className="hidden sm:inline">도움말</span>
         </Button>
@@ -43,14 +43,14 @@ export function PalmHelpDialog() {
                     <Badge variant="secondary" className="text-xs">기본</Badge>
                   )}
                 </div>
-                <p className="text-xs text-gray-600">{p.shortDescription}</p>
+                <p className="text-xs text-muted-foreground">{p.shortDescription}</p>
                 <div className="grid grid-cols-[60px_1fr] gap-y-1 gap-x-2 text-xs">
-                  <span className="text-gray-400">대상</span>
-                  <span className="text-gray-600">{p.target}</span>
-                  <span className="text-gray-400">목적</span>
-                  <span className="text-gray-600">{p.purpose}</span>
-                  <span className="text-gray-400">추천시기</span>
-                  <span className="text-gray-600">{p.recommendedTiming}</span>
+                  <span className="text-muted-foreground">대상</span>
+                  <span className="text-muted-foreground">{p.target}</span>
+                  <span className="text-muted-foreground">목적</span>
+                  <span className="text-muted-foreground">{p.purpose}</span>
+                  <span className="text-muted-foreground">추천시기</span>
+                  <span className="text-muted-foreground">{p.recommendedTiming}</span>
                 </div>
                 <div className="flex flex-wrap gap-1">
                   {p.tags.map((tag) => (

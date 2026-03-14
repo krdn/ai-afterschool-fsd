@@ -16,12 +16,12 @@ function CompatibilityBar({ label, value, max, color }: CompatibilityBarProps) {
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between text-sm">
-        <span className="text-gray-600">{label}</span>
+        <span className="text-muted-foreground">{label}</span>
         <span className="font-medium" data-testid={label === "MBTI" ? "mbti-compatibility" : label === "학습 스타일" ? "learning-style-compatibility" : undefined}>
           {value.toFixed(1)} / {max}
         </span>
       </div>
-      <div className="h-2 w-full rounded-full bg-gray-100">
+      <div className="h-2 w-full rounded-full bg-muted">
         <div
           className="h-2 rounded-full transition-all"
           style={{ width: `${percentage}%`, backgroundColor: color }}
@@ -81,8 +81,8 @@ export function CompatibilityScoreCard({
 
         {reasons.length > 0 && (
           <div className="pt-3 border-t space-y-1">
-            <h4 className="text-sm font-medium text-gray-700">추천 이유</h4>
-            <ul className="list-inside list-disc space-y-1 text-xs text-gray-600">
+            <h4 className="text-sm font-medium text-foreground">추천 이유</h4>
+            <ul className="list-inside list-disc space-y-1 text-xs text-muted-foreground">
               {reasons.slice(0, 3).map((reason, idx) => (
                 <li key={idx}>{reason}</li>
               ))}

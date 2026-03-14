@@ -23,9 +23,9 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
   if (active && payload && payload.length) {
     const data = payload[0].payload
     return (
-      <div className="bg-white border border-gray-200 rounded-lg p-3 shadow-lg">
+      <div className="bg-card border border rounded-lg p-3 shadow-lg">
         <p className="font-medium">{data.type}</p>
-        <p className="text-sm text-gray-600">{data.count}명 ({data.percentage}%)</p>
+        <p className="text-sm text-muted-foreground">{data.count}명 ({data.percentage}%)</p>
       </div>
     )
   }
@@ -57,7 +57,7 @@ export function MBTIDistributionChart({ distribution }: MBTIDistributionChartPro
 
   if (totalCount === 0) {
     return (
-      <div className="h-[400px] flex items-center justify-center text-gray-500">
+      <div className="h-[400px] flex items-center justify-center text-muted-foreground">
         MBTI 데이터가 없습니다
       </div>
     )

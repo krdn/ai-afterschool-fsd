@@ -109,20 +109,20 @@ export function BatchAssignment({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] flex flex-col">
+      <div className="bg-card rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] flex flex-col">
         {/* Header */}
         <div className="border-b px-6 py-4 flex items-center justify-between shrink-0">
           <div>
             <h3 className="text-lg font-semibold">학생 일괄 배정</h3>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-muted-foreground">
               여러 학생을 한 번에 선생님에게 배정합니다.
             </p>
           </div>
           <button
             onClick={handleClose}
-            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-1 hover:bg-muted rounded-lg transition-colors"
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="w-5 h-5 text-muted-foreground" />
           </button>
         </div>
 
@@ -164,7 +164,7 @@ export function BatchAssignment({
             </div>
 
             {availableStudents.length === 0 ? (
-              <p className="text-sm text-gray-500 text-center py-4">
+              <p className="text-sm text-muted-foreground text-center py-4">
                 배정 가능한 학생이 없습니다. 모든 학생이 이미 선생님에게 배정되었습니다.
               </p>
             ) : (
@@ -175,7 +175,7 @@ export function BatchAssignment({
                     <Card
                       key={student.id}
                       className={`cursor-pointer transition-colors ${
-                        isSelected ? "border-blue-500 bg-blue-50" : "hover:bg-gray-50"
+                        isSelected ? "border-blue-500 bg-blue-50" : "hover:bg-muted"
                       }`}
                       onClick={() => toggleStudent(student.id)}
                     >
@@ -184,14 +184,14 @@ export function BatchAssignment({
                           className={`w-5 h-5 rounded border flex items-center justify-center ${
                             isSelected
                               ? "bg-blue-500 border-blue-500"
-                              : "border-gray-300"
+                              : "border"
                           }`}
                         >
                           {isSelected && <Check className="w-3 h-3 text-white" />}
                         </div>
                         <div className="flex-1">
                           <div className="font-medium">{student.name}</div>
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-muted-foreground">
                             {student.school} {student.grade}학년
                           </div>
                         </div>

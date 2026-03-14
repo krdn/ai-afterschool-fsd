@@ -41,11 +41,11 @@ export function ExpertiseCoverageChart({ coverage }: ExpertiseCoverageChartProps
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  <th className="border border-gray-300 p-2 text-sm font-medium text-gray-700 bg-gray-50 text-left">
+                  <th className="border border p-2 text-sm font-medium text-foreground bg-muted text-left">
                     과목
                   </th>
                   {GRADES.map(grade => (
-                    <th key={grade} className="border border-gray-300 p-2 text-sm font-medium text-gray-700 bg-gray-50">
+                    <th key={grade} className="border border p-2 text-sm font-medium text-foreground bg-muted">
                       {grade}
                     </th>
                   ))}
@@ -56,7 +56,7 @@ export function ExpertiseCoverageChart({ coverage }: ExpertiseCoverageChartProps
                   const isWeak = coverage.weakSubjects.includes(subject)
                   return (
                     <tr key={subject} className={isWeak ? "bg-red-50" : ""}>
-                      <td className={`border border-gray-300 p-2 text-sm font-medium ${isWeak ? "text-red-700" : ""}`}>
+                      <td className={`border border p-2 text-sm font-medium ${isWeak ? "text-red-700" : ""}`}>
                         {subject}
                       </td>
                       {GRADES.map(grade => {
@@ -64,7 +64,7 @@ export function ExpertiseCoverageChart({ coverage }: ExpertiseCoverageChartProps
                         return (
                           <td
                             key={`${subject}-${grade}`}
-                            className={`border border-gray-300 p-2 text-sm text-center ${getCoverageColor(count, maxSubjectTeachers)}`}
+                            className={`border border p-2 text-sm text-center ${getCoverageColor(count, maxSubjectTeachers)}`}
                           >
                             <div className="font-bold">{count}</div>
                             <div className="text-xs opacity-75">{getCoverageLabel(count, maxSubjectTeachers)}</div>

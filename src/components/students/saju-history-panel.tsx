@@ -52,10 +52,10 @@ export function SajuHistoryPanel({ studentId }: Props) {
 
   if (isPending) {
     return (
-      <div className="rounded-md border border-gray-200 p-4">
+      <div className="rounded-md border border p-4">
         <div className="flex items-center justify-center py-4">
           <div className="animate-spin w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full" />
-          <span className="ml-2 text-sm text-gray-500">이력 불러오는 중...</span>
+          <span className="ml-2 text-sm text-muted-foreground">이력 불러오는 중...</span>
         </div>
       </div>
     )
@@ -63,8 +63,8 @@ export function SajuHistoryPanel({ studentId }: Props) {
 
   if (history.length === 0) {
     return (
-      <div className="rounded-md border border-gray-200 p-4">
-        <div className="flex items-center gap-2 text-gray-500 text-sm">
+      <div className="rounded-md border border p-4">
+        <div className="flex items-center gap-2 text-muted-foreground text-sm">
           <Clock className="h-4 w-4" />
           <span>분석 이력이 없습니다.</span>
         </div>
@@ -73,10 +73,10 @@ export function SajuHistoryPanel({ studentId }: Props) {
   }
 
   return (
-    <div className="rounded-md border border-gray-200">
-      <div className="flex items-center gap-2 px-4 py-2 border-b bg-gray-50">
-        <Clock className="h-4 w-4 text-gray-500" />
-        <span className="text-sm font-medium text-gray-700">분석 이력</span>
+    <div className="rounded-md border border">
+      <div className="flex items-center gap-2 px-4 py-2 border-b bg-muted">
+        <Clock className="h-4 w-4 text-muted-foreground" />
+        <span className="text-sm font-medium text-foreground">분석 이력</span>
         <Badge variant="secondary" className="text-[10px]">{history.length}건</Badge>
       </div>
       <ScrollArea className="max-h-[400px]">
@@ -95,7 +95,7 @@ export function SajuHistoryPanel({ studentId }: Props) {
               <div key={item.id}>
                 <button
                   type="button"
-                  className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors text-left"
+                  className="w-full px-4 py-3 flex items-center justify-between hover:bg-muted transition-colors text-left"
                   onClick={() => setExpandedId(isExpanded ? null : item.id)}
                 >
                   <div className="flex-1 min-w-0 space-y-1">
@@ -116,7 +116,7 @@ export function SajuHistoryPanel({ studentId }: Props) {
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-gray-500 truncate">
+                    <p className="text-xs text-muted-foreground truncate">
                       {item.usedProvider}{model}
                       {item.interpretation
                         ? ` - ${item.interpretation.slice(0, 60)}...`
@@ -124,9 +124,9 @@ export function SajuHistoryPanel({ studentId }: Props) {
                     </p>
                   </div>
                   {isExpanded ? (
-                    <ChevronUp className="h-4 w-4 text-gray-400 flex-shrink-0 ml-2" />
+                    <ChevronUp className="h-4 w-4 text-muted-foreground flex-shrink-0 ml-2" />
                   ) : (
-                    <ChevronDown className="h-4 w-4 text-gray-400 flex-shrink-0 ml-2" />
+                    <ChevronDown className="h-4 w-4 text-muted-foreground flex-shrink-0 ml-2" />
                   )}
                 </button>
 
@@ -135,12 +135,12 @@ export function SajuHistoryPanel({ studentId }: Props) {
                     {/* 메타 정보 */}
                     <div className="grid grid-cols-2 gap-2 text-xs">
                       <div>
-                        <span className="text-gray-400">프롬프트:</span>{' '}
-                        <span className="text-gray-600">{promptName}</span>
+                        <span className="text-muted-foreground">프롬프트:</span>{' '}
+                        <span className="text-muted-foreground">{promptName}</span>
                       </div>
                       <div>
-                        <span className="text-gray-400">엔진:</span>{' '}
-                        <span className="text-gray-600">{item.usedProvider}{model}</span>
+                        <span className="text-muted-foreground">엔진:</span>{' '}
+                        <span className="text-muted-foreground">{item.usedProvider}{model}</span>
                       </div>
                     </div>
 
@@ -154,14 +154,14 @@ export function SajuHistoryPanel({ studentId }: Props) {
 
                     {/* 해석 결과 */}
                     {item.interpretation ? (
-                      <div className="rounded-md border border-gray-200 bg-white p-3">
-                        <p className="text-[10px] text-gray-400 font-medium mb-1">해석 결과</p>
+                      <div className="rounded-md border border bg-card p-3">
+                        <p className="text-[10px] text-muted-foreground font-medium mb-1">해석 결과</p>
                         <div className="max-h-[300px] overflow-y-auto">
                           <MarkdownRenderer content={item.interpretation} />
                         </div>
                       </div>
                     ) : (
-                      <p className="text-xs text-gray-400">해석 결과가 없습니다.</p>
+                      <p className="text-xs text-muted-foreground">해석 결과가 없습니다.</p>
                     )}
                   </div>
                 )}

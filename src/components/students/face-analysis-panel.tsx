@@ -126,7 +126,7 @@ export function FaceAnalysisPanel({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm overflow-hidden" data-testid="physiognomy-tab">
+    <div className="bg-card rounded-lg shadow-sm overflow-hidden" data-testid="physiognomy-tab">
       {/* Header */}
       <div className="px-6 py-4 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
@@ -273,7 +273,7 @@ function AnalysisResult({ result, imageUrl, usedProvider, usedModel, onReanalyze
       {/* Face Shape */}
       <div>
         <h3 className="font-semibold mb-2">얼굴형</h3>
-        <p className="text-gray-700">{analysisResult.faceShape}</p>
+        <p className="text-foreground">{analysisResult.faceShape}</p>
       </div>
 
       {/* Features */}
@@ -294,7 +294,7 @@ function AnalysisResult({ result, imageUrl, usedProvider, usedModel, onReanalyze
         <h3 className="font-semibold mb-2">성격 특성</h3>
         <ul className="list-disc list-inside space-y-1">
           {analysisResult.personalityTraits.map((trait: string, i: number) => (
-            <li key={i} className="text-gray-700">{trait}</li>
+            <li key={i} className="text-foreground">{trait}</li>
           ))}
         </ul>
       </div>
@@ -313,7 +313,7 @@ function AnalysisResult({ result, imageUrl, usedProvider, usedModel, onReanalyze
       {analysisResult.overallInterpretation && (
         <div>
           <h3 className="font-semibold mb-2">종합 해석</h3>
-          <p className="text-gray-700 text-sm leading-relaxed">
+          <p className="text-foreground text-sm leading-relaxed">
             {analysisResult.overallInterpretation}
           </p>
         </div>
@@ -347,8 +347,8 @@ function AnalysisResult({ result, imageUrl, usedProvider, usedModel, onReanalyze
 function FeatureItem({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-sm text-gray-500">{label}</dt>
-      <dd className="text-gray-700">{value}</dd>
+      <dt className="text-sm text-muted-foreground">{label}</dt>
+      <dd className="text-foreground">{value}</dd>
     </div>
   )
 }
@@ -357,8 +357,8 @@ function LoadingState() {
   return (
     <div className="text-center py-8">
       <div className="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4" />
-      <p className="text-gray-600">AI가 얼굴 사진을 분석 중이에요...</p>
-      <p className="text-sm text-gray-500 mt-2">10~20초 정도 소요됩니다.</p>
+      <p className="text-muted-foreground">AI가 얼굴 사진을 분석 중이에요...</p>
+      <p className="text-sm text-muted-foreground mt-2">10~20초 정도 소요됩니다.</p>
     </div>
   )
 }
@@ -366,8 +366,8 @@ function LoadingState() {
 function EmptyState({ hasImage, onAnalyze }: { hasImage: boolean; onAnalyze: () => void }) {
   return (
     <div className="text-center py-8">
-      <Camera className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-      <p className="text-gray-500 mb-4">
+      <Camera className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+      <p className="text-muted-foreground mb-4">
         {hasImage
           ? "얼굴 사진이 준비되었어요. 분석을 시작할까요?"
           : "아직 얼굴 사진이 없어요. 학생 정보에서 얼굴 사진을 업로드해주세요."

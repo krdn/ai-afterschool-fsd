@@ -109,7 +109,7 @@ export default function GradeReportsManager({
       {/* 헤더 */}
       <div>
         <h1 className="text-3xl font-bold">학부모 리포트 관리</h1>
-        <p className="text-gray-600">
+        <p className="text-muted-foreground">
           학생별 성적 리포트를 생성하고 학부모에게 발송합니다
         </p>
       </div>
@@ -137,7 +137,7 @@ export default function GradeReportsManager({
                     <SelectItem key={student.id} value={student.id}>
                       {student.name} ({student.school} {student.grade}학년)
                       {student._count.parentGradeReports > 0 && (
-                        <span className="text-gray-400 ml-2">
+                        <span className="text-muted-foreground ml-2">
                           - 기존 {student._count.parentGradeReports}건
                         </span>
                       )}
@@ -241,7 +241,7 @@ export default function GradeReportsManager({
                 <TableRow>
                   <TableCell
                     colSpan={6}
-                    className="text-center py-12 text-gray-500"
+                    className="text-center py-12 text-muted-foreground"
                   >
                     생성된 리포트가 없습니다.
                   </TableCell>

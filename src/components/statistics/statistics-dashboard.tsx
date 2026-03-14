@@ -131,7 +131,7 @@ export function StatisticsDashboard({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold">상담 통계</h1>
-          <p className="text-sm text-gray-600 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             상담 활동을 분석하고 후속 조치를 관리합니다
           </p>
         </div>

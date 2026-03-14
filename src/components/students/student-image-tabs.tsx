@@ -44,7 +44,7 @@ export function StudentImageTabs({ value, onChange, images }: StudentImageTabsPr
               className={
                 isActive
                   ? "rounded-full bg-gray-900 px-4 py-2 text-sm text-white"
-                  : "rounded-full border border-gray-200 px-4 py-2 text-sm text-gray-600 hover:border-gray-400"
+                  : "rounded-full border border px-4 py-2 text-sm text-muted-foreground hover:border-gray-400"
               }
             >
               {tab.label}
@@ -53,14 +53,14 @@ export function StudentImageTabs({ value, onChange, images }: StudentImageTabsPr
         })}
       </div>
 
-      <div className="rounded-lg border border-gray-200 bg-white p-4">
+      <div className="rounded-lg border border bg-card p-4">
         <div className="flex flex-col gap-4 md:flex-row md:items-center">
           {imageUrl ? (
             <a
               href={linkUrl}
               target="_blank"
               rel="noreferrer"
-              className="group relative h-40 w-40 shrink-0 overflow-hidden rounded-lg border border-gray-100"
+              className="group relative h-40 w-40 shrink-0 overflow-hidden rounded-lg border border"
             >
               <img
                 src={imageUrl}
@@ -72,17 +72,17 @@ export function StudentImageTabs({ value, onChange, images }: StudentImageTabsPr
               </div>
             </a>
           ) : (
-            <div className="flex h-40 w-40 flex-col items-center justify-center rounded-lg border border-dashed border-gray-200 bg-gray-50 text-center text-xs text-gray-500">
+            <div className="flex h-40 w-40 flex-col items-center justify-center rounded-lg border border-dashed border bg-muted text-center text-xs text-muted-foreground">
               <span>이미지 없음</span>
-              <span className="mt-1 text-gray-400">업로드로 추가하세요</span>
+              <span className="mt-1 text-muted-foreground">업로드로 추가하세요</span>
             </div>
           )}
 
           <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-900">
+            <p className="text-sm font-medium text-foreground">
               {activeTab.description}
             </p>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               탭을 눌러 유형별 이미지를 확인할 수 있어요.
             </p>
           </div>

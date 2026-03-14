@@ -72,7 +72,7 @@ export function TeacherRecommendationList({
                   <h3 className="text-lg font-semibold">
                     {index + 1}. {recommendation.teacherName}
                   </h3>
-                  <span className="rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700">
+                  <span className="rounded-full bg-muted px-2 py-1 text-xs font-medium text-foreground">
                     {getRoleLabel(recommendation.teacherRole)}
                   </span>
                   {recommendation.currentStudentCount != null && (
@@ -148,7 +148,7 @@ export function TeacherRecommendationList({
                 {/* 추천 이유 */}
                 {recommendation.reasons.length > 0 && (
                   <div className="mt-4 space-y-1">
-                    <h4 className="text-sm font-medium text-gray-700">추천 이유</h4>
+                    <h4 className="text-sm font-medium text-foreground">추천 이유</h4>
                     <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
                       {recommendation.reasons.map((reason, idx) => (
                         <li key={idx}>{reason}</li>

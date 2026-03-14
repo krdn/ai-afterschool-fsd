@@ -113,7 +113,7 @@ export default function GradeDetailTabs({
 
         <TabsContent value="study-habit" className="mt-6">
           <Card>
-            <CardContent className="flex flex-col items-center justify-center py-16 text-gray-400">
+            <CardContent className="flex flex-col items-center justify-center py-16 text-muted-foreground">
               <Clock className="w-12 h-12 mb-4" />
               <p className="text-lg font-medium">
                 학습 습관 분석 - 추후 구현 예정
@@ -128,7 +128,7 @@ export default function GradeDetailTabs({
 
         <TabsContent value="peer-compare" className="mt-6">
           <Card>
-            <CardContent className="flex flex-col items-center justify-center py-16 text-gray-400">
+            <CardContent className="flex flex-col items-center justify-center py-16 text-muted-foreground">
               <Users className="w-12 h-12 mb-4" />
               <p className="text-lg font-medium">
                 동료 비교 분석 - 추후 구현 예정
@@ -161,17 +161,17 @@ function TeacherAlertBanner({ alerts }: { alerts: TeacherAlert[] }) {
                 <Badge variant="outline" className={`text-xs ${config.badgeColor}`}>
                   {config.label}
                 </Badge>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-muted-foreground">
                   심각도 {alert.severity}/5
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-muted-foreground">
                   {alert.subjects.join(', ')}
                 </span>
               </div>
               <p className={`text-sm mt-1 ${config.textColor}`}>
                 {alert.message}
               </p>
-              <p className="text-xs text-gray-600 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 {alert.suggestedAction}
               </p>
             </div>
@@ -229,11 +229,11 @@ function getAlertConfig(alert: TeacherAlert) {
       return {
         icon: Info,
         label: '알림',
-        bgColor: 'bg-gray-50',
-        borderColor: 'border-gray-200',
-        iconColor: 'text-gray-600',
-        textColor: 'text-gray-800',
-        badgeColor: 'border-gray-300 text-gray-700',
+        bgColor: 'bg-muted',
+        borderColor: 'border',
+        iconColor: 'text-muted-foreground',
+        textColor: 'text-foreground',
+        badgeColor: 'border text-foreground',
       };
   }
 }

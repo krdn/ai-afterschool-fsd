@@ -131,7 +131,7 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                             </LineChart>
                         </ResponsiveContainer>
                     ) : (
-                        <div className="flex flex-col items-center justify-center h-full text-gray-400">
+                        <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
                             <p>입력된 성적 데이터가 없습니다.</p>
                         </div>
                     )}
@@ -226,7 +226,7 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                         <TableBody>
                             {grades.length === 0 ? (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="text-center py-8 text-gray-500">
+                                    <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
                                         데이터가 없습니다.
                                     </TableCell>
                                 </TableRow>

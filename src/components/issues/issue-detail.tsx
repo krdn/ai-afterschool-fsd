@@ -64,11 +64,11 @@ export function IssueDetail({ issue, teachers }: IssueDetailProps) {
           <div className="flex items-center gap-2 mb-2">
             <IssueStatusBadge status={issue.status} />
             {issue.githubIssueNumber && (
-              <span className="text-gray-400 text-sm">#{issue.githubIssueNumber}</span>
+              <span className="text-muted-foreground text-sm">#{issue.githubIssueNumber}</span>
             )}
           </div>
           <h1 className="text-2xl font-bold">{issue.title}</h1>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             {issue.creator.name} · {new Date(issue.createdAt).toLocaleString('ko-KR')}
           </p>
         </div>
@@ -79,7 +79,7 @@ export function IssueDetail({ issue, teachers }: IssueDetailProps) {
               <CardTitle className="text-base">설명</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-700 whitespace-pre-wrap">{issue.description}</p>
+              <p className="text-foreground whitespace-pre-wrap">{issue.description}</p>
             </CardContent>
           </Card>
         )}
@@ -143,11 +143,11 @@ export function IssueDetail({ issue, teachers }: IssueDetailProps) {
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-500">카테고리</span>
+              <span className="text-sm text-muted-foreground">카테고리</span>
               <IssueCategoryBadge category={issue.category as IssueCategory} />
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-500">우선순위</span>
+              <span className="text-sm text-muted-foreground">우선순위</span>
               <IssuePriorityBadge priority={issue.priority as IssuePriority} />
             </div>
           </CardContent>
@@ -169,7 +169,7 @@ export function IssueDetail({ issue, teachers }: IssueDetailProps) {
                 <ExternalLink className="w-3 h-3" />
               </a>
               {issue.githubBranchName && (
-                <p className="text-xs text-gray-500 font-mono">
+                <p className="text-xs text-muted-foreground font-mono">
                   {issue.githubBranchName}
                 </p>
               )}

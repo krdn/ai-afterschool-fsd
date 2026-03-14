@@ -83,7 +83,7 @@ export function FollowUpList({
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-24 bg-gray-100 animate-pulse rounded-lg"
+                className="h-24 bg-muted animate-pulse rounded-lg"
               />
             ))}
           </div>
@@ -105,7 +105,7 @@ export function FollowUpList({
               checked={showCompleted}
               onCheckedChange={setShowCompleted}
             />
-            <Label htmlFor="show-completed" className="text-sm text-gray-600">
+            <Label htmlFor="show-completed" className="text-sm text-muted-foreground">
               완료된 항목 표시
             </Label>
           </div>
@@ -136,7 +136,7 @@ export function FollowUpList({
               </div>
             ) : (
               // 빈 상태
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-12 text-muted-foreground">
                 <div className="mb-2 text-lg font-medium">
                   {showCompleted
                     ? "후속 조치가 없습니다"

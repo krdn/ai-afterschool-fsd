@@ -15,7 +15,7 @@ const EVENT_CONFIG: Record<string, { icon: React.ElementType; label: string; col
   branch_created: { icon: GitBranch, label: '브랜치 생성', color: 'text-green-500' },
   status_changed: { icon: RefreshCw, label: '상태 변경', color: 'text-yellow-500' },
   assigned: { icon: UserPlus, label: '담당자 변경', color: 'text-indigo-500' },
-  closed: { icon: CheckCircle, label: '이슈 종료', color: 'text-gray-500' },
+  closed: { icon: CheckCircle, label: '이슈 종료', color: 'text-muted-foreground' },
 }
 
 function formatDateTime(date: string | Date): string {
@@ -48,14 +48,14 @@ function getEventDetail(event: TimelineEvent): string | null {
 
 export function IssueTimeline({ events }: { events: TimelineEvent[] }) {
   if (events.length === 0) {
-    return <p className="text-gray-400 text-sm">이벤트 기록이 없습니다.</p>
+    return <p className="text-muted-foreground text-sm">이벤트 기록이 없습니다.</p>
   }
 
   return (
     <div className="space-y-4">
       <h3 className="font-semibold text-lg">활동 기록</h3>
       <div className="relative">
-        <div className="absolute left-4 top-0 bottom-0 w-px bg-gray-200" />
+        <div className="absolute left-4 top-0 bottom-0 w-px bg-muted" />
         <div className="space-y-4">
           {events.map((event) => {
             const config = EVENT_CONFIG[event.eventType] || EVENT_CONFIG.created
@@ -64,18 +64,18 @@ export function IssueTimeline({ events }: { events: TimelineEvent[] }) {
 
             return (
               <div key={event.id} className="relative flex items-start gap-3 pl-2">
-                <div className={`relative z-10 flex-shrink-0 w-6 h-6 rounded-full bg-white border-2 flex items-center justify-center ${config.color}`}>
+                <div className={`relative z-10 flex-shrink-0 w-6 h-6 rounded-full bg-card border-2 flex items-center justify-center ${config.color}`}>
                   <Icon className="w-3 h-3" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm">
                     <span className="font-medium">{event.performer.name}</span>
-                    <span className="text-gray-500 ml-1">{config.label}</span>
+                    <span className="text-muted-foreground ml-1">{config.label}</span>
                   </p>
                   {detail && (
-                    <p className="text-xs text-gray-400 font-mono mt-0.5">{detail}</p>
+                    <p className="text-xs text-muted-foreground font-mono mt-0.5">{detail}</p>
                   )}
-                  <p className="text-xs text-gray-400 mt-0.5">
+                  <p className="text-xs text-muted-foreground mt-0.5">
                     {formatDateTime(event.createdAt)}
                   </p>
                 </div>

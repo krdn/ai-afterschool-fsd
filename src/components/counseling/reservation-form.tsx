@@ -219,7 +219,7 @@ export function ReservationForm({ onCancel, onSuccess }: ReservationFormProps) {
         )}
 
         {selectedStudent && parents.length === 0 && (
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             해당 학생의 학부모 정보가 없습니다. 학생 상세 페이지에서 학부모를 등록해주세요.
           </p>
         )}
@@ -234,7 +234,7 @@ export function ReservationForm({ onCancel, onSuccess }: ReservationFormProps) {
             placeholder="상담 주제를 입력해주세요 (2-200자)"
             maxLength={200}
           />
-          <p className="text-xs text-gray-500">{topic.length} / 200자</p>
+          <p className="text-xs text-muted-foreground">{topic.length} / 200자</p>
         </div>
 
         {/* 버튼 그룹 */}

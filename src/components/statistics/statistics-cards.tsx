@@ -12,7 +12,7 @@ interface StatCardProps {
 
 function StatCard({ title, value, icon, variant = 'default' }: StatCardProps) {
   const colorClass = {
-    default: 'text-gray-900',
+    default: 'text-foreground',
     success: 'text-green-600',
     warning: 'text-orange-600',
     danger: 'text-red-600'
@@ -21,7 +21,7 @@ function StatCard({ title, value, icon, variant = 'default' }: StatCardProps) {
   return (
     <Card>
       <CardHeader className="pb-3">
-        <CardTitle className="text-sm font-medium text-gray-600 flex items-center gap-2">
+        <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
           {icon}
           {title}
         </CardTitle>
@@ -56,10 +56,10 @@ export function StatisticsCards({
         {[1, 2, 3, 4].map((i) => (
           <Card key={i}>
             <CardHeader className="pb-3">
-              <div className="h-4 w-24 bg-gray-200 animate-pulse rounded" />
+              <div className="h-4 w-24 bg-muted animate-pulse rounded" />
             </CardHeader>
             <CardContent>
-              <div className="h-9 w-16 bg-gray-200 animate-pulse rounded" />
+              <div className="h-9 w-16 bg-muted animate-pulse rounded" />
             </CardContent>
           </Card>
         ))}

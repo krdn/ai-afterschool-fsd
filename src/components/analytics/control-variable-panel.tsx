@@ -31,7 +31,7 @@ export function ControlVariablePanel({
             <Label htmlFor="initial-grade-filter" className="text-sm font-medium">
               초기 성적 필터링
             </Label>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               HIGH/MID/LOW 초기 성적 수준 조정 적용
             </p>
           </div>
@@ -47,7 +47,7 @@ export function ControlVariablePanel({
             <Label htmlFor="attendance-filter" className="text-sm font-medium">
               출석률 필터링
             </Label>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               출석률 80% 이상 학생만 포함
             </p>
           </div>

@@ -258,7 +258,7 @@ function StrengthWeaknessView({ data }: { data: StrengthWeaknessResult }) {
                 >
                   <div>
                     <span className="font-medium">{s.subject}</span>
-                    <p className="text-sm text-gray-600">{s.reason}</p>
+                    <p className="text-sm text-muted-foreground">{s.reason}</p>
                   </div>
                   <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
                     {s.score}점
@@ -291,7 +291,7 @@ function StrengthWeaknessView({ data }: { data: StrengthWeaknessResult }) {
                       {w.score}점
                     </Badge>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">{w.reason}</p>
+                  <p className="text-sm text-muted-foreground mt-1">{w.reason}</p>
                   <p className="text-sm text-blue-600 mt-1">
                     Tip: {w.improvementTip}
                   </p>
@@ -308,7 +308,7 @@ function StrengthWeaknessView({ data }: { data: StrengthWeaknessResult }) {
           <CardTitle className="text-base">종합 분석</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-700 whitespace-pre-wrap">
+          <p className="text-sm text-foreground whitespace-pre-wrap">
             {data.summary}
           </p>
         </CardContent>
@@ -326,7 +326,7 @@ function EmptyState({
   loading: boolean;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+    <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
       {loading ? (
         <>
           <Loader2 className="w-8 h-8 animate-spin mb-3" />

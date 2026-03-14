@@ -115,15 +115,15 @@ function AnalysisStatus({
       className={`flex flex-col items-center gap-1 p-2 rounded-md border ${
         available
           ? "bg-green-50 border-green-200"
-          : "bg-gray-50 border-gray-200"
+          : "bg-muted border"
       }`}
     >
       {available ? (
         <CheckCircle2 className="w-4 h-4 text-green-600" />
       ) : (
-        <Circle className="w-4 h-4 text-gray-400" />
+        <Circle className="w-4 h-4 text-muted-foreground" />
       )}
-      <span className="text-xs text-gray-600">{label}</span>
+      <span className="text-xs text-muted-foreground">{label}</span>
     </div>
   )
 }

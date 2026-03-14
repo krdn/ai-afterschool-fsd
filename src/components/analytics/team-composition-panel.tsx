@@ -15,7 +15,7 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
   if (!team) {
     return (
       <div className="flex items-center justify-center h-96">
-        <p className="text-gray-500">팀을 찾을 수 없습니다</p>
+        <p className="text-muted-foreground">팀을 찾을 수 없습니다</p>
       </div>
     )
   }
@@ -45,7 +45,7 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">{team.name}</h1>
-          <p className="text-gray-600">구성 분석</p>
+          <p className="text-muted-foreground">구성 분석</p>
         </div>
         <div className={`px-6 py-4 rounded-lg border-2 ${diversityColor}`}>
           <p className="text-sm font-medium">종합 다양성 점수</p>
@@ -97,7 +97,7 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
                     <span>Kinesthetic</span>
                     <span className="font-semibold">{composition.learningStyleDistribution.kinesthetic}%</span>
                   </div>
-                  <p className="text-xs text-gray-600 mt-2">
+                  <p className="text-xs text-muted-foreground mt-2">
                     우세 스타일: {composition.learningStyleDistribution.dominant}
                   </p>
                 </div>
@@ -126,7 +126,7 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
                     <span>수(水)</span>
                     <span className="font-semibold">{composition.sajuElementsDistribution.water}%</span>
                   </div>
-                  <p className="text-xs text-gray-600 mt-2">
+                  <p className="text-xs text-muted-foreground mt-2">
                     우세 오행: {composition.sajuElementsDistribution.dominant}
                   </p>
                 </div>
@@ -141,7 +141,7 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-3">
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+              <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
                 <span className="text-sm">MBTI 다양성</span>
                 <span className={`font-bold ${
                   diversityScore.mbtiDiversity >= 70 ? 'text-green-700' :
@@ -152,7 +152,7 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
                   {diversityScore.mbtiDiversity}
                 </span>
               </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+              <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
                 <span className="text-sm">학습 스타일</span>
                 <span className={`font-bold ${
                   diversityScore.learningStyleDiversity >= 70 ? 'text-green-700' :
@@ -163,7 +163,7 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
                   {diversityScore.learningStyleDiversity}
                 </span>
               </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+              <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
                 <span className="text-sm">오행 균형</span>
                 <span className={`font-bold ${
                   diversityScore.sajuElementsDiversity >= 70 ? 'text-green-700' :
@@ -174,7 +174,7 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
                   {diversityScore.sajuElementsDiversity}
                 </span>
               </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+              <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
                 <span className="text-sm">과목 커버리지</span>
                 <span className={`font-bold ${
                   diversityScore.subjectDiversity >= 70 ? 'text-green-700' :
@@ -185,7 +185,7 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
                   {diversityScore.subjectDiversity}
                 </span>
               </div>
-              <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+              <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
                 <span className="text-sm">학년 커버리지</span>
                 <span className={`font-bold ${
                   diversityScore.gradeDiversity >= 70 ? 'text-green-700' :

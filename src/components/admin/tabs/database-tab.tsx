@@ -185,7 +185,7 @@ export function DatabaseTab({ userRole }: DatabaseTabProps) {
               return (
                 <div
                   key={group}
-                  className={`flex items-center gap-3 p-2.5 rounded-lg border transition-colors ${isSelected ? 'bg-white border-gray-300' : 'bg-gray-50 border-gray-200'
+                  className={`flex items-center gap-3 p-2.5 rounded-lg border transition-colors ${isSelected ? 'bg-card border' : 'bg-muted border'
                     }`}
                 >
                   <Checkbox
@@ -206,7 +206,7 @@ export function DatabaseTab({ userRole }: DatabaseTabProps) {
                         disabled={isForced}
                         className={`px-2 py-0.5 text-xs rounded transition-colors ${currentMode === 'merge'
                           ? 'bg-green-100 text-green-800 font-medium'
-                          : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                          : 'bg-muted text-muted-foreground hover:bg-muted'
                           } ${isForced ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                       >
                         추가/갱신
@@ -216,7 +216,7 @@ export function DatabaseTab({ userRole }: DatabaseTabProps) {
                         onClick={() => toggleMode(group, 'reset')}
                         className={`px-2 py-0.5 text-xs rounded transition-colors cursor-pointer ${currentMode === 'reset'
                           ? 'bg-red-100 text-red-800 font-medium'
-                          : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                          : 'bg-muted text-muted-foreground hover:bg-muted'
                           }`}
                       >
                         리셋
@@ -258,7 +258,7 @@ export function DatabaseTab({ userRole }: DatabaseTabProps) {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-muted-foreground"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>

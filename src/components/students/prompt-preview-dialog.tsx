@@ -84,16 +84,16 @@ export function PromptPreviewDialog({ open, onOpenChange, prompt }: Props) {
         {view === "info" ? (
           <div className="space-y-4 text-sm">
             <div className="grid grid-cols-[80px_1fr] gap-y-3 gap-x-2">
-              <span className="text-gray-500">대상</span>
+              <span className="text-muted-foreground">대상</span>
               <span>{prompt.target}</span>
 
-              <span className="text-gray-500">난이도</span>
+              <span className="text-muted-foreground">난이도</span>
               <span>{prompt.levels}</span>
 
-              <span className="text-gray-500">목적</span>
-              <span className="text-gray-700">{prompt.purpose}</span>
+              <span className="text-muted-foreground">목적</span>
+              <span className="text-foreground">{prompt.purpose}</span>
 
-              <span className="text-gray-500">추천 시기</span>
+              <span className="text-muted-foreground">추천 시기</span>
               <span>{prompt.recommendedTiming}</span>
             </div>
 
@@ -108,15 +108,15 @@ export function PromptPreviewDialog({ open, onOpenChange, prompt }: Props) {
         ) : (
           <ScrollArea className="h-[400px]">
             {previewLoading ? (
-              <div className="flex items-center justify-center h-32 text-gray-400 text-sm">
+              <div className="flex items-center justify-center h-32 text-muted-foreground text-sm">
                 미리보기 로딩 중...
               </div>
             ) : (
               <>
-                <div className="rounded-md border border-gray-200 bg-white">
+                <div className="rounded-md border border bg-card">
                   <MarkdownRenderer content={previewText} />
                 </div>
-                <p className="text-xs text-gray-400 mt-2">
+                <p className="text-xs text-muted-foreground mt-2">
                   * DB에 저장된 프롬프트 원문입니다. 실제 분석 시 {`{학생정보}`}, {`{사주데이터}`} 부분이 학생 데이터로 치환됩니다.
                 </p>
               </>

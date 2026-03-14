@@ -103,7 +103,7 @@ export function LLMQueryBar() {
   if (pathname.includes("/chat")) return null
 
   return (
-    <div className="bg-white border-b">
+    <div className="bg-card border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
         <div className="flex items-center gap-2 overflow-hidden">
           <Sparkles className="h-4 w-4 text-purple-500 flex-shrink-0" />

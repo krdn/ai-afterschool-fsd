@@ -153,7 +153,7 @@ export function ChatInput({
   const plainTextForDisabled = mentionMarkup.replace(/@\[([^\]]+)\]\([^)]+\)/g, '@$1').trim()
 
   return (
-    <div className="border-t bg-white px-4 md:px-6 py-3">
+    <div className="border-t bg-card px-4 md:px-6 py-3">
       <div className="max-w-3xl mx-auto flex items-end gap-2">
         <Sparkles className="h-4 w-4 text-purple-500 mb-3 flex-shrink-0" />
 
@@ -192,7 +192,7 @@ export function ChatInput({
             <SelectItem value="auto">{t("autoModel")}</SelectItem>
             {providers.map((provider) => (
               <SelectGroup key={provider.id}>
-                <SelectLabel className="text-xs text-gray-500">
+                <SelectLabel className="text-xs text-muted-foreground">
                   {provider.name}
                 </SelectLabel>
                 {provider.models.map((model) => (

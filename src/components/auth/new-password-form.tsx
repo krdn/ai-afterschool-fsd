@@ -35,7 +35,7 @@ export function NewPasswordForm({ token }: NewPasswordFormProps) {
         </CardHeader>
         <CardContent className="text-center space-y-4">
           <div className="text-6xl">✅</div>
-          <p className="text-gray-600">{state.message}</p>
+          <p className="text-muted-foreground">{state.message}</p>
         </CardContent>
         <CardFooter className="justify-center">
           <Button asChild>
@@ -76,7 +76,7 @@ export function NewPasswordForm({ token }: NewPasswordFormProps) {
             {state?.errors?.password && (
               <p className="text-sm text-red-600">{state.errors.password[0]}</p>
             )}
-            <p className="text-xs text-gray-500">8자 이상, 영문자와 숫자 포함</p>
+            <p className="text-xs text-muted-foreground">8자 이상, 영문자와 숫자 포함</p>
           </div>
 
           <div className="space-y-2">

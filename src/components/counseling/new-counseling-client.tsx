@@ -59,7 +59,7 @@ export function NewCounselingClient({ students, teacherId, editSession }: NewCou
           <h1 className="text-3xl font-bold">
             {isEditMode ? "상담 기록 수정" : "새 상담 기록"}
           </h1>
-          <p className="text-gray-600">
+          <p className="text-muted-foreground">
             {isEditMode ? "기존 상담 기록을 수정합니다" : "선생님-학생 상담을 기록합니다"}
           </p>
         </div>
@@ -89,11 +89,11 @@ export function NewCounselingClient({ students, teacherId, editSession }: NewCou
                   </SelectContent>
                 </Select>
                 {isEditMode ? (
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     수정 모드에서는 학생을 변경할 수 없습니다
                   </p>
                 ) : (
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     학생을 선택한 후 아래 폼을 작성해주세요
                   </p>
                 )}
@@ -114,8 +114,8 @@ export function NewCounselingClient({ students, teacherId, editSession }: NewCou
               onSuccess={handleSuccess}
             />
           ) : (
-            <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed">
-              <p className="text-gray-500">
+            <div className="text-center py-12 bg-muted rounded-lg border-2 border-dashed">
+              <p className="text-muted-foreground">
                 상단에서 학생을 선택하면 상담 기록 폼이 나타납니다
               </p>
             </div>

@@ -47,7 +47,7 @@ export function PromptSelector({
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2">
-        <label className="text-sm text-gray-600 whitespace-nowrap">프롬프트:</label>
+        <label className="text-sm text-muted-foreground whitespace-nowrap">프롬프트:</label>
         <Select
           value={selectedPromptId}
           onValueChange={onPromptChange}
@@ -73,7 +73,7 @@ export function PromptSelector({
             onClick={() => setPreviewOpen(true)}
             disabled={disabled}
           >
-            <Info className="h-4 w-4 text-gray-500" />
+            <Info className="h-4 w-4 text-muted-foreground" />
           </Button>
         )}
         <PromptPreviewDialog
@@ -95,8 +95,8 @@ export function PromptSelector({
               ))}
             </div>
           </div>
-          <p className="text-gray-600">{selectedMeta.shortDescription}</p>
-          <div className="flex gap-4 text-gray-500">
+          <p className="text-muted-foreground">{selectedMeta.shortDescription}</p>
+          <div className="flex gap-4 text-muted-foreground">
             <span>대상: {selectedMeta.target}</span>
             <span>추천: {selectedMeta.recommendedTiming}</span>
           </div>

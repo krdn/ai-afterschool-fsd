@@ -57,7 +57,7 @@ export function PerformanceMetricsGrid({
     <div className="space-y-4">
       <div className="flex gap-4 items-center flex-wrap">
         <div className="flex items-center gap-2">
-          <label className="text-sm font-medium text-gray-700">정렬 기준:</label>
+          <label className="text-sm font-medium text-foreground">정렬 기준:</label>
           <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue />
@@ -73,7 +73,7 @@ export function PerformanceMetricsGrid({
           </Select>
         </div>
         <div className="flex items-center gap-2">
-          <label className="text-sm font-medium text-gray-700">순서:</label>
+          <label className="text-sm font-medium text-foreground">순서:</label>
           <Select value={sortOrder} onValueChange={(value) => setSortOrder(value as 'asc' | 'desc')}>
             <SelectTrigger className="w-[120px]">
               <SelectValue />

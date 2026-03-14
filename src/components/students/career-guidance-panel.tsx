@@ -46,7 +46,7 @@ export async function CareerGuidancePanel({ studentId, teacherId: _teacherId, su
   if (summary.status === 'complete' && summary.careerGuidance) {
     const result = summary.careerGuidance as CareerGuidanceResult
     return (
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div className="bg-card rounded-lg shadow-sm overflow-hidden">
         {/* Header */}
         <div className="px-6 py-4 border-b flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -56,7 +56,7 @@ export async function CareerGuidancePanel({ studentId, teacherId: _teacherId, su
             <h2 className="text-lg font-semibold">AI 진로 가이드</h2>
           </div>
           {summary.generatedAt && (
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-muted-foreground">
               {format(new Date(summary.generatedAt), "yyyy-MM-dd HH:mm")}
             </span>
           )}
@@ -75,14 +75,14 @@ export async function CareerGuidancePanel({ studentId, teacherId: _teacherId, su
             <h3 className="font-semibold mb-3">적합 학과</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {result.suitableMajors.map((major, i) => (
-                <div key={i} className="bg-gray-50 rounded-lg p-3">
+                <div key={i} className="bg-muted rounded-lg p-3">
                   <div className="flex items-center justify-between mb-1">
-                    <h4 className="font-medium text-sm text-gray-900">{major.name}</h4>
+                    <h4 className="font-medium text-sm text-foreground">{major.name}</h4>
                     <span className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs font-medium">
                       {major.matchScore}%
                     </span>
                   </div>
-                  <p className="text-xs text-gray-600">{major.reason}</p>
+                  <p className="text-xs text-muted-foreground">{major.reason}</p>
                 </div>
               ))}
             </div>
@@ -93,8 +93,8 @@ export async function CareerGuidancePanel({ studentId, teacherId: _teacherId, su
             <h3 className="font-semibold mb-3">진로 경로</h3>
             <div className="space-y-3">
               {result.careerPaths.map((path, i) => (
-                <div key={i} className="bg-gray-50 rounded-lg p-4">
-                  <h4 className="font-medium text-sm text-gray-900 mb-2">{path.field}</h4>
+                <div key={i} className="bg-muted rounded-lg p-4">
+                  <h4 className="font-medium text-sm text-foreground mb-2">{path.field}</h4>
                   <div className="flex flex-wrap gap-1 mb-2">
                     {path.roles.map((role, j) => (
                       <span key={j} className="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs">
@@ -102,7 +102,7 @@ export async function CareerGuidancePanel({ studentId, teacherId: _teacherId, su
                       </span>
                     ))}
                   </div>
-                  <p className="text-xs text-gray-600">{path.reasoning}</p>
+                  <p className="text-xs text-muted-foreground">{path.reasoning}</p>
                 </div>
               ))}
             </div>
@@ -113,7 +113,7 @@ export async function CareerGuidancePanel({ studentId, teacherId: _teacherId, su
             <h3 className="font-semibold mb-3">개발 제안</h3>
             <ul className="space-y-2">
               {result.developmentSuggestions.map((suggestion, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
+                <li key={i} className="flex items-start gap-2 text-sm text-foreground">
                   <span className="text-purple-500 mt-0.5">✓</span>
                   <span>{suggestion}</span>
                 </li>
@@ -130,7 +130,7 @@ export async function CareerGuidancePanel({ studentId, teacherId: _teacherId, su
 
 function LoadingState() {
   return (
-    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-card rounded-lg shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b flex items-center gap-3">
         <div className="p-2 bg-purple-100 rounded-lg">
           <Briefcase className="w-5 h-5 text-purple-600" />
@@ -140,8 +140,8 @@ function LoadingState() {
       <div className="p-6">
         <div className="text-center py-8">
           <div className="animate-spin w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full mx-auto mb-4" />
-          <p className="text-gray-600">AI가 진로 가이드를 생성 중이에요...</p>
-          <p className="text-sm text-gray-500 mt-2">10~20초 정도 소요됩니다.</p>
+          <p className="text-muted-foreground">AI가 진로 가이드를 생성 중이에요...</p>
+          <p className="text-sm text-muted-foreground mt-2">10~20초 정도 소요됩니다.</p>
         </div>
       </div>
     </div>
@@ -150,7 +150,7 @@ function LoadingState() {
 
 function EmptyState() {
   return (
-    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-card rounded-lg shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b flex items-center gap-3">
         <div className="p-2 bg-purple-100 rounded-lg">
           <Briefcase className="w-5 h-5 text-purple-600" />
@@ -159,8 +159,8 @@ function EmptyState() {
       </div>
       <div className="p-6">
         <div className="text-center py-8">
-          <Briefcase className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-500">
+          <Briefcase className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+          <p className="text-muted-foreground">
             최소 3개 이상의 성향 분석이 완료되면 AI가 진로 가이드를 생성해줘요.
           </p>
         </div>
@@ -171,7 +171,7 @@ function EmptyState() {
 
 function ErrorState({ message, studentId }: { message: string; studentId: string }) {
   return (
-    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+    <div className="bg-card rounded-lg shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b flex items-center gap-3">
         <div className="p-2 bg-purple-100 rounded-lg">
           <Briefcase className="w-5 h-5 text-purple-600" />

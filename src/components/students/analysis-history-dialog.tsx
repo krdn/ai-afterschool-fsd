@@ -59,7 +59,7 @@ export function AnalysisHistoryDialog({
               <div className="animate-spin w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full" />
             </div>
           ) : history.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-muted-foreground">
               분석 이력이 없습니다.
             </div>
           ) : (
@@ -67,7 +67,7 @@ export function AnalysisHistoryDialog({
               {history.map((item) => (
                 <div
                   key={item.id}
-                  className="p-3 border rounded-lg hover:bg-gray-50 cursor-pointer transition-colors"
+                  className="p-3 border rounded-lg hover:bg-muted cursor-pointer transition-colors"
                   onClick={() => onViewDetail?.(item)}
                   data-testid="history-item"
                 >
@@ -80,7 +80,7 @@ export function AnalysisHistoryDialog({
                       { locale: ko }
                     )}
                   </p>
-                  <p className="text-xs text-gray-500 mt-1">{item.summary}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{item.summary}</p>
                 </div>
               ))}
             </div>

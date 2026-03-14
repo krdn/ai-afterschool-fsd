@@ -63,7 +63,7 @@ export function ChatMessageItem({
           "max-w-[80%] rounded-lg px-4 py-3",
           isUser
             ? "bg-blue-600 text-white"
-            : "bg-gray-100 text-gray-900"
+            : "bg-muted text-foreground"
         )}
       >
         {isUser ? (
@@ -81,9 +81,9 @@ export function ChatMessageItem({
 
         {/* assistant 메시지 하단 메타/액션 */}
         {!isUser && content && !isStreaming && (
-          <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-200/50">
+          <div className="flex items-center gap-2 mt-2 pt-2 border-t border/50">
             {provider && (
-              <span className="text-xs text-gray-400">
+              <span className="text-xs text-muted-foreground">
                 {provider} / {model}
               </span>
             )}
@@ -96,7 +96,7 @@ export function ChatMessageItem({
               {copied ? (
                 <Check className="h-3 w-3 text-green-500" />
               ) : (
-                <Copy className="h-3 w-3 text-gray-400" />
+                <Copy className="h-3 w-3 text-muted-foreground" />
               )}
             </Button>
           </div>

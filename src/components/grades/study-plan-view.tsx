@@ -20,7 +20,7 @@ interface StudyPlanViewProps {
 function getDayColor(day: string) {
   if (day.includes('토')) return 'text-blue-600';
   if (day.includes('일')) return 'text-red-600';
-  return 'text-gray-900';
+  return 'text-foreground';
 }
 
 export default function StudyPlanView({ data }: StudyPlanViewProps) {
@@ -45,7 +45,7 @@ export default function StudyPlanView({ data }: StudyPlanViewProps) {
         <CardContent className="space-y-3">
           {/* 우선순위 과목 */}
           <div>
-            <span className="text-sm font-medium text-gray-600">
+            <span className="text-sm font-medium text-muted-foreground">
               우선순위 과목:
             </span>
             <div className="flex flex-wrap gap-2 mt-1">
@@ -62,19 +62,19 @@ export default function StudyPlanView({ data }: StudyPlanViewProps) {
 
           {/* 주간 총 학습 시간 */}
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-gray-600">
+            <span className="text-sm font-medium text-muted-foreground">
               주간 총 학습 시간:
             </span>
             <span className="text-lg font-bold text-blue-600">
               {weeklyTotalHours.toFixed(1)}시간
             </span>
-            <span className="text-sm text-gray-400">
+            <span className="text-sm text-muted-foreground">
               (일 평균 {(weeklyTotalHours / 7).toFixed(1)}시간)
             </span>
           </div>
 
           {/* 근거 */}
-          <p className="text-sm text-gray-600">{data.rationale}</p>
+          <p className="text-sm text-muted-foreground">{data.rationale}</p>
         </CardContent>
       </Card>
 
@@ -110,7 +110,7 @@ export default function StudyPlanView({ data }: StudyPlanViewProps) {
                         >
                           <div>
                             <div>{dayPlan.day}</div>
-                            <div className="text-xs text-gray-400 font-normal mt-1">
+                            <div className="text-xs text-muted-foreground font-normal mt-1">
                               총{' '}
                               {dayPlan.subjects
                                 .reduce((sum, s) => sum + s.hours, 0)
@@ -137,7 +137,7 @@ export default function StudyPlanView({ data }: StudyPlanViewProps) {
                         </span>
                       </TableCell>
                       <TableCell>
-                        <span className="text-sm text-gray-600">
+                        <span className="text-sm text-muted-foreground">
                           {subject.focus}
                         </span>
                       </TableCell>

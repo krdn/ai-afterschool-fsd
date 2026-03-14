@@ -126,7 +126,7 @@ export function StudentForm({ student }: StudentFormProps) {
     <form
       action={formAction}
       onSubmit={handleSubmit}
-      className="space-y-4 max-w-md mx-auto p-4 border rounded-lg bg-white"
+      className="space-y-4 max-w-md mx-auto p-4 border rounded-lg bg-card"
     >
       {state.errors?._form && (
         <div className="bg-red-50 text-red-600 p-3 rounded text-sm">
@@ -156,7 +156,7 @@ export function StudentForm({ student }: StudentFormProps) {
 
       <div>
         <label htmlFor="nameHanjaText" className="block text-sm font-medium">
-          한자 이름 <span className="text-gray-400 font-normal">(선택)</span>
+          한자 이름 <span className="text-muted-foreground font-normal">(선택)</span>
         </label>
         <input
           type="text"
@@ -167,7 +167,7 @@ export function StudentForm({ student }: StudentFormProps) {
           className="border p-2 w-full rounded"
           data-testid="student-name-hanja-input"
         />
-        <p className="text-xs text-gray-400 mt-1">
+        <p className="text-xs text-muted-foreground mt-1">
           이름 분석에 사용됩니다
         </p>
       </div>
@@ -198,7 +198,7 @@ export function StudentForm({ student }: StudentFormProps) {
 
       <div>
         <label htmlFor="birthTimeHour" className="block text-sm font-medium">
-          출생 시간 <span className="text-gray-400 font-normal">(선택)</span>
+          출생 시간 <span className="text-muted-foreground font-normal">(선택)</span>
         </label>
         <div className="flex items-center gap-2">
           <select
@@ -215,7 +215,7 @@ export function StudentForm({ student }: StudentFormProps) {
               </option>
             ))}
           </select>
-          <span className="text-gray-500">:</span>
+          <span className="text-muted-foreground">:</span>
           <select
             name="birthTimeMinute"
             id="birthTimeMinute"
@@ -231,7 +231,7 @@ export function StudentForm({ student }: StudentFormProps) {
             ))}
           </select>
         </div>
-        <p className="text-xs text-gray-400 mt-1">
+        <p className="text-xs text-muted-foreground mt-1">
           사주 분석 시 시주 계산에 사용됩니다
         </p>
       </div>
@@ -280,7 +280,7 @@ export function StudentForm({ student }: StudentFormProps) {
 
       <div>
         <label htmlFor="nationality" className="block text-sm font-medium">
-          국적 <span className="text-gray-400 font-normal">(선택)</span>
+          국적 <span className="text-muted-foreground font-normal">(선택)</span>
         </label>
         <input
           type="text"
@@ -321,7 +321,7 @@ export function StudentForm({ student }: StudentFormProps) {
         <h3 className="font-semibold mb-3">학부모 정보</h3>
         <div className="space-y-4">
           <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-700">어머니</p>
+            <p className="text-sm font-medium text-foreground">어머니</p>
             <div>
               <label htmlFor="motherName" className="block text-sm font-medium">
                 성함
@@ -357,7 +357,7 @@ export function StudentForm({ student }: StudentFormProps) {
           </div>
 
           <div className="space-y-2">
-            <p className="text-sm font-medium text-gray-700">아버지</p>
+            <p className="text-sm font-medium text-foreground">아버지</p>
             <div>
               <label htmlFor="fatherName" className="block text-sm font-medium">
                 성함

@@ -27,16 +27,16 @@ export default function ParentReportPreview({
           <div className="text-center">
             <FileText className="w-8 h-8 text-blue-600 mx-auto mb-2" />
             <CardTitle className="text-xl">학습 성적 리포트</CardTitle>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-muted-foreground mt-1">
               {report.studentName} ({report.schoolInfo})
             </p>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               기간: {report.reportPeriod}
             </p>
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-gray-700 leading-relaxed text-center">
+          <p className="text-sm text-foreground leading-relaxed text-center">
             {report.summary}
           </p>
         </CardContent>
@@ -56,13 +56,13 @@ export default function ParentReportPreview({
               {report.subjectComments.map((sc) => (
                 <div
                   key={sc.subject}
-                  className="flex items-center justify-between p-3 rounded-lg bg-gray-50"
+                  className="flex items-center justify-between p-3 rounded-lg bg-muted"
                 >
                   <div className="flex items-center gap-3">
                     <span className="font-medium">{sc.subject}</span>
                     <Badge variant="outline">{sc.score}점</Badge>
                   </div>
-                  <span className="text-sm text-gray-600">{sc.comment}</span>
+                  <span className="text-sm text-muted-foreground">{sc.comment}</span>
                 </div>
               ))}
             </div>
@@ -84,7 +84,7 @@ export default function ParentReportPreview({
               {report.strengths.map((s, i) => (
                 <li
                   key={i}
-                  className="flex items-start gap-2 text-sm text-gray-700 p-2 bg-green-50 rounded"
+                  className="flex items-start gap-2 text-sm text-foreground p-2 bg-green-50 rounded"
                 >
                   <Star className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
                   {s}
@@ -109,7 +109,7 @@ export default function ParentReportPreview({
               {report.growthPoints.map((g, i) => (
                 <li
                   key={i}
-                  className="flex items-start gap-2 text-sm text-gray-700 p-2 bg-amber-50 rounded"
+                  className="flex items-start gap-2 text-sm text-foreground p-2 bg-amber-50 rounded"
                 >
                   <TrendingUp className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
                   {g}
@@ -134,7 +134,7 @@ export default function ParentReportPreview({
               {report.homeStudyTips.map((tip, i) => (
                 <li
                   key={i}
-                  className="flex items-start gap-2 text-sm text-gray-700 p-2 bg-purple-50 rounded"
+                  className="flex items-start gap-2 text-sm text-foreground p-2 bg-purple-50 rounded"
                 >
                   <Home className="w-4 h-4 text-purple-500 mt-0.5 shrink-0" />
                   {tip}
@@ -163,7 +163,7 @@ export default function ParentReportPreview({
       )}
 
       {/* 생성 일시 */}
-      <p className="text-xs text-gray-400 text-center">
+      <p className="text-xs text-muted-foreground text-center">
         생성일: {new Date(report.generatedAt).toLocaleDateString('ko-KR', {
           year: 'numeric',
           month: 'long',

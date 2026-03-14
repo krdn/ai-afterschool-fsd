@@ -215,7 +215,7 @@ export function CounselingSessionForm({
               placeholder="상담 내용을 10-1000자로 요약해주세요"
               {...form.register("summary")}
             />
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-muted-foreground">
               {form.watch("summary")?.length || 0} / 1000자
             </p>
             {form.formState.errors.summary && (
@@ -229,7 +229,7 @@ export function CounselingSessionForm({
             <input
               type="checkbox"
               id="followUpRequired"
-              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              className="h-4 w-4 rounded border text-blue-600 focus:ring-blue-500"
               checked={followUpRequired}
               onChange={(e) => handleFollowUpChange(e.target.checked)}
             />

@@ -63,11 +63,11 @@ export function ResetPasswordError({
     switch (errorType) {
       case 'invalid':
         return {
-          icon: <XCircle className="h-16 w-16 text-gray-400" />,
+          icon: <XCircle className="h-16 w-16 text-muted-foreground" />,
           title: '유효하지 않은 링크예요',
           description:
             '비밀번호 재설정 링크가 유효하지 않아요. 링크가 올바르게 복사되었는지 확인해주세요.',
-          iconColor: 'text-gray-400',
+          iconColor: 'text-muted-foreground',
         }
       case 'expired':
         return {
@@ -78,11 +78,11 @@ export function ResetPasswordError({
         }
       case 'used':
         return {
-          icon: <Lock className="h-16 w-16 text-gray-400" />,
+          icon: <Lock className="h-16 w-16 text-muted-foreground" />,
           title: '이미 사용된 링크예요',
           description:
             '이미 비밀번호가 변경된 링크예요. 새로운 링크를 요청해주세요.',
-          iconColor: 'text-gray-400',
+          iconColor: 'text-muted-foreground',
         }
     }
   }
@@ -96,7 +96,7 @@ export function ResetPasswordError({
       </CardHeader>
       <CardContent className="text-center space-y-4">
         <div className="flex justify-center">{content.icon}</div>
-        <p className="text-gray-600">{content.description}</p>
+        <p className="text-muted-foreground">{content.description}</p>
 
         {errorType === 'expired' && expiredAt && createdAt && (
           <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 text-left">

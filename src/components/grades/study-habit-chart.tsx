@@ -145,12 +145,12 @@ export default function StudyHabitChart({
         </CardHeader>
         <CardContent>
           {statsLoading ? (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+            <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
               <Loader2 className="w-8 h-8 animate-spin mb-3" />
               <p className="text-sm">통계를 불러오는 중...</p>
             </div>
           ) : !stats ? (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+            <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
               <BarChart3 className="w-8 h-8 mb-3" />
               <p className="text-sm">기간을 선택하면 학습 통계를 확인할 수 있습니다.</p>
               <Button
@@ -263,11 +263,11 @@ export default function StudyHabitChart({
                           <div key={item.taskType} className="space-y-1">
                             <div className="flex items-center justify-between text-sm">
                               <span>{TASK_TYPE_LABELS[item.taskType] || item.taskType}</span>
-                              <span className="text-gray-500">
+                              <span className="text-muted-foreground">
                                 {item.count}회 / {item.totalMinutes}분
                               </span>
                             </div>
-                            <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div className="w-full bg-muted rounded-full h-2">
                               <div
                                 className="bg-blue-600 h-2 rounded-full transition-all"
                                 style={{ width: `${percentage}%` }}
@@ -282,7 +282,7 @@ export default function StudyHabitChart({
               )}
 
               {stats.totalMinutes === 0 && (
-                <div className="text-center py-8 text-gray-400">
+                <div className="text-center py-8 text-muted-foreground">
                   <Clock className="w-8 h-8 mx-auto mb-2" />
                   <p className="text-sm">
                     최근 {periodDays}일간 학습 기록이 없습니다.
@@ -323,7 +323,7 @@ export default function StudyHabitChart({
         </CardHeader>
         <CardContent>
           {habitLoading ? (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+            <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
               <Loader2 className="w-8 h-8 animate-spin mb-3" />
               <p className="text-sm">AI가 학습 습관을 분석하고 있습니다...</p>
             </div>
@@ -341,7 +341,7 @@ export default function StudyHabitChart({
                           ? 'bg-green-50 border-green-200'
                           : c.impact === 'NEGATIVE'
                             ? 'bg-red-50 border-red-200'
-                            : 'bg-gray-50 border-gray-200'
+                            : 'bg-muted border'
                       }`}
                     >
                       <div className="flex items-center gap-2 mb-1">
@@ -353,7 +353,7 @@ export default function StudyHabitChart({
                               ? 'text-green-700 border-green-300'
                               : c.impact === 'NEGATIVE'
                                 ? 'text-red-700 border-red-300'
-                                : 'text-gray-700 border-gray-300'
+                                : 'text-foreground border'
                           }
                         >
                           {c.impact === 'POSITIVE'
@@ -363,7 +363,7 @@ export default function StudyHabitChart({
                               : '보통'}
                         </Badge>
                       </div>
-                      <p className="text-sm text-gray-600">{c.description}</p>
+                      <p className="text-sm text-muted-foreground">{c.description}</p>
                       {c.affectedSubjects.length > 0 && (
                         <div className="flex gap-1 mt-2">
                           {c.affectedSubjects.map((s) => (
@@ -386,7 +386,7 @@ export default function StudyHabitChart({
                     {habitResult.recommendations.map((rec, index) => (
                       <li
                         key={index}
-                        className="flex items-start gap-2 text-sm text-gray-700 p-2 bg-blue-50 rounded"
+                        className="flex items-start gap-2 text-sm text-foreground p-2 bg-blue-50 rounded"
                       >
                         <TrendingUp className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
                         {rec}
@@ -397,7 +397,7 @@ export default function StudyHabitChart({
               )}
             </div>
           ) : (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+            <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
               <Activity className="w-8 h-8 mb-3" />
               <p className="text-sm text-center max-w-sm">
                 학습 습관 분석을 실행하면 학습 패턴과 성적 간의 상관관계를 확인할 수 있습니다.
@@ -421,10 +421,10 @@ function SummaryCard({
   value: string;
 }) {
   return (
-    <div className="p-3 rounded-lg border bg-white">
+    <div className="p-3 rounded-lg border bg-card">
       <div className="flex items-center gap-2 mb-1">
         {icon}
-        <span className="text-xs text-gray-500">{label}</span>
+        <span className="text-xs text-muted-foreground">{label}</span>
       </div>
       <p className="text-lg font-semibold">{value}</p>
     </div>

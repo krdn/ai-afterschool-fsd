@@ -122,7 +122,7 @@ export default function TeacherAnalysisTab({ teacherId }: { teacherId: string })
 
   if (!data.teacher) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-muted-foreground">
         선생님 정보를 불러올 수 없습니다.
       </div>
     )

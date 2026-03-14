@@ -211,7 +211,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
             </label>
             <input
               type="text"
-              className="w-full rounded-md border px-3 py-2 text-sm disabled:bg-gray-100"
+              className="w-full rounded-md border px-3 py-2 text-sm disabled:bg-muted"
               placeholder="예: custom-math-strategy"
               value={editing.promptKey}
               onChange={(e) =>
@@ -417,8 +417,8 @@ export function SajuPromptsTab({ initialPresets }: Props) {
                   key={preset.id}
                   className={`rounded-lg border ${
                     preset.isActive
-                      ? "border-gray-200"
-                      : "border-gray-100 bg-muted opacity-60"
+                      ? "border"
+                      : "border bg-muted opacity-60"
                   }`}
                 >
                   {/* 헤더 */}

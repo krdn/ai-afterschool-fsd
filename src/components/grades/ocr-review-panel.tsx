@@ -117,7 +117,7 @@ export default function OcrReviewPanel({
           <CardTitle className="text-lg">분석 결과</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+          <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
             <FileSearch className="w-12 h-12 mb-4" />
             <p className="text-lg font-medium">이미지를 업로드하세요</p>
             <p className="text-sm mt-2">
@@ -139,9 +139,9 @@ export default function OcrReviewPanel({
           <CardTitle className="text-lg">분석 결과</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+          <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
             <Loader2 className="w-12 h-12 mb-4 animate-spin text-blue-600" />
-            <p className="text-lg font-medium text-gray-600">
+            <p className="text-lg font-medium text-muted-foreground">
               AI가 성적을 분석하고 있습니다...
             </p>
             <p className="text-sm mt-2">잠시만 기다려주세요.</p>
@@ -222,7 +222,7 @@ export default function OcrReviewPanel({
             value={studentId}
             onChange={(e) => setStudentId(e.target.value)}
           />
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-muted-foreground">
             추후 학생 검색 기능으로 개선 예정
           </p>
         </div>

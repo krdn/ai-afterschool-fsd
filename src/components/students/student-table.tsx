@@ -88,7 +88,7 @@ export function StudentTable({ data }: StudentTableProps) {
         </Select>
       </div>
 
-      <div className="rounded-md border bg-white">
+      <div className="rounded-md border bg-card">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -135,7 +135,7 @@ export function StudentTable({ data }: StudentTableProps) {
       </div>
 
       <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted-foreground">
           총 {totalCount}명 중 {start}-{end}명 표시
         </p>
         <div className="flex items-center space-x-2">

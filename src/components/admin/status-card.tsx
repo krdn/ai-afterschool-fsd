@@ -53,16 +53,16 @@ export function StatusCard({ title, status, testId }: StatusCardProps) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-gray-700 mb-2" data-testid={`${testId}-message`}>
+        <p className="text-sm text-foreground mb-2" data-testid={`${testId}-message`}>
           {status.message || '상태 확인 중...'}
         </p>
         {status.responseTime !== undefined && (
-          <p className="text-xs text-gray-500" data-testid={`${testId}-response-time`}>
+          <p className="text-xs text-muted-foreground" data-testid={`${testId}-response-time`}>
             응답 시간: {status.responseTime}ms
           </p>
         )}
         {status.connectionPool && (
-          <div className="mt-2 text-xs text-gray-500" data-testid={`${testId}-connection-pool`}>
+          <div className="mt-2 text-xs text-muted-foreground" data-testid={`${testId}-connection-pool`}>
             <span>연결 풀: {status.connectionPool.total}개</span>
             <span className="ml-2">유휴: {status.connectionPool.idle}개</span>
             {status.connectionPool.waiting > 0 && (

@@ -562,7 +562,7 @@ function MbtiDetailView({ mbti }: { mbti: { mbtiType: string; percentages: Recor
 
       {/* 차원별 백분율 바 */}
       <div className="space-y-3">
-        <h4 className="text-sm font-medium text-gray-700">차원별 성향 비율</h4>
+        <h4 className="text-sm font-medium text-foreground">차원별 성향 비율</h4>
         {MBTI_DIMENSIONS.map(({ left, right, leftKey, rightKey }) => {
           const leftPct = mbti.percentages[leftKey] ?? 50
           const rightPct = mbti.percentages[rightKey] ?? 50
@@ -570,11 +570,11 @@ function MbtiDetailView({ mbti }: { mbti: { mbtiType: string; percentages: Recor
 
           return (
             <div key={leftKey} className="space-y-1">
-              <div className="flex justify-between text-xs text-gray-600">
+              <div className="flex justify-between text-xs text-muted-foreground">
                 <span className={dominantSide === 'left' ? 'font-semibold text-blue-700' : ''}>{left}</span>
                 <span className={dominantSide === 'right' ? 'font-semibold text-blue-700' : ''}>{right}</span>
               </div>
-              <div className="flex h-2.5 rounded-full overflow-hidden bg-gray-100">
+              <div className="flex h-2.5 rounded-full overflow-hidden bg-muted">
                 <div
                   className="bg-blue-500 transition-all"
                   style={{ width: `${leftPct}%` }}
@@ -584,7 +584,7 @@ function MbtiDetailView({ mbti }: { mbti: { mbtiType: string; percentages: Recor
                   style={{ width: `${rightPct}%` }}
                 />
               </div>
-              <div className="flex justify-between text-[10px] text-gray-400">
+              <div className="flex justify-between text-[10px] text-muted-foreground">
                 <span>{leftPct}%</span>
                 <span>{rightPct}%</span>
               </div>
@@ -645,11 +645,11 @@ function InterpretationDetailView({ title, interpretation, result, color }: {
               const p = pillars[key]
               return (
                 <div key={key} className="space-y-1">
-                  <p className="text-[10px] text-gray-500">{key === 'year' ? '연주' : key === 'month' ? '월주' : key === 'day' ? '일주' : '시주'}</p>
+                  <p className="text-[10px] text-muted-foreground">{key === 'year' ? '연주' : key === 'month' ? '월주' : key === 'day' ? '일주' : '시주'}</p>
                   {p ? (
                     <p className={`text-sm font-semibold ${c.text}`}>{p.stem}{p.branch}</p>
                   ) : (
-                    <p className="text-xs text-gray-400">-</p>
+                    <p className="text-xs text-muted-foreground">-</p>
                   )}
                 </div>
               )
@@ -657,7 +657,7 @@ function InterpretationDetailView({ title, interpretation, result, color }: {
           </div>
           {elements && (
             <div className="mt-3 flex items-center gap-2 flex-wrap">
-              <span className="text-xs text-gray-500">오행:</span>
+              <span className="text-xs text-muted-foreground">오행:</span>
               {Object.entries(elements).map(([el, count]) => (
                 <span key={el} className={`text-xs px-1.5 py-0.5 rounded ${c.badge}`}>
                   {el} {count}
@@ -674,10 +674,10 @@ function InterpretationDetailView({ title, interpretation, result, color }: {
           <h4 className={`text-sm font-medium ${c.text} mb-3`}>성명학 분석 결과</h4>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <p className="text-xs text-gray-500 mb-1">총 획수</p>
+              <p className="text-xs text-muted-foreground mb-1">총 획수</p>
               <p className={`text-lg font-bold ${c.text}`}>{strokes.total}획</p>
               {strokes.perSyllable && (
-                <p className="text-xs text-gray-400">글자별: {strokes.perSyllable.join(' + ')}</p>
+                <p className="text-xs text-muted-foreground">글자별: {strokes.perSyllable.join(' + ')}</p>
               )}
             </div>
             <div className="space-y-1">
@@ -685,7 +685,7 @@ function InterpretationDetailView({ title, interpretation, result, color }: {
                 const gridNames: Record<string, string> = { won: '원운', hyung: '형운', yi: '이운', jeong: '정운' }
                 return (
                   <div key={key} className="flex items-center justify-between text-xs">
-                    <span className="text-gray-600">{gridNames[key] || key}</span>
+                    <span className="text-muted-foreground">{gridNames[key] || key}</span>
                     <span className={`font-medium ${c.text}`}>{val as number}</span>
                   </div>
                 )
@@ -699,7 +699,7 @@ function InterpretationDetailView({ title, interpretation, result, color }: {
                 return (
                   <div key={key} className="text-xs">
                     <span className={`font-medium ${c.text}`}>{gridNames[key] || key}:</span>{' '}
-                    <span className="text-gray-700">{text as string}</span>
+                    <span className="text-foreground">{text as string}</span>
                   </div>
                 )
               })}
@@ -711,8 +711,8 @@ function InterpretationDetailView({ title, interpretation, result, color }: {
       {/* AI 해석 전문 */}
       {interpretation ? (
         <div className="space-y-2">
-          <h4 className="text-sm font-medium text-gray-700">AI 해석</h4>
-          <div className="prose prose-sm max-w-none rounded-lg border p-4 bg-white">
+          <h4 className="text-sm font-medium text-foreground">AI 해석</h4>
+          <div className="prose prose-sm max-w-none rounded-lg border p-4 bg-card">
             <MarkdownRenderer content={interpretation} />
           </div>
         </div>
@@ -776,7 +776,7 @@ function VisionAnalysisDetailView({ title, result, color }: {
               return (
                 <div key={key}>
                   <p className={`text-xs font-medium ${c.text}`}>{fortuneLabels[key] || key}</p>
-                  <p className="text-xs text-gray-700 leading-relaxed">{value}</p>
+                  <p className="text-xs text-foreground leading-relaxed">{value}</p>
                 </div>
               )
             })}
@@ -786,13 +786,13 @@ function VisionAnalysisDetailView({ title, result, color }: {
 
       {/* 문자열 형태 결과 또는 기타 JSON 표시 */}
       {isStringResult ? (
-        <div className="prose prose-sm max-w-none rounded-lg border p-4 bg-white">
+        <div className="prose prose-sm max-w-none rounded-lg border p-4 bg-card">
           <MarkdownRenderer content={result as string} />
         </div>
       ) : !personalityTraits && !fortune ? (
-        <div className="rounded-lg border p-4 bg-gray-50">
-          <h4 className="text-sm font-medium text-gray-700 mb-2">{title} 결과</h4>
-          <pre className="text-xs text-gray-600 whitespace-pre-wrap overflow-x-auto">
+        <div className="rounded-lg border p-4 bg-muted">
+          <h4 className="text-sm font-medium text-foreground mb-2">{title} 결과</h4>
+          <pre className="text-xs text-muted-foreground whitespace-pre-wrap overflow-x-auto">
             {JSON.stringify(result, null, 2)}
           </pre>
         </div>

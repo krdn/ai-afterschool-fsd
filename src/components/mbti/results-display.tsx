@@ -29,11 +29,11 @@ export function MbtiResultsDisplay({ analysis }: { analysis: MbtiAnalysisData })
           <span className="text-4xl font-bold tracking-wider">{mbtiType}</span>
           <span className="text-lg font-medium">{typeInfo.name}</span>
         </div>
-        <p data-testid="mbti-description" className="text-gray-600 mt-3 max-w-lg mx-auto">{typeInfo.summary}</p>
+        <p data-testid="mbti-description" className="text-muted-foreground mt-3 max-w-lg mx-auto">{typeInfo.summary}</p>
       </div>
 
-      <div className="bg-gray-50 rounded-lg p-4 space-y-4">
-        <h3 className="font-semibold text-gray-700 mb-3">차원별 성향</h3>
+      <div className="bg-muted rounded-lg p-4 space-y-4">
+        <h3 className="font-semibold text-foreground mb-3">차원별 성향</h3>
         <DimensionBar
           leftLabel="외향"
           rightLabel="내향"
@@ -116,13 +116,13 @@ export function MbtiResultsDisplay({ analysis }: { analysis: MbtiAnalysisData })
         </div>
       </div>
 
-      <div className="bg-gray-50 rounded-lg p-4">
-        <h3 className="font-semibold text-gray-700 mb-3">같은 유형의 유명인</h3>
+      <div className="bg-muted rounded-lg p-4">
+        <h3 className="font-semibold text-foreground mb-3">같은 유형의 유명인</h3>
         <div className="flex flex-wrap gap-2">
           {typeInfo.famousPeople.map((person, i) => (
             <span
               key={i}
-              className="px-3 py-1 bg-white border border-gray-200 text-gray-600 rounded-full text-sm"
+              className="px-3 py-1 bg-card border border text-muted-foreground rounded-full text-sm"
             >
               {person}
             </span>
@@ -130,11 +130,11 @@ export function MbtiResultsDisplay({ analysis }: { analysis: MbtiAnalysisData })
         </div>
       </div>
 
-      <p className="text-xs text-gray-400 text-center">
+      <p className="text-xs text-muted-foreground text-center">
         참고용 성향 검사 결과입니다. 전문적인 심리 평가는 자격을 갖춘 전문가와 상담하세요.
       </p>
 
-      <p className="text-xs text-gray-400 text-center">
+      <p className="text-xs text-muted-foreground text-center">
         분석일: {new Date(analysis.calculatedAt).toLocaleDateString("ko-KR")}
       </p>
     </div>

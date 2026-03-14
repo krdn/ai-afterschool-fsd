@@ -37,7 +37,7 @@ export function TeacherRecommendationList({
     return (
       <Card>
         <CardContent className="flex items-center justify-center py-12">
-          <p className="text-center text-gray-500">
+          <p className="text-center text-muted-foreground">
             추천 가능한 선생님이 없습니다.
           </p>
         </CardContent>
@@ -62,7 +62,7 @@ export function TeacherRecommendationList({
     if (score >= 80) return "bg-green-100 text-green-700"
     if (score >= 60) return "bg-blue-100 text-blue-700"
     if (score >= 40) return "bg-yellow-100 text-yellow-700"
-    return "bg-gray-100 text-gray-700"
+    return "bg-muted text-foreground"
   }
 
   const getScoreLabel = (score: number): string => {
@@ -108,10 +108,10 @@ export function TeacherRecommendationList({
                       rank === 1
                         ? "bg-yellow-100 text-yellow-700"
                         : rank === 2
-                          ? "bg-gray-200 text-gray-700"
+                          ? "bg-muted text-foreground"
                           : rank === 3
                             ? "bg-amber-100 text-amber-700"
-                            : "bg-gray-100 text-gray-500"
+                            : "bg-muted text-muted-foreground"
                     }`}
                   >
                     {rank}
@@ -122,7 +122,7 @@ export function TeacherRecommendationList({
                       {recommendation.teacherName}
                     </CardTitle>
                     <div className="flex items-center gap-2 mt-1">
-                      <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-700">
+                      <span className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-foreground">
                         {getRoleLabel(recommendation.teacherRole)}
                       </span>
                       {isCurrentTeacher && (
@@ -138,7 +138,7 @@ export function TeacherRecommendationList({
                   <span className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-medium ${getScoreColorClass(recommendation.score.overall)}`}>
                     {recommendation.score.overall.toFixed(1)}점
                   </span>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-muted-foreground mt-1">
                     {getScoreLabel(recommendation.score.overall)}
                   </p>
                 </div>

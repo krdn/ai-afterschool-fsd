@@ -88,7 +88,7 @@ function HistoryDetailContent({ item, type }: { item: AnalysisHistoryItem; type:
       return <MbtiDetailContent item={item} />
     default:
       return (
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-muted-foreground">
           <pre className="whitespace-pre-wrap font-sans">
             {JSON.stringify(item.result, null, 2)}
           </pre>
@@ -123,20 +123,20 @@ function SajuDetailContent({ item }: { item: AnalysisHistoryItem }) {
         <div>
           <h4 className="text-sm font-semibold mb-2">사주 구조</h4>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-            <div className="p-2 bg-gray-50 rounded">
-              <p className="text-xs text-gray-500">연주</p>
+            <div className="p-2 bg-muted rounded">
+              <p className="text-xs text-muted-foreground">연주</p>
               <p className="font-medium">{result.pillars.year.stem}{result.pillars.year.branch}</p>
             </div>
-            <div className="p-2 bg-gray-50 rounded">
-              <p className="text-xs text-gray-500">월주</p>
+            <div className="p-2 bg-muted rounded">
+              <p className="text-xs text-muted-foreground">월주</p>
               <p className="font-medium">{result.pillars.month.stem}{result.pillars.month.branch}</p>
             </div>
-            <div className="p-2 bg-gray-50 rounded">
-              <p className="text-xs text-gray-500">일주</p>
+            <div className="p-2 bg-muted rounded">
+              <p className="text-xs text-muted-foreground">일주</p>
               <p className="font-medium">{result.pillars.day.stem}{result.pillars.day.branch}</p>
             </div>
-            <div className="p-2 bg-gray-50 rounded">
-              <p className="text-xs text-gray-500">시주</p>
+            <div className="p-2 bg-muted rounded">
+              <p className="text-xs text-muted-foreground">시주</p>
               <p className="font-medium">
                 {result.pillars.hour
                   ? `${result.pillars.hour.stem}${result.pillars.hour.branch}`
@@ -241,7 +241,7 @@ function FaceDetailContent({ item }: { item: AnalysisHistoryItem }) {
       {result?.overallInterpretation && (
         <div>
           <h4 className="text-sm font-semibold mb-2">종합 해석</h4>
-          <p className="text-sm text-gray-700">{result.overallInterpretation}</p>
+          <p className="text-sm text-foreground">{result.overallInterpretation}</p>
         </div>
       )}
     </div>
@@ -250,7 +250,7 @@ function FaceDetailContent({ item }: { item: AnalysisHistoryItem }) {
 
 function PalmDetailContent({ item }: { item: AnalysisHistoryItem }) {
   return (
-    <div className="text-sm text-gray-700">
+    <div className="text-sm text-foreground">
       <p>손금 분석 결과 상세</p>
       <pre className="mt-2 whitespace-pre-wrap text-xs">
         {JSON.stringify(item.result, null, 2)}
@@ -282,13 +282,13 @@ function MbtiDetailContent({ item }: { item: AnalysisHistoryItem }) {
             {Object.entries(result.percentages).map(([key, value]) => (
               <div key={key} className="flex items-center gap-2">
                 <span className="w-12 text-sm">{key}:</span>
-                <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                   <div
                     className="h-full bg-blue-600"
                     style={{ width: `${value}%` }}
                   />
                 </div>
-                <span className="text-sm text-gray-500">{value.toFixed(1)}%</span>
+                <span className="text-sm text-muted-foreground">{value.toFixed(1)}%</span>
               </div>
             ))}
           </div>
@@ -301,7 +301,7 @@ function MbtiDetailContent({ item }: { item: AnalysisHistoryItem }) {
 function FeatureItem({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-xs text-gray-500">{label}</dt>
+      <dt className="text-xs text-muted-foreground">{label}</dt>
       <dd className="text-sm">{value}</dd>
     </div>
   )

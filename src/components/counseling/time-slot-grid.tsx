@@ -30,7 +30,7 @@ export function TimeSlotGrid({
   return (
     <div className="space-y-3">
       {selectedDate && (
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-muted-foreground">
           {format(selectedDate, "M월 d일 E요일", { locale: ko })} 시간 선택
         </p>
       )}
@@ -51,8 +51,8 @@ export function TimeSlotGrid({
                 ${isSelected
                   ? "bg-blue-600 text-white shadow-md"
                   : isReserved
-                    ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                    : "bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300"
+                    ? "bg-muted text-muted-foreground cursor-not-allowed"
+                    : "bg-card border border hover:bg-muted hover:border"
                 }
               `}
             >

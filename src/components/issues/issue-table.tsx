@@ -37,7 +37,7 @@ function formatRelativeTime(date: string | Date): string {
 export function IssueTable({ issues }: { issues: IssueRow[] }) {
   if (issues.length === 0) {
     return (
-      <div className="text-center py-12 text-gray-500">
+      <div className="text-center py-12 text-muted-foreground">
         등록된 이슈가 없습니다.
       </div>
     )
@@ -68,7 +68,7 @@ export function IssueTable({ issues }: { issues: IssueRow[] }) {
                 className="text-blue-600 hover:underline font-medium"
               >
                 {issue.githubIssueNumber && (
-                  <span className="text-gray-400 mr-1">#{issue.githubIssueNumber}</span>
+                  <span className="text-muted-foreground mr-1">#{issue.githubIssueNumber}</span>
                 )}
                 {issue.title}
               </Link>
@@ -79,11 +79,11 @@ export function IssueTable({ issues }: { issues: IssueRow[] }) {
             <TableCell>
               <IssuePriorityBadge priority={issue.priority} />
             </TableCell>
-            <TableCell className="text-gray-600">{issue.creator.name}</TableCell>
-            <TableCell className="text-gray-600">
-              {issue.assignee?.name || <span className="text-gray-400">미할당</span>}
+            <TableCell className="text-muted-foreground">{issue.creator.name}</TableCell>
+            <TableCell className="text-muted-foreground">
+              {issue.assignee?.name || <span className="text-muted-foreground">미할당</span>}
             </TableCell>
-            <TableCell className="text-gray-500 text-sm">
+            <TableCell className="text-muted-foreground text-sm">
               {formatRelativeTime(issue.createdAt)}
             </TableCell>
           </TableRow>

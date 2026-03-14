@@ -175,7 +175,7 @@ function CoachingReportView({ report }: { report: CoachingReport }) {
               </div>
             )}
           </div>
-          <p className="text-sm text-gray-600 mt-3 whitespace-pre-wrap">
+          <p className="text-sm text-muted-foreground mt-3 whitespace-pre-wrap">
             {report.strengthWeakness.summary}
           </p>
         </CardContent>
@@ -200,7 +200,7 @@ function CoachingReportView({ report }: { report: CoachingReport }) {
       </div>
 
       {/* 생성 시간 */}
-      <p className="text-xs text-gray-400 text-right">
+      <p className="text-xs text-muted-foreground text-right">
         리포트 생성: {new Date(report.generatedAt).toLocaleString('ko-KR')}
       </p>
     </div>
@@ -210,7 +210,7 @@ function CoachingReportView({ report }: { report: CoachingReport }) {
 /** 빈 상태 표시 */
 function EmptyState({ loading }: { loading: boolean }) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+    <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
       {loading ? (
         <>
           <Loader2 className="w-10 h-10 animate-spin mb-4" />

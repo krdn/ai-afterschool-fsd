@@ -44,7 +44,7 @@ function DisparityIndexCard({ value }: { value: number }) {
   return (
     <Card data-testid="fairness-metric">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-gray-600" data-testid="metric-label">
+        <CardTitle className="text-sm font-medium text-muted-foreground" data-testid="metric-label">
           집단 간 궁합 점수 차이
         </CardTitle>
       </CardHeader>
@@ -65,7 +65,7 @@ function DisparityIndexCard({ value }: { value: number }) {
             } as React.CSSProperties
           }
         />
-        <p className="mt-2 text-xs text-gray-500">
+        <p className="mt-2 text-xs text-muted-foreground">
           학교별 평균 궁합 점수의 차이 (0 = 공정, 1 = 불공정)
         </p>
       </CardContent>
@@ -82,7 +82,7 @@ function ABROCACard({ value }: { value: number }) {
   return (
     <Card data-testid="fairness-metric">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-gray-600" data-testid="metric-label">
+        <CardTitle className="text-sm font-medium text-muted-foreground" data-testid="metric-label">
           궁합 점수 분포 편향
         </CardTitle>
       </CardHeader>
@@ -102,7 +102,7 @@ function ABROCACard({ value }: { value: number }) {
             } as React.CSSProperties
           }
         />
-        <p className="mt-2 text-xs text-gray-500">
+        <p className="mt-2 text-xs text-muted-foreground">
           점수 분포의 균등성 (0 = 균등, 1 = 편향)
         </p>
       </CardContent>
@@ -119,7 +119,7 @@ function DistributionBalanceCard({ value }: { value: number }) {
   return (
     <Card data-testid="fairness-metric">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-gray-600" data-testid="metric-label">
+        <CardTitle className="text-sm font-medium text-muted-foreground" data-testid="metric-label">
           선생님별 배정 균형
         </CardTitle>
       </CardHeader>
@@ -139,7 +139,7 @@ function DistributionBalanceCard({ value }: { value: number }) {
             } as React.CSSProperties
           }
         />
-        <p className="mt-2 text-xs text-gray-500">
+        <p className="mt-2 text-xs text-muted-foreground">
           선생님별 학생 배정 균형 (1 = 균등, 0 = 불균형)
         </p>
       </CardContent>
@@ -185,7 +185,7 @@ function RecommendationsSection({
           {recommendations.map((recommendation, index) => (
             <li key={index} className="flex items-start gap-3">
               <RecommendationIcon recommendation={recommendation} />
-              <span className="text-gray-700">{recommendation}</span>
+              <span className="text-foreground">{recommendation}</span>
             </li>
           ))}
         </ul>

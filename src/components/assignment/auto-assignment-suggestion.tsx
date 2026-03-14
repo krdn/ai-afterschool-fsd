@@ -233,35 +233,35 @@ export function AutoAssignmentSuggestion({
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
                 <div className="space-y-1">
-                  <p className="text-gray-500">Disparity Index</p>
+                  <p className="text-muted-foreground">Disparity Index</p>
                   <p className="font-medium">
                     {(suggestion.fairnessMetrics.disparityIndex * 100).toFixed(
                       1
                     )}
                     %
                   </p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-muted-foreground">
                     학교 간 점수 차이 (낮을수록 공정)
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-gray-500">ABROCA</p>
+                  <p className="text-muted-foreground">ABROCA</p>
                   <p className="font-medium">
                     {(suggestion.fairnessMetrics.abroca * 100).toFixed(1)}%
                   </p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-muted-foreground">
                     점수 분포 편향 (낮을수록 공정)
                   </p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-gray-500">Distribution Balance</p>
+                  <p className="text-muted-foreground">Distribution Balance</p>
                   <p className="font-medium">
                     {(suggestion.fairnessMetrics.distributionBalance * 100).toFixed(
                       1
                     )}
                     %
                   </p>
-                  <p className="text-xs text-gray-400">
+                  <p className="text-xs text-muted-foreground">
                     선생님별 배정 균형 (높을수록 균등)
                   </p>
                 </div>
@@ -294,7 +294,7 @@ export function AutoAssignmentSuggestion({
             <CardContent>
               <div className="border rounded-lg overflow-hidden">
                 <table className="w-full text-sm">
-                  <thead className="bg-gray-50">
+                  <thead className="bg-muted">
                     <tr>
                       <th className="px-4 py-2 text-left font-medium">학생</th>
                       <th className="px-4 py-2 text-left font-medium">배정 선생님</th>
@@ -305,12 +305,12 @@ export function AutoAssignmentSuggestion({
                   </thead>
                   <tbody className="divide-y">
                     {suggestion.assignments.map((assignment) => (
-                      <tr key={assignment.studentId} className="hover:bg-gray-50" data-testid="teacher-assignment">
+                      <tr key={assignment.studentId} className="hover:bg-muted" data-testid="teacher-assignment">
                         <td className="px-4 py-3">
                           <p className="font-medium">
                             {getStudentName(assignment.studentId)}
                           </p>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-muted-foreground">
                             {allStudents.find(
                               (s) => s.id === assignment.studentId
                             )?.school || ''}
@@ -325,30 +325,30 @@ export function AutoAssignmentSuggestion({
                           <span className="font-medium text-lg">
                             {Math.round(assignment.score.overall)}
                           </span>
-                          <span className="text-gray-500 text-sm">/100</span>
+                          <span className="text-muted-foreground text-sm">/100</span>
                         </td>
                         <td className="px-4 py-3">
                           <div className="space-y-1 text-xs">
                             <div className="flex justify-between gap-4">
-                              <span className="text-gray-500">MBTI</span>
+                              <span className="text-muted-foreground">MBTI</span>
                               <span>{Math.round(assignment.score.breakdown.mbti / 25 * 100)}%</span>
                             </div>
                             <div className="flex justify-between gap-4">
-                              <span className="text-gray-500">학습 스타일</span>
+                              <span className="text-muted-foreground">학습 스타일</span>
                               <span>
                                 {Math.round(assignment.score.breakdown.learningStyle / 25 * 100)}%
                               </span>
                             </div>
                             <div className="flex justify-between gap-4">
-                              <span className="text-gray-500">사주</span>
+                              <span className="text-muted-foreground">사주</span>
                               <span>{Math.round(assignment.score.breakdown.saju / 20 * 100)}%</span>
                             </div>
                             <div className="flex justify-between gap-4">
-                              <span className="text-gray-500">성명학</span>
+                              <span className="text-muted-foreground">성명학</span>
                               <span>{Math.round(assignment.score.breakdown.name / 15 * 100)}%</span>
                             </div>
                             <div className="flex justify-between gap-4">
-                              <span className="text-gray-500">부하 분산</span>
+                              <span className="text-muted-foreground">부하 분산</span>
                               <span>
                                 {Math.round(assignment.score.breakdown.loadBalance / 15 * 100)}%
                               </span>
@@ -358,7 +358,7 @@ export function AutoAssignmentSuggestion({
                         <td className="px-4 py-3">
                           <ul className="text-xs space-y-1">
                             {assignment.score.reasons.slice(0, 2).map((reason, idx) => (
-                              <li key={idx} className="text-gray-600">
+                              <li key={idx} className="text-muted-foreground">
                                 • {reason}
                               </li>
                             ))}

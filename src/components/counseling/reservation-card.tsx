@@ -108,7 +108,7 @@ export function ReservationCard({
         <CardContent className="p-4">
           {/* Header: Date/Time + Status Badge */}
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-muted-foreground">
               {format(new Date(reservation.scheduledAt), "M월 d일 E요일 HH:mm", { locale: ko })}
             </span>
             <Badge variant={statusVariant}>{statusLabel}</Badge>
@@ -118,10 +118,10 @@ export function ReservationCard({
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm">
               <span className="font-medium">{reservation.student.name}</span>
-              <span className="text-gray-400">·</span>
-              <span className="text-gray-600">{getParentRelationLabel(reservation.parent.relation)}</span>
+              <span className="text-muted-foreground">·</span>
+              <span className="text-muted-foreground">{getParentRelationLabel(reservation.parent.relation)}</span>
             </div>
-            <div className="text-sm text-gray-700">{reservation.topic}</div>
+            <div className="text-sm text-foreground">{reservation.topic}</div>
           </div>
 
           {/* Footer: Action Buttons (SCHEDULED only) */}
@@ -153,7 +153,7 @@ export function ReservationCard({
                 size="sm"
                 onClick={() => openDialog("cancel")}
                 disabled={isProcessing}
-                className="flex-1 bg-gray-50 text-gray-700 hover:bg-gray-100 border-gray-200"
+                className="flex-1 bg-muted text-foreground hover:bg-muted border"
               >
                 취소
               </Button>

@@ -78,13 +78,13 @@ export function StudentImageUploader({
     return (
       <div className="space-y-3">
         <div>
-          <p className="text-sm font-medium text-gray-900">{label}</p>
+          <p className="text-sm font-medium text-foreground">{label}</p>
           {description ? (
-            <p className="text-xs text-gray-500">{description}</p>
+            <p className="text-xs text-muted-foreground">{description}</p>
           ) : null}
         </div>
-        <div className="rounded-lg border border-dashed border-gray-200 p-4">
-          <p className="text-sm text-gray-400">이미지 업로드 서비스가 설정되지 않았습니다</p>
+        <div className="rounded-lg border border-dashed border p-4">
+          <p className="text-sm text-muted-foreground">이미지 업로드 서비스가 설정되지 않았습니다</p>
         </div>
       </div>
     )
@@ -93,20 +93,20 @@ export function StudentImageUploader({
   return (
     <div className="space-y-3">
       <div>
-        <p className="text-sm font-medium text-gray-900">{label}</p>
+        <p className="text-sm font-medium text-foreground">{label}</p>
         {description ? (
-          <p className="text-xs text-gray-500">{description}</p>
+          <p className="text-xs text-muted-foreground">{description}</p>
         ) : null}
       </div>
 
-      <div className="rounded-lg border border-dashed border-gray-200 p-4">
+      <div className="rounded-lg border border-dashed border p-4">
         <div className="flex flex-col gap-3">
           <div className="flex items-start justify-between gap-3">
             <div className="space-y-1">
-              <p className="text-sm font-medium text-gray-700">
+              <p className="text-sm font-medium text-foreground">
                 {hasPreview ? "이미지 선택됨" : "이미지를 업로드해주세요"}
               </p>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-muted-foreground">
                 JPG, PNG, WebP, HEIC 파일 1장까지 업로드할 수 있어요 (최대 10MB).
               </p>
             </div>
@@ -254,7 +254,7 @@ export function StudentImageUploader({
           </div>
 
           {publicId ? (
-            <div className="rounded-md border border-gray-100 bg-white p-2">
+            <div className="rounded-md border border bg-card p-2">
               <CldImage
                 width={128}
                 height={128}

@@ -94,7 +94,7 @@ export function DevUserSwitcher({ currentUserId }: { currentUserId: string }) {
 
       {/* 패널 */}
       {isOpen && (
-        <div className="absolute bottom-12 right-0 w-72 bg-white rounded-lg shadow-2xl border border-yellow-300 overflow-hidden">
+        <div className="absolute bottom-12 right-0 w-72 bg-card rounded-lg shadow-2xl border border-yellow-300 overflow-hidden">
           <div className="bg-yellow-400 px-3 py-2">
             <p className="text-xs font-bold text-yellow-900">
               개발 전용 - 사용자 전환
@@ -103,7 +103,7 @@ export function DevUserSwitcher({ currentUserId }: { currentUserId: string }) {
 
           <div className="max-h-80 overflow-y-auto">
             {loading ? (
-              <div className="p-4 text-center text-sm text-gray-500">
+              <div className="p-4 text-center text-sm text-muted-foreground">
                 로딩 중...
               </div>
             ) : (
@@ -115,7 +115,7 @@ export function DevUserSwitcher({ currentUserId }: { currentUserId: string }) {
                   className={`w-full text-left px-3 py-2.5 border-b last:border-b-0 transition-colors ${
                     t.id === currentUserId
                       ? "bg-yellow-50"
-                      : "hover:bg-gray-50"
+                      : "hover:bg-muted"
                   } ${switching ? "opacity-50" : ""}`}
                 >
                   <div className="flex items-center justify-between">
@@ -130,14 +130,14 @@ export function DevUserSwitcher({ currentUserId }: { currentUserId: string }) {
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-gray-400 truncate">
+                      <p className="text-xs text-muted-foreground truncate">
                         {t.email}
                         {t.team ? ` · ${t.team.name}` : ""}
                       </p>
                     </div>
                     <span
                       className={`text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap ${
-                        ROLE_COLORS[t.role] || "bg-gray-100 text-gray-600"
+                        ROLE_COLORS[t.role] || "bg-muted text-muted-foreground"
                       }`}
                     >
                       {ROLE_LABELS[t.role] || t.role}

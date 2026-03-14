@@ -66,7 +66,7 @@ export function AIInterpretationControls({
   const [selectedPromptId, setSelectedPromptId] = useState("default")
 
   return (
-    <div className="rounded-md border border-gray-200 p-4">
+    <div className="rounded-md border border p-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 flex-wrap">
         <ProviderSelector
           selectedProvider={selectedProvider}
@@ -116,8 +116,8 @@ export function AnalysisEmptyState({
 
   return (
     <div className="text-center py-8">
-      <Icon className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-      <p className="text-gray-500 mb-4">{message}</p>
+      <Icon className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+      <p className="text-muted-foreground mb-4">{message}</p>
       {children}
       {actionLabel && onAction && (
         <Button onClick={onAction} disabled={isLoading}>
@@ -147,8 +147,8 @@ export function AnalysisLoadingState({
       <div
         className={`animate-spin w-12 h-12 border-4 border-${color}-600 border-t-transparent rounded-full mx-auto mb-4`}
       />
-      <p className="text-gray-600">{displayMessage}</p>
-      <p className="text-sm text-gray-500 mt-2">{displaySubMessage}</p>
+      <p className="text-muted-foreground">{displayMessage}</p>
+      <p className="text-sm text-muted-foreground mt-2">{displaySubMessage}</p>
     </div>
   )
 }
@@ -201,7 +201,7 @@ export function AnalysisNoResult({ label }: { label?: string }) {
   const displayLabel = label ?? "해석"
 
   return (
-    <div className="rounded-md bg-gray-50 p-4 text-sm text-gray-500">
+    <div className="rounded-md bg-muted p-4 text-sm text-muted-foreground">
       {t("noInterpretation", { label: displayLabel })}
     </div>
   )

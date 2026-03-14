@@ -21,7 +21,7 @@ export function StudentAnalysisStatus({ status }: StudentAnalysisStatusProps) {
       >
         {isStale ? "재계산 필요" : "최신 분석"}
       </span>
-      <span className="text-xs text-gray-500">
+      <span className="text-xs text-muted-foreground">
         최근 계산: {format(status.latestCalculatedAt, "yyyy.MM.dd", { locale: ko })}
       </span>
     </div>

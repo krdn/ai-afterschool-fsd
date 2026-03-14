@@ -109,18 +109,18 @@ export function MbtiDirectInputModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-card rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
+        <div className="sticky top-0 bg-card border-b px-6 py-4 flex items-center justify-between">
           <div>
             <h3 className="text-lg font-semibold">MBTI 직접 입력</h3>
-            <p className="text-sm text-gray-500">{studentName} 학생의 MBTI 유형</p>
+            <p className="text-sm text-muted-foreground">{studentName} 학생의 MBTI 유형</p>
           </div>
           <button
             onClick={onCancel}
-            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-1 hover:bg-muted rounded-lg transition-colors"
           >
-            <X className="w-5 h-5 text-gray-500" />
+            <X className="w-5 h-5 text-muted-foreground" />
           </button>
         </div>
 
@@ -128,7 +128,7 @@ export function MbtiDirectInputModal({
         <div className="p-6 space-y-6">
           {/* MBTI 유형 선택 */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
+            <label className="block text-sm font-medium text-foreground mb-3">
               MBTI 유형 선택 *
             </label>
             <div className="grid grid-cols-4 gap-2">
@@ -141,7 +141,7 @@ export function MbtiDirectInputModal({
                     py-2 px-3 rounded-lg border-2 font-medium text-sm transition-all
                     ${selectedType === type
                       ? "border-purple-600 bg-purple-50 text-purple-700"
-                      : "border-gray-200 hover:border-purple-300 hover:bg-purple-50"
+                      : "border hover:border-purple-300 hover:bg-purple-50"
                     }
                   `}
                 >
@@ -154,12 +154,12 @@ export function MbtiDirectInputModal({
           {/* 차원별 백분율 조정 */}
           {selectedType && (
             <div className="space-y-4">
-              <h4 className="font-medium text-gray-700">차원별 백분율 조정</h4>
+              <h4 className="font-medium text-foreground">차원별 백분율 조정</h4>
 
               {/* E / I */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">외향 (E)</span>
+                  <span className="text-muted-foreground">외향 (E)</span>
                   <span className="font-medium">{percentages.E}%</span>
                 </div>
                 <input
@@ -171,10 +171,10 @@ export function MbtiDirectInputModal({
                     const val = parseInt(e.target.value)
                     setPercentages({ ...percentages, E: val, I: 100 - val })
                   }}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                  className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-purple-600"
                 />
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">내향 (I)</span>
+                  <span className="text-muted-foreground">내향 (I)</span>
                   <span className="font-medium">{percentages.I}%</span>
                 </div>
               </div>
@@ -182,7 +182,7 @@ export function MbtiDirectInputModal({
               {/* S / N */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">감각 (S)</span>
+                  <span className="text-muted-foreground">감각 (S)</span>
                   <span className="font-medium">{percentages.S}%</span>
                 </div>
                 <input
@@ -194,10 +194,10 @@ export function MbtiDirectInputModal({
                     const val = parseInt(e.target.value)
                     setPercentages({ ...percentages, S: val, N: 100 - val })
                   }}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                  className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-purple-600"
                 />
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">직관 (N)</span>
+                  <span className="text-muted-foreground">직관 (N)</span>
                   <span className="font-medium">{percentages.N}%</span>
                 </div>
               </div>
@@ -205,7 +205,7 @@ export function MbtiDirectInputModal({
               {/* T / F */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">사고 (T)</span>
+                  <span className="text-muted-foreground">사고 (T)</span>
                   <span className="font-medium">{percentages.T}%</span>
                 </div>
                 <input
@@ -217,10 +217,10 @@ export function MbtiDirectInputModal({
                     const val = parseInt(e.target.value)
                     setPercentages({ ...percentages, T: val, F: 100 - val })
                   }}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                  className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-purple-600"
                 />
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">감정 (F)</span>
+                  <span className="text-muted-foreground">감정 (F)</span>
                   <span className="font-medium">{percentages.F}%</span>
                 </div>
               </div>
@@ -228,7 +228,7 @@ export function MbtiDirectInputModal({
               {/* J / P */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">판단 (J)</span>
+                  <span className="text-muted-foreground">판단 (J)</span>
                   <span className="font-medium">{percentages.J}%</span>
                 </div>
                 <input
@@ -240,10 +240,10 @@ export function MbtiDirectInputModal({
                     const val = parseInt(e.target.value)
                     setPercentages({ ...percentages, J: val, P: 100 - val })
                   }}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-purple-600"
+                  className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-purple-600"
                 />
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">인식 (P)</span>
+                  <span className="text-muted-foreground">인식 (P)</span>
                   <span className="font-medium">{percentages.P}%</span>
                 </div>
               </div>
@@ -258,12 +258,12 @@ export function MbtiDirectInputModal({
         </div>
 
         {/* Footer */}
-        <div className="sticky bottom-0 bg-white border-t px-6 py-4 flex gap-3 justify-end">
+        <div className="sticky bottom-0 bg-card border-t px-6 py-4 flex gap-3 justify-end">
           <button
             type="button"
             onClick={onCancel}
             disabled={isSaving || isSavingProp}
-            className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="px-4 py-2 border border rounded-lg hover:bg-muted transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             취소
           </button>

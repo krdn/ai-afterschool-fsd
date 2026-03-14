@@ -36,7 +36,7 @@ export function CounselingTrendChart({
           <CardTitle>{title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="w-full h-[300px] bg-gray-100 animate-pulse rounded" />
+          <div className="w-full h-[300px] bg-muted animate-pulse rounded" />
         </CardContent>
       </Card>
     )
@@ -49,7 +49,7 @@ export function CounselingTrendChart({
           <CardTitle>{title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px] flex items-center justify-center text-gray-500">
+          <div className="h-[300px] flex items-center justify-center text-muted-foreground">
             데이터가 충분하지 않습니다
           </div>
         </CardContent>

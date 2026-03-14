@@ -21,7 +21,7 @@ export function AssignmentHelpDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-1 text-gray-500">
+        <Button variant="ghost" size="sm" className="gap-1 text-muted-foreground">
           <HelpCircle className="h-4 w-4" />
           <span className="hidden sm:inline">도움말</span>
         </Button>

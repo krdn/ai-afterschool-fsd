@@ -147,7 +147,7 @@ export function CostAlerts({ initialData }: CostAlertsProps) {
             className={`px-3 py-1 text-sm rounded ${
               dateRange === "7d"
                 ? "bg-blue-600 text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                : "bg-muted text-muted-foreground hover:bg-muted"
             }`}
           >
             7일
@@ -158,7 +158,7 @@ export function CostAlerts({ initialData }: CostAlertsProps) {
             className={`px-3 py-1 text-sm rounded ${
               dateRange === "30d"
                 ? "bg-blue-600 text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                : "bg-muted text-muted-foreground hover:bg-muted"
             }`}
           >
             30일
@@ -169,7 +169,7 @@ export function CostAlerts({ initialData }: CostAlertsProps) {
             className={`px-3 py-1 text-sm rounded ${
               dateRange === "90d"
                 ? "bg-blue-600 text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                : "bg-muted text-muted-foreground hover:bg-muted"
             }`}
           >
             90일
