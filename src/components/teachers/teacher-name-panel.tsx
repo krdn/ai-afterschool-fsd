@@ -275,14 +275,14 @@ export function TeacherNamePanel({ teacherId, teacherName, analysis, teacherName
               <div className="ml-auto flex rounded-md border border text-xs overflow-hidden">
                 <button
                   type="button"
-                  className={`px-2.5 py-1 transition-colors ${viewMode === "rendered" ? "bg-gray-800 text-white" : "bg-card text-muted-foreground hover:bg-muted"}`}
+                  className={`px-2.5 py-1 transition-colors ${viewMode === "rendered" ? "bg-foreground text-background" : "bg-card text-muted-foreground hover:bg-muted"}`}
                   onClick={() => setViewMode("rendered")}
                 >
                   미리보기
                 </button>
                 <button
                   type="button"
-                  className={`px-2.5 py-1 border-l border transition-colors ${viewMode === "markdown" ? "bg-gray-800 text-white" : "bg-card text-muted-foreground hover:bg-muted"}`}
+                  className={`px-2.5 py-1 border-l border transition-colors ${viewMode === "markdown" ? "bg-foreground text-background" : "bg-card text-muted-foreground hover:bg-muted"}`}
                   onClick={() => setViewMode("markdown")}
                 >
                   원문

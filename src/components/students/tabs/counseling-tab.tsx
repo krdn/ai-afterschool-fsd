@@ -376,7 +376,7 @@ function TimelineList({
 
       <div className="space-y-6">
         {sessions.map((session) => {
-          const dotColor = typeTimelineColor[session.type] || 'bg-gray-400'
+          const dotColor = typeTimelineColor[session.type] || 'bg-muted-foreground'
           const badgeColor = getTypeColor(session.type)
           const typeLabel = getTypeLabel(session.type)
 

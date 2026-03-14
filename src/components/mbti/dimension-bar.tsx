@@ -32,7 +32,7 @@ export function DimensionBar({
       <div className="flex h-6 rounded-full overflow-hidden bg-muted">
         <div
           className={`flex items-center justify-end pr-2 text-xs font-medium transition-all ${
-            dominant === "left" ? "bg-blue-500 text-white" : "bg-gray-300 text-foreground"
+            dominant === "left" ? "bg-blue-500 text-white" : "bg-muted text-foreground"
           }`}
           style={{ width: `${leftPercent}%` }}
         >
@@ -40,7 +40,7 @@ export function DimensionBar({
         </div>
         <div
           className={`flex items-center justify-start pl-2 text-xs font-medium transition-all ${
-            dominant === "right" ? "bg-blue-500 text-white" : "bg-gray-300 text-foreground"
+            dominant === "right" ? "bg-blue-500 text-white" : "bg-muted text-foreground"
           }`}
           style={{ width: `${rightPercent}%` }}
         >

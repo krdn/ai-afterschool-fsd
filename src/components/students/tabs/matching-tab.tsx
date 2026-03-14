@@ -188,7 +188,7 @@ export default function MatchingTab({ studentId, studentName, currentTeacherId }
                         percent >= 80 ? "bg-green-500"
                           : percent >= 60 ? "bg-blue-500"
                           : percent >= 40 ? "bg-yellow-500"
-                          : "bg-gray-400"
+                          : "bg-muted-foreground"
                       }`}
                       style={{ width: `${percent}%` }}
                     />
