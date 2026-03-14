@@ -27,7 +27,7 @@ export default function GlobalError({
   return (
     <html>
       <body>
-        <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4" data-testid="server-error-page">
+        <div className="flex min-h-screen flex-col items-center justify-center bg-muted px-4" data-testid="server-error-page">
           <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
             <div className="mb-4 flex justify-center">
               <div className="rounded-full bg-red-100 p-3">
@@ -47,14 +47,14 @@ export default function GlobalError({
               </div>
             </div>
 
-            <h1 className="mb-2 text-center text-2xl font-bold text-gray-900">
+            <h1 className="mb-2 text-center text-2xl font-bold text-foreground">
               일시적인 문제가 발생했어요
             </h1>
-            <p className="mb-4 text-center text-gray-600">
+            <p className="mb-4 text-center text-muted-foreground">
               페이지를 불러오는 중 문제가 발생했어요.
             </p>
 
-            <div className="mb-6 p-3 rounded-lg bg-gray-50 text-sm text-gray-600">
+            <div className="mb-6 p-3 rounded-lg bg-muted text-sm text-muted-foreground">
               <p className="font-medium mb-2">이렇게 해보세요:</p>
               <ul className="list-disc list-inside space-y-1">
                 <li>페이지를 새로고침 해보세요</li>
@@ -62,7 +62,7 @@ export default function GlobalError({
                 <li>잠시 후 다시 시도해보세요</li>
               </ul>
               {error.digest && (
-                <p className="mt-3 text-xs text-gray-400">
+                <p className="mt-3 text-xs text-muted-foreground">
                   문의 시 참고 코드: {error.digest}
                 </p>
               )}
@@ -77,14 +77,14 @@ export default function GlobalError({
               </button>
               <button
                 onClick={() => window.location.href = '/students'}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 text-gray-700 font-medium hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                className="w-full rounded-lg border border px-4 py-2 text-foreground font-medium hover:bg-muted focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors"
               >
                 학생 목록으로 가기
               </button>
             </div>
 
             <div className="mt-6 border-t pt-4">
-              <p className="text-center text-sm text-gray-500">
+              <p className="text-center text-sm text-muted-foreground">
                 문제가 계속되면 관리자에게 문의해 주세요.
               </p>
             </div>

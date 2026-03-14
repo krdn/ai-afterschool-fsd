@@ -41,37 +41,37 @@ export default async function AdminLayout({
               <nav className="hidden md:flex space-x-4">
                 <Link
                   href="/students"
-                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-sm font-medium"
                 >
                   {t("students")}
                 </Link>
                 <Link
                   href="/counseling"
-                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-sm font-medium"
                 >
                   {t("counseling")}
                 </Link>
                 <Link
                   href="/teachers"
-                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-sm font-medium"
                 >
                   {t("teachers")}
                 </Link>
                 <Link
                   href="/matching"
-                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-sm font-medium"
                 >
                   {t("matching")}
                 </Link>
                 <Link
                   href="/analytics"
-                  className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-muted-foreground hover:text-foreground px-3 py-2 rounded-md text-sm font-medium"
                 >
                   {t("analytics")}
                 </Link>
                 <Link
                   href="/admin"
-                  className="text-gray-900 bg-gray-100 px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-foreground bg-muted px-3 py-2 rounded-md text-sm font-medium"
                 >
                   {t("admin")}
                 </Link>
