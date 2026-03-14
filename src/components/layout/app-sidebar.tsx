@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useEffect, useCallback, useState } from "react"
+import { useSidebar } from "./sidebar-context"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useTranslations } from "next-intl"
@@ -18,7 +19,6 @@ import {
   Settings,
   PanelLeftClose,
   PanelLeft,
-  Menu,
   ChevronDown,
   Sun,
   Moon,
@@ -255,7 +255,7 @@ type AppSidebarProps = {
 export function AppSidebar({ role, name }: AppSidebarProps) {
   const t = useTranslations("Navigation")
   const [collapsed, setCollapsed] = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const { mobileOpen, setMobileOpen } = useSidebar()
 
   // localStorage에서 초기 상태 복원
   useEffect(() => {
@@ -353,25 +353,6 @@ export function AppSidebar({ role, name }: AppSidebarProps) {
         </SheetContent>
       </Sheet>
 
-      {/* 모바일 햄버거 버튼 (외부에서 접근할 수 있도록 export) */}
-      <MobileMenuButton onClick={() => setMobileOpen(true)} />
     </>
-  )
-}
-
-// 모바일 메뉴 버튼 — 헤더에 배치됨
-function MobileMenuButton({ onClick }: { onClick: () => void }) {
-  const t = useTranslations("Navigation")
-
-  return (
-    <Button
-      variant="ghost"
-      size="icon"
-      className="lg:hidden absolute left-3 top-3 z-10"
-      onClick={onClick}
-      aria-label={t("openMenu")}
-    >
-      <Menu className="h-5 w-5" />
-    </Button>
   )
 }
