@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Brain, Loader2, Sparkles, AlertTriangle } from 'lucide-react';
 import { runStrategyRecommendation } from '@/lib/actions/neuroscience/strategy';
 import { ProviderSelector } from '@/components/students/provider-selector';
+import { NeuroscienceHelpDialog } from '@/components/neuroscience/neuroscience-help-dialog';
 import type { NeuroscienceStrategy } from '@/features/neuroscience/types';
 import type { ProviderName } from '@/features/ai-engine/providers/types';
 
@@ -89,10 +90,13 @@ export default function StrategyForm({ students, locale, availableProviders }: P
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Brain className="h-5 w-5" />
-            {t('strategy')}
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <Brain className="h-5 w-5" />
+              {t('strategy')}
+            </CardTitle>
+            <NeuroscienceHelpDialog />
+          </div>
           <CardDescription>{t('description')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
