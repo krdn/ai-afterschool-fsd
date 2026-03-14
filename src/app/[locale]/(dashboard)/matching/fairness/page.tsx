@@ -60,7 +60,7 @@ export default async function FairnessMetricsPage() {
 
       {/* 제안 없음 메시지 */}
       {proposals.length === 0 && (
-        <div className="rounded-lg border border-gray-200 bg-muted p-8 text-center">
+        <div className="rounded-lg border bg-muted p-8 text-center">
           <p className="text-muted-foreground">아직 배정 제안이 없습니다.</p>
           <p className="mt-2 text-sm text-muted-foreground">
             자동 배정을 실행하여 제안을 생성하면 공정성 메트릭을 확인할 수

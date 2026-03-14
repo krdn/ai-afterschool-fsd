@@ -1,9 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart3 } from 'lucide-react';
+import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav';
 
 export default function GradeAnalyticsPage() {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 space-y-2">
+      <BreadcrumbNav items={[
+        { label: "성적 관리", href: "/grades" },
+        { label: "성적 통계" },
+      ]} />
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">

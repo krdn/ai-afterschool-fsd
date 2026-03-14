@@ -44,7 +44,7 @@ export function StudentImageTabs({ value, onChange, images }: StudentImageTabsPr
               className={
                 isActive
                   ? "rounded-full bg-foreground px-4 py-2 text-sm text-white"
-                  : "rounded-full border border px-4 py-2 text-sm text-muted-foreground hover:border-gray-400"
+                  : "rounded-full border px-4 py-2 text-sm text-muted-foreground hover:border-foreground/30"
               }
             >
               {tab.label}

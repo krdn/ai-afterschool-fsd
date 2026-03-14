@@ -1,6 +1,7 @@
 import { getCurrentTeacher } from '@/lib/dal';
 import { db } from '@/lib/db/client';
 import GradeReportsManager from '@/components/grades/grade-reports-manager';
+import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav';
 
 export default async function GradeReportsPage() {
   const teacher = await getCurrentTeacher();
@@ -42,9 +43,15 @@ export default async function GradeReportsPage() {
   });
 
   return (
-    <GradeReportsManager
-      students={students}
-      recentReports={recentReports}
-    />
+    <div className="space-y-2">
+      <BreadcrumbNav items={[
+        { label: "성적 관리", href: "/grades" },
+        { label: "학부모 리포트" },
+      ]} />
+      <GradeReportsManager
+        students={students}
+        recentReports={recentReports}
+      />
+    </div>
   );
 }
