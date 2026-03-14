@@ -1,5 +1,6 @@
 import { generateWithSpecificProvider } from '@/features/ai-engine/universal-router'
 import { aiResearchResultSchema } from '@/lib/validations/admission'
+import type { Prisma } from '@prisma/client'
 import { createSync, updateSyncStatus } from '@/features/admission/repositories/data-sync'
 import { ADMISSION_RESEARCH_SYSTEM_PROMPT, buildResearchPrompt } from '@/features/admission/prompts/research'
 import { logger } from '@/lib/logger'
@@ -41,7 +42,7 @@ export async function researchUniversity(
     }
 
     await updateSyncStatus(sync.id, 'REVIEW', {
-      resultData: parsed.data as unknown as Record<string, unknown>,
+      resultData: parsed.data as unknown as Prisma.InputJsonValue,
       recordsFound: parsed.data.majors.length,
       source: parsed.data.sources.join(', '),
     })

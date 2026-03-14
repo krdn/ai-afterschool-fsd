@@ -49,7 +49,7 @@ export async function updateTargetStatus(id: string, status: string) {
 
 export async function updateTargetAnalysis(
   id: string,
-  gapAnalysis: Prisma.JsonValue,
+  gapAnalysis: Prisma.InputJsonValue,
   admissionProbability: number,
 ) {
   return db.studentTarget.update({

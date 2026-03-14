@@ -19,7 +19,7 @@ export async function setTargetAction(
     await getCurrentTeacher()
     const parsed = studentTargetSchema.safeParse(input)
     if (!parsed.success) {
-      return fail(parsed.error.errors[0]?.message ?? '입력이 올바르지 않습니다.')
+      return fail(parsed.error.issues[0]?.message ?? '입력이 올바르지 않습니다.')
     }
     const result = await setTarget(parsed.data)
     revalidatePath('/admission/targets')

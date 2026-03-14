@@ -6,7 +6,7 @@ import { MajorDetail } from '@/components/admission/major-detail'
 import { AdmissionHelpDialog } from '@/components/admission/admission-help-dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Link } from '@/i18n/routing'
+import { Link } from '@/i18n/navigation'
 import { ArrowLeft, GraduationCap, MapPin, ExternalLink } from 'lucide-react'
 import { notFound } from 'next/navigation'
 

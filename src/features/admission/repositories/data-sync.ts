@@ -8,7 +8,7 @@ export async function createSync(data: Prisma.AdmissionDataSyncUncheckedCreateIn
 export async function updateSyncStatus(
   id: string,
   status: SyncStatus,
-  extra?: { resultData?: Prisma.JsonValue; recordsFound?: number; recordsSaved?: number; errorLog?: string; source?: string },
+  extra?: { resultData?: Prisma.InputJsonValue; recordsFound?: number; recordsSaved?: number; errorLog?: string; source?: string },
 ) {
   return db.admissionDataSync.update({
     where: { id },

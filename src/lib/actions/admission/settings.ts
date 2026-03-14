@@ -10,7 +10,11 @@ import { logger } from '@/lib/logger'
 export async function getAdmissionSettingsAction(): Promise<ActionResult<AdmissionSettings>> {
   try {
     const teacher = await getCurrentTeacher()
-    const prefs = (teacher.preferences as Record<string, unknown>) ?? {}
+    const teacherWithPrefs = await db.teacher.findUnique({
+      where: { id: teacher.id },
+      select: { preferences: true },
+    })
+    const prefs = (teacherWithPrefs?.preferences as Record<string, unknown>) ?? {}
     const settings = { ...DEFAULT_ADMISSION_SETTINGS, ...(prefs.admission as Partial<AdmissionSettings> ?? {}) }
     return ok(settings)
   } catch (error) {
@@ -26,9 +30,13 @@ export async function updateAdmissionSettingsAction(
     const teacher = await getCurrentTeacher()
     const parsed = admissionSettingsSchema.safeParse(input)
     if (!parsed.success) {
-      return fail(parsed.error.errors[0]?.message ?? '설정 값이 올바르지 않습니다.')
+      return fail(parsed.error.issues[0]?.message ?? '설정 값이 올바르지 않습니다.')
     }
-    const currentPrefs = (teacher.preferences as Record<string, unknown>) ?? {}
+    const teacherWithPrefs = await db.teacher.findUnique({
+      where: { id: teacher.id },
+      select: { preferences: true },
+    })
+    const currentPrefs = (teacherWithPrefs?.preferences as Record<string, unknown>) ?? {}
     await db.teacher.update({
       where: { id: teacher.id },
       data: {

@@ -19,7 +19,7 @@ export async function addCutoffAction(
     await getCurrentTeacher()
     const parsed = admissionCutoffSchema.safeParse(input)
     if (!parsed.success) {
-      return fail(parsed.error.errors[0]?.message ?? '입력이 올바르지 않습니다.')
+      return fail(parsed.error.issues[0]?.message ?? '입력이 올바르지 않습니다.')
     }
     const result = await upsertCutoff(parsed.data)
     return ok(result)

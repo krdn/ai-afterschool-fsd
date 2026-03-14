@@ -19,7 +19,7 @@ export async function createUniversityAction(
     const teacher = await getCurrentTeacher()
     const parsed = universitySchema.safeParse(input)
     if (!parsed.success) {
-      return fail(parsed.error.errors[0]?.message ?? '입력이 올바르지 않습니다.')
+      return fail(parsed.error.issues[0]?.message ?? '입력이 올바르지 않습니다.')
     }
     const result = await createUniversity({
       ...parsed.data,
@@ -70,7 +70,7 @@ export async function updateUniversityAction(
     await getCurrentTeacher()
     const parsed = universitySchema.partial().safeParse(input)
     if (!parsed.success) {
-      return fail(parsed.error.errors[0]?.message ?? '입력이 올바르지 않습니다.')
+      return fail(parsed.error.issues[0]?.message ?? '입력이 올바르지 않습니다.')
     }
     const result = await updateUniversity(id, parsed.data)
     return ok(result)

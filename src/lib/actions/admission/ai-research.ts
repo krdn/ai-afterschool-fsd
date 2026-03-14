@@ -19,7 +19,7 @@ export async function requestResearchAction(
     const teacher = await getCurrentTeacher()
     const parsed = aiResearchQuerySchema.safeParse(input)
     if (!parsed.success) {
-      return fail(parsed.error.errors[0]?.message ?? '검색어를 입력해주세요.')
+      return fail(parsed.error.issues[0]?.message ?? '검색어를 입력해주세요.')
     }
     const result = await researchUniversity(
       teacher.id,
@@ -54,7 +54,7 @@ export async function approveResearchAction(
 
     let university = await findUniversityByName(normalizedName)
     if (!university) {
-      university = await createUniversity({
+      const created = await createUniversity({
         name: normalizedName,
         nameShort: data.university.nameShort,
         type: data.university.type,
@@ -63,6 +63,10 @@ export async function approveResearchAction(
         createdBy: teacher.id,
         dataSource: sync.source,
       })
+      university = await findUniversityByName(normalizedName)
+      if (!university) {
+        return fail('대학 생성 후 조회에 실패했습니다.')
+      }
     }
 
     let savedCount = 0

@@ -170,5 +170,15 @@ export const DEFAULT_MODELS: Record<ProviderType, Array<Partial<ModelInput>>> = 
       supportsTools: true,
     },
   ],
+  perplexity: [
+    {
+      modelId: 'sonar-pro',
+      displayName: 'Sonar Pro',
+      contextWindow: 200000,
+      supportsVision: false,
+      supportsTools: false,
+      isDefault: true,
+    },
+  ],
   custom: [],
 };

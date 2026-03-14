@@ -6,6 +6,7 @@ import { analyzeAdmission } from '@/features/admission/services/admission-analyz
 import { updateTargetAnalysis } from '@/features/admission/repositories/student-target'
 import { analyzeSubjectStrengths } from '@/features/grade-management/analysis/stat-analyzer'
 import { db } from '@/lib/db/client'
+import type { Prisma } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import { logger } from '@/lib/logger'
 import type { AdmissionAnalysisInput, AdmissionAnalysisResult } from '@/features/admission/types'
@@ -83,7 +84,7 @@ export async function analyzeAdmissionAction(
     }
 
     const result = await analyzeAdmission(input)
-    await updateTargetAnalysis(targetId, result as unknown as Record<string, unknown>, result.probability)
+    await updateTargetAnalysis(targetId, result as unknown as Prisma.InputJsonValue, result.probability)
     revalidatePath('/admission/targets')
 
     return ok(result)
