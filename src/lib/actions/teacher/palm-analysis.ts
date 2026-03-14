@@ -117,11 +117,22 @@ export async function runTeacherPalmAnalysis(
  * 선생님 손금 분석 결과 조회
  */
 export async function getTeacherPalmAnalysisAction(teacherId: string) {
-  const _session = await verifySession()
+  const session = await verifySession()
 
-  const analysis = await getPalmAnalysis('TEACHER', teacherId)
+  // RBAC: 본인, DIRECTOR, 같은 팀 TEAM_LEADER만 접근
+  if (session.userId !== teacherId && session.role !== 'DIRECTOR') {
+    if (session.role === 'TEAM_LEADER' && session.teamId) {
+      const target = await db.teacher.findUnique({
+        where: { id: teacherId },
+        select: { teamId: true },
+      })
+      if (target?.teamId !== session.teamId) {
+        return null
+      }
+    } else {
+      return null
+    }
+  }
 
-  // TODO: Add RBAC check based on teacher roles when needed
-  // For now, teachers can view their own analysis
-  return analysis
+  return await getPalmAnalysis('TEACHER', teacherId)
 }

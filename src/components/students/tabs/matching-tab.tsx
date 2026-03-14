@@ -227,7 +227,7 @@ export default function MatchingTab({ studentId, studentName, currentTeacherId }
         <span>분석 시점: {new Date(data.calculatedAt).toLocaleString("ko-KR")}</span>
         <Link
           href={`/students/${studentId}/matching`}
-          className="text-blue-500 hover:text-blue-600 hover:underline"
+          className="text-primary hover:text-primary/80 hover:underline"
         >
           다른 선생님 추천 보기
         </Link>
