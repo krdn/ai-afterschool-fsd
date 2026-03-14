@@ -7,6 +7,7 @@ import { LocaleSwitcher } from "@/components/layout/locale-switcher"
 import { NotificationProvider } from "@/components/common/notification-provider"
 import { LLMQueryBar } from "@/components/layout/llm-query-bar"
 import { AppSidebar } from "@/components/layout/app-sidebar"
+import { CommandMenu } from "@/components/layout/command-menu"
 
 const isDev = process.env.NODE_ENV === "development"
 
@@ -29,8 +30,15 @@ export default async function DashboardLayout({
           {/* 좌측: 모바일에서 햄버거 메뉴 공간 확보 */}
           <div className="lg:hidden w-10" />
 
-          {/* 중앙: 빈 공간 (LLMQueryBar가 아래에 별도 배치) */}
-          <div className="flex-1" />
+          {/* 중앙: 검색 힌트 */}
+          <div className="hidden sm:flex flex-1 justify-center">
+            <div className="inline-flex items-center gap-2 rounded-md border bg-muted/50 px-3 py-1.5 text-sm text-muted-foreground">
+              <span>검색...</span>
+              <kbd className="hidden md:inline-flex h-5 items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+                <span className="text-xs">⌘</span>K
+              </kbd>
+            </div>
+          </div>
 
           {/* 우측: 도구 모음 */}
           <div className="flex items-center gap-2">
@@ -58,6 +66,7 @@ export default async function DashboardLayout({
 
       {isDev && <DevUserSwitcher currentUserId={teacher.id} />}
       <NotificationProvider />
+      <CommandMenu role={teacher.role} />
     </div>
   )
 }
