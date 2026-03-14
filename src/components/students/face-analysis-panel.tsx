@@ -130,7 +130,7 @@ export function FaceAnalysisPanel({
       {/* Header */}
       <div className="px-6 py-4 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-100 rounded-lg">
+          <div className="p-2 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
             <Sparkles className="w-5 h-5 text-blue-600" />
           </div>
           <h2 className="text-lg font-semibold">AI 관상 분석</h2>

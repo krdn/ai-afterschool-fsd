@@ -125,7 +125,7 @@ export function NameAnalysisPanel({ student, analysis, enabledProviders = [], pr
     <Card data-testid="name-tab">
       <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-amber-100 rounded-lg">
+          <div className="p-2 bg-amber-100 dark:bg-amber-900/40 rounded-lg">
             <Type className="w-5 h-5 text-amber-600" />
           </div>
           <CardTitle>이름풀이</CardTitle>

@@ -154,7 +154,7 @@ export default async function AutoAssignPage() {
                 <div className="border rounded-lg p-4 space-y-2">
                   <div className="flex items-center justify-between">
                     <h5 className="font-medium text-sm">성명학 호환도</h5>
-                    <span className="text-xs font-semibold bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full">15%</span>
+                    <span className="text-xs font-semibold bg-orange-100 dark:bg-orange-900/40 text-orange-700 px-2 py-0.5 rounded-full">15%</span>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     4격(원형, 형격, 이격, 정격)의 획수 차이를 비교합니다.

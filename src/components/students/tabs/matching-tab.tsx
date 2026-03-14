@@ -105,7 +105,7 @@ export default function MatchingTab({ studentId, studentName, currentTeacherId }
     return (
       <div data-testid="matching-tab-content" className="space-y-6">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-100 rounded-lg">
+          <div className="p-2 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
             <Users className="w-5 h-5 text-blue-600" />
           </div>
           <div>
@@ -134,7 +134,7 @@ export default function MatchingTab({ studentId, studentName, currentTeacherId }
       {/* 헤더 */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-100 rounded-lg">
+          <div className="p-2 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
             <Users className="w-5 h-5 text-blue-600" />
           </div>
           <div>

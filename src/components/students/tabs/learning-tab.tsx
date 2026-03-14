@@ -243,7 +243,7 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                                         <TableCell>
                                             <span className={`inline-flex items-center px-2 py-1 rounded-md text-sm font-bold ${grade.score >= 90 ? 'bg-green-100 text-green-700 dark:text-green-400' :
                                                     grade.score >= 80 ? 'bg-blue-100 text-blue-700 dark:text-blue-400' :
-                                                        grade.score >= 70 ? 'bg-yellow-100 text-yellow-700' :
+                                                        grade.score >= 70 ? 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700' :
                                                             'bg-red-100 text-red-700 dark:text-red-400'
                                                 }`}>
                                                 {grade.score}점

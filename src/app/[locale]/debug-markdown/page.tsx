@@ -88,7 +88,7 @@ export default function DebugMarkdownPage() {
               </thead>
               <tbody>
                 {originalAnalysis.map((line) => (
-                  <tr key={line.lineNum} className={line.startsWithHash ? "bg-yellow-100" : ""}>
+                  <tr key={line.lineNum} className={line.startsWithHash ? "bg-yellow-100 dark:bg-yellow-900/40" : ""}>
                     <td className="p-2 border text-center">{line.lineNum}</td>
                     <td className="p-2 border font-mono text-xs">{line.content || "(빈 줄)"}</td>
                     <td className="p-2 border text-center">{line.startsWithHash ? "✅" : "❌"}</td>

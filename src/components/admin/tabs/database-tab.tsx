@@ -147,7 +147,7 @@ export function DatabaseTab({ userRole }: DatabaseTabProps) {
               variant="outline"
               onClick={() => setSeedDialogOpen(true)}
               disabled={isPending}
-              className="border-amber-300 text-amber-900 hover:bg-amber-100"
+              className="border-amber-300 text-amber-900 hover:bg-amber-100 dark:bg-amber-900/40"
             >
               {isPending ? (
                 <>

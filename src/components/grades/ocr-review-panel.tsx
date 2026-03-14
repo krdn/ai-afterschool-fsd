@@ -51,7 +51,7 @@ function getConfidenceBadge(confidence: number) {
   }
   if (confidence >= 50) {
     return (
-      <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-100">
+      <Badge className="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 hover:bg-yellow-100 dark:bg-yellow-900/40">
         {confidence}%
       </Badge>
     );

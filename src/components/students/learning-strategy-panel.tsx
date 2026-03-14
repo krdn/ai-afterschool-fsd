@@ -53,7 +53,7 @@ export async function LearningStrategyPanel({ studentId, teacherId: _teacherId, 
         {/* Header */}
         <div className="px-6 py-4 border-b flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-green-100 rounded-lg">
+            <div className="p-2 bg-green-100 dark:bg-green-900/40 rounded-lg">
               <BookOpen className="w-5 h-5 text-green-600" />
             </div>
             <h2 className="text-lg font-semibold">맞춤형 학습 전략</h2>
@@ -140,7 +140,7 @@ function LoadingState() {
   return (
     <div className="bg-card rounded-lg shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b flex items-center gap-3">
-        <div className="p-2 bg-green-100 rounded-lg">
+        <div className="p-2 bg-green-100 dark:bg-green-900/40 rounded-lg">
           <BookOpen className="w-5 h-5 text-green-600" />
         </div>
         <h2 className="text-lg font-semibold">맞춤형 학습 전략</h2>
@@ -160,7 +160,7 @@ function EmptyState() {
   return (
     <div className="bg-card rounded-lg shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b flex items-center gap-3">
-        <div className="p-2 bg-green-100 rounded-lg">
+        <div className="p-2 bg-green-100 dark:bg-green-900/40 rounded-lg">
           <BookOpen className="w-5 h-5 text-green-600" />
         </div>
         <h2 className="text-lg font-semibold">맞춤형 학습 전략</h2>
@@ -181,7 +181,7 @@ function ErrorState({ message, studentId }: { message: string; studentId: string
   return (
     <div className="bg-card rounded-lg shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b flex items-center gap-3">
-        <div className="p-2 bg-green-100 rounded-lg">
+        <div className="p-2 bg-green-100 dark:bg-green-900/40 rounded-lg">
           <BookOpen className="w-5 h-5 text-green-600" />
         </div>
         <h2 className="text-lg font-semibold">맞춤형 학습 전략</h2>

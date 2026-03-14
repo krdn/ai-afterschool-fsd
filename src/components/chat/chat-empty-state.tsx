@@ -31,7 +31,7 @@ export function ChatEmptyState({ onSuggestionClick }: ChatEmptyStateProps) {
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-4">
       <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-purple-100 mb-4">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-purple-100 dark:bg-purple-900/40 mb-4">
           <Sparkles className="h-8 w-8 text-purple-600" />
         </div>
         <h2 className="text-xl font-semibold text-foreground mb-2">

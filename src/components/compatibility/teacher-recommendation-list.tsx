@@ -61,7 +61,7 @@ export function TeacherRecommendationList({
   const getScoreColorClass = (score: number): string => {
     if (score >= 80) return "bg-green-100 text-green-700 dark:text-green-400"
     if (score >= 60) return "bg-blue-100 text-blue-700 dark:text-blue-400"
-    if (score >= 40) return "bg-yellow-100 text-yellow-700"
+    if (score >= 40) return "bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700"
     return "bg-muted text-foreground"
   }
 
@@ -106,7 +106,7 @@ export function TeacherRecommendationList({
                   <div
                     className={`flex h-8 w-8 items-center justify-center rounded-full font-bold text-sm ${
                       rank === 1
-                        ? "bg-yellow-100 text-yellow-700"
+                        ? "bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700"
                         : rank === 2
                           ? "bg-muted text-foreground"
                           : rank === 3

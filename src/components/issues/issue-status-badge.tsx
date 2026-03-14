@@ -21,7 +21,7 @@ const CATEGORY_CONFIG: Record<IssueCategory, { label: string; className: string 
 
 const PRIORITY_CONFIG: Record<IssuePriority, { label: string; className: string }> = {
   LOW: { label: '낮음', className: 'bg-muted text-muted-foreground' },
-  MEDIUM: { label: '보통', className: 'bg-yellow-100 text-yellow-700' },
+  MEDIUM: { label: '보통', className: 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700' },
   HIGH: { label: '높음', className: 'bg-orange-100 text-orange-800 dark:text-orange-300' },
   URGENT: { label: '긴급', className: 'bg-red-100 text-red-800 dark:text-red-300' },
 }
