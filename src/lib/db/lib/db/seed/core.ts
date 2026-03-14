@@ -116,6 +116,14 @@ export async function runSeed(prisma: PrismaClient, options?: SeedOptions): Prom
     }
   }
 
+  // 8. Agent Configs (트랜잭션 밖 — 워크플로우 동적 import)
+  try {
+    const { seedAgentConfigs } = await import("./agent-configs")
+    await seedAgentConfigs(prisma)
+  } catch (err) {
+    console.error("[seed] agentConfigs 시딩 실패:", err)
+  }
+
   // 이미지 업로드 (트랜잭션 밖 — Cloudinary 외부 API)
   await uploadSeedImages(prisma, groups, dataOverride)
 
