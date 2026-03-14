@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { HelpCircle } from "lucide-react"
+import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 
 function formatDate(date: Date): string {
   return new Intl.DateTimeFormat("ko-KR", {
@@ -78,6 +79,10 @@ export default async function AutoAssignPage() {
 
   return (
     <div className="space-y-6">
+      <BreadcrumbNav items={[
+        { label: "배정 관리", href: "/matching" },
+        { label: "AI 자동 배정" },
+      ]} />
       <div>
         <h1 className="text-2xl font-bold">AI 자동 배정 제안</h1>
         <p className="text-muted-foreground">

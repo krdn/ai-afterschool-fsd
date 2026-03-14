@@ -3,6 +3,7 @@ import { verifySession } from "@/lib/dal"
 import { listAssignmentProposals } from '@/features/matching'
 import { calculateFairnessMetrics } from "@/features/matching"
 import { FairnessMetricsPanel } from "@/components/compatibility/fairness-metrics-panel"
+import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 
 /**
  * 공정성 메트릭 대시보드 페이지
@@ -50,6 +51,10 @@ export default async function FairnessMetricsPage() {
 
   return (
     <div className="space-y-6">
+      <BreadcrumbNav items={[
+        { label: "배정 관리", href: "/matching" },
+        { label: "공정성 메트릭" },
+      ]} />
       {/* 헤더 */}
       <div>
         <h1 className="text-3xl font-bold text-foreground" data-testid="fairness-heading">공정성 메트릭</h1>
