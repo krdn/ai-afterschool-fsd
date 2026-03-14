@@ -154,7 +154,7 @@ export default async function TeacherLayout({ children, params }: LayoutProps) {
             <Link
               key={tab.href}
               href={tab.href}
-              className="pb-4 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent hover:border-gray-300 data-[active=true]:border-blue-600 data-[active=true]:text-blue-600"
+              className="pb-4 text-sm font-medium text-muted-foreground hover:text-foreground border-b-2 border-transparent hover:border-border data-[active=true]:border-primary data-[active=true]:text-primary"
             >
               {tab.label}
             </Link>

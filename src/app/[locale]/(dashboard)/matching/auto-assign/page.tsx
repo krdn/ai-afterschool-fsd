@@ -254,7 +254,7 @@ export default async function AutoAssignPage() {
                     <div className="flex gap-2">
                       <a
                         href={`/matching/proposals/${proposal.id}`}
-                        className="text-blue-600 hover:underline text-sm"
+                        className="text-primary hover:underline text-sm"
                       >
                         상세 보기
                       </a>

@@ -74,7 +74,7 @@ export default async function TeamDetailPage({
                 <li key={teacher.id}>
                   <Link
                     href={`/teachers/${teacher.id}`}
-                    className="text-blue-600 hover:underline"
+                    className="text-primary hover:underline"
                     data-testid="teacher-link"
                   >
                     {teacher.name} ({teacher.role})
@@ -103,7 +103,7 @@ export default async function TeamDetailPage({
                 <li key={student.id}>
                   <Link
                     href={`/students/${student.id}`}
-                    className="text-blue-600 hover:underline"
+                    className="text-primary hover:underline"
                     data-testid="student-link"
                   >
                     {student.name} ({student.grade}학년)
