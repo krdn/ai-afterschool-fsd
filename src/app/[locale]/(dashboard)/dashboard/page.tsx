@@ -2,22 +2,26 @@ import { getTranslations } from "next-intl/server"
 import { getCurrentTeacher } from "@/lib/dal"
 import { getUpcomingCounseling } from "@/lib/actions/counseling/upcoming"
 import { getDashboardStatsAction } from "@/lib/actions/dashboard/stats"
+import { getRecentActivityAction } from "@/lib/actions/dashboard/recent-activity"
 import { UpcomingCounselingWidget } from "@/components/counseling/upcoming-counseling-widget"
 import { DashboardStatCards } from "@/components/dashboard/stat-cards"
 import { QuickActions } from "@/components/dashboard/quick-actions"
+import { RecentActivity } from "@/components/dashboard/recent-activity"
 import { AlertTriangle } from "lucide-react"
 import { Link } from "@/i18n/navigation"
 
 export default async function DashboardPage() {
-  const [teacher, statsResult, counselingResult, t] = await Promise.all([
+  const [teacher, statsResult, counselingResult, activityResult, t] = await Promise.all([
     getCurrentTeacher(),
     getDashboardStatsAction(),
     getUpcomingCounseling(),
+    getRecentActivityAction(),
     getTranslations("Dashboard"),
   ])
 
   const stats = statsResult.success ? statsResult.data : null
   const upcomingReservations = counselingResult.success ? counselingResult.data || [] : []
+  const recentActivities = activityResult.success ? activityResult.data : []
 
   return (
     <div className="space-y-6">
@@ -74,6 +78,9 @@ export default async function DashboardPage() {
           <p>{t("noUpcoming")}</p>
         </div>
       )}
+
+      {/* 최근 활동 타임라인 */}
+      <RecentActivity activities={recentActivities} />
     </div>
   )
 }
