@@ -101,6 +101,7 @@ ${zodiac.learningStyle}
     subjectName: student.name,
     timestamp: new Date().toISOString(),
   })
+  eventBus.emit('analysis.completed', { studentId, analysisType: 'zodiac', subjectType: 'STUDENT', subjectId: studentId, subjectName: student.name, timestamp: new Date().toISOString() })
 
   revalidatePath(`/students/${studentId}`)
 

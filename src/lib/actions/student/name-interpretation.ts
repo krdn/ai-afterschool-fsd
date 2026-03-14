@@ -104,6 +104,7 @@ AI 해석을 통해 이름의 음운과 의미를 분석해보세요.`
     subjectName: student.name,
     timestamp: new Date().toISOString(),
   })
+  eventBus.emit('analysis.completed', { studentId, analysisType: 'name', subjectType: 'STUDENT', subjectId: studentId, subjectName: student.name, timestamp: new Date().toISOString() })
 
   revalidatePath(`/students/${studentId}`)
 

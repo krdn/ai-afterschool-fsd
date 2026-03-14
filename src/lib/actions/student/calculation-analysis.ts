@@ -290,6 +290,7 @@ export async function runSajuAnalysis(studentId: string, provider?: string, prom
     subjectName: student.name,
     timestamp: new Date().toISOString(),
   })
+  eventBus.emit('analysis.completed', { studentId, analysisType: 'saju', subjectType: 'STUDENT', subjectId: studentId, subjectName: student.name, timestamp: new Date().toISOString() })
 
   return {
     result,
@@ -353,6 +354,7 @@ export async function runNameAnalysis(studentId: string) {
     subjectName: student.name,
     timestamp: new Date().toISOString(),
   })
+  eventBus.emit('analysis.completed', { studentId, analysisType: 'name', subjectType: 'STUDENT', subjectId: studentId, subjectName: student.name, timestamp: new Date().toISOString() })
 
   return {
     result: outcome.result,

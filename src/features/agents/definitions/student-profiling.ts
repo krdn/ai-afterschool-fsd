@@ -28,7 +28,7 @@ export class StudentProfilingAgent extends BaseAgent {
           ? { hour: student.birthTimeHour, minute: student.birthTimeMinute ?? 0 }
           : null,
       });
-      return { calculated: true, pillars: result.fourPillars };
+      return { calculated: true, pillars: result.pillars };
     },
 
     analyzeName: async (_config, context) => {

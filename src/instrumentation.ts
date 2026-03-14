@@ -5,6 +5,12 @@ export async function register() {
     // Agent 시스템 초기화
     try {
       const { agentRegistry } = await import('@/features/agents/core/registry');
+      const { StudentProfilingAgent } = await import('@/features/agents/definitions/student-profiling');
+      const { GradeAnalysisAgent } = await import('@/features/agents/definitions/grade-analysis');
+      const { CounselingAssistantAgent } = await import('@/features/agents/definitions/counseling-assistant');
+      agentRegistry.register(new StudentProfilingAgent());
+      agentRegistry.register(new GradeAnalysisAgent());
+      agentRegistry.register(new CounselingAssistantAgent());
       await agentRegistry.initialize();
     } catch (error) {
       console.warn('Agent registry initialization skipped:', error);
