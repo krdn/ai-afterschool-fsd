@@ -74,7 +74,6 @@ export const strategyInputSchema = z.object({
   }),
   locale: z.enum(['ko', 'en']).default('ko'),
   provider: z.string().default('auto'),
-  forceRefresh: z.boolean().default(false),
 });
 
 export type StrategyInput = z.infer<typeof strategyInputSchema>;

@@ -12,7 +12,6 @@ type StrategyActionResult = {
   strategy: NeuroscienceStrategy;
   provider: string;
   model: string;
-  cached: boolean;
 };
 
 function deriveGradeContext(profile: {
@@ -66,7 +65,7 @@ export async function runStrategyRecommendation(
     const parsed = strategyInputSchema.safeParse(input);
     if (!parsed.success) return fieldError(parsed.error.flatten().fieldErrors);
 
-    const { studentId, situation, goal, locale, provider, forceRefresh } = parsed.data;
+    const { studentId, situation, goal, locale, provider } = parsed.data;
 
     const profile = await getStudentProfile(studentId);
     if (!profile) return fail('학생을 찾을 수 없습니다.');
@@ -106,7 +105,6 @@ export async function runStrategyRecommendation(
       teacherId: teacher.id,
       locale,
       providerId: provider,
-      forceRefresh,
     });
 
     return ok(result);
