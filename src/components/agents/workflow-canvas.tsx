@@ -8,7 +8,6 @@ import {
   MiniMap,
   type Node,
   type Edge,
-  type OnNodeClick,
   BackgroundVariant,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
@@ -60,8 +59,8 @@ export function WorkflowCanvas({ workflow, nodeLogs, onNodeClick, className }: W
     [workflow.edges, nodeStatusMap]
   );
 
-  const handleNodeClick: OnNodeClick = useCallback(
-    (_event, node) => {
+  const handleNodeClick = useCallback(
+    (_event: React.MouseEvent, node: Node) => {
       onNodeClick?.(node.id);
     },
     [onNodeClick]
