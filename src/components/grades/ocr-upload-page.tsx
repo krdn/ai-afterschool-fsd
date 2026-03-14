@@ -144,7 +144,7 @@ export default function OcrUploadPage({ teacherId }: OcrUploadPageProps) {
             <CardContent className="space-y-4">
               {/* 파일 업로드 영역 */}
               <div
-                className="border-2 border-dashed border rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 hover:bg-blue-50/50 transition-colors"
+                className="border-2 border-dashed border rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 hover:bg-primary/5 transition-colors"
                 onClick={() => fileInputRef.current?.click()}
               >
                 {previewUrl ? (
