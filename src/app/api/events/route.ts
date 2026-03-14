@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server'
 import { getSession } from '@/lib/session'
 import { eventBus } from '@/lib/events/event-bus'
-import type { ServerEvent } from '@/lib/events/types'
+import type { ServerEvent, AgentEventMap } from '@/lib/events/types'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,13 +13,14 @@ export async function GET(request: NextRequest) {
 
   const encoder = new TextEncoder()
   let unsubscribe: (() => void) | null = null
+  let unsubscribeAgent: (() => void) | null = null
 
   const stream = new ReadableStream({
     start(controller) {
       // 연결 성공 메시지 전송
       controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'connected' })}\n\n`))
 
-      // 이벤트 구독
+      // 기존 SSE 이벤트 구독
       unsubscribe = eventBus.onEvent((event: ServerEvent) => {
         try {
           controller.enqueue(encoder.encode(`data: ${JSON.stringify(event)}\n\n`))
@@ -27,6 +28,19 @@ export async function GET(request: NextRequest) {
           /* 클라이언트 연결 해제 시 무시 */
         }
       })
+
+      // Agent 이벤트는 DIRECTOR/TEAM_LEADER에게만 전달
+      if (session.role === 'DIRECTOR' || session.role === 'TEAM_LEADER') {
+        const agentHandler = (data: AgentEventMap['agent.execution.completed']) => {
+          try {
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'agent.execution.completed', ...data })}\n\n`))
+          } catch {
+            /* 클라이언트 연결 해제 시 무시 */
+          }
+        }
+        eventBus.on('agent.execution.completed', agentHandler)
+        unsubscribeAgent = () => eventBus.off('agent.execution.completed', agentHandler)
+      }
 
       // 30초마다 heartbeat 전송
       const heartbeat = setInterval(() => {
@@ -41,6 +55,7 @@ export async function GET(request: NextRequest) {
       request.signal.addEventListener('abort', () => {
         clearInterval(heartbeat)
         if (unsubscribe) unsubscribe()
+        if (unsubscribeAgent) unsubscribeAgent()
         try {
           controller.close()
         } catch {
@@ -50,6 +65,7 @@ export async function GET(request: NextRequest) {
     },
     cancel() {
       if (unsubscribe) unsubscribe()
+      if (unsubscribeAgent) unsubscribeAgent()
     },
   })
 

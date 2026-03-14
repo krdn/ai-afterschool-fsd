@@ -108,7 +108,7 @@ ${desc.careers.join(", ")}
 `).join("\n---\n\n")
 
   // 저장
-  await upsertVarkAnalysis(studentId, {
+  const analysis = await upsertVarkAnalysis(studentId, {
     responses,
     scores: result.scores,
     varkType: result.varkType,
@@ -138,6 +138,7 @@ ${desc.careers.join(", ")}
       timestamp: new Date().toISOString(),
     })
   }
+  eventBus.emit('vark.submitted', { studentId, resultId: analysis.id })
 
   revalidatePath(`/students/${studentId}`)
 

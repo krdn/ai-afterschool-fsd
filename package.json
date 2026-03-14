@@ -41,6 +41,7 @@
     "@swc/helpers": "^0.5.18",
     "@tailwindcss/typography": "^0.5.19",
     "@tanstack/react-table": "^8.21.3",
+    "@xyflow/react": "^12.10.1",
     "ai": "^6.0.101",
     "argon2": "^0.44.0",
     "class-variance-authority": "^0.7.1",

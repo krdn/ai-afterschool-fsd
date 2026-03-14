@@ -17,6 +17,7 @@ import {
 } from "@/lib/validations/student-images"
 import { setStudentImage } from "@/lib/actions/student/images"
 import { markStudentRecalculationNeeded } from '@/features/analysis'
+import { eventBus } from "@/lib/events/event-bus"
 import { ok, fail, type ActionResult } from "@/lib/errors/action-result"
 import { logger } from "@/lib/logger"
 
@@ -274,6 +275,8 @@ export async function createStudent(
       },
     }
   }
+
+  eventBus.emit('student.created', { studentId, teacherId: session.userId })
 
   revalidatePath("/students")
   redirect(`/students/${studentId}?created=true`)

@@ -1071,3 +1071,88 @@ model CounselingPromptPreset {
   @@index([promptType, isActive])
   @@map("counseling_prompt_presets")
 }
+
+// ─── Agent Workflow System ───
+
+enum AgentType {
+  STUDENT_PROFILING
+  GRADE_ANALYSIS
+  COUNSELING_ASSISTANT
+  MATCHING_OPTIMIZER
+  REPORT_ORCHESTRATOR
+}
+
+enum ExecutionStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum NodeStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  SKIPPED
+  WAITING
+}
+
+model AgentConfig {
+  id          String    @id @default(cuid())
+  type        AgentType @unique
+  name        String
+  description String?
+  enabled     Boolean   @default(false)
+  workflow    Json
+  settings    Json      @default("{}")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  executions  AgentExecution[]
+
+  @@map("agent_configs")
+}
+
+model AgentExecution {
+  id            String          @id @default(cuid())
+  agentType     AgentType
+  agentId       String
+  agent         AgentConfig     @relation(fields: [agentId], references: [id])
+  status        ExecutionStatus @default(PENDING)
+  triggerEvent  String
+  triggerData   Json?
+  currentNodeId String?
+  startedAt     DateTime?
+  completedAt   DateTime?
+  result        Json?
+  error         String?
+  createdAt     DateTime        @default(now())
+
+  nodeLogs      AgentNodeLog[]
+
+  @@index([agentType, status])
+  @@index([agentId, status])
+  @@index([createdAt])
+  @@map("agent_executions")
+}
+
+model AgentNodeLog {
+  id          String         @id @default(cuid())
+  executionId String
+  execution   AgentExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+  nodeId      String
+  nodeName    String
+  status      NodeStatus     @default(PENDING)
+  input       Json?
+  output      Json?
+  error       String?
+  startedAt   DateTime?
+  completedAt DateTime?
+  durationMs  Int?
+
+  @@unique([executionId, nodeId])
+  @@index([executionId])
+  @@map("agent_node_logs")
+}

@@ -122,7 +122,7 @@ ${typeDescription.famousPeople.join(", ")}
 `
 
   // 분석 결과 저장
-  await upsertMbtiAnalysis(studentId, {
+  const analysis = await upsertMbtiAnalysis(studentId, {
     responses,
     scores: result.scores,
     mbtiType: result.mbtiType,
@@ -152,6 +152,7 @@ ${typeDescription.famousPeople.join(", ")}
       timestamp: new Date().toISOString(),
     })
   }
+  eventBus.emit('mbti.submitted', { studentId, resultId: analysis.id })
 
   // 캐시 무효화
   revalidatePath(`/students/${studentId}`)
@@ -237,7 +238,7 @@ ${typeDescription.famousPeople.join(", ")}
   }
 
   // 분석 결과 저장
-  await upsertMbtiAnalysis(studentId, {
+  const analysis = await upsertMbtiAnalysis(studentId, {
     responses: {}, // 직접 입력이므로 빈 응답
     scores,
     mbtiType: data.mbtiType,
@@ -267,6 +268,7 @@ ${typeDescription.famousPeople.join(", ")}
       timestamp: new Date().toISOString(),
     })
   }
+  eventBus.emit('mbti.submitted', { studentId, resultId: analysis.id })
 
   // 캐시 무효화
   revalidatePath(`/students/${studentId}`)

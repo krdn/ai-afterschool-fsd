@@ -19,6 +19,11 @@ import { TeamsTab } from '@/components/admin/tabs/teams-tab'
 import { getTeams } from '@/lib/actions/common/teams'
 import { pool } from '@/lib/db/client'
 
+// 에이전트 관리
+import { getAgentConfigs } from '@/lib/actions/agents/config'
+import { getRecentExecutions } from '@/lib/actions/agents/execution'
+import { AgentDashboard } from '@/components/agents/agent-dashboard'
+
 // LLM Hub
 import { LLMHubTab } from '@/components/admin/tabs/llm-hub-tab'
 import { getProvidersAction } from '@/lib/actions/admin/providers'
@@ -278,6 +283,8 @@ export default async function AdminPage() {
     teams,
     universalProviders,
     universalMappings,
+    agentConfigsResult,
+    recentExecutionsResult,
   ] = await Promise.all([
     getBudgetSummary(),
     getCurrentPeriodCost('daily'),
@@ -289,6 +296,8 @@ export default async function AdminPage() {
     getTeams(),
     getProvidersAction(),
     getFeatureMappingsAction(),
+    getAgentConfigs(),
+    getRecentExecutions(),
   ])
 
   // AI 프롬프트 seed 및 조회
@@ -401,6 +410,14 @@ export default async function AdminPage() {
         {/* 팀 관리 탭 */}
         <AdminTabsContent value="teams">
           <TeamsTab initialTeams={teams} userRole={session.role} />
+        </AdminTabsContent>
+
+        {/* 에이전트 관리 탭 */}
+        <AdminTabsContent value="agents">
+          <AgentDashboard
+            configs={agentConfigsResult?.success ? agentConfigsResult.data : []}
+            recentExecutions={recentExecutionsResult?.success ? recentExecutionsResult.data : []}
+          />
         </AdminTabsContent>
       </AdminTabsWrapper>
     </div>
