@@ -17,6 +17,7 @@ import { MistralAdapter } from './mistral';
 import { CohereAdapter } from './cohere';
 import { XaiAdapter } from './xai';
 import { OpenRouterAdapter } from './openrouter';
+import { PerplexityAdapter } from './perplexity';
 
 /**
  * 어댑터 팩토리 클래스
@@ -44,6 +45,7 @@ class AdapterFactory {
     this.adapters.set('cohere', CohereAdapter);
     this.adapters.set('xai', XaiAdapter);
     this.adapters.set('openrouter', OpenRouterAdapter);
+    this.adapters.set('perplexity', PerplexityAdapter);
   }
 
   /**
@@ -184,3 +186,4 @@ export { MistralAdapter } from './mistral';
 export { CohereAdapter } from './cohere';
 export { XaiAdapter } from './xai';
 export { OpenRouterAdapter } from './openrouter';
+export { PerplexityAdapter } from './perplexity';
