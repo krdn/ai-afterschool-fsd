@@ -129,7 +129,6 @@ export function TeamsTab({ initialTeams, userRole }: TeamsTabProps) {
     setDeleteOpen(true)
   }
 
-  // TODO(human): 삭제 확인 후 실행하는 handleDelete 함수 구현
   function handleDelete() {
     if (!selectedTeam) return
     startTransition(async () => {
