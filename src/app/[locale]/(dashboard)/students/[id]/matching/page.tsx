@@ -3,6 +3,7 @@ import { verifySession } from "@/lib/dal"
 import { db } from "@/lib/db/client"
 import { getTeacherRecommendations } from "@/lib/actions/matching/assignment"
 import { TeacherRecommendationList } from "@/components/matching/teacher-recommendation-list"
+import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 
 export default async function StudentMatchingPage({
   params,
@@ -43,6 +44,11 @@ export default async function StudentMatchingPage({
 
   return (
     <div className="space-y-6">
+      <BreadcrumbNav items={[
+        { label: "학생 목록", href: "/students" },
+        { label: student.name, href: `/students/${student.id}` },
+        { label: "매칭 추천" },
+      ]} />
       {/* 헤더 */}
       <div>
         <h1 className="text-3xl font-bold text-foreground">

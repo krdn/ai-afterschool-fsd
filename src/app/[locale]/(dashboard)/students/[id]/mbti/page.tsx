@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation"
-import Link from "next/link"
-import { ChevronLeft } from "lucide-react"
 import { verifySession } from "@/lib/dal"
+import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav"
 import { db } from "@/lib/db/client"
 import { MbtiSurveyForm } from "@/components/mbti/survey-form"
 
@@ -45,15 +44,11 @@ export default async function MbtiSurveyPage({
 
   return (
     <div className="max-w-3xl mx-auto">
-      <div className="mb-6">
-        <Link
-          href={`/students/${student.id}`}
-          className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
-        >
-          <ChevronLeft className="w-4 h-4 mr-1" />
-          {student.name} 프로필로 돌아가기
-        </Link>
-      </div>
+      <BreadcrumbNav items={[
+        { label: "학생 목록", href: "/students" },
+        { label: student.name, href: `/students/${student.id}` },
+        { label: "MBTI 검사" },
+      ]} />
 
       <div className="bg-card rounded-lg shadow-sm p-6 mb-6">
         <h1 className="text-2xl font-bold mb-2">MBTI 성향 검사</h1>
