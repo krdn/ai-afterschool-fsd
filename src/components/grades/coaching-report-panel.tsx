@@ -109,7 +109,7 @@ function CoachingReportView({ report }: { report: CoachingReport }) {
       </Card>
 
       {/* 종합 추천 카드 */}
-      <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200">
+      <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 border-blue-200 dark:border-blue-800">
         <CardContent className="pt-4">
           <div className="flex items-start gap-3">
             <MessageCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />

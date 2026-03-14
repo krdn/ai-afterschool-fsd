@@ -196,7 +196,7 @@ export function PromptEditorPanel({
 
               {/* 템플릿 변수 */}
               {variables.length > 0 && (
-                <div className="pt-1 border-t border-amber-200">
+                <div className="pt-1 border-t border-amber-200 dark:border-amber-800">
                   <p className="text-[10px] font-medium text-amber-800 dark:text-amber-300 flex items-center gap-1 mb-1.5">
                     <Variable className="h-3 w-3" />
                     사용 가능한 변수 {'('}

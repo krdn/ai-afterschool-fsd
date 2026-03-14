@@ -89,7 +89,7 @@ export function PromptSelector({
             <span className="font-medium text-purple-700 dark:text-purple-400">{selectedMeta.name}</span>
             <div className="flex gap-1">
               {selectedMeta.tags.slice(0, 3).map((tag) => (
-                <Badge key={tag} variant="outline" className="text-[10px] px-1 py-0 border-purple-200 text-purple-600">
+                <Badge key={tag} variant="outline" className="text-[10px] px-1 py-0 border-purple-200 dark:border-purple-800 text-purple-600">
                   {tag}
                 </Badge>
               ))}

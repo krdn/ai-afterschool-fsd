@@ -22,7 +22,7 @@ export default function ParentReportPreview({
   return (
     <div className="space-y-4 max-w-2xl mx-auto">
       {/* 리포트 헤더 */}
-      <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+      <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20 border-blue-200 dark:border-blue-800">
         <CardHeader>
           <div className="text-center">
             <FileText className="w-8 h-8 text-blue-600 mx-auto mb-2" />
@@ -72,7 +72,7 @@ export default function ParentReportPreview({
 
       {/* 강점 */}
       {report.strengths.length > 0 && (
-        <Card className="border-green-200">
+        <Card className="border-green-200 dark:border-green-800">
           <CardHeader className="pb-2">
             <CardTitle className="text-base flex items-center gap-2 text-green-700 dark:text-green-400">
               <Star className="w-4 h-4" />
@@ -97,7 +97,7 @@ export default function ParentReportPreview({
 
       {/* 성장 포인트 */}
       {report.growthPoints.length > 0 && (
-        <Card className="border-amber-200">
+        <Card className="border-amber-200 dark:border-amber-800">
           <CardHeader className="pb-2">
             <CardTitle className="text-base flex items-center gap-2 text-amber-700 dark:text-amber-400">
               <TrendingUp className="w-4 h-4" />
@@ -122,7 +122,7 @@ export default function ParentReportPreview({
 
       {/* 가정 학습 지도 방법 */}
       {report.homeStudyTips.length > 0 && (
-        <Card className="border-purple-200">
+        <Card className="border-purple-200 dark:border-purple-800">
           <CardHeader className="pb-2">
             <CardTitle className="text-base flex items-center gap-2 text-purple-700 dark:text-purple-400">
               <Home className="w-4 h-4" />
