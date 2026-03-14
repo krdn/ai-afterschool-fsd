@@ -31,10 +31,10 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
   }
 
   const getDiversityColor = (score: number): string => {
-    if (score >= 70) return "bg-green-100 text-green-800"
-    if (score >= 50) return "bg-blue-100 text-blue-800"
-    if (score >= 30) return "bg-yellow-100 text-yellow-800"
-    return "bg-red-100 text-red-800"
+    if (score >= 70) return "bg-green-100 text-green-800 dark:text-green-300"
+    if (score >= 50) return "bg-blue-100 text-blue-800 dark:text-blue-300"
+    if (score >= 30) return "bg-yellow-100 text-yellow-800 dark:text-yellow-300"
+    return "bg-red-100 text-red-800 dark:text-red-300"
   }
 
   const diversityLabel = getDiversityLabel(diversityScore.overall)
@@ -144,10 +144,10 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
               <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
                 <span className="text-sm">MBTI 다양성</span>
                 <span className={`font-bold ${
-                  diversityScore.mbtiDiversity >= 70 ? 'text-green-700' :
-                  diversityScore.mbtiDiversity >= 50 ? 'text-blue-700' :
+                  diversityScore.mbtiDiversity >= 70 ? 'text-green-700 dark:text-green-400' :
+                  diversityScore.mbtiDiversity >= 50 ? 'text-blue-700 dark:text-blue-400' :
                   diversityScore.mbtiDiversity >= 30 ? 'text-yellow-700' :
-                  'text-red-700'
+                  'text-red-700 dark:text-red-400'
                 }`}>
                   {diversityScore.mbtiDiversity}
                 </span>
@@ -155,10 +155,10 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
               <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
                 <span className="text-sm">학습 스타일</span>
                 <span className={`font-bold ${
-                  diversityScore.learningStyleDiversity >= 70 ? 'text-green-700' :
-                  diversityScore.learningStyleDiversity >= 50 ? 'text-blue-700' :
+                  diversityScore.learningStyleDiversity >= 70 ? 'text-green-700 dark:text-green-400' :
+                  diversityScore.learningStyleDiversity >= 50 ? 'text-blue-700 dark:text-blue-400' :
                   diversityScore.learningStyleDiversity >= 30 ? 'text-yellow-700' :
-                  'text-red-700'
+                  'text-red-700 dark:text-red-400'
                 }`}>
                   {diversityScore.learningStyleDiversity}
                 </span>
@@ -166,10 +166,10 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
               <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
                 <span className="text-sm">오행 균형</span>
                 <span className={`font-bold ${
-                  diversityScore.sajuElementsDiversity >= 70 ? 'text-green-700' :
-                  diversityScore.sajuElementsDiversity >= 50 ? 'text-blue-700' :
+                  diversityScore.sajuElementsDiversity >= 70 ? 'text-green-700 dark:text-green-400' :
+                  diversityScore.sajuElementsDiversity >= 50 ? 'text-blue-700 dark:text-blue-400' :
                   diversityScore.sajuElementsDiversity >= 30 ? 'text-yellow-700' :
-                  'text-red-700'
+                  'text-red-700 dark:text-red-400'
                 }`}>
                   {diversityScore.sajuElementsDiversity}
                 </span>
@@ -177,10 +177,10 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
               <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
                 <span className="text-sm">과목 커버리지</span>
                 <span className={`font-bold ${
-                  diversityScore.subjectDiversity >= 70 ? 'text-green-700' :
-                  diversityScore.subjectDiversity >= 50 ? 'text-blue-700' :
+                  diversityScore.subjectDiversity >= 70 ? 'text-green-700 dark:text-green-400' :
+                  diversityScore.subjectDiversity >= 50 ? 'text-blue-700 dark:text-blue-400' :
                   diversityScore.subjectDiversity >= 30 ? 'text-yellow-700' :
-                  'text-red-700'
+                  'text-red-700 dark:text-red-400'
                 }`}>
                   {diversityScore.subjectDiversity}
                 </span>
@@ -188,10 +188,10 @@ async function TeamCompositionPanel({ teamId }: TeamCompositionPanelProps) {
               <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
                 <span className="text-sm">학년 커버리지</span>
                 <span className={`font-bold ${
-                  diversityScore.gradeDiversity >= 70 ? 'text-green-700' :
-                  diversityScore.gradeDiversity >= 50 ? 'text-blue-700' :
+                  diversityScore.gradeDiversity >= 70 ? 'text-green-700 dark:text-green-400' :
+                  diversityScore.gradeDiversity >= 50 ? 'text-blue-700 dark:text-blue-400' :
                   diversityScore.gradeDiversity >= 30 ? 'text-yellow-700' :
-                  'text-red-700'
+                  'text-red-700 dark:text-red-400'
                 }`}>
                   {diversityScore.gradeDiversity}
                 </span>

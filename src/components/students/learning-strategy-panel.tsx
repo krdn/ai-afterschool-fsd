@@ -68,9 +68,9 @@ export async function LearningStrategyPanel({ studentId, teacherId: _teacherId, 
         {/* Content */}
         <div className="p-6 space-y-6">
           {/* Core Traits */}
-          <div className="bg-blue-50 border-l-4 border-blue-400 p-4">
+          <div className="bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-400 p-4">
             <h3 className="font-semibold text-blue-900 mb-2">핵심 성향</h3>
-            <p className="text-sm text-blue-800 leading-relaxed">{result.coreTraits}</p>
+            <p className="text-sm text-blue-800 dark:text-blue-300 leading-relaxed">{result.coreTraits}</p>
           </div>
 
           {/* Learning Style */}
@@ -78,7 +78,7 @@ export async function LearningStrategyPanel({ studentId, teacherId: _teacherId, 
             <h3 className="font-semibold mb-3">학습 스타일</h3>
             <div className="bg-muted rounded-lg p-4">
               <div className="flex items-center gap-2 mb-2">
-                <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                <span className="px-3 py-1 bg-blue-100 text-blue-700 dark:text-blue-400 rounded-full text-sm font-medium">
                   {result.learningStyle.type}
                 </span>
               </div>
@@ -115,9 +115,9 @@ export async function LearningStrategyPanel({ studentId, teacherId: _teacherId, 
           </div>
 
           {/* Motivation Approach */}
-          <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+          <div className="bg-yellow-50 dark:bg-yellow-950/30 border-l-4 border-yellow-400 p-4">
             <h3 className="font-semibold text-yellow-900 mb-2">동기 부여 방법</h3>
-            <p className="text-sm text-yellow-800 leading-relaxed">{result.motivationApproach}</p>
+            <p className="text-sm text-yellow-800 dark:text-yellow-300 leading-relaxed">{result.motivationApproach}</p>
           </div>
         </div>
       </div>
@@ -188,11 +188,11 @@ function ErrorState({ message, studentId }: { message: string; studentId: string
       </div>
       <div className="p-6">
         <div className="text-center py-8">
-          <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-4 text-left">
+          <div className="bg-red-50 dark:bg-red-950/30 border-l-4 border-red-400 p-4 mb-4 text-left">
             <div className="flex">
               <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0" />
               <div className="ml-3">
-                <p className="text-sm text-red-800">{message}</p>
+                <p className="text-sm text-red-800 dark:text-red-300">{message}</p>
               </div>
             </div>
           </div>

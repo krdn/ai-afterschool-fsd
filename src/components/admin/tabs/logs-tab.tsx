@@ -12,11 +12,11 @@ interface LogsTabProps {
 function getLevelColor(level: string): string {
   switch (level) {
     case 'ERROR':
-      return 'bg-red-100 text-red-800'
+      return 'bg-red-100 text-red-800 dark:text-red-300'
     case 'WARN':
-      return 'bg-yellow-100 text-yellow-800'
+      return 'bg-yellow-100 text-yellow-800 dark:text-yellow-300'
     case 'INFO':
-      return 'bg-blue-100 text-blue-800'
+      return 'bg-blue-100 text-blue-800 dark:text-blue-300'
     case 'DEBUG':
       return 'bg-muted text-foreground'
     default:

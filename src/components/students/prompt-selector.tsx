@@ -84,9 +84,9 @@ export function PromptSelector({
       </div>
 
       {showInfoCard && selectedMeta && selectedMeta.id !== "default" && (
-        <div className="rounded-md border border-purple-100 bg-purple-50/50 px-3 py-2 text-xs space-y-1">
+        <div className="rounded-md border border-purple-100 bg-purple-50 dark:bg-purple-950/30/50 px-3 py-2 text-xs space-y-1">
           <div className="flex items-center gap-2">
-            <span className="font-medium text-purple-700">{selectedMeta.name}</span>
+            <span className="font-medium text-purple-700 dark:text-purple-400">{selectedMeta.name}</span>
             <div className="flex gap-1">
               {selectedMeta.tags.slice(0, 3).map((tag) => (
                 <Badge key={tag} variant="outline" className="text-[10px] px-1 py-0 border-purple-200 text-purple-600">

@@ -241,10 +241,10 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                                         </TableCell>
                                         <TableCell className="font-medium">{grade.subject}</TableCell>
                                         <TableCell>
-                                            <span className={`inline-flex items-center px-2 py-1 rounded-md text-sm font-bold ${grade.score >= 90 ? 'bg-green-100 text-green-700' :
-                                                    grade.score >= 80 ? 'bg-blue-100 text-blue-700' :
+                                            <span className={`inline-flex items-center px-2 py-1 rounded-md text-sm font-bold ${grade.score >= 90 ? 'bg-green-100 text-green-700 dark:text-green-400' :
+                                                    grade.score >= 80 ? 'bg-blue-100 text-blue-700 dark:text-blue-400' :
                                                         grade.score >= 70 ? 'bg-yellow-100 text-yellow-700' :
-                                                            'bg-red-100 text-red-700'
+                                                            'bg-red-100 text-red-700 dark:text-red-400'
                                                 }`}>
                                                 {grade.score}점
                                             </span>
@@ -253,7 +253,7 @@ export default function LearningTab({ studentId }: { studentId: string }) {
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                                                className="h-8 w-8 text-red-500 hover:text-red-700 hover:bg-red-50 dark:bg-red-950/30"
                                                 onClick={() => setDeleteTarget(grade.id)}
                                             >
                                                 <Trash2 className="w-4 h-4" />

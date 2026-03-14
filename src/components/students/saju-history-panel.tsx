@@ -146,9 +146,9 @@ export function SajuHistoryPanel({ studentId }: Props) {
 
                     {/* 추가 요청사항 */}
                     {item.additionalRequest && (
-                      <div className="rounded-md bg-amber-50 border border-amber-200 p-2">
+                      <div className="rounded-md bg-amber-50 dark:bg-amber-950/30 border border-amber-200 p-2">
                         <p className="text-[10px] text-amber-600 font-medium mb-1">추가 요청사항</p>
-                        <p className="text-xs text-amber-800">{item.additionalRequest}</p>
+                        <p className="text-xs text-amber-800 dark:text-amber-300">{item.additionalRequest}</p>
                       </div>
                     )}
 

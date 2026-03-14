@@ -322,8 +322,8 @@ export function SajuPanel({
           )}
 
           {errorMessage && (
-            <div className="flex items-center justify-between gap-4 mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-700">{errorMessage}</p>
+            <div className="flex items-center justify-between gap-4 mt-2 p-3 bg-red-50 dark:bg-red-950/30 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-700 dark:text-red-400">{errorMessage}</p>
               <Button
                 onClick={() => handleRunAnalysis(false)}
                 disabled={isPending}
@@ -396,17 +396,17 @@ export function SajuPanel({
           <div className="flex items-center gap-2">
             <h3 className="text-sm font-semibold text-muted-foreground">3. 해석</h3>
             {providerLabel && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/30 text-blue-600 border border-blue-200">
                 {providerLabel}
               </span>
             )}
             {promptLabel && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-purple-50 text-purple-600 border border-purple-200">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-purple-50 dark:bg-purple-950/30 text-purple-600 border border-purple-200">
                 {promptLabel}
               </span>
             )}
             {isCached && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-50 text-yellow-700 border border-yellow-200">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-50 dark:bg-yellow-950/30 text-yellow-700 border border-yellow-200">
                 ⚡ 캐시됨
               </span>
             )}
@@ -417,8 +417,8 @@ export function SajuPanel({
                 onClick={handleSimplify}
                 className={`inline-flex items-center gap-1 px-2.5 py-1 text-xs rounded-full border transition-colors ${
                   showSimplified
-                    ? 'bg-amber-100 text-amber-700 border-amber-300'
-                    : 'bg-card text-muted-foreground border hover:bg-amber-50 hover:text-amber-600 hover:border-amber-200'
+                    ? 'bg-amber-100 text-amber-700 dark:text-amber-400 border-amber-300'
+                    : 'bg-card text-muted-foreground border hover:bg-amber-50 dark:bg-amber-950/30 hover:text-amber-600 hover:border-amber-200'
                 }`}
               >
                 {isSimplifying ? (
@@ -452,7 +452,7 @@ export function SajuPanel({
             <>
               {showSimplified && simplifiedText && (
                 <div className="flex items-center gap-1 mb-2">
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-200">
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-950/30 text-amber-600 border border-amber-200">
                     <Sparkles className="inline h-3 w-3 mr-0.5" />
                     쉽게 풀이 보기 중
                   </span>

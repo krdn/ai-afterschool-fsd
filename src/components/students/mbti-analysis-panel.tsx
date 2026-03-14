@@ -180,7 +180,7 @@ export function MbtiAnalysisPanel({ studentId, studentName, analysis, enabledPro
             <div className="flex gap-3 justify-center">
               <button
                 onClick={() => setShowDirectInput(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 border border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 border border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 dark:bg-purple-950/30 transition-colors"
               >
                 <Edit3 className="w-4 h-4" />
                 직접 입력

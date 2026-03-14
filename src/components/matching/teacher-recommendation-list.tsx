@@ -63,7 +63,7 @@ export function TeacherRecommendationList({
             key={recommendation.teacherId}
             data-testid={`teacher-match-${recommendation.teacherId}`}
             className={`rounded-lg border bg-card p-6 shadow-sm transition-colors ${
-              isCurrentTeacher ? "border-blue-500 bg-blue-50" : ""
+              isCurrentTeacher ? "border-blue-500 bg-blue-50 dark:bg-blue-950/30" : ""
             }`}
           >
             <div className="flex items-start justify-between">
@@ -76,12 +76,12 @@ export function TeacherRecommendationList({
                     {getRoleLabel(recommendation.teacherRole)}
                   </span>
                   {recommendation.currentStudentCount != null && (
-                    <span className="rounded-full bg-purple-100 px-2 py-1 text-xs font-medium text-purple-700">
+                    <span className="rounded-full bg-purple-100 px-2 py-1 text-xs font-medium text-purple-700 dark:text-purple-400">
                       담당 {recommendation.currentStudentCount}명
                     </span>
                   )}
                   {isCurrentTeacher && (
-                    <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700">
+                    <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700 dark:text-blue-400">
                       현재 배정
                     </span>
                   )}

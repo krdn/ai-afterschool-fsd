@@ -33,11 +33,11 @@ export function StatusCard({ title, status, testId }: StatusCardProps) {
   const getStatusColor = () => {
     switch (status.status) {
       case 'healthy':
-        return 'bg-green-50 border-green-200'
+        return 'bg-green-50 dark:bg-green-950/30 border-green-200'
       case 'unhealthy':
-        return 'bg-red-50 border-red-200'
+        return 'bg-red-50 dark:bg-red-950/30 border-red-200'
       case 'unknown':
-        return 'bg-yellow-50 border-yellow-200'
+        return 'bg-yellow-50 dark:bg-yellow-950/30 border-yellow-200'
     }
   }
 

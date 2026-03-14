@@ -47,7 +47,7 @@ export function ChatEmptyState({ onSuggestionClick }: ChatEmptyStateProps) {
             <button
               key={s.titleKey}
               onClick={() => onSuggestionClick(t(s.promptKey))}
-              className="flex flex-col items-start gap-2 p-4 rounded-lg border border hover:border-purple-300 hover:bg-purple-50/50 transition-colors text-left"
+              className="flex flex-col items-start gap-2 p-4 rounded-lg border border hover:border-purple-300 hover:bg-purple-50 dark:bg-purple-950/30/50 transition-colors text-left"
             >
               <Icon className="h-5 w-5 text-purple-500" />
               <span className="text-sm font-medium text-foreground">

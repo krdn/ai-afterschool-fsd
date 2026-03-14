@@ -153,7 +153,7 @@ function SidebarContent({
                   </span>
                   <button
                     onClick={(e) => handleDeleteClick(e, s.id, s.title || t("emptyChatTitle"))}
-                    className="flex-shrink-0 p-1 rounded-full text-muted-foreground hover:text-white hover:bg-red-500 transition-colors"
+                    className="flex-shrink-0 p-1 rounded-full text-muted-foreground hover:text-white hover:bg-red-50 dark:bg-red-950/30 transition-colors"
                     title={t("deleteChat")}
                   >
                     <X className="h-4 w-4" />

@@ -241,7 +241,7 @@ export function StudentImageUploader({
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                className="text-red-500 hover:text-red-700 hover:bg-red-50 dark:bg-red-950/30"
                 onClick={() => {
                   onChange?.(null)
                   toast.success("사진이 삭제되었어요", { id: "image-removed" })

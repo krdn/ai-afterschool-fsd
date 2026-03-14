@@ -59,7 +59,7 @@ export function ResetPasswordForm() {
       <CardContent>
         <form action={formAction} className="space-y-4">
           {state?.errors?._form && (
-            <div className="p-3 rounded-md bg-red-50 text-red-600 text-sm">
+            <div className="p-3 rounded-md bg-red-50 dark:bg-red-950/30 text-red-600 text-sm">
               {state.errors._form[0]}
             </div>
           )}

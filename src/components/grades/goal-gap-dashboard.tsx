@@ -22,19 +22,19 @@ function getAchievabilityBadge(achievability: 'HIGH' | 'MEDIUM' | 'LOW') {
   switch (achievability) {
     case 'HIGH':
       return (
-        <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+        <Badge className="bg-green-100 text-green-800 dark:text-green-300 hover:bg-green-100">
           달성 가능성 높음
         </Badge>
       );
     case 'MEDIUM':
       return (
-        <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">
+        <Badge className="bg-yellow-100 text-yellow-800 dark:text-yellow-300 hover:bg-yellow-100">
           달성 가능성 보통
         </Badge>
       );
     case 'LOW':
       return (
-        <Badge className="bg-red-100 text-red-800 hover:bg-red-100">
+        <Badge className="bg-red-100 text-red-800 dark:text-red-300 hover:bg-red-100">
           달성 가능성 낮음
         </Badge>
       );

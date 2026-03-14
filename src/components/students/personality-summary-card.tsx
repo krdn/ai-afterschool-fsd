@@ -72,9 +72,9 @@ export async function PersonalitySummaryCard({
         {/* 상태별 조건부 렌더링 */}
         {summary?.coreTraits ? (
           // 요약 완료 상태
-          <div className="rounded-md bg-blue-50 p-4 border border-blue-200">
+          <div className="rounded-md bg-blue-50 dark:bg-blue-950/30 p-4 border border-blue-200">
             <h4 className="text-sm font-semibold text-blue-900 mb-2">핵심 성향</h4>
-            <p className="text-sm text-blue-800 leading-relaxed whitespace-pre-wrap">
+            <p className="text-sm text-blue-800 dark:text-blue-300 leading-relaxed whitespace-pre-wrap">
               {summary.coreTraits}
             </p>
           </div>
@@ -114,7 +114,7 @@ function AnalysisStatus({
     <div
       className={`flex flex-col items-center gap-1 p-2 rounded-md border ${
         available
-          ? "bg-green-50 border-green-200"
+          ? "bg-green-50 dark:bg-green-950/30 border-green-200"
           : "bg-muted border"
       }`}
     >

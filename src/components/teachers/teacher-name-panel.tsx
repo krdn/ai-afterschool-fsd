@@ -141,11 +141,11 @@ export function TeacherNamePanel({ teacherId, teacherName, analysis, teacherName
       </CardHeader>
       <CardContent className="space-y-6">
         {errorMessage && (
-          <div className="bg-red-50 border-l-4 border-red-400 p-4">
+          <div className="bg-red-50 dark:bg-red-950/30 border-l-4 border-red-400 p-4">
             <div className="flex">
               <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0" />
               <div className="ml-3">
-                <p className="text-sm text-red-800">{errorMessage}</p>
+                <p className="text-sm text-red-800 dark:text-red-300">{errorMessage}</p>
                 <Button onClick={() => setErrorMessage(null)} variant="outline" size="sm" className="mt-2">
                   닫기
                 </Button>

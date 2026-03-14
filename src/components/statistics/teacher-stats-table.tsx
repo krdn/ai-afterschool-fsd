@@ -131,7 +131,7 @@ export function TeacherStatsTable({
                     <div className="flex items-center gap-2">
                       <div className="flex-1 bg-muted rounded-full h-2 overflow-hidden">
                         <div
-                          className="bg-blue-500 h-full rounded-full transition-all"
+                          className="bg-blue-50 dark:bg-blue-950/30 h-full rounded-full transition-all"
                           style={{ width: `${barWidth}%` }}
                         />
                       </div>

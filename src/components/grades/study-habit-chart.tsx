@@ -338,9 +338,9 @@ export default function StudyHabitChart({
                       key={index}
                       className={`p-3 rounded-lg border ${
                         c.impact === 'POSITIVE'
-                          ? 'bg-green-50 border-green-200'
+                          ? 'bg-green-50 dark:bg-green-950/30 border-green-200'
                           : c.impact === 'NEGATIVE'
-                            ? 'bg-red-50 border-red-200'
+                            ? 'bg-red-50 dark:bg-red-950/30 border-red-200'
                             : 'bg-muted border'
                       }`}
                     >
@@ -350,9 +350,9 @@ export default function StudyHabitChart({
                           variant="outline"
                           className={
                             c.impact === 'POSITIVE'
-                              ? 'text-green-700 border-green-300'
+                              ? 'text-green-700 dark:text-green-400 border-green-300'
                               : c.impact === 'NEGATIVE'
-                                ? 'text-red-700 border-red-300'
+                                ? 'text-red-700 dark:text-red-400 border-red-300'
                                 : 'text-foreground border'
                           }
                         >
@@ -386,7 +386,7 @@ export default function StudyHabitChart({
                     {habitResult.recommendations.map((rec, index) => (
                       <li
                         key={index}
-                        className="flex items-start gap-2 text-sm text-foreground p-2 bg-blue-50 rounded"
+                        className="flex items-start gap-2 text-sm text-foreground p-2 bg-blue-50 dark:bg-blue-950/30 rounded"
                       >
                         <TrendingUp className="w-4 h-4 text-blue-500 mt-0.5 shrink-0" />
                         {rec}

@@ -88,8 +88,8 @@ export function AnalysisHistoryDialog({
         </ScrollArea>
 
         {note && (
-          <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-xs text-blue-700">{note}</p>
+          <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950/30 border border-blue-200 rounded-lg">
+            <p className="text-xs text-blue-700 dark:text-blue-400">{note}</p>
           </div>
         )}
       </DialogContent>

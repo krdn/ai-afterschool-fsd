@@ -73,22 +73,22 @@ export function MbtiResultsDisplay({ analysis }: { analysis: MbtiAnalysisData })
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">
-        <div data-testid="mbti-strengths" className="bg-green-50 rounded-lg p-4">
-          <h3 className="font-semibold text-green-800 mb-3">강점</h3>
+        <div data-testid="mbti-strengths" className="bg-green-50 dark:bg-green-950/30 rounded-lg p-4">
+          <h3 className="font-semibold text-green-800 dark:text-green-300 mb-3">강점</h3>
           <ul className="space-y-2">
             {typeInfo.strengths.map((strength, i) => (
-              <li key={i} className="flex items-start gap-2 text-green-700">
+              <li key={i} className="flex items-start gap-2 text-green-700 dark:text-green-400">
                 <span className="text-green-500 mt-0.5">+</span>
                 <span>{strength}</span>
               </li>
             ))}
           </ul>
         </div>
-        <div data-testid="mbti-weaknesses" className="bg-amber-50 rounded-lg p-4">
-          <h3 className="font-semibold text-amber-800 mb-3">약점</h3>
+        <div data-testid="mbti-weaknesses" className="bg-amber-50 dark:bg-amber-950/30 rounded-lg p-4">
+          <h3 className="font-semibold text-amber-800 dark:text-amber-300 mb-3">약점</h3>
           <ul className="space-y-2">
             {typeInfo.weaknesses.map((weakness, i) => (
-              <li key={i} className="flex items-start gap-2 text-amber-700">
+              <li key={i} className="flex items-start gap-2 text-amber-700 dark:text-amber-400">
                 <span className="text-amber-500 mt-0.5">-</span>
                 <span>{weakness}</span>
               </li>
@@ -108,7 +108,7 @@ export function MbtiResultsDisplay({ analysis }: { analysis: MbtiAnalysisData })
           {typeInfo.careers.map((career, i) => (
             <span
               key={i}
-              className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm"
+              className="px-3 py-1 bg-purple-100 text-purple-700 dark:text-purple-400 rounded-full text-sm"
             >
               {career}
             </span>

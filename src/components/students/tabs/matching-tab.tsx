@@ -27,9 +27,9 @@ const getScoreLabel = (score: number) => {
 }
 
 const getScoreBgColor = (score: number) => {
-  if (score >= 80) return "bg-green-50 border-green-200"
-  if (score >= 60) return "bg-blue-50 border-blue-200"
-  if (score >= 40) return "bg-yellow-50 border-yellow-200"
+  if (score >= 80) return "bg-green-50 dark:bg-green-950/30 border-green-200"
+  if (score >= 60) return "bg-blue-50 dark:bg-blue-950/30 border-blue-200"
+  if (score >= 40) return "bg-yellow-50 dark:bg-yellow-950/30 border-yellow-200"
   return "bg-muted border"
 }
 
@@ -157,7 +157,7 @@ export default function MatchingTab({ studentId, studentName, currentTeacherId }
           <span className="rounded-full bg-muted px-2 py-1 text-xs font-medium text-foreground">
             {getRoleLabel(data.teacherRole)}
           </span>
-          <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700">
+          <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700 dark:text-blue-400">
             현재 배정
           </span>
         </div>
@@ -185,9 +185,9 @@ export default function MatchingTab({ studentId, studentName, currentTeacherId }
                   <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full transition-all ${
-                        percent >= 80 ? "bg-green-500"
-                          : percent >= 60 ? "bg-blue-500"
-                          : percent >= 40 ? "bg-yellow-500"
+                        percent >= 80 ? "bg-green-50 dark:bg-green-950/30"
+                          : percent >= 60 ? "bg-blue-50 dark:bg-blue-950/30"
+                          : percent >= 40 ? "bg-yellow-50 dark:bg-yellow-950/30"
                           : "bg-muted-foreground"
                       }`}
                       style={{ width: `${percent}%` }}

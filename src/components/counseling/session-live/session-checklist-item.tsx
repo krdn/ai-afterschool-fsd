@@ -68,7 +68,7 @@ export function SessionChecklistItem({
 
           {/* AI 뱃지 */}
           {source === 'AI' && (
-            <span className="rounded bg-blue-100 px-1.5 py-0.5 text-xs text-blue-700">
+            <span className="rounded bg-blue-100 px-1.5 py-0.5 text-xs text-blue-700 dark:text-blue-400">
               AI
             </span>
           )}

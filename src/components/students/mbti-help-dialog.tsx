@@ -62,7 +62,7 @@ export function MbtiHelpDialog() {
               </div>
             ))}
 
-            <div className="rounded-lg bg-blue-50 border border-blue-200 p-3 text-xs text-blue-700 space-y-1">
+            <div className="rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 p-3 text-xs text-blue-700 space-y-1">
               <p className="font-medium">사용 팁</p>
               <ul className="list-disc list-inside space-y-0.5">
                 <li>MBTI 유형이 먼저 입력/설문되어야 AI 해석 가능합니다</li>

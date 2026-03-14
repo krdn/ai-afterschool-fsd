@@ -260,7 +260,7 @@ export default function GradeReportsManager({
                     </TableCell>
                     <TableCell>
                       {report.sentAt ? (
-                        <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+                        <Badge className="bg-green-100 text-green-800 dark:text-green-300 hover:bg-green-100">
                           발송 완료 ({report.sentMethod})
                         </Badge>
                       ) : (

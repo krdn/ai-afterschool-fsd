@@ -267,8 +267,8 @@ export function AutoAssignmentSuggestion({
                 </div>
               </div>
               {suggestion.fairnessMetrics.recommendations.length > 0 && (
-                <div className="mt-4 p-3 bg-yellow-50 rounded-lg">
-                  <p className="text-sm font-medium text-yellow-800 mb-1">
+                <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-950/30 rounded-lg">
+                  <p className="text-sm font-medium text-yellow-800 dark:text-yellow-300 mb-1">
                     개선 제안
                   </p>
                   <ul className="text-sm text-yellow-700 space-y-1">

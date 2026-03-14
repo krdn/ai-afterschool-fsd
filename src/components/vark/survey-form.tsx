@@ -125,7 +125,7 @@ export function VarkSurveyForm({ studentId, initialDraft }: {
                     key={question.id}
                     id={`question-${question.id}`}
                     className={`p-4 rounded-lg border transition-colors ${
-                      isUnanswered ? "border-red-300 bg-red-50" : value !== undefined ? "border-green-200 bg-green-50/30" : "border"
+                      isUnanswered ? "border-red-300 bg-red-50 dark:bg-red-950/30" : value !== undefined ? "border-green-200 bg-green-50 dark:bg-green-950/30/30" : "border"
                     }`}
                   >
                     <p className="text-sm font-medium text-foreground mb-3">

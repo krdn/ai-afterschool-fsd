@@ -31,7 +31,7 @@ const components: Components = {
   ol: ({ children }) => <ol className="my-2 ml-4 space-y-1 list-decimal">{children}</ol>,
   li: ({ children }) => <li className="leading-7">{children}</li>,
   blockquote: ({ children }) => (
-    <blockquote className="my-3 pl-4 border-l-4 border-purple-300 bg-purple-50/50 py-2 pr-3 rounded-r-md text-foreground italic">
+    <blockquote className="my-3 pl-4 border-l-4 border-purple-300 bg-purple-50 dark:bg-purple-950/30/50 py-2 pr-3 rounded-r-md text-foreground italic">
       {children}
     </blockquote>
   ),

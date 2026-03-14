@@ -125,7 +125,7 @@ export function StudentInsightStep({
               </div>
               {/* AI 종합 요약이 있으면 우선 표시 */}
               {insight.personalitySummary && (
-                <p className="text-sm text-muted-foreground mb-3 p-3 bg-blue-50 rounded-md border border-blue-100">
+                <p className="text-sm text-muted-foreground mb-3 p-3 bg-blue-50 dark:bg-blue-950/30 rounded-md border border-blue-100">
                   {insight.personalitySummary}
                 </p>
               )}
@@ -347,20 +347,20 @@ function PersonalityInsightSummary({ data }: { data: NonNullable<StudentInsightD
       <div className="space-y-2.5">
         {/* MBTI 섹션 */}
         {mbtiHint && mbti && (
-          <div className="p-3 rounded-md bg-blue-50/50 border border-blue-100">
+          <div className="p-3 rounded-md bg-blue-50 dark:bg-blue-950/30/50 border border-blue-100">
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-2">
                 <Brain className="h-3.5 w-3.5 text-blue-600" />
-                <span className="text-xs font-semibold text-blue-800">
+                <span className="text-xs font-semibold text-blue-800 dark:text-blue-300">
                   MBTI: {mbti.mbtiType}
                 </span>
                 <span className="text-xs text-blue-600">({mbtiHint.style})</span>
               </div>
-              <button onClick={() => openDetail('mbti')} className="text-xs text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-0.5">
+              <button onClick={() => openDetail('mbti')} className="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-300 hover:underline flex items-center gap-0.5">
                 자세히 <ExternalLink className="h-3 w-3" />
               </button>
             </div>
-            <p className="text-xs text-blue-700 leading-relaxed">
+            <p className="text-xs text-blue-700 dark:text-blue-400 leading-relaxed">
               <span className="font-medium">상담 팁:</span> {mbtiHint.tip}
             </p>
           </div>
@@ -368,18 +368,18 @@ function PersonalityInsightSummary({ data }: { data: NonNullable<StudentInsightD
 
         {/* 사주 분석 요약 */}
         {hasSaju && (
-          <div className="p-3 rounded-md bg-purple-50/50 border border-purple-100">
+          <div className="p-3 rounded-md bg-purple-50 dark:bg-purple-950/30/50 border border-purple-100">
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-2">
                 <BookOpen className="h-3.5 w-3.5 text-purple-600" />
-                <span className="text-xs font-semibold text-purple-800">사주 성향</span>
+                <span className="text-xs font-semibold text-purple-800 dark:text-purple-300">사주 성향</span>
               </div>
-              <button onClick={() => openDetail('saju')} className="text-xs text-purple-600 hover:text-purple-800 hover:underline flex items-center gap-0.5">
+              <button onClick={() => openDetail('saju')} className="text-xs text-purple-600 hover:text-purple-800 dark:text-purple-300 hover:underline flex items-center gap-0.5">
                 자세히 <ExternalLink className="h-3 w-3" />
               </button>
             </div>
             {sajuHint ? (
-              <p className="text-xs text-purple-700 leading-relaxed line-clamp-2">{sajuHint}</p>
+              <p className="text-xs text-purple-700 dark:text-purple-400 leading-relaxed line-clamp-2">{sajuHint}</p>
             ) : (
               <p className="text-xs text-purple-600 italic">분석 완료 (클릭하여 상세 확인)</p>
             )}
@@ -388,18 +388,18 @@ function PersonalityInsightSummary({ data }: { data: NonNullable<StudentInsightD
 
         {/* 성명학 분석 요약 */}
         {hasName && (
-          <div className="p-3 rounded-md bg-green-50/50 border border-green-100">
+          <div className="p-3 rounded-md bg-green-50 dark:bg-green-950/30/50 border border-green-100">
             <div className="flex items-center justify-between mb-1.5">
               <div className="flex items-center gap-2">
                 <Heart className="h-3.5 w-3.5 text-green-600" />
-                <span className="text-xs font-semibold text-green-800">성명학 성향</span>
+                <span className="text-xs font-semibold text-green-800 dark:text-green-300">성명학 성향</span>
               </div>
-              <button onClick={() => openDetail('name')} className="text-xs text-green-600 hover:text-green-800 hover:underline flex items-center gap-0.5">
+              <button onClick={() => openDetail('name')} className="text-xs text-green-600 hover:text-green-800 dark:text-green-300 hover:underline flex items-center gap-0.5">
                 자세히 <ExternalLink className="h-3 w-3" />
               </button>
             </div>
             {nameHint ? (
-              <p className="text-xs text-green-700 leading-relaxed line-clamp-2">{nameHint}</p>
+              <p className="text-xs text-green-700 dark:text-green-400 leading-relaxed line-clamp-2">{nameHint}</p>
             ) : (
               <p className="text-xs text-green-600 italic">분석 완료 (클릭하여 상세 확인)</p>
             )}
@@ -412,7 +412,7 @@ function PersonalityInsightSummary({ data }: { data: NonNullable<StudentInsightD
             {hasFace && (
               <button
                 onClick={() => openDetail('face')}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-50 border border-orange-100 text-orange-800 text-xs rounded-md hover:bg-orange-100 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-50 dark:bg-orange-950/30 border border-orange-100 text-orange-800 text-xs rounded-md hover:bg-orange-100 transition-colors"
               >
                 <Eye className="h-3 w-3" />
                 관상 분석
@@ -555,9 +555,9 @@ function MbtiDetailView({ mbti }: { mbti: { mbtiType: string; percentages: Recor
   return (
     <div className="space-y-5">
       {/* 유형 헤더 */}
-      <div className="text-center p-4 rounded-lg bg-blue-50 border border-blue-200">
+      <div className="text-center p-4 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200">
         <p className="text-3xl font-bold text-blue-900 mb-1">{mbti.mbtiType}</p>
-        {hint && <p className="text-sm text-blue-700">{hint.style}</p>}
+        {hint && <p className="text-sm text-blue-700 dark:text-blue-400">{hint.style}</p>}
       </div>
 
       {/* 차원별 백분율 바 */}
@@ -571,12 +571,12 @@ function MbtiDetailView({ mbti }: { mbti: { mbtiType: string; percentages: Recor
           return (
             <div key={leftKey} className="space-y-1">
               <div className="flex justify-between text-xs text-muted-foreground">
-                <span className={dominantSide === 'left' ? 'font-semibold text-blue-700' : ''}>{left}</span>
-                <span className={dominantSide === 'right' ? 'font-semibold text-blue-700' : ''}>{right}</span>
+                <span className={dominantSide === 'left' ? 'font-semibold text-blue-700 dark:text-blue-400' : ''}>{left}</span>
+                <span className={dominantSide === 'right' ? 'font-semibold text-blue-700 dark:text-blue-400' : ''}>{right}</span>
               </div>
               <div className="flex h-2.5 rounded-full overflow-hidden bg-muted">
                 <div
-                  className="bg-blue-500 transition-all"
+                  className="bg-blue-50 dark:bg-blue-950/30 transition-all"
                   style={{ width: `${leftPct}%` }}
                 />
                 <div
@@ -595,9 +595,9 @@ function MbtiDetailView({ mbti }: { mbti: { mbtiType: string; percentages: Recor
 
       {/* 상담 가이드 */}
       {hint && (
-        <div className="p-4 rounded-lg bg-blue-50/50 border border-blue-100 space-y-2">
+        <div className="p-4 rounded-lg bg-blue-50 dark:bg-blue-950/30/50 border border-blue-100 space-y-2">
           <h4 className="text-sm font-medium text-blue-900">상담 가이드</h4>
-          <p className="text-sm text-blue-800 leading-relaxed">{hint.tip}</p>
+          <p className="text-sm text-blue-800 dark:text-blue-300 leading-relaxed">{hint.tip}</p>
           <div className="mt-3 text-xs text-blue-600 space-y-1">
             <p><span className="font-medium">성향 키워드:</span> {hint.style}</p>
             <p><span className="font-medium">효과적 접근:</span> {mbti.mbtiType.includes('I') ? '1:1 개별 상담 선호, 생각할 시간 제공' : '그룹 활동 참여 유도, 즉각적 피드백'}</p>
@@ -620,8 +620,8 @@ function InterpretationDetailView({ title, interpretation, result, color }: {
   color: 'purple' | 'green'
 }) {
   const colorMap = {
-    purple: { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-900', badge: 'bg-purple-100 text-purple-800' },
-    green: { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-900', badge: 'bg-green-100 text-green-800' },
+    purple: { bg: 'bg-purple-50 dark:bg-purple-950/30', border: 'border-purple-200', text: 'text-purple-900', badge: 'bg-purple-100 text-purple-800' },
+    green: { bg: 'bg-green-50 dark:bg-green-950/30', border: 'border-green-200', text: 'text-green-900', badge: 'bg-green-100 text-green-800' },
   }
   const c = colorMap[color]
 
@@ -733,7 +733,7 @@ function VisionAnalysisDetailView({ title, result, color }: {
   color: 'orange' | 'teal'
 }) {
   const colorMap = {
-    orange: { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-900', badge: 'bg-orange-100 text-orange-800' },
+    orange: { bg: 'bg-orange-50 dark:bg-orange-950/30', border: 'border-orange-200', text: 'text-orange-900', badge: 'bg-orange-100 text-orange-800' },
     teal: { bg: 'bg-teal-50', border: 'border-teal-200', text: 'text-teal-900', badge: 'bg-teal-100 text-teal-800' },
   }
   const c = colorMap[color]

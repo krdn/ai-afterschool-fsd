@@ -140,8 +140,8 @@ export function MbtiDirectInputModal({
                   className={`
                     py-2 px-3 rounded-lg border-2 font-medium text-sm transition-all
                     ${selectedType === type
-                      ? "border-purple-600 bg-purple-50 text-purple-700"
-                      : "border hover:border-purple-300 hover:bg-purple-50"
+                      ? "border-purple-600 bg-purple-50 dark:bg-purple-950/30 text-purple-700"
+                      : "border hover:border-purple-300 hover:bg-purple-50 dark:bg-purple-950/30"
                     }
                   `}
                 >
@@ -251,7 +251,7 @@ export function MbtiDirectInputModal({
           )}
 
           {/* 안내 메시지 */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-700">
+          <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 rounded-lg p-3 text-sm text-blue-700">
             💡 <strong>팁:</strong> 설문 없이 이미 알고 있는 MBTI 유형을 빠르게 입력할 수 있습니다.
             백분율은 선택사항이며, 유형에 따라 자동으로 설정됩니다.
           </div>

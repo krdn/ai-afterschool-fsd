@@ -288,7 +288,7 @@ export function ProviderCard({
                   className={cn(
                     "flex items-center gap-2 text-sm py-1 px-2 rounded",
                     model.isDefault 
-                      ? "bg-yellow-50 border border-yellow-200 hover:bg-yellow-100" 
+                      ? "bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 hover:bg-yellow-100" 
                       : "hover:bg-muted"
                   )}
                 >
@@ -299,7 +299,7 @@ export function ProviderCard({
                   )}
                   <span className="font-medium">{model.displayName || model.modelId}</span>
                   {model.isDefault && (
-                    <Badge className="bg-yellow-500 text-white text-[10px] h-4 px-1">
+                    <Badge className="bg-yellow-50 dark:bg-yellow-950/30 text-white text-[10px] h-4 px-1">
                       기본
                     </Badge>
                   )}

@@ -22,7 +22,7 @@ export function QuestionItem({ questionId, questionText, description, isFocused,
       id={`question-${questionId}`}
       className={cn(
         "p-4 rounded-lg border transition-colors",
-        showError && "border-red-500 bg-red-50",
+        showError && "border-red-500 bg-red-50 dark:bg-red-950/30",
         isFocused && "ring-2 ring-blue-500",
         !showError && !isFocused && "border"
       )}

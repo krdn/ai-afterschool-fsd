@@ -37,10 +37,10 @@ import { toast } from 'sonner'
 
 // 타임라인 도트 색상 매핑
 const typeTimelineColor: Record<string, string> = {
-  ACADEMIC: 'bg-blue-500',
-  CAREER: 'bg-green-500',
-  PSYCHOLOGICAL: 'bg-purple-500',
-  BEHAVIORAL: 'bg-orange-500',
+  ACADEMIC: 'bg-blue-50 dark:bg-blue-950/30',
+  CAREER: 'bg-green-50 dark:bg-green-950/30',
+  PSYCHOLOGICAL: 'bg-purple-50 dark:bg-purple-950/30',
+  BEHAVIORAL: 'bg-orange-50 dark:bg-orange-950/30',
 }
 
 interface CounselingTabProps {

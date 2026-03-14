@@ -140,31 +140,31 @@ export default function TeacherAnalysisTab({ teacherId }: { teacherId: string })
             <TabsTrigger value="saju" className="flex-shrink-0">
               사주
               {data.teacher?.sajuAnalysis && (
-                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-500" />
+                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-50 dark:bg-green-950/30" />
               )}
             </TabsTrigger>
             <TabsTrigger value="face" className="flex-shrink-0">
               관상
               {data.faceAnalysis?.status === "complete" && (
-                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-500" />
+                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-50 dark:bg-green-950/30" />
               )}
             </TabsTrigger>
             <TabsTrigger value="palm" className="flex-shrink-0">
               손금
               {data.palmAnalysis?.status === "complete" && (
-                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-500" />
+                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-50 dark:bg-green-950/30" />
               )}
             </TabsTrigger>
             <TabsTrigger value="mbti" className="flex-shrink-0">
               MBTI
               {data.mbtiAnalysis && (
-                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-500" />
+                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-50 dark:bg-green-950/30" />
               )}
             </TabsTrigger>
             <TabsTrigger value="name" className="flex-shrink-0">
               이름
               {data.nameAnalysis && (
-                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-500" />
+                <span className="ml-1.5 inline-block w-1.5 h-1.5 rounded-full bg-green-50 dark:bg-green-950/30" />
               )}
             </TabsTrigger>
           </TabsList>

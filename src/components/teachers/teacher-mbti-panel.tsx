@@ -118,11 +118,11 @@ export function TeacherMbtiPanel({ teacherId, teacherName, analysis, enabledProv
 
       <div className="p-6 space-y-6">
         {errorMessage && (
-          <div className="bg-red-50 border-l-4 border-red-400 p-4">
+          <div className="bg-red-50 dark:bg-red-950/30 border-l-4 border-red-400 p-4">
             <div className="flex">
               <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0" />
               <div className="ml-3">
-                <p className="text-sm text-red-800">{errorMessage}</p>
+                <p className="text-sm text-red-800 dark:text-red-300">{errorMessage}</p>
                 <Button onClick={() => setErrorMessage(null)} variant="outline" size="sm" className="mt-2">
                   닫기
                 </Button>
@@ -195,7 +195,7 @@ export function TeacherMbtiPanel({ teacherId, teacherName, analysis, enabledProv
             <div className="flex gap-3 justify-center">
               <button
                 onClick={() => setShowDirectInput(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 border border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 border border-purple-600 text-purple-600 rounded-lg hover:bg-purple-50 dark:bg-purple-950/30 transition-colors"
               >
                 <Edit3 className="w-4 h-4" />
                 직접 입력

@@ -43,7 +43,7 @@ export function TeacherPerformanceCard({
         isTopPerformer
           ? "border-2 border-yellow-500 shadow-md"
           : teacher.averageGradeChange < 0
-            ? "bg-red-50"
+            ? "bg-red-50 dark:bg-red-950/30"
             : ""
       }`}
     >
@@ -54,7 +54,7 @@ export function TeacherPerformanceCard({
             {rank !== undefined && (
               <Badge
                 variant={isTopPerformer ? "default" : "secondary"}
-                className={`mt-1 ${isTopPerformer ? "bg-yellow-500 text-white" : ""}`}
+                className={`mt-1 ${isTopPerformer ? "bg-yellow-50 dark:bg-yellow-950/30 text-white" : ""}`}
               >
                 순위 #{rank}
               </Badge>

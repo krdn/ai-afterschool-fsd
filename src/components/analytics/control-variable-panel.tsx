@@ -58,8 +58,8 @@ export function ControlVariablePanel({
           />
         </div>
 
-        <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
-          <p className="text-sm text-blue-800">
+        <div className="bg-blue-50 dark:bg-blue-950/30 p-3 rounded-lg border border-blue-200">
+          <p className="text-sm text-blue-800 dark:text-blue-300">
             공정한 비교를 위해 통제 변수를 적용했습니다.
           </p>
         </div>

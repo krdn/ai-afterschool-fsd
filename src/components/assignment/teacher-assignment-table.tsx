@@ -72,9 +72,9 @@ const getRoleLabel = (role: string): string => {
 const getRoleBadgeClass = (role: string): string => {
   switch (role) {
     case 'TEAM_LEADER':
-      return 'bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium'
+      return 'bg-blue-100 text-blue-800 dark:text-blue-300 px-2 py-1 rounded-full text-xs font-medium'
     case 'MANAGER':
-      return 'bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium'
+      return 'bg-purple-100 text-purple-800 dark:text-purple-300 px-2 py-1 rounded-full text-xs font-medium'
     default:
       return 'bg-muted text-foreground px-2 py-1 rounded-full text-xs font-medium'
   }
@@ -287,7 +287,7 @@ export function TeacherAssignmentTable({ teachers }: TeacherAssignmentTableProps
                                   <button
                                     onClick={() => handleUnassignClick(student.id, student.name)}
                                     disabled={unassigningId === student.id}
-                                    className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 disabled:opacity-50"
+                                    className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 dark:text-red-400 disabled:opacity-50"
                                     title="배정 해제"
                                   >
                                     <UserMinus className="h-3.5 w-3.5" />

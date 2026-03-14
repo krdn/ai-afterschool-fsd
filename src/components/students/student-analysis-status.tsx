@@ -11,7 +11,7 @@ export function StudentAnalysisStatus({ status }: StudentAnalysisStatusProps) {
 
   const isStale = status.needsRecalculation
   const badgeClass = isStale
-    ? "bg-amber-50 text-amber-700 ring-1 ring-amber-200"
+    ? "bg-amber-50 dark:bg-amber-950/30 text-amber-700 ring-1 ring-amber-200"
     : "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200"
 
   return (

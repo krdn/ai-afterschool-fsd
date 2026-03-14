@@ -264,7 +264,7 @@ export function ReservationEditForm({ reservation, onSave, onCancel }: Reservati
 
         {/* AI 무효화 알림 (인라인) */}
         {needsAiInvalidation && (
-          <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+          <div className="rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/30 p-3 text-sm text-amber-800">
             학생 또는 주제가 변경되어 저장 시 기존 AI 보고서가 삭제됩니다.
           </div>
         )}

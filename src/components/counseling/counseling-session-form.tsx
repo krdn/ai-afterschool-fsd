@@ -144,7 +144,7 @@ export function CounselingSessionForm({
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {form.formState.errors.root && (
-            <div className="p-3 rounded-md bg-red-50 text-red-600 text-sm">
+            <div className="p-3 rounded-md bg-red-50 dark:bg-red-950/30 text-red-600 text-sm">
               {form.formState.errors.root.message}
             </div>
           )}

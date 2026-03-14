@@ -52,7 +52,7 @@ export default function StudyPlanView({ data }: StudyPlanViewProps) {
               {data.prioritySubjects.map((subject) => (
                 <Badge
                   key={subject}
-                  className="bg-orange-100 text-orange-800 hover:bg-orange-100"
+                  className="bg-orange-100 text-orange-800 dark:text-orange-300 hover:bg-orange-100"
                 >
                   {subject}
                 </Badge>

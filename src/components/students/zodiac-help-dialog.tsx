@@ -62,7 +62,7 @@ export function ZodiacHelpDialog() {
               </div>
             ))}
 
-            <div className="rounded-lg bg-blue-50 border border-blue-200 p-3 text-xs text-blue-700 space-y-1">
+            <div className="rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 p-3 text-xs text-blue-700 space-y-1">
               <p className="font-medium">사용 팁</p>
               <ul className="list-disc list-inside space-y-0.5">
                 <li>별자리 분석은 학생의 생년월일 기반으로 자동 결정됩니다</li>

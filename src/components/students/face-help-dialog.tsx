@@ -62,7 +62,7 @@ export function FaceHelpDialog() {
               </div>
             ))}
 
-            <div className="rounded-lg bg-blue-50 border border-blue-200 p-3 text-xs text-blue-700 space-y-1">
+            <div className="rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 p-3 text-xs text-blue-700 space-y-1">
               <p className="font-medium">사용 팁</p>
               <ul className="list-disc list-inside space-y-0.5">
                 <li>Vision 모델이 필요합니다 (Claude, GPT-4o 등)</li>

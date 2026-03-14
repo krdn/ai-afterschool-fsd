@@ -20,10 +20,10 @@ const ROLE_LABELS: Record<string, string> = {
 }
 
 const ROLE_COLORS: Record<string, string> = {
-  DIRECTOR: "bg-red-100 text-red-700",
+  DIRECTOR: "bg-red-100 text-red-700 dark:text-red-400",
   TEAM_LEADER: "bg-orange-100 text-orange-700",
-  MANAGER: "bg-blue-100 text-blue-700",
-  TEACHER: "bg-green-100 text-green-700",
+  MANAGER: "bg-blue-100 text-blue-700 dark:text-blue-400",
+  TEACHER: "bg-green-100 text-green-700 dark:text-green-400",
 }
 
 export function DevUserSwitcher({ currentUserId }: { currentUserId: string }) {
@@ -86,7 +86,7 @@ export function DevUserSwitcher({ currentUserId }: { currentUserId: string }) {
       {/* 토글 버튼 */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-10 h-10 rounded-full bg-yellow-400 hover:bg-yellow-500 text-black font-bold text-sm shadow-lg flex items-center justify-center transition-transform hover:scale-110"
+        className="w-10 h-10 rounded-full bg-yellow-400 hover:bg-yellow-50 dark:bg-yellow-950/30 text-black font-bold text-sm shadow-lg flex items-center justify-center transition-transform hover:scale-110"
         title="DEV: 사용자 전환"
       >
         DEV
@@ -114,7 +114,7 @@ export function DevUserSwitcher({ currentUserId }: { currentUserId: string }) {
                   disabled={switching || t.id === currentUserId}
                   className={`w-full text-left px-3 py-2.5 border-b last:border-b-0 transition-colors ${
                     t.id === currentUserId
-                      ? "bg-yellow-50"
+                      ? "bg-yellow-50 dark:bg-yellow-950/30"
                       : "hover:bg-muted"
                   } ${switching ? "opacity-50" : ""}`}
                 >
@@ -125,7 +125,7 @@ export function DevUserSwitcher({ currentUserId }: { currentUserId: string }) {
                           {t.name}
                         </span>
                         {t.id === currentUserId && (
-                          <span className="text-[10px] bg-yellow-200 text-yellow-800 px-1.5 py-0.5 rounded">
+                          <span className="text-[10px] bg-yellow-200 text-yellow-800 dark:text-yellow-300 px-1.5 py-0.5 rounded">
                             현재
                           </span>
                         )}

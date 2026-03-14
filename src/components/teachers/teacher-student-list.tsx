@@ -31,9 +31,9 @@ interface TeacherStudentListProps {
 }
 
 function getGradeColor(score: number): string {
-  if (score < 60) return 'text-red-600 bg-red-50'
-  if (score < 80) return 'text-yellow-600 bg-yellow-50'
-  return 'text-green-600 bg-green-50'
+  if (score < 60) return 'text-red-600 bg-red-50 dark:bg-red-950/30'
+  if (score < 80) return 'text-yellow-600 bg-yellow-50 dark:bg-yellow-950/30'
+  return 'text-green-600 bg-green-50 dark:bg-green-950/30'
 }
 
 function CompatibilityProgressBar({ score }: { score: number | null }) {
@@ -43,9 +43,9 @@ function CompatibilityProgressBar({ score }: { score: number | null }) {
 
   const percentage = score
   let color = 'bg-muted'
-  if (score >= 80) color = 'bg-green-500'
-  else if (score >= 60) color = 'bg-yellow-500'
-  else color = 'bg-red-500'
+  if (score >= 80) color = 'bg-green-50 dark:bg-green-950/30'
+  else if (score >= 60) color = 'bg-yellow-50 dark:bg-yellow-950/30'
+  else color = 'bg-red-50 dark:bg-red-950/30'
 
   return (
     <div className="w-full max-w-[120px]">

@@ -198,7 +198,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
         </div>
 
         {error && (
-          <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md p-2">
+          <div className="text-sm text-red-600 bg-red-50 dark:bg-red-950/30 border border-red-200 rounded-md p-2">
             {error}
           </div>
         )}
@@ -398,7 +398,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
       </div>
 
       {error && (
-        <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-md p-2">
+        <div className="text-sm text-red-600 bg-red-50 dark:bg-red-950/30 border border-red-200 rounded-md p-2">
           {error}
         </div>
       )}
@@ -486,7 +486,7 @@ export function SajuPromptsTab({ initialPresets }: Props) {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-7 w-7 text-red-500 hover:text-red-700"
+                        className="h-7 w-7 text-red-500 hover:text-red-700 dark:text-red-400"
                         onClick={() => setDeleteTarget(preset)}
                         disabled={isPending}
                         title={preset.isBuiltIn ? "비활성 처리" : "삭제"}

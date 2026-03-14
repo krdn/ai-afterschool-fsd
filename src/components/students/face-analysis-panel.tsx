@@ -255,8 +255,8 @@ function AnalysisResult({ result, imageUrl, usedProvider, usedModel, onReanalyze
       )}
 
       {/* Disclaimer Banner */}
-      <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
-        <p className="text-sm text-yellow-800">
+      <div className="bg-yellow-50 dark:bg-yellow-950/30 border-l-4 border-yellow-400 p-4">
+        <p className="text-sm text-yellow-800 dark:text-yellow-300">
           {DISCLAIMER_TEXT.face}
         </p>
       </div>
@@ -264,7 +264,7 @@ function AnalysisResult({ result, imageUrl, usedProvider, usedModel, onReanalyze
       {/* Provider Label */}
       {providerLabel && (
         <div className="flex items-center gap-2">
-          <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">
+          <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/30 text-blue-600 border border-blue-200">
             {providerLabel}
           </span>
         </div>
@@ -389,11 +389,11 @@ function EmptyState({ hasImage, onAnalyze }: { hasImage: boolean; onAnalyze: () 
 function ErrorState({ message, onRetry, isRetrying }: { message: string; onRetry: () => void; isRetrying: boolean }) {
   return (
     <div className="text-center py-8">
-      <div data-testid="analysis-error" className="bg-red-50 border-l-4 border-red-400 p-4 mb-4 text-left">
+      <div data-testid="analysis-error" className="bg-red-50 dark:bg-red-950/30 border-l-4 border-red-400 p-4 mb-4 text-left">
         <div className="flex">
           <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0" />
           <div className="ml-3">
-            <p className="text-sm text-red-800">{message}</p>
+            <p className="text-sm text-red-800 dark:text-red-300">{message}</p>
           </div>
         </div>
       </div>

@@ -74,7 +74,7 @@ export default function ParentReportPreview({
       {report.strengths.length > 0 && (
         <Card className="border-green-200">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2 text-green-700">
+            <CardTitle className="text-base flex items-center gap-2 text-green-700 dark:text-green-400">
               <Star className="w-4 h-4" />
               잘하고 있는 점
             </CardTitle>
@@ -84,7 +84,7 @@ export default function ParentReportPreview({
               {report.strengths.map((s, i) => (
                 <li
                   key={i}
-                  className="flex items-start gap-2 text-sm text-foreground p-2 bg-green-50 rounded"
+                  className="flex items-start gap-2 text-sm text-foreground p-2 bg-green-50 dark:bg-green-950/30 rounded"
                 >
                   <Star className="w-4 h-4 text-green-500 mt-0.5 shrink-0" />
                   {s}
@@ -99,7 +99,7 @@ export default function ParentReportPreview({
       {report.growthPoints.length > 0 && (
         <Card className="border-amber-200">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2 text-amber-700">
+            <CardTitle className="text-base flex items-center gap-2 text-amber-700 dark:text-amber-400">
               <TrendingUp className="w-4 h-4" />
               앞으로의 성장 포인트
             </CardTitle>
@@ -109,7 +109,7 @@ export default function ParentReportPreview({
               {report.growthPoints.map((g, i) => (
                 <li
                   key={i}
-                  className="flex items-start gap-2 text-sm text-foreground p-2 bg-amber-50 rounded"
+                  className="flex items-start gap-2 text-sm text-foreground p-2 bg-amber-50 dark:bg-amber-950/30 rounded"
                 >
                   <TrendingUp className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
                   {g}
@@ -124,7 +124,7 @@ export default function ParentReportPreview({
       {report.homeStudyTips.length > 0 && (
         <Card className="border-purple-200">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2 text-purple-700">
+            <CardTitle className="text-base flex items-center gap-2 text-purple-700 dark:text-purple-400">
               <Home className="w-4 h-4" />
               가정에서 이렇게 도와주세요
             </CardTitle>
@@ -134,7 +134,7 @@ export default function ParentReportPreview({
               {report.homeStudyTips.map((tip, i) => (
                 <li
                   key={i}
-                  className="flex items-start gap-2 text-sm text-foreground p-2 bg-purple-50 rounded"
+                  className="flex items-start gap-2 text-sm text-foreground p-2 bg-purple-50 dark:bg-purple-950/30 rounded"
                 >
                   <Home className="w-4 h-4 text-purple-500 mt-0.5 shrink-0" />
                   {tip}
@@ -147,9 +147,9 @@ export default function ParentReportPreview({
 
       {/* 선생님 한마디 */}
       {report.teacherNote && (
-        <Card className="bg-blue-50 border-blue-200">
+        <Card className="bg-blue-50 dark:bg-blue-950/30 border-blue-200">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2 text-blue-700">
+            <CardTitle className="text-base flex items-center gap-2 text-blue-700 dark:text-blue-400">
               <MessageCircle className="w-4 h-4" />
               선생님 한마디
             </CardTitle>

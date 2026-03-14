@@ -99,11 +99,11 @@ export function ResetPasswordError({
         <p className="text-muted-foreground">{content.description}</p>
 
         {errorType === 'expired' && expiredAt && createdAt && (
-          <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 text-left">
+          <div className="bg-orange-50 dark:bg-orange-950/30 border border-orange-200 rounded-lg p-4 text-left">
             <div className="flex items-start gap-2">
               <AlertCircle className="h-5 w-5 text-orange-600 mt-0.5 flex-shrink-0" />
               <div className="space-y-2 text-sm">
-                <p className="text-orange-800">
+                <p className="text-orange-800 dark:text-orange-300">
                   이 링크는{' '}
                   <span className="font-semibold">
                     {formatDistanceToNow(expiredAt, { locale: ko, addSuffix: true })}
@@ -175,7 +175,7 @@ export function ResetPasswordError({
           formState?.message && (
             <Alert
               variant={formState.success ? 'default' : 'destructive'}
-              className={formState.success ? 'border-green-500 text-green-700' : ''}
+              className={formState.success ? 'border-green-500 text-green-700 dark:text-green-400' : ''}
             >
               <AlertDescription>{formState.message}</AlertDescription>
             </Alert>

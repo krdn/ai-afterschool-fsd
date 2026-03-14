@@ -100,7 +100,7 @@ export default function ParentReportSend({
               type="button"
               className={`flex items-center w-full rounded-lg border p-4 cursor-pointer transition-colors text-left ${
                 method === m.value
-                  ? 'border-blue-500 bg-blue-50'
+                  ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/30'
                   : 'border hover:bg-muted'
               }`}
               onClick={() => setMethod(m.value)}
@@ -120,7 +120,7 @@ export default function ParentReportSend({
             </button>
           ))}
 
-          <p className="text-xs text-amber-600 mt-3 bg-amber-50 p-2 rounded">
+          <p className="text-xs text-amber-600 mt-3 bg-amber-50 dark:bg-amber-950/30 p-2 rounded">
             * 현재 발송 기능은 준비 중입니다. 발송 기록만 저장됩니다.
           </p>
         </div>

@@ -36,7 +36,7 @@ export function FollowUpCard({ item, onComplete, loading = false }: FollowUpCard
 
   // 상태별 스타일링
   const cardStyles = {
-    overdue: "bg-red-50 border-red-200",
+    overdue: "bg-red-50 dark:bg-red-950/30 border-red-200",
     pending: "bg-card border",
     completed: "bg-muted border opacity-75",
   }

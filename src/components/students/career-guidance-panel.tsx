@@ -65,9 +65,9 @@ export async function CareerGuidancePanel({ studentId, teacherId: _teacherId, su
         {/* Content */}
         <div className="p-6 space-y-6">
           {/* Core Traits */}
-          <div className="bg-blue-50 border-l-4 border-blue-400 p-4">
+          <div className="bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-400 p-4">
             <h3 className="font-semibold text-blue-900 mb-2">핵심 성향</h3>
-            <p className="text-sm text-blue-800 leading-relaxed">{result.coreTraits}</p>
+            <p className="text-sm text-blue-800 dark:text-blue-300 leading-relaxed">{result.coreTraits}</p>
           </div>
 
           {/* Suitable Majors */}
@@ -78,7 +78,7 @@ export async function CareerGuidancePanel({ studentId, teacherId: _teacherId, su
                 <div key={i} className="bg-muted rounded-lg p-3">
                   <div className="flex items-center justify-between mb-1">
                     <h4 className="font-medium text-sm text-foreground">{major.name}</h4>
-                    <span className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs font-medium">
+                    <span className="px-2 py-0.5 bg-purple-100 text-purple-700 dark:text-purple-400 rounded text-xs font-medium">
                       {major.matchScore}%
                     </span>
                   </div>
@@ -97,7 +97,7 @@ export async function CareerGuidancePanel({ studentId, teacherId: _teacherId, su
                   <h4 className="font-medium text-sm text-foreground mb-2">{path.field}</h4>
                   <div className="flex flex-wrap gap-1 mb-2">
                     {path.roles.map((role, j) => (
-                      <span key={j} className="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs">
+                      <span key={j} className="px-2 py-1 bg-purple-50 dark:bg-purple-950/30 text-purple-700 rounded text-xs">
                         {role}
                       </span>
                     ))}
@@ -180,11 +180,11 @@ function ErrorState({ message, studentId }: { message: string; studentId: string
       </div>
       <div className="p-6">
         <div className="text-center py-8">
-          <div className="bg-red-50 border-l-4 border-red-400 p-4 mb-4 text-left">
+          <div className="bg-red-50 dark:bg-red-950/30 border-l-4 border-red-400 p-4 mb-4 text-left">
             <div className="flex">
               <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0" />
               <div className="ml-3">
-                <p className="text-sm text-red-800">{message}</p>
+                <p className="text-sm text-red-800 dark:text-red-300">{message}</p>
               </div>
             </div>
           </div>

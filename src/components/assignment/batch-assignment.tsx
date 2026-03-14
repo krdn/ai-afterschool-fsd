@@ -175,7 +175,7 @@ export function BatchAssignment({
                     <Card
                       key={student.id}
                       className={`cursor-pointer transition-colors ${
-                        isSelected ? "border-blue-500 bg-blue-50" : "hover:bg-muted"
+                        isSelected ? "border-blue-500 bg-blue-50 dark:bg-blue-950/30" : "hover:bg-muted"
                       }`}
                       onClick={() => toggleStudent(student.id)}
                     >
@@ -183,7 +183,7 @@ export function BatchAssignment({
                         <div
                           className={`w-5 h-5 rounded border flex items-center justify-center ${
                             isSelected
-                              ? "bg-blue-500 border-blue-500"
+                              ? "bg-blue-50 dark:bg-blue-950/30 border-blue-500"
                               : "border"
                           }`}
                         >

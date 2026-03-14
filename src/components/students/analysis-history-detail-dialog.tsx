@@ -63,8 +63,8 @@ export function AnalysisHistoryDetailDialog({
         <ScrollArea className="max-h-[500px]">
           <div className="p-4">
             {item.errorMessage ? (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <p className="text-red-700">{item.errorMessage}</p>
+              <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 rounded-lg p-4">
+                <p className="text-red-700 dark:text-red-400">{item.errorMessage}</p>
               </div>
             ) : (
               <HistoryDetailContent item={item} type={type} />

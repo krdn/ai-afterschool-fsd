@@ -212,10 +212,10 @@ export default function PeerComparisonChart({
                             variant="outline"
                             className={
                               s.percentile >= 70
-                                ? 'text-green-700 border-green-300'
+                                ? 'text-green-700 dark:text-green-400 border-green-300'
                                 : s.percentile >= 30
                                   ? 'text-foreground border'
-                                  : 'text-red-700 border-red-300'
+                                  : 'text-red-700 dark:text-red-400 border-red-300'
                             }
                           >
                             상위 {100 - s.percentile}%
@@ -233,7 +233,7 @@ export default function PeerComparisonChart({
             )}
 
             {/* 분석 코멘트 */}
-            <Card className="bg-blue-50 border-blue-200">
+            <Card className="bg-blue-50 dark:bg-blue-950/30 border-blue-200">
               <CardContent className="pt-4">
                 <p className="text-sm text-blue-900 whitespace-pre-wrap">
                   {result.comment}

@@ -163,7 +163,7 @@ export function ReservationCard({
                 size="sm"
                 onClick={() => openDialog("noShow")}
                 disabled={isProcessing}
-                className="flex-1 bg-orange-50 text-orange-700 hover:bg-orange-100 border-orange-200"
+                className="flex-1 bg-orange-50 dark:bg-orange-950/30 text-orange-700 hover:bg-orange-100 border-orange-200"
               >
                 노쇼
               </Button>

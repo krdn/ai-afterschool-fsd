@@ -59,8 +59,8 @@ export function TeacherRecommendationList({
   }
 
   const getScoreColorClass = (score: number): string => {
-    if (score >= 80) return "bg-green-100 text-green-700"
-    if (score >= 60) return "bg-blue-100 text-blue-700"
+    if (score >= 80) return "bg-green-100 text-green-700 dark:text-green-400"
+    if (score >= 60) return "bg-blue-100 text-blue-700 dark:text-blue-400"
     if (score >= 40) return "bg-yellow-100 text-yellow-700"
     return "bg-muted text-foreground"
   }
@@ -110,7 +110,7 @@ export function TeacherRecommendationList({
                         : rank === 2
                           ? "bg-muted text-foreground"
                           : rank === 3
-                            ? "bg-amber-100 text-amber-700"
+                            ? "bg-amber-100 text-amber-700 dark:text-amber-400"
                             : "bg-muted text-muted-foreground"
                     }`}
                   >
@@ -126,7 +126,7 @@ export function TeacherRecommendationList({
                         {getRoleLabel(recommendation.teacherRole)}
                       </span>
                       {isCurrentTeacher && (
-                        <span className="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700">
+                        <span className="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700 dark:text-blue-400">
                           현재 배정
                         </span>
                       )}

@@ -44,7 +44,7 @@ interface OcrReviewPanelProps {
 function getConfidenceBadge(confidence: number) {
   if (confidence >= 80) {
     return (
-      <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
+      <Badge className="bg-green-100 text-green-700 dark:text-green-400 hover:bg-green-100">
         {confidence}%
       </Badge>
     );
@@ -57,7 +57,7 @@ function getConfidenceBadge(confidence: number) {
     );
   }
   return (
-    <Badge className="bg-red-100 text-red-700 hover:bg-red-100">
+    <Badge className="bg-red-100 text-red-700 dark:text-red-400 hover:bg-red-100">
       {confidence}%
     </Badge>
   );
@@ -205,7 +205,7 @@ export default function OcrReviewPanel({
         {/* 낮은 신뢰도 경고 */}
         {ocrResult &&
           ocrResult.subjects.some((s) => s.confidence < 50) && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 flex items-start gap-2">
+            <div className="bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 rounded-lg p-3 flex items-start gap-2">
               <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5 shrink-0" />
               <p className="text-sm text-yellow-700">
                 일부 과목의 인식 신뢰도가 낮습니다. 저장 전에 수동으로 확인해주세요.

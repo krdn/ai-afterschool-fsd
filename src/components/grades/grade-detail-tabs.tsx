@@ -189,41 +189,41 @@ function getAlertConfig(alert: TeacherAlert) {
       return {
         icon: AlertTriangle,
         label: '위험',
-        bgColor: 'bg-red-50',
+        bgColor: 'bg-red-50 dark:bg-red-950/30',
         borderColor: 'border-red-200',
         iconColor: 'text-red-600',
-        textColor: 'text-red-800',
-        badgeColor: 'border-red-300 text-red-700',
+        textColor: 'text-red-800 dark:text-red-300',
+        badgeColor: 'border-red-300 text-red-700 dark:text-red-400',
       };
     case 'SCORE_DROP':
       return {
         icon: TrendingDown,
         label: '급락',
-        bgColor: 'bg-orange-50',
+        bgColor: 'bg-orange-50 dark:bg-orange-950/30',
         borderColor: 'border-orange-200',
         iconColor: 'text-orange-600',
-        textColor: 'text-orange-800',
+        textColor: 'text-orange-800 dark:text-orange-300',
         badgeColor: 'border-orange-300 text-orange-700',
       };
     case 'BELOW_AVERAGE':
       return {
         icon: Info,
         label: '평균 미달',
-        bgColor: 'bg-yellow-50',
+        bgColor: 'bg-yellow-50 dark:bg-yellow-950/30',
         borderColor: 'border-yellow-200',
         iconColor: 'text-yellow-600',
-        textColor: 'text-yellow-800',
+        textColor: 'text-yellow-800 dark:text-yellow-300',
         badgeColor: 'border-yellow-300 text-yellow-700',
       };
     case 'IMPROVEMENT':
       return {
         icon: TrendingUp,
         label: '개선',
-        bgColor: 'bg-green-50',
+        bgColor: 'bg-green-50 dark:bg-green-950/30',
         borderColor: 'border-green-200',
         iconColor: 'text-green-600',
-        textColor: 'text-green-800',
-        badgeColor: 'border-green-300 text-green-700',
+        textColor: 'text-green-800 dark:text-green-300',
+        badgeColor: 'border-green-300 text-green-700 dark:text-green-400',
       };
     default:
       return {

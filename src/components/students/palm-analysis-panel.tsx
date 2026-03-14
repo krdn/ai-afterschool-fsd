@@ -213,8 +213,8 @@ function AnalysisResult({ result, imageUrl, hand }: { result: unknown; imageUrl:
       </div>
 
       {/* Disclaimer Banner */}
-      <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
-        <p className="text-sm text-yellow-800">
+      <div className="bg-yellow-50 dark:bg-yellow-950/30 border-l-4 border-yellow-400 p-4">
+        <p className="text-sm text-yellow-800 dark:text-yellow-300">
           {DISCLAIMER_TEXT.palm}
         </p>
       </div>
@@ -276,9 +276,9 @@ function AnalysisResult({ result, imageUrl, hand }: { result: unknown; imageUrl:
 
 function ClarityBadge({ clarity }: { clarity: 'clear' | 'unclear' | 'partial' }) {
   const styles = {
-    clear: 'bg-green-100 text-green-800',
-    partial: 'bg-yellow-100 text-yellow-800',
-    unclear: 'bg-red-100 text-red-800'
+    clear: 'bg-green-100 text-green-800 dark:text-green-300',
+    partial: 'bg-yellow-100 text-yellow-800 dark:text-yellow-300',
+    unclear: 'bg-red-100 text-red-800 dark:text-red-300'
   }
 
   const labels = {
@@ -379,11 +379,11 @@ function EmptyState({
 function ErrorState({ message, onRetry, isRetrying }: { message: string; onRetry: () => void; isRetrying: boolean }) {
   return (
     <div className="text-center py-8">
-      <div data-testid="analysis-error" className="bg-red-50 border-l-4 border-red-400 p-4 mb-4 text-left">
+      <div data-testid="analysis-error" className="bg-red-50 dark:bg-red-950/30 border-l-4 border-red-400 p-4 mb-4 text-left">
         <div className="flex">
           <AlertCircle className="h-5 w-5 text-red-400 flex-shrink-0" />
           <div className="ml-3">
-            <p className="text-sm text-red-800">{message}</p>
+            <p className="text-sm text-red-800 dark:text-red-300">{message}</p>
           </div>
         </div>
       </div>

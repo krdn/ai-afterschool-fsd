@@ -79,7 +79,7 @@ export function ProviderList({
       {activeProviders.length > 0 && (
         <section>
           <div className="flex items-center gap-2 mb-4">
-            <span className="w-2.5 h-2.5 rounded-full bg-green-500" />
+            <span className="w-2.5 h-2.5 rounded-full bg-green-50 dark:bg-green-950/30" />
             <h3 className="text-base font-semibold">활성 제공자</h3>
             <Badge variant="secondary">{activeProviders.length}</Badge>
           </div>

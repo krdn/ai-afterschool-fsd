@@ -199,9 +199,9 @@ function BudgetCard({ status }: { status: BudgetStatus }) {
   };
 
   const getProgressColor = () => {
-    if (isOverBudget) return "bg-red-500";
-    if (percentUsed >= 80) return "bg-amber-500";
-    return "bg-green-500";
+    if (isOverBudget) return "bg-red-50 dark:bg-red-950/30";
+    if (percentUsed >= 80) return "bg-amber-50 dark:bg-amber-950/30";
+    return "bg-green-50 dark:bg-green-950/30";
   };
 
   const getStatusIcon = () => {

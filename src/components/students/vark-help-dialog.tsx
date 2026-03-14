@@ -62,7 +62,7 @@ export function VarkHelpDialog() {
               </div>
             ))}
 
-            <div className="rounded-lg bg-blue-50 border border-blue-200 p-3 text-xs text-blue-700 space-y-1">
+            <div className="rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-200 p-3 text-xs text-blue-700 space-y-1">
               <p className="font-medium">사용 팁</p>
               <ul className="list-disc list-inside space-y-0.5">
                 <li>VARK 설문을 먼저 완료해야 AI 해석을 사용할 수 있습니다</li>

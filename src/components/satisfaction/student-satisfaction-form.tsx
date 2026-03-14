@@ -17,10 +17,10 @@ interface StudentSatisfactionFormProps {
 }
 
 const RATING_LEVELS = {
-  LOW: { label: "불만족", min: 1, max: 3, color: "bg-red-100 text-red-800" },
-  MEDIUM: { label: "보통", min: 4, max: 6, color: "bg-yellow-100 text-yellow-800" },
-  HIGH: { label: "만족", min: 7, max: 8, color: "bg-blue-100 text-blue-800" },
-  EXCELLENT: { label: "매우 만족", min: 9, max: 10, color: "bg-green-100 text-green-800" },
+  LOW: { label: "불만족", min: 1, max: 3, color: "bg-red-100 text-red-800 dark:text-red-300" },
+  MEDIUM: { label: "보통", min: 4, max: 6, color: "bg-yellow-100 text-yellow-800 dark:text-yellow-300" },
+  HIGH: { label: "만족", min: 7, max: 8, color: "bg-blue-100 text-blue-800 dark:text-blue-300" },
+  EXCELLENT: { label: "매우 만족", min: 9, max: 10, color: "bg-green-100 text-green-800 dark:text-green-300" },
 }
 
 export function StudentSatisfactionForm({
@@ -147,7 +147,7 @@ export function StudentSatisfactionForm({
       <CardContent>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {form.formState.errors.root && (
-            <div className="p-3 rounded-md bg-red-50 text-red-600 text-sm">
+            <div className="p-3 rounded-md bg-red-50 dark:bg-red-950/30 text-red-600 text-sm">
               {form.formState.errors.root.message}
             </div>
           )}

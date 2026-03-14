@@ -74,7 +74,7 @@ export function ChatMessageItem({
           <>
             <MarkdownRenderer content={content} className="text-sm" />
             {isStreaming && (
-              <span className="inline-block w-2 h-4 bg-purple-500 animate-pulse ml-0.5" />
+              <span className="inline-block w-2 h-4 bg-purple-50 dark:bg-purple-950/30 animate-pulse ml-0.5" />
             )}
           </>
         )}

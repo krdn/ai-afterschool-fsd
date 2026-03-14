@@ -129,7 +129,7 @@ export function StudentForm({ student }: StudentFormProps) {
       className="space-y-4 max-w-md mx-auto p-4 border rounded-lg bg-card"
     >
       {state.errors?._form && (
-        <div className="bg-red-50 text-red-600 p-3 rounded text-sm">
+        <div className="bg-red-50 dark:bg-red-950/30 text-red-600 p-3 rounded text-sm">
           {state.errors._form.map((err, i) => (
             <p key={i}>{err}</p>
           ))}

@@ -114,10 +114,10 @@ function CoachingReportView({ report }: { report: CoachingReport }) {
           <div className="flex items-start gap-3">
             <MessageCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
             <div>
-              <h3 className="text-sm font-semibold text-blue-800 mb-1">
+              <h3 className="text-sm font-semibold text-blue-800 dark:text-blue-300 mb-1">
                 종합 학습 전략
               </h3>
-              <p className="text-sm text-blue-700 whitespace-pre-wrap">
+              <p className="text-sm text-blue-700 dark:text-blue-400 whitespace-pre-wrap">
                 {report.overallRecommendation}
               </p>
             </div>
@@ -138,14 +138,14 @@ function CoachingReportView({ report }: { report: CoachingReport }) {
             {/* 강점 */}
             {report.strengthWeakness.strengths.length > 0 && (
               <div className="space-y-2">
-                <h4 className="text-sm font-medium text-green-700">강점 과목</h4>
+                <h4 className="text-sm font-medium text-green-700 dark:text-green-400">강점 과목</h4>
                 {report.strengthWeakness.strengths.map((s) => (
                   <div
                     key={s.subject}
-                    className="flex items-center justify-between p-2 rounded bg-green-50"
+                    className="flex items-center justify-between p-2 rounded bg-green-50 dark:bg-green-950/30"
                   >
                     <span className="text-sm font-medium">{s.subject}</span>
-                    <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+                    <Badge className="bg-green-100 text-green-800 dark:text-green-300 hover:bg-green-100">
                       {s.score}점
                     </Badge>
                   </div>
@@ -155,15 +155,15 @@ function CoachingReportView({ report }: { report: CoachingReport }) {
             {/* 약점 */}
             {report.strengthWeakness.weaknesses.length > 0 && (
               <div className="space-y-2">
-                <h4 className="text-sm font-medium text-red-700">약점 과목</h4>
+                <h4 className="text-sm font-medium text-red-700 dark:text-red-400">약점 과목</h4>
                 {report.strengthWeakness.weaknesses.map((w) => (
                   <div
                     key={w.subject}
-                    className="p-2 rounded bg-red-50"
+                    className="p-2 rounded bg-red-50 dark:bg-red-950/30"
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium">{w.subject}</span>
-                      <Badge className="bg-red-100 text-red-800 hover:bg-red-100">
+                      <Badge className="bg-red-100 text-red-800 dark:text-red-300 hover:bg-red-100">
                         {w.score}점
                       </Badge>
                     </div>

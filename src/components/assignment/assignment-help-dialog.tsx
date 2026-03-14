@@ -166,7 +166,7 @@ export function AssignmentHelpDialog() {
                   <div className="rounded-lg border p-3 space-y-2">
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-xs">LLM 기반 분석 (AI 추천)</span>
-                      <Badge className="text-[10px] bg-purple-100 text-purple-700 hover:bg-purple-200">AI</Badge>
+                      <Badge className="text-[10px] bg-purple-100 text-purple-700 dark:text-purple-400 hover:bg-purple-200">AI</Badge>
                     </div>
                     <p className="text-xs text-muted-foreground">
                       AI가 학생과 선생님의 데이터를 종합적으로 분석합니다. 특히 사주 궁합에 50%의 비중을 두어
@@ -255,7 +255,7 @@ export function AssignmentHelpDialog() {
                 <div className="rounded-lg border p-3 space-y-2">
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-xs">AI 자동 배정 제안</span>
-                    <Badge className="text-[10px] bg-purple-100 text-purple-700 hover:bg-purple-200">AI</Badge>
+                    <Badge className="text-[10px] bg-purple-100 text-purple-700 dark:text-purple-400 hover:bg-purple-200">AI</Badge>
                   </div>
                   <p className="text-xs text-muted-foreground">
                     미배정 학생 전체를 대상으로 AI가 자동으로 최적의 배정 안을 생성합니다.

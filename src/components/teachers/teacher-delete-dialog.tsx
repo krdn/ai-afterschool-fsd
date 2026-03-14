@@ -66,7 +66,7 @@ export function TeacherDeleteDialog({
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         {variant === 'icon' ? (
-          <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50">
+          <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:bg-red-950/30">
             <Trash2 className="h-4 w-4" />
           </Button>
         ) : (
@@ -86,7 +86,7 @@ export function TeacherDeleteDialog({
               </p>
               <p>이 작업은 되돌릴 수 없으며, 관련 분석 데이터도 함께 삭제됩니다.</p>
               {hasStudents && (
-                <div className="flex items-start gap-2 rounded-md bg-amber-50 border border-amber-200 p-3 text-amber-800">
+                <div className="flex items-start gap-2 rounded-md bg-amber-50 dark:bg-amber-950/30 border border-amber-200 p-3 text-amber-800">
                   <AlertTriangle className="h-5 w-5 mt-0.5 shrink-0" />
                   <p className="text-sm">
                     담당 학생이 <strong>{studentCount}명</strong> 있어요.
