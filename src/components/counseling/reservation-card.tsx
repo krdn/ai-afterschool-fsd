@@ -133,7 +133,7 @@ export function ReservationCard({
                 size="sm"
                 onClick={() => onEditClick?.(reservation.id)}
                 disabled={isProcessing}
-                className="flex-1 bg-blue-50 text-blue-700 hover:bg-blue-100 border-blue-200"
+                className="flex-1 bg-blue-50 dark:bg-blue-950/30 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-950/50 border-blue-200 dark:border-blue-800"
               >
                 수정
               </Button>
@@ -143,7 +143,7 @@ export function ReservationCard({
                 size="sm"
                 onClick={() => onRecordClick?.(reservation.id)}
                 disabled={isProcessing}
-                className="flex-1 bg-green-50 text-green-700 hover:bg-green-100 border-green-200"
+                className="flex-1 bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-950/50 border-green-200 dark:border-green-800"
               >
                 완료
               </Button>
@@ -187,7 +187,7 @@ export function ReservationCard({
                 size="sm"
                 onClick={() => openDialog("delete")}
                 disabled={isProcessing}
-                className="bg-red-50 text-red-700 hover:bg-red-100 border-red-200"
+                className="bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-950/50 border-red-200 dark:border-red-800"
               >
                 제거
               </Button>
@@ -203,7 +203,7 @@ export function ReservationCard({
                 size="sm"
                 onClick={() => openDialog("delete")}
                 disabled={isProcessing}
-                className="bg-red-50 text-red-700 hover:bg-red-100 border-red-200"
+                className="bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-950/50 border-red-200 dark:border-red-800"
               >
                 제거
               </Button>
