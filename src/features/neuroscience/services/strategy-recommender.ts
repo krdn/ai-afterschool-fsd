@@ -1,4 +1,5 @@
-import { generateWithProvider } from '@/features/ai-engine';
+import { generateWithProvider, generateWithSpecificProvider } from '@/features/ai-engine';
+import type { ProviderName } from '@/features/ai-engine/providers/types';
 import { db } from '@/lib/db/client';
 import { logger } from '@/lib/logger';
 import { buildCondition } from '../condition-builder';
@@ -35,14 +36,17 @@ export async function getStrategyRecommendation(
   }
 
   // LLM 호출
-  const result = await generateWithProvider({
+  const llmOptions = {
     featureType: 'neuroscience_strategy',
     prompt: built.contextString,
     system: getStrategySystemPrompt(locale),
     teacherId,
     maxOutputTokens: 4096,
-    ...(providerId && providerId !== 'auto' ? { providerId } : {}),
-  });
+  };
+
+  const result = providerId && providerId !== 'auto'
+    ? await generateWithSpecificProvider(providerId as ProviderName, llmOptions)
+    : await generateWithProvider(llmOptions);
 
   // 응답 파싱
   const parsed = NeuroscienceStrategySchema.safeParse(JSON.parse(result.text));
