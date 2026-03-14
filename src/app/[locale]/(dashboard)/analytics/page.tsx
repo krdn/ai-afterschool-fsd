@@ -58,23 +58,20 @@ export default function AnalyticsPage() {
         if (comparisonResult.success) {
           setComparisonData(comparisonResult.data)
         } else {
-          // eslint-disable-next-line no-console -- 에러 로깅
-          console.error("Comparison error:", comparisonResult.error)
+        console.error("Comparison error:", comparisonResult.error)
         }
 
         const counselingResult = await getCounselingStats()
         if (counselingResult.success) {
           setCounselingStats(counselingResult.data)
         } else {
-          // eslint-disable-next-line no-console -- 에러 로깅
-          console.error("Counseling error:", counselingResult.error)
+        console.error("Counseling error:", counselingResult.error)
         }
 
         const trendData: TrendDataPoint[] = []
         setGradeTrendData(trendData)
       } catch (err) {
-        // eslint-disable-next-line no-console -- 에러 로깅
-          console.error("Failed to fetch analytics data:", err)
+        console.error("Failed to fetch analytics data:", err)
         setError("데이터를 불러오는데 실패했습니다")
       } finally {
         setLoading(false)
