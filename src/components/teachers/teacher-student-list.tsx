@@ -110,7 +110,7 @@ export function TeacherStudentList({ students, metrics }: TeacherStudentListProp
             <User className="h-4 w-4 text-muted-foreground" />
             <Link
               href={`/students/${row.original.id}`}
-              className="font-medium hover:underline text-blue-600"
+              className="font-medium hover:underline text-primary"
             >
               {row.getValue('name')}
             </Link>

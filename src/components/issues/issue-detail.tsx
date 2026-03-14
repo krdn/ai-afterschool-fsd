@@ -163,7 +163,7 @@ export function IssueDetail({ issue, teachers }: IssueDetailProps) {
                 href={issue.githubIssueUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm text-blue-600 hover:underline flex items-center gap-1"
+                className="text-sm text-primary hover:underline flex items-center gap-1"
               >
                 Issue #{issue.githubIssueNumber}
                 <ExternalLink className="w-3 h-3" />
