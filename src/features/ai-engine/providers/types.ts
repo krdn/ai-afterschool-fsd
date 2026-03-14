@@ -16,7 +16,10 @@ export type FeatureType =
   | 'grade_ocr'              // 성적표 OCR 분석
   | 'grade_analysis'         // 성적 분석 & 학습 전략
   | 'parent_report'          // 학부모 리포트 생성
-  | 'general_chat';          // 일반 채팅
+  | 'general_chat'             // 일반 채팅
+  | 'neuroscience_strategy'    // 뇌과학 학습 전략 추천
+  | 'neuroscience_knowledge'   // 뇌과학 지식 조회
+  | 'neuroscience_coaching';   // 실시간 학습 코칭
 
 export interface ProviderConfig {
   name: ProviderName;
