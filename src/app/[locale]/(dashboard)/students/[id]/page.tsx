@@ -108,8 +108,8 @@ export default async function StudentDetailPage(props: {
                 </Card>
             )}
 
-            <div className="border-b mb-6" data-testid="student-detail-tabs">
-                <div className="flex gap-4">
+            <div className="border-b mb-6 overflow-x-auto" data-testid="student-detail-tabs">
+                <div className="flex gap-4 min-w-max">
                     {tabs.map(tab => (
                         <Link
                             key={tab.id}
