@@ -18,7 +18,7 @@ function getActionColor(action: string): string {
     case 'DELETE':
       return 'bg-red-100 text-red-800'
     default:
-      return 'bg-gray-100 text-gray-800'
+      return 'bg-muted text-foreground'
   }
 }
 
@@ -50,28 +50,28 @@ export function AuditTab({ initialAction = 'ALL', initialPage = 1 }: AuditTabPro
       <div className="flex gap-2" data-testid="action-filter">
         <button
           onClick={() => { setAction('ALL'); setPage(1) }}
-          className={`px-3 py-1 rounded ${action === 'ALL' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+          className={`px-3 py-1 rounded ${action === 'ALL' ? 'bg-blue-600 text-white' : 'bg-muted'}`}
           data-testid="filter-all"
         >
           전체
         </button>
         <button
           onClick={() => { setAction('CREATE'); setPage(1) }}
-          className={`px-3 py-1 rounded ${action === 'CREATE' ? 'bg-green-600 text-white' : 'bg-gray-200'}`}
+          className={`px-3 py-1 rounded ${action === 'CREATE' ? 'bg-green-600 text-white' : 'bg-muted'}`}
           data-testid="filter-create"
         >
           생성
         </button>
         <button
           onClick={() => { setAction('UPDATE'); setPage(1) }}
-          className={`px-3 py-1 rounded ${action === 'UPDATE' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+          className={`px-3 py-1 rounded ${action === 'UPDATE' ? 'bg-blue-600 text-white' : 'bg-muted'}`}
           data-testid="filter-update"
         >
           수정
         </button>
         <button
           onClick={() => { setAction('DELETE'); setPage(1) }}
-          className={`px-3 py-1 rounded ${action === 'DELETE' ? 'bg-red-600 text-white' : 'bg-gray-200'}`}
+          className={`px-3 py-1 rounded ${action === 'DELETE' ? 'bg-red-600 text-white' : 'bg-muted'}`}
           data-testid="filter-delete"
         >
           삭제
@@ -80,7 +80,7 @@ export function AuditTab({ initialAction = 'ALL', initialPage = 1 }: AuditTabPro
 
       {/* 감사 로그 테이블 */}
       {logs.length === 0 ? (
-        <div className="text-center py-12 text-gray-500" data-testid="no-logs">
+        <div className="text-center py-12 text-muted-foreground" data-testid="no-logs">
           감사 로그가 없습니다.
         </div>
       ) : (
@@ -115,11 +115,11 @@ export function AuditTab({ initialAction = 'ALL', initialPage = 1 }: AuditTabPro
                     </TableCell>
                     <TableCell data-testid="log-entity">
                       {log.entityType}
-                      {log.entityId && <span className="text-gray-400"> ({log.entityId.slice(0, 8)}...)</span>}
+                      {log.entityId && <span className="text-muted-foreground"> ({log.entityId.slice(0, 8)}...)</span>}
                     </TableCell>
                     <TableCell>
                       <div
-                        className="max-w-md truncate text-sm text-gray-600"
+                        className="max-w-md truncate text-sm text-muted-foreground"
                         data-testid="log-changes"
                         title={formatChanges(log.changes)}
                       >

@@ -37,8 +37,8 @@ export function FollowUpCard({ item, onComplete, loading = false }: FollowUpCard
   // 상태별 스타일링
   const cardStyles = {
     overdue: "bg-red-50 border-red-200",
-    pending: "bg-white border-gray-200",
-    completed: "bg-gray-50 border-gray-200 opacity-75",
+    pending: "bg-card border",
+    completed: "bg-muted border opacity-75",
   }
 
   // 상태별 Badge
@@ -110,7 +110,7 @@ export function FollowUpCard({ item, onComplete, loading = false }: FollowUpCard
                 />
                 <label
                   htmlFor={`complete-${item.id}`}
-                  className="text-sm text-gray-600 cursor-pointer"
+                  className="text-sm text-muted-foreground cursor-pointer"
                 >
                   완료
                 </label>
@@ -129,24 +129,24 @@ export function FollowUpCard({ item, onComplete, loading = false }: FollowUpCard
           {/* Body: 학생/선생님 정보 */}
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm">
-              <User className="w-4 h-4 text-gray-400" />
+              <User className="w-4 h-4 text-muted-foreground" />
               <span className="font-medium">{item.studentName}</span>
-              <span className="text-gray-400">·</span>
-              <span className="text-gray-600">{item.teacherName} 선생님</span>
+              <span className="text-muted-foreground">·</span>
+              <span className="text-muted-foreground">{item.teacherName} 선생님</span>
             </div>
 
             {/* 상담 요약 */}
-            <div className="text-sm text-gray-700 line-clamp-2">
+            <div className="text-sm text-foreground line-clamp-2">
               {item.summary}
             </div>
 
             {/* 날짜 정보 */}
-            <div className="flex items-center gap-3 text-xs text-gray-500">
+            <div className="flex items-center gap-3 text-xs text-muted-foreground">
               <div className="flex items-center gap-1">
                 <Calendar className="w-3 h-3" />
                 <span>후속 조치: {relativeTime}</span>
               </div>
-              <span className="text-gray-400">·</span>
+              <span className="text-muted-foreground">·</span>
               <span>원본 상담: {originalDate}</span>
             </div>
           </div>
@@ -162,7 +162,7 @@ export function FollowUpCard({ item, onComplete, loading = false }: FollowUpCard
               {item.studentName} 학생의 후속 조치를 완료 처리하시겠습니까?
               <br />
               <br />
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-muted-foreground">
                 주제: {item.summary}
               </span>
             </AlertDialogDescription>

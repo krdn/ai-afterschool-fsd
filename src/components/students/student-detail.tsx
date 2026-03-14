@@ -124,7 +124,7 @@ export function StudentDetail({ student, analysisStatus }: StudentDetailProps) {
         </div>
       </div>
 
-      <div className="rounded-lg border border-gray-200 bg-white p-4">
+      <div className="rounded-lg border bg-card p-4">
         <div className="flex flex-col gap-6 lg:flex-row">
           <div className="flex-1">
             <StudentImageTabs
@@ -206,27 +206,27 @@ export function StudentDetail({ student, analysisStatus }: StudentDetailProps) {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <dt className="text-sm text-gray-500">이름</dt>
+              <dt className="text-sm text-muted-foreground">이름</dt>
               <dd className="mt-1 font-medium">{student.name}</dd>
             </div>
             <div>
-              <dt className="text-sm text-gray-500">생년월일</dt>
+              <dt className="text-sm text-muted-foreground">생년월일</dt>
               <dd className="mt-1 font-medium">
                 {format(birthDate, "yyyy년 M월 d일", { locale: ko })}
               </dd>
             </div>
             <div>
-              <dt className="text-sm text-gray-500">국적</dt>
+              <dt className="text-sm text-muted-foreground">국적</dt>
               <dd className="mt-1 font-medium">
                 {student.nationality || "한국"}
               </dd>
             </div>
             <div>
-              <dt className="text-sm text-gray-500">연락처</dt>
+              <dt className="text-sm text-muted-foreground">연락처</dt>
               <dd className="mt-1 font-medium">{student.phone || "-"}</dd>
             </div>
             <div>
-              <dt className="text-sm text-gray-500">혈액형</dt>
+              <dt className="text-sm text-muted-foreground">혈액형</dt>
               <dd className="mt-1 font-medium">
                 {student.bloodType ? `${student.bloodType}형` : "-"}
               </dd>
@@ -240,21 +240,21 @@ export function StudentDetail({ student, analysisStatus }: StudentDetailProps) {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <dt className="text-sm text-gray-500">학교</dt>
+              <dt className="text-sm text-muted-foreground">학교</dt>
               <dd className="mt-1 font-medium">{student.school}</dd>
             </div>
             <div>
-              <dt className="text-sm text-gray-500">학년</dt>
+              <dt className="text-sm text-muted-foreground">학년</dt>
               <dd className="mt-1 font-medium">{student.grade}학년</dd>
             </div>
             <div>
-              <dt className="text-sm text-gray-500">목표 대학</dt>
+              <dt className="text-sm text-muted-foreground">목표 대학</dt>
               <dd className="mt-1 font-medium">
                 {student.targetUniversity || "-"}
               </dd>
             </div>
             <div>
-              <dt className="text-sm text-gray-500">목표 학과</dt>
+              <dt className="text-sm text-muted-foreground">목표 학과</dt>
               <dd className="mt-1 font-medium">{student.targetMajor || "-"}</dd>
             </div>
           </CardContent>
@@ -266,7 +266,7 @@ export function StudentDetail({ student, analysisStatus }: StudentDetailProps) {
           <CardTitle>분석 상태</CardTitle>
           <StudentAnalysisStatus status={analysisStatus ?? null} />
         </CardHeader>
-        <CardContent className="text-sm text-gray-500">
+        <CardContent className="text-sm text-muted-foreground">
           사주/성명학 분석이 최신인지 확인합니다.
         </CardContent>
       </Card>
