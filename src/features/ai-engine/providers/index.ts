@@ -36,6 +36,13 @@ export const providers: Record<ProviderName, (model?: string) => LanguageModel> 
   zhipu: (model?: string) => zhipu(model || 'glm-4v-plus'),
   moonshot: (model?: string) => moonshotProvider.chatModel(model || 'kimi-k2.5-preview'),
   openrouter: (model?: string) => openrouterProvider.chatModel(model || 'openai/gpt-4o'),
+  perplexity: (model?: string) => {
+    const perplexityProvider = createOpenAICompatible({
+      name: 'perplexity',
+      baseURL: 'https://api.perplexity.ai',
+    });
+    return perplexityProvider.chatModel(model || 'sonar-pro');
+  },
 };
 
 /**

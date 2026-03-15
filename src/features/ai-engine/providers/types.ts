@@ -1,4 +1,4 @@
-export type ProviderName = 'anthropic' | 'openai' | 'google' | 'ollama' | 'deepseek' | 'mistral' | 'cohere' | 'xai' | 'zhipu' | 'moonshot' | 'openrouter';
+export type ProviderName = 'anthropic' | 'openai' | 'google' | 'ollama' | 'deepseek' | 'mistral' | 'cohere' | 'xai' | 'zhipu' | 'moonshot' | 'openrouter' | 'perplexity';
 
 export type FeatureType =
   | 'learning_analysis'   // 학습 분석
@@ -16,7 +16,12 @@ export type FeatureType =
   | 'grade_ocr'              // 성적표 OCR 분석
   | 'grade_analysis'         // 성적 분석 & 학습 전략
   | 'parent_report'          // 학부모 리포트 생성
-  | 'general_chat';          // 일반 채팅
+  | 'general_chat'             // 일반 채팅
+  | 'neuroscience_strategy'    // 뇌과학 학습 전략 추천
+  | 'neuroscience_knowledge'   // 뇌과학 지식 조회
+  | 'neuroscience_coaching'    // 실시간 학습 코칭
+  | 'admission_research'      // 입시 정보 리서치
+  | 'admission_analysis';     // 입시 분석
 
 export interface ProviderConfig {
   name: ProviderName;
@@ -123,6 +128,14 @@ export const PROVIDER_CONFIGS: Record<ProviderName, ProviderConfig> = {
     defaultModel: 'openai/gpt-4o',
     models: ['openai/gpt-4o', 'openai/gpt-4o-mini', 'anthropic/claude-sonnet-4-5', 'google/gemini-2.5-flash'],
   },
+  perplexity: {
+    name: 'perplexity',
+    displayName: 'Perplexity',
+    requiresApiKey: true,
+    supportsVision: false,
+    defaultModel: 'sonar',
+    models: ['sonar', 'sonar-pro'],
+  },
 };
 
 // 비용 per 1M tokens (USD, 2026 기준)
@@ -138,4 +151,5 @@ export const COST_PER_MILLION_TOKENS: Record<ProviderName, { input: number; outp
   zhipu: { input: 0.35, output: 1.40 },         // GLM-4-Plus
   moonshot: { input: 1.0, output: 4.0 },         // Kimi K2.5
   openrouter: { input: 2.5, output: 10.0 },      // 모델에 따라 다름 (GPT-4o 기준)
+  perplexity: { input: 1, output: 1 },            // Sonar 기준
 };
