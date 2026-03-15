@@ -11,6 +11,8 @@
 import { logger } from '@/lib/logger'
 import { AdmissionQuotaSource } from './admission-quota-source'
 import { MajorInfoSource } from './major-info-source'
+import { SeedDataSource } from './seed-data-source'
+import { CareerNetSource } from './career-net-source'
 import type { BaseDataSource, DataSourceType, DataSourceConfig } from './types'
 
 // === 데이터 소스 설정 ===
@@ -50,6 +52,15 @@ export const DATA_SOURCE_CONFIGS: DataSourceConfig[] = [
     baseUrl: 'http://openapi.academyinfo.go.kr/openapi/service/rest/BasicInformationService',
     apiKey: 'ACADEMY_INFO_SERVICE_KEY',
     enabled: false, // 추후 구현
+    rateLimit: 1000,
+  },
+  {
+    type: 'career_net',
+    name: '커리어넷 대학학과정보',
+    description: '학과 목록, 학과 상세, 관련 직업 (교육부)',
+    baseUrl: 'https://www.career.go.kr/cnet/openapi/getOpenApi',
+    apiKey: 'CAREER_NET_API_KEY',
+    enabled: true,
     rateLimit: 1000,
   },
   {
@@ -117,9 +128,8 @@ class DataSourceRegistryImpl {
     if (this.initialized) return
     this.register(new AdmissionQuotaSource())
     this.register(new MajorInfoSource())
-    // 추후 추가:
-    // this.register(new StudentStatsSource())
-    // this.register(new BasicInfoSource())
+    this.register(new SeedDataSource())
+    this.register(new CareerNetSource())
     this.initialized = true
     logger.debug({ count: this.sources.size }, 'DataSource registry initialized')
   }
@@ -146,5 +156,18 @@ export function getMajorInfoSource(): MajorInfoSource {
   return dataSourceRegistry.get('data_go_kr_major') as unknown as MajorInfoSource
 }
 
-// re-export types
+export function getSeedDataSource(): SeedDataSource {
+  dataSourceRegistry.ensureInitialized()
+  return dataSourceRegistry.get('data_go_kr_basic') as unknown as SeedDataSource
+}
+
+export function getCareerNetSource(): CareerNetSource {
+  dataSourceRegistry.ensureInitialized()
+  return dataSourceRegistry.get('career_net') as unknown as CareerNetSource
+}
+
+// re-export
+export { fetchWithFallback } from './fallback-fetcher'
+export { searchSeedUniversities, getSeedStats, KOREAN_UNIVERSITIES } from './seed-data'
 export type { BaseDataSource, DataSourceType, FetchResult } from './types'
+export type { FallbackResult } from './fallback-fetcher'
