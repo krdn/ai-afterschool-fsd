@@ -4,6 +4,7 @@ import { getStudentProfile } from './student-profiler';
 import { analyzeStrengthWeakness } from './strength-weakness';
 import { generateAnalysis } from './llm-composer';
 import type { StudyPlanResult, StrengthWeaknessResult } from '../types';
+import { loadGradePromptTemplate, renderPromptTemplate } from './grade-prompt-loader';
 import { logger } from '@/lib/logger';
 
 /**
@@ -54,10 +55,8 @@ export async function generateStudyPlan(
   // VARK 학습스타일 기반 학습 방법 제안
   const varkAdvice = getVarkLearningAdvice(profile.varkType);
 
-  // LLM에 StudyPlanResult JSON 형식으로 응답 요청
-  const prompt = `이 학생의 강점/약점 분석과 학습스타일을 바탕으로 맞춤형 주간 학습 플랜을 JSON으로 작성해주세요.
-
-강점 과목:
+  // 동적 데이터 구성
+  const dynamicData = `강점 과목:
 ${swResult.strengths.length > 0
     ? swResult.strengths.map((s) => `- ${s.subject}: ${s.reason} (${s.score}점)`).join('\n')
     : '- 분석 데이터 부족'}
@@ -71,7 +70,12 @@ VARK 학습스타일: ${profile.varkType ?? '미측정'}
 ${varkAdvice ? `학습스타일 특성: ${varkAdvice}` : ''}
 MBTI: ${profile.mbtiType ?? '미측정'}
 목표 대학: ${profile.targetUniversity ?? '미정'}
-목표 학과: ${profile.targetMajor ?? '미정'}
+목표 학과: ${profile.targetMajor ?? '미정'}`;
+
+  // 폴백 프롬프트
+  const fallbackTemplate = `이 학생의 강점/약점 분석과 학습스타일을 바탕으로 맞춤형 주간 학습 플랜을 JSON으로 작성해주세요.
+
+{{DATA}}
 
 학습 플랜 작성 규칙:
 1. 약점 과목에 더 많은 시간을 배정하세요
@@ -93,6 +97,10 @@ MBTI: ${profile.mbtiType ?? '미측정'}
   "prioritySubjects": ["우선순위 과목1", "우선순위 과목2"],
   "rationale": "이 학습 플랜의 근거와 기대 효과 3~5문장"
 }`;
+
+  // DB에서 프롬프트 템플릿 로드
+  const template = await loadGradePromptTemplate('grade_plan', fallbackTemplate);
+  const prompt = renderPromptTemplate(template, dynamicData);
 
   let result: StudyPlanResult;
   try {

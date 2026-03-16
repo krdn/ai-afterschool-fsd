@@ -10,6 +10,7 @@ import type {
   GoalGapResult,
   StudyPlanResult,
 } from '../types';
+import { loadGradePromptTemplate, renderPromptTemplate } from './grade-prompt-loader';
 import { logger } from '@/lib/logger';
 
 /**
@@ -67,7 +68,7 @@ export async function generateCoachingReport(
   ]);
 
   // LLM으로 종합 추천 + 동기부여 메시지 생성
-  const coachingPrompt = buildCoachingPrompt(
+  const coachingPrompt = await buildCoachingPrompt(
     strengthWeakness,
     goalGap,
     studyPlan,
@@ -125,16 +126,14 @@ export async function generateCoachingReport(
 /**
  * 코칭 리포트 LLM 프롬프트를 구성한다.
  */
-function buildCoachingPrompt(
+async function buildCoachingPrompt(
   sw: StrengthWeaknessResult,
   gg: GoalGapResult,
   sp: StudyPlanResult,
   mbtiType: string | null | undefined,
   varkType: string | null | undefined
-): string {
-  return `아래 3가지 분석 결과를 종합하여 코칭 리포트를 작성해주세요.
-
-## 강점/약점 분석
+): Promise<string> {
+  const dynamicData = `## 강점/약점 분석
 - 강점: ${sw.strengths.map((s) => `${s.subject}(${s.score}점)`).join(', ') || '없음'}
 - 약점: ${sw.weaknesses.map((w) => `${w.subject}(${w.score}점)`).join(', ') || '없음'}
 - 종합: ${sw.summary}
@@ -150,13 +149,20 @@ function buildCoachingPrompt(
 
 ## 학생 특성
 - MBTI: ${mbtiType ?? '미측정'}
-- VARK 학습스타일: ${varkType ?? '미측정'}
+- VARK 학습스타일: ${varkType ?? '미측정'}`;
+
+  const fallbackTemplate = `아래 3가지 분석 결과를 종합하여 코칭 리포트를 작성해주세요.
+
+{{DATA}}
 
 위 분석을 종합하여 아래 JSON 형식으로만 응답해주세요:
 {
   "motivationMessage": "학생의 MBTI/VARK 특성을 반영한 개인화 동기부여 메시지 (3~5문장, 따뜻하고 격려하는 톤)",
   "overallRecommendation": "3가지 분석을 종합한 학습 전략 추천 (5~8문장, 구체적인 실행 방안 포함)"
 }`;
+
+  const template = await loadGradePromptTemplate('grade_coaching', fallbackTemplate);
+  return renderPromptTemplate(template, dynamicData);
 }
 
 /**

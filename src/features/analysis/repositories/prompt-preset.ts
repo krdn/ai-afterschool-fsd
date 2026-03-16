@@ -4,7 +4,7 @@ import { db } from "@/lib/db/client"
 // 타입 정의
 // ---------------------------------------------------------------------------
 
-export type AnalysisType = "saju" | "face" | "palm" | "mbti" | "vark" | "name" | "zodiac"
+export type AnalysisType = "saju" | "face" | "palm" | "mbti" | "vark" | "name" | "zodiac" | "grade_strength" | "grade_gap" | "grade_plan" | "grade_coaching"
 
 export type AnalysisPromptPresetData = {
   id: string

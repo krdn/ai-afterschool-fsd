@@ -4,6 +4,7 @@ import { getStudentProfile } from './student-profiler';
 import { analyzeSubjectStrengths } from './stat-analyzer';
 import { generateAnalysis } from './llm-composer';
 import type { GoalGapResult } from '../types';
+import { loadGradePromptTemplate, renderPromptTemplate } from './grade-prompt-loader';
 import { logger } from '@/lib/logger';
 
 /**
@@ -54,10 +55,8 @@ export async function analyzeGoalGap(
     ? `목표 대학: ${profile.targetUniversity ?? '미정'}, 목표 학과: ${profile.targetMajor ?? '미정'}`
     : '구체적인 목표 대학/학과가 설정되지 않음 (현재 점수 기반 +10~15점 상향 목표 설정)';
 
-  // LLM에 GoalGapResult JSON 형식으로 응답 요청
-  const prompt = `이 학생의 과목별 현재 성적과 목표를 분석하여 목표 격차(Goal Gap) 분석을 JSON으로 작성해주세요.
-
-현재 과목별 성적:
+  // 동적 데이터 구성
+  const dynamicData = `현재 과목별 성적:
 ${subjects.map((s) => `- ${s.name}: 평균 ${s.avgScore}점, 추세 ${s.trend}`).join('\n')}
 
 학생 목표 정보:
@@ -68,7 +67,12 @@ ${hasTarget
     : '현재 점수 기반으로 +10~15점 상향 목표를 설정해주세요.'}
 
 VARK 학습스타일: ${profile.varkType ?? '미측정'}
-MBTI: ${profile.mbtiType ?? '미측정'}
+MBTI: ${profile.mbtiType ?? '미측정'}`;
+
+  // 폴백 프롬프트
+  const fallbackTemplate = `이 학생의 과목별 현재 성적과 목표를 분석하여 목표 격차(Goal Gap) 분석을 JSON으로 작성해주세요.
+
+{{DATA}}
 
 아래 JSON 형식으로만 응답해주세요:
 {
@@ -90,6 +94,10 @@ achievability 기준:
 - HIGH: 격차 10점 이하 또는 상승 추세
 - MEDIUM: 격차 10~20점
 - LOW: 격차 20점 초과 또는 하락 추세`;
+
+  // DB에서 프롬프트 템플릿 로드
+  const template = await loadGradePromptTemplate('grade_gap', fallbackTemplate);
+  const prompt = renderPromptTemplate(template, dynamicData);
 
   let result: GoalGapResult;
   try {

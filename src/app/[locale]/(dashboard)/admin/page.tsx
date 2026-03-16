@@ -319,6 +319,10 @@ export default async function AdminPage() {
     vark: await getAllGeneralPresetsByType('vark'),
     name: await getAllGeneralPresetsByType('name'),
     zodiac: await getAllGeneralPresetsByType('zodiac'),
+    grade_strength: await getAllGeneralPresetsByType('grade_strength'),
+    grade_gap: await getAllGeneralPresetsByType('grade_gap'),
+    grade_plan: await getAllGeneralPresetsByType('grade_plan'),
+    grade_coaching: await getAllGeneralPresetsByType('grade_coaching'),
   }
 
   // 상담 프롬프트 프리셋 조회

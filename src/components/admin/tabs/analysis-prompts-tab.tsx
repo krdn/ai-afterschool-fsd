@@ -88,6 +88,10 @@ const placeholderGuides: Record<AnalysisType, string> = {
   vark: "사용 가능한 플레이스홀더: {학생정보}, {VARK유형}, {VARK비율}",
   name: "사용 가능한 플레이스홀더: {학생정보}, {이름}, {한자}",
   zodiac: "사용 가능한 플레이스홀더: {학생정보}, {별자리}, {원소}",
+  grade_strength: "사용 가능한 플레이스홀더: {{DATA}} (통계 분석 결과가 자동 삽입됩니다)",
+  grade_gap: "사용 가능한 플레이스홀더: {{DATA}} (과목별 성적/목표 데이터가 자동 삽입됩니다)",
+  grade_plan: "사용 가능한 플레이스홀더: {{DATA}} (강점/약점/학습스타일 데이터가 자동 삽입됩니다)",
+  grade_coaching: "사용 가능한 플레이스홀더: {{DATA}} (3개 분석 결과가 자동 삽입됩니다)",
 }
 
 export function AnalysisPromptsTab({ initialPresets }: Props) {
