@@ -36,6 +36,36 @@ jobs:
         env:
           DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
 
+      - name: Check Prisma schema/migrations drift
+        env:
+          DATABASE_URL: "postgresql://dummy:dummy@localhost:5432/dummy"
+        run: |
+          set +e
+          OUTPUT=$(pnpm dlx prisma migrate diff \
+            --from-migrations prisma/migrations \
+            --to-schema-datamodel prisma/schema.prisma \
+            --exit-code 2>&1)
+          STATUS=$?
+          set -e
+
+          if [ $STATUS -eq 0 ]; then
+            echo "::notice::Prisma schema와 migrations가 일치합니다."
+          elif [ $STATUS -eq 2 ]; then
+            echo "::error::Prisma schema와 migrations 불일치 (drift 감지)."
+            echo "schema.prisma에 모델을 추가/수정 후 마이그레이션 파일이 누락된 것으로 보입니다."
+            echo ""
+            echo "해결: 로컬에서 'pnpm prisma migrate dev --name <설명>' 실행 후"
+            echo "      생성된 prisma/migrations/* 파일을 커밋하세요."
+            echo ""
+            echo "drift 내용:"
+            printf '%s\n' "$OUTPUT"
+            exit 1
+          else
+            echo "::error::Prisma migrate diff 실행 실패 (exit code: $STATUS)"
+            printf '%s\n' "$OUTPUT"
+            exit 1
+          fi
+
       - name: Lint
         run: pnpm run lint
 
