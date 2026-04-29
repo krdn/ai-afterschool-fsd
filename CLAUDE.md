@@ -104,10 +104,32 @@ export async function myAction(input: string): Promise<ActionResult<MyType>> {
 
 ### DB 스키마 변경
 
+**원칙**: schema 변경은 반드시 마이그레이션 파일과 함께 커밋합니다. `db:push`는 production drift의 원인이 되므로 일상 워크플로우에서 사용하지 않습니다.
+
 ```bash
-# 스키마 수정 후
-pnpm db:push        # 개발 환경 반영
-pnpm db:generate    # 타입 재생성
+# 스키마 수정 후 (정식 워크플로우)
+pnpm prisma migrate dev --name <설명>   # 마이그레이션 파일 생성 + 적용 + 클라이언트 재생성
+git add prisma/schema.prisma prisma/migrations/  # 두 가지 모두 커밋
+
+# production 배포 시 (CI/CD)
+pnpm prisma migrate deploy   # 신규 마이그레이션만 적용 (idempotent)
+```
+
+#### `db:push` 사용 가능 상황 (예외)
+- **프로토타입 단계**: 모델 구조를 빠르게 실험할 때 (커밋 전)
+- **테스트 DB 초기화**: CI에서 일회성 schema 동기화
+
+`db:push`로 운영/스테이징 DB를 변경하면 `_prisma_migrations` 테이블과 schema가 어긋나며, 이후 `migrate deploy`가 P3018/P2021 에러로 실패합니다.
+
+#### Drift 검증
+PR에서 schema vs migrations 일치 여부를 자동 검증합니다 — `.github/workflows/ci.yml`의 "Check Prisma schema/migrations drift" step 참고.
+수동 확인:
+```bash
+pnpm prisma migrate diff \
+  --from-migrations prisma/migrations \
+  --to-schema-datamodel prisma/schema.prisma \
+  --exit-code
+# exit code 0 = 일치, 2 = drift 있음
 ```
 
 ## 핵심 인프라 파일
@@ -149,9 +171,12 @@ pnpm test             # Vitest 단위 테스트
 pnpm test:e2e         # Playwright E2E
 pnpm format           # Prettier 포맷팅
 pnpm format:check     # 포맷팅 체크
-pnpm db:generate      # Prisma 클라이언트 생성
-pnpm db:push          # 스키마 DB 반영
-pnpm db:seed          # 시드 데이터 (dotenv -e .env)
+pnpm db:generate                              # Prisma 클라이언트 생성
+pnpm prisma migrate dev --name <설명>          # ★ 마이그레이션 (정식 워크플로우)
+pnpm prisma migrate deploy                    # production 마이그레이션 적용 (CI/CD)
+pnpm prisma migrate status                    # 적용 상태 확인
+pnpm db:push                                  # ⚠️ 프로토타입 전용 (drift 위험, 일상 사용 금지)
+pnpm db:seed                                  # 시드 데이터 (dotenv -e .env)
 ```
 
 ## 상세 분석 문서
